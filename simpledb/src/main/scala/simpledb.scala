@@ -4,7 +4,6 @@ import scala.concurrent.Future
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
 import aws.core._
-import java.text.SimpleDateFormat
 
 case class SimpleDBRegion(region: String, endpoint: String)
 
@@ -95,11 +94,6 @@ object SimpleDBCalculator extends SignatureCalculator {
   val SIGMETHOD = "HmacSHA1"
 
   override def sign(request: WSRequest) {
-    request.addHeader("AWSAccessKeyId", AWS.key)
-           .addHeader("Version", VERSION)
-           .addHeader("SignatureVersion", SIGVERSION)
-           .addHeader("SignatureMethod", SIGMETHOD)
-           .addHeader("Signature", "TODO")
     val toSign = request.method + "\n" +
                SimpleDB.HOST + "\n" +
                "/" + "\n" +
@@ -109,7 +103,11 @@ object SimpleDBCalculator extends SignatureCalculator {
                  header._1 + "=" + header._2
                }.mkString("\n")
     println("String to sign = " + toSign)
-    request.addHeader("Signature", signature(toSign))
+    request.setQueryString(Map("AWSAccessKeyId" -> Seq(AWS.key),
+           "Version" -> Seq(VERSION),
+           "SignatureVersion" -> Seq(SIGVERSION),
+           "SignatureMethod" -> Seq(SIGMETHOD),
+           "Signature" -> Seq(signature(toSign))))
   }
 
   def signature(data: String) = HmacSha1.calculate(data, AWS.secret)
