@@ -1,4 +1,4 @@
-package aws
+package aws.core
 
 import java.security.SignatureException
 import javax.crypto.Mac

@@ -1,41 +1,28 @@
-package aws
+package aws.core
 
 import play.api.libs.ws._
-import org.jboss.netty.handler.codec.base64.Base64
+import play.api.libs.ws.WS._
+
+import com.ning.http.client.Realm.{ AuthScheme, RealmBuilder }
+
+object AWS {
+  val awsVersion = "2009-04-15"
+  lazy val key: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(0)
+  lazy val secret: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(1)
+
+}
 
 case class AWSignatureCalculator(accessKeyId: String, secretAccessKey: String) extends SignatureCalculator {
 
   override def sign(request: WS.WSRequest): Unit = {
-    
+    request.setHeader("Authorization", signature(request))
   }
 
-  private def signature(request: WS.WSRequest, extra: String = ""): String = {
+  private def signature(request: WS.WSRequest): String = {
     val tosign = request.method + "\n" +
       request.header("Content-Type").map(_ + "\n") +
-      request.header("Date").map(_ + "\n") +
-      extra
+      request.header("Date").map(_ + "\n")
     HmacSha1.calculate(tosign, secretAccessKey)
   }
 
 }
-
-
-/*
- * 
-Authorization = "AWS" + " " + AWSAccessKeyId + ":" + Signature;
-
-Signature = Base64( HMAC-SHA1( YourSecretAccessKeyID, UTF-8-Encoding-Of( StringToSign ) ) );
-
-StringToSign = HTTP-Verb + "\n" +
-	Content-MD5 + "\n" +
-	Content-Type + "\n" +
-	Date + "\n" +
-	CanonicalizedAmzHeaders +
-	CanonicalizedResource;
-
-CanonicalizedResource = [ "/" + Bucket ] +
-	<HTTP-Request-URI, from the protocol name up to the query string> +
-	[ sub-resource, if present. For example "?acl", "?location", "?logging", or "?torrent"];
-
-CanonicalizedAmzHeaders = <described below>
-*/
