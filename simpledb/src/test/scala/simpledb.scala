@@ -9,14 +9,20 @@ import org.specs2.mutable._
 
 object SimpleDBSpec extends Specification {
 
-  import 
-  
+  import scala.concurrent._
+  import scala.concurrent.util._
+  import java.util.concurrent.TimeUnit._
+
+  implicit val region = SimpleDB.EU_WEST_1
+
   "SimpleDB API" should {
+    import scala.concurrent.ExecutionContext.Implicits.global
+
     "Create a domain" in {
-      SimpleDB.
+      val r = Await.result(SimpleDB.createDomain("testdomain"), Duration(1, SECONDS))
+      println(r.status)
+      println(r.body)
+      r.status.shouldEqual(200)
     }
   }
-
 }
-
-
