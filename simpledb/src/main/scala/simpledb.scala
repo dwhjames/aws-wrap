@@ -17,31 +17,34 @@ object SimpleDB {
     def DomainName(a: String) = ("DomainName" -> a)
   }
 
+  object Regions {
+    //The Different SimpleDBRegions
+    val US_EAST_1 = SimpleDBRegion("US East (Northern Virginia) Region", "sdb.amazonaws.com")
+    val US_WEST_1 = SimpleDBRegion("US West (Northern California) Region    ", "sdb.us-west-1.amazonaws.com")
+    val US_WEST_2 = SimpleDBRegion("US West (Oregon) Region", "sdb.us-west-2.amazonaws.com")
+    val EU_WEST_1 = SimpleDBRegion("EU (Ireland) Region", "sdb.eu-west-1.amazonaws.com")
+    val ASIA_SOUTHEAST_1 = SimpleDBRegion("Asia Pacific (Singapore) Region", "sdb.ap-southeast-1.amazonaws.com")
+    val ASIA_NORTHEAST_1 = SimpleDBRegion("Asia Pacific (Tokyo) Region", "sdb.ap-northeast-1.amazonaws.com")
+    val SA_EAST_1 = SimpleDBRegion("South America (Sao Paulo) Region", "sdb.sa-east-1.amazonaws.com")
+
+    implicit val DEFAULT = US_EAST_1
+  }
+
   import AWS.Parameters._
   import Parameters._
-
-  //The Different SimpleDBRegions
-  val US_EAST_1 = SimpleDBRegion("US East (Northern Virginia) Region", "sdb.amazonaws.com")
-  val US_WEST_1 = SimpleDBRegion("US West (Northern California) Region    ", "sdb.us-west-1.amazonaws.com")
-  val US_WEST_2 = SimpleDBRegion("US West (Oregon) Region", "sdb.us-west-2.amazonaws.com")
-  val EU_WEST_1 = SimpleDBRegion("EU (Ireland) Region", "sdb.eu-west-1.amazonaws.com")
-  val ASIA_SOUTHEAST_1 = SimpleDBRegion("Asia Pacific (Singapore) Region", "sdb.ap-southeast-1.amazonaws.com")
-  val ASIA_NORTHEAST_1 = SimpleDBRegion("Asia Pacific (Tokyo) Region", "sdb.ap-northeast-1.amazonaws.com")
-  val SA_EAST_1 = SimpleDBRegion("South America (Sao Paulo) Region", "sdb.sa-east-1.amazonaws.com")
-
-  implicit def defaultRegion = US_EAST_1
+  import Regions.DEFAULT
 
   val HOST = "sdb.amazonaws.com"
 
-  private def request(parameters: (String, String)*): WSRequestHolder = {
-    WS.url("https://" + HOST + "/?" + SimpleDBCalculator.url("GET", parameters))
+  private def request(parameters: (String, String)*): Future[Response] = {
+    WS.url("https://" + HOST + "/?" + SimpleDBCalculator.url("GET", parameters)).get()
   }
 
   /**
    * Creates a domain with the given name
    */
   def createDomain(domainName: String)(implicit region: SimpleDBRegion): Future[Response] = {
-    request(Action("CreateDomain"), DomainName(domainName), Expires(600L)).get()
+    request(Action("CreateDomain"), DomainName(domainName), Expires(600L))
   }
   /*
   /**

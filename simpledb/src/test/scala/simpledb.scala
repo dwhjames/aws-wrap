@@ -13,15 +13,13 @@ object SimpleDBSpec extends Specification {
   import scala.concurrent.util._
   import java.util.concurrent.TimeUnit._
 
-  implicit val region = SimpleDB.EU_WEST_1
+  implicit val region = SimpleDB.Regions.EU_WEST_1
 
   "SimpleDB API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
 
     "Create a domain" in {
       val r = Await.result(SimpleDB.createDomain("testdomain"), Duration(30, SECONDS))
-      println(r.status)
-      println(r.body)
       r.status.shouldEqual(200)
     }
   }
