@@ -31,19 +31,19 @@ object SimpleDB {
 
   implicit def defaultRegion = US_EAST_1
 
-  val HOST = "http://sdb.amazonaws.com"
+  val HOST = "sdb.amazonaws.com"
 
   private def request(parameters: (String, String)*): WSRequestHolder = {
-    WS.url(HOST).withQueryString(parameters:_*).sign(new SimpleDBCalculator(parameters))
+    WS.url("https://" + HOST + "/?" + SimpleDBCalculator.url("GET", parameters))
   }
 
   /**
    * Creates a domain with the given name
    */
   def createDomain(domainName: String)(implicit region: SimpleDBRegion): Future[Response] = {
-    request(Action("CreateDomain"), DomainName(domainName), TimeStamp(new Date)).get()
+    request(Action("CreateDomain"), DomainName(domainName), Expires(600L)).get()
   }
-/*
+  /*
   /**
    * Lists domains starting with the nextToken, if present, and giving the mas number of domains given
    **/
@@ -95,29 +95,31 @@ object SimpleDB {
 */
 }
 
-class SimpleDBCalculator(params: Seq[(String, String)]) extends SignatureCalculator {
+object SimpleDBCalculator {
 
   val VERSION = "2009-04-15"
   val SIGVERSION = "2"
   val SIGMETHOD = "HmacSHA1"
 
-  override def sign(request: WSRequest) {
+  def url(method: String, params: Seq[(String, String)]): String = {
 
+    import AWS.Parameters._
     import SignerEncoder.encode
 
-    val ps = Seq("AWSAccessKeyId" -> AWS.key,
-      "Version" -> VERSION,
-      "SignatureVersion" -> SIGVERSION,
-      "SignatureMethod" -> SIGMETHOD)
+    val ps = Seq(
+      AWSAccessKeyId(AWS.key),
+      Version(VERSION),
+      SignatureVersion(SIGVERSION),
+      SignatureMethod(SIGMETHOD)
+    )
 
     val queryString = (params ++ ps).sortBy(_._1)
       .map { p => encode(p._1) + "=" + encode(p._2) }.mkString("&")
 
-    val toSign = "%s\n%s\n%s\n%s".format(request.method, SimpleDB.HOST, "/",queryString)
-    val qs = ps :+ ("Signature" -> signature(toSign))
+    val toSign = "%s\n%s\n%s\n%s".format(method, SimpleDB.HOST, "/", queryString)
 
-    request.setQueryString(qs.toMap.mapValues(Seq(_)))
- }
+    "Signature=" + encode(signature(toSign)) + "&" + queryString
+  }
 
   def signature(data: String) = HmacSha1.calculate(data, AWS.secret)
 

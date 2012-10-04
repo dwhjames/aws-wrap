@@ -7,7 +7,6 @@ http://code.google.com/p/typica/source/browse/tags/1.5.1/java/com/xerox/amazonws
 
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.BitSet;
 import java.security.AccessController;
 import sun.security.action.GetPropertyAction;
