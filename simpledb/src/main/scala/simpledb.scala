@@ -1,5 +1,7 @@
 package aws.simpledb
 
+import java.util.Date
+
 import scala.concurrent.Future
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
@@ -10,6 +12,13 @@ case class SimpleDBRegion(region: String, endpoint: String)
 case class SimpleDBAttribute(name: String, value: String, replace: Option[Boolean] = None)
 
 object SimpleDB {
+
+  object Parameters {
+    def DomainName(a: String) = ("DomainName" -> a)
+  }
+
+  import AWS.Parameters._
+  import Parameters._
 
   //The Different SimpleDBRegions
   val US_EAST_1 = SimpleDBRegion("US East (Northern Virginia) Region", "sdb.amazonaws.com")
@@ -25,15 +34,14 @@ object SimpleDB {
   val HOST = "http://sdb.amazonaws.com"
 
   private def request(parameters: (String, String)*): WSRequestHolder = {
-    WS.url(HOST).withQueryString(parameters:_*).sign(SimpleDBCalculator)
+    WS.url(HOST).withQueryString(parameters:_*).sign(new SimpleDBCalculator(parameters))
   }
 
   /**
    * Creates a domain with the given name
    */
   def createDomain(domainName: String)(implicit region: SimpleDBRegion): Future[Response] = {
-    // doRequest(host = region.endpoint, params = Map(ACTION -> "CreateDomain", "DomainName" -> domainName))
-    request("Action" -> "createDomain", "DomainName" -> domainName).get()
+    request(Action("CreateDomain"), DomainName(domainName), TimeStamp(new Date)).get()
   }
 /*
   /**
@@ -43,7 +51,7 @@ object SimpleDB {
     val params = Map(ACTION -> "ListDomains", "MaxNmberOfDomains" -> maxNumberOfDomains.toString) ++
       {if(nextToken.isDefined) Map("NextToken" -> nextToken.get) else Map[String, String]()}
       performRequest(host = region.endpoint, params = params)
-    }
+  }
 
 
     /**
@@ -57,10 +65,10 @@ object SimpleDB {
      * Puts the attributes into SimpleDB
      **/
     def putAttributes(domainName: String, itemName: String, attributes: Seq[SimpleDBAttribute])(implicit http: dispatch.Http, region: SimpleDBRegion = US_EAST_1): dispatch.Promise[(Response, Elem)] = {
-        val params: Map[String, String] = Map(ACTION -> "PutAttributes", "ItemName" -> itemName, "DomainName" -> domainName) ++ 
+        val params: Map[String, String] = Map(ACTION -> "PutAttributes", "ItemName" -> itemName, "DomainName" -> domainName) ++
                 (for((attribute, i) <- attributes.zipWithIndex) yield {
                     Map(
-                            "Attribute.%s.Name".format((i + 1).toString) -> attribute.name, 
+                            "Attribute.%s.Name".format((i + 1).toString) -> attribute.name,
                             "Attribute.%s.Value".format((i + 1).toString) -> attribute.value
                             ) ++ {if(attribute.replace.isDefined) Map("Attribute.%s.Replace".format((i + 1).toString) -> attribute.replace.get.toString) else Map[String, String]()}
                 }).foldLeft(Map[String, String]())(_ ++ _)
@@ -69,7 +77,7 @@ object SimpleDB {
 
     /**
      * Deletes an entire item
-     **/ 
+     **/
     def deleteAttributes(domainName: String, itemName: String)(implicit http: dispatch.Http, region: SimpleDBRegion = US_EAST_1): dispatch.Promise[(Response, Elem)] = {
         val params: Map[String, String] = Map(ACTION -> "DeleteAttributes", "ItemName" -> itemName, "DomainName" -> domainName)
                 performRequest(host = region.endpoint, params = params, method = POST)
@@ -79,7 +87,7 @@ object SimpleDB {
      * Gets Attributes from the given domain name
      **/
     def getAttributes(domainName: String, itemName: String, attributeName: Option[String] = None, consistentRead: Option[Boolean] = None)(implicit http: dispatch.Http, region: SimpleDBRegion = US_EAST_1): dispatch.Promise[(Response, Elem)] = {
-        val params: Map[String, String] = Map(ACTION -> "GetAttributes", "DomainName" -> domainName, "ItemName" -> itemName) ++ 
+        val params: Map[String, String] = Map(ACTION -> "GetAttributes", "DomainName" -> domainName, "ItemName" -> itemName) ++
                 {if(attributeName.isDefined) Map("AttributeName" -> attributeName.get) else Map[String, String]()} ++
                 {if(consistentRead.isDefined) Map("ConsistentRead" -> consistentRead.get.toString) else Map[String, String]()}
                 performRequest(host = region.endpoint, params = params)
@@ -87,28 +95,29 @@ object SimpleDB {
 */
 }
 
-object SimpleDBCalculator extends SignatureCalculator {
+class SimpleDBCalculator(params: Seq[(String, String)]) extends SignatureCalculator {
 
   val VERSION = "2009-04-15"
   val SIGVERSION = "2"
   val SIGMETHOD = "HmacSHA1"
 
   override def sign(request: WSRequest) {
-    val toSign = request.method + "\n" +
-               SimpleDB.HOST + "\n" +
-               "/" + "\n" +
-               request.allHeaders.toSeq.sortBy(_._1).flatMap { header =>
-                 header._2.map { value => (header._1, value) }
-               }.map { header =>
-                 header._1 + "=" + header._2
-               }.mkString("\n")
-    println("String to sign = " + toSign)
-    request.setQueryString(Map("AWSAccessKeyId" -> Seq(AWS.key),
-           "Version" -> Seq(VERSION),
-           "SignatureVersion" -> Seq(SIGVERSION),
-           "SignatureMethod" -> Seq(SIGMETHOD),
-           "Signature" -> Seq(signature(toSign))))
-  }
+
+    import java.net.URLEncoder.encode
+
+    val ps = Seq("AWSAccessKeyId" -> AWS.key,
+      "Version" -> VERSION,
+      "SignatureVersion" -> SIGVERSION,
+      "SignatureMethod" -> SIGMETHOD)
+
+    val queryString = (params ++ ps).sortBy(_._1)
+      .map { p => encode(p._1) + "=" + encode(p._2) }.mkString("&")
+
+    val toSign = "%s\n%s\n%s\n%s".format(request.method, SimpleDB.HOST, "/",queryString)
+    val qs = ps :+ ("Signature" -> signature(toSign))
+
+    request.setQueryString(qs.toMap.mapValues(Seq(_)))
+ }
 
   def signature(data: String) = HmacSha1.calculate(data, AWS.secret)
 

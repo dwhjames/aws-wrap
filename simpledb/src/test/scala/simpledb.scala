@@ -19,7 +19,7 @@ object SimpleDBSpec extends Specification {
     import scala.concurrent.ExecutionContext.Implicits.global
 
     "Create a domain" in {
-      val r = Await.result(SimpleDB.createDomain("testdomain"), Duration(1, SECONDS))
+      val r = Await.result(SimpleDB.createDomain("testdomain"), Duration(30, SECONDS))
       println(r.status)
       println(r.body)
       r.status.shouldEqual(200)
