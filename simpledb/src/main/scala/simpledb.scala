@@ -2,20 +2,21 @@ package aws.simpledb
 
 import java.util.Date
 
-import scala.util.Try
+import scala.util.{Try, Success}
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.ws._
 import aws.core._
 
 case class SimpleDBRegion(region: String, endpoint: String)
-
 case class SimpleDBAttribute(name: String, value: String, replace: Option[Boolean] = None)
 
 object SimpleDB {
 
   object Parameters {
     def DomainName(a: String) = ("DomainName" -> a)
+    def MaxNumberOfDomains(n: Int) = ("MaxNumberOfDomains" -> n.toString)
+    def NextToken(n: String) = ("NextToken" -> n)
   }
 
   object Regions {
@@ -46,12 +47,32 @@ object SimpleDB {
    */
   def createDomain(domainName: String)(implicit region: SimpleDBRegion): Future[Try[Result]] = {
     request(Action("CreateDomain"), DomainName(domainName), Expires(600L)).map { wsresponse =>
-      aws.core.Result.fromWS(wsresponse)
+      aws.core.EmptyResult(wsresponse)
+    }
+  }
+
+  /**
+   * Deletes the given domain
+   **/
+  def deleteDomain(domainName: String)(implicit region: SimpleDBRegion): Future[Try[Result]] = {
+    request(Action("DeleteDomain"), DomainName(domainName), Expires(600L)).map { wsresponse =>
+      aws.core.EmptyResult(wsresponse)
+    }
+  }
+
+  def listDomains(maxNumberOfDomains: Int = 100, nextToken: Option[String] = None)(implicit region: SimpleDBRegion): Future[Try[SimpleResult[Seq[String]]]] = {
+    val params = Seq(
+      Action("ListDomains"),
+      Expires(600L),
+      MaxNumberOfDomains(maxNumberOfDomains)) ++ nextToken.map(NextToken(_)).toSeq
+
+    request(params:_*).map { wsresponse =>
+      SimpleResult(wsresponse.xml, Parsers.domainsParsers)
     }
   }
 
   /*
-  /**
+/**
    * Lists domains starting with the nextToken, if present, and giving the mas number of domains given
    **/
   def listDomains(maxNumberOfDomains: Int = 100, nextToken: Option[String] = None)(implicit region: SimpleDBRegion): Promise[(Response, Elem)] = {
@@ -59,14 +80,6 @@ object SimpleDB {
       {if(nextToken.isDefined) Map("NextToken" -> nextToken.get) else Map[String, String]()}
       performRequest(host = region.endpoint, params = params)
   }
-
-
-    /**
-     * Deletes the given domain
-     **/
-    def deleteDomain(domainName: String)(implicit http: dispatch.Http, region: SimpleDBRegion = US_EAST_1): dispatch.Promise[(Response, Elem)] = {
-        performRequest(host = region.endpoint, params = Map(ACTION -> "DeleteDomain", "DomainName" -> domainName))
-    }
 
     /**
      * Puts the attributes into SimpleDB
