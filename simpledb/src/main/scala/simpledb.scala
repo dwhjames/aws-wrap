@@ -2,9 +2,10 @@ package aws.simpledb
 
 import java.util.Date
 
+import scala.util.Try
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.ws._
-import play.api.libs.ws.WS._
 import aws.core._
 
 case class SimpleDBRegion(region: String, endpoint: String)
@@ -43,9 +44,12 @@ object SimpleDB {
   /**
    * Creates a domain with the given name
    */
-  def createDomain(domainName: String)(implicit region: SimpleDBRegion): Future[Response] = {
-    request(Action("CreateDomain"), DomainName(domainName), Expires(600L))
+  def createDomain(domainName: String)(implicit region: SimpleDBRegion): Future[Try[Result]] = {
+    request(Action("CreateDomain"), DomainName(domainName), Expires(600L)).map { wsresponse =>
+      aws.core.Result.fromWS(wsresponse)
+    }
   }
+
   /*
   /**
    * Lists domains starting with the nextToken, if present, and giving the mas number of domains given

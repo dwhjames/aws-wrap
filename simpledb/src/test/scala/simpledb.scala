@@ -1,5 +1,6 @@
 package aws.simpledb
 
+import scala.util.{Success, Failure}
 import scala.concurrent.Future
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
@@ -20,7 +21,11 @@ object SimpleDBSpec extends Specification {
 
     "Create a domain" in {
       val r = Await.result(SimpleDB.createDomain("testdomain"), Duration(30, SECONDS))
-      r.status.shouldEqual(200)
+      r match {
+        case Success(result) => (result.requestId must not be empty)
+        case Failure(f) => throw f
+      }
     }
   }
+
 }
