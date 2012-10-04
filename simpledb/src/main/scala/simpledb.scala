@@ -103,7 +103,7 @@ class SimpleDBCalculator(params: Seq[(String, String)]) extends SignatureCalcula
 
   override def sign(request: WSRequest) {
 
-    import java.net.URLEncoder.encode
+    import SignerEncoder.encode
 
     val ps = Seq("AWSAccessKeyId" -> AWS.key,
       "Version" -> VERSION,
