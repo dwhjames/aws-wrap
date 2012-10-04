@@ -22,7 +22,7 @@ object SimpleDBSpec extends Specification {
     def checkResult(r: Try[Result]) = r match {
       case Success(result) =>
         result.metadata.requestId must not be empty
-      case Failure(Error(requestId, errors)) => failure(errors.toString)
+      case Failure(Error(SimpleResult(_, errors))) => failure(errors.toString)
       case Failure(t) => failure(t.getMessage)
     }
 

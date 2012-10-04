@@ -23,20 +23,18 @@ object SimpleResult {
     def metadata = Metadata(xml)
     def body = parser(xml)
   })
+
+  def unapply[T](s: SimpleResult[T]): Option[(Metadata, T)] = Some((s.metadata, s.body))
 }
 
 case class EmptyResult(metadata: Metadata) extends Result
 
-case class Error(metadata: Metadata, errors: Seq[(String, String)]) extends Exception with Result
+// Would be nice if Error was Exception and SimpleResult
+case class Error(res: SimpleResult[Seq[(String, String)]]) extends Exception
 
 object EmptyResult {
   def apply(wsresp: WSResponse): Try[EmptyResult] = wsresp.status match {
     case 200 => Success(EmptyResult(Metadata(wsresp.xml)))
-    case _ => {
-      val errors = wsresp.xml \\ "Error" map { node =>
-        (node \ "Code" text) -> (node \ "Message" text)
-      }
-      Failure(Error(Metadata(wsresp.xml), errors))
-    }
+    case _ => SimpleResult(wsresp.xml, Parsers.errorsParser).flatMap(e => Failure(Error(e)))
   }
 }
