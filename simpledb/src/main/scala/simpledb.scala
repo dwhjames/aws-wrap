@@ -2,6 +2,7 @@ package aws.simpledb
 
 import java.util.Date
 
+import scala.annotation.implicitNotFound
 import scala.util.{ Try, Success }
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,6 +26,9 @@ case class SDBDomainMetadata(
   attributeNamesSizeBytes: Long
 )
 
+@implicitNotFound(
+  "You need to import a region to specify which datacenter you want to use. If you don't care, just import aws.simpledb.SDBRegion.DEFAULT"
+)
 object SDBRegion {
   val US_EAST_1 = SDBRegion("US East (Northern Virginia) Region", "sdb.amazonaws.com")
   val US_WEST_1 = SDBRegion("US West (Northern California) Region", "sdb.us-west-1.amazonaws.com")
@@ -65,12 +69,9 @@ object SimpleDB {
 
   import AWS.Parameters._
   import Parameters._
-  import SDBRegion.DEFAULT
 
-  val HOST = "sdb.amazonaws.com"
-
-  private def request(parameters: (String, String)*): Future[Response] = {
-    WS.url("https://" + HOST + "/?" + SimpleDBCalculator.url("GET", parameters)).get()
+  private def request(parameters: (String, String)*)(implicit region: SDBRegion): Future[Response] = {
+    WS.url("https://" + region.endpoint + "/?" + SimpleDBCalculator.url("GET", parameters)).get()
   }
 
   /**
@@ -213,7 +214,7 @@ object SimpleDBCalculator {
   val SIGVERSION = "2"
   val SIGMETHOD = "HmacSHA1"
 
-  def url(method: String, params: Seq[(String, String)]): String = {
+  def url(method: String, params: Seq[(String, String)])(implicit region: SDBRegion): String = {
 
     import AWS.Parameters._
     import aws.core.SignerEncoder.encode
@@ -229,7 +230,7 @@ object SimpleDBCalculator {
     val queryString = (params ++ ps).sortBy(_._1)
       .map { p => encode(p._1) + "=" + encode(p._2) }.mkString("&")
 
-    val toSign = "%s\n%s\n%s\n%s".format(method, SimpleDB.HOST, "/", queryString)
+    val toSign = "%s\n%s\n%s\n%s".format(method, region.endpoint, "/", queryString)
 
     "Signature=" + encode(signature(toSign)) + "&" + queryString
   }
