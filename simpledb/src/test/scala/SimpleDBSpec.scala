@@ -14,7 +14,7 @@ object SimpleDBSpec extends Specification {
   import scala.concurrent.util._
   import java.util.concurrent.TimeUnit._
 
-  implicit val region = SimpleDB.Regions.EU_WEST_1
+  implicit val region = SimpleDBRegion.EU_WEST_1
 
   "SimpleDB API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -27,13 +27,13 @@ object SimpleDBSpec extends Specification {
     }
 
     "Create a domain" in {
-      val r = Await.result(SimpleDB.createDomain("test-domaine-create"), Duration(30, SECONDS))
+      val r = Await.result(SimpleDB.createDomain("test-domain-create"), Duration(30, SECONDS))
       checkResult(r)
     }
 
     "Delete a domain" in {
-      val r = Await.result(SimpleDB.createDomain("test-domaine-delete"), Duration(30, SECONDS))
-        .flatMap(_ => Await.result(SimpleDB.deleteDomain("test-domaine-delete"), Duration(30, SECONDS)))
+      val r = Await.result(SimpleDB.createDomain("test-domain-delete"), Duration(30, SECONDS))
+        .flatMap(_ => Await.result(SimpleDB.deleteDomain("test-domain-delete"), Duration(30, SECONDS)))
       checkResult(r)
     }
 
@@ -44,5 +44,13 @@ object SimpleDBSpec extends Specification {
         domains.body must not be empty
       success
     }
+
+  "Put attributes" in {
+      val r = Await.result(SimpleDB.createDomain("test-put-attributes"), Duration(30, SECONDS))
+        .flatMap(_ => Await.result(SimpleDB.putAttributes("test-put-attributes", "theItem", Seq(SimpleDBAttribute("toto", "tata"))), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.deleteDomain("test-put-attributes"), Duration(30, SECONDS)))
+      checkResult(r)
+  }
+
   }
 }

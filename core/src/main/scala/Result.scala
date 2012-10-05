@@ -1,15 +1,15 @@
 package aws.core
 
-import scala.util.{Try, Success, Failure}
+import scala.util.{ Try, Success, Failure }
 import scala.xml.Elem
-import play.api.libs.ws.{Response => WSResponse}
+import play.api.libs.ws.{ Response => WSResponse }
 
 case class Metadata(requestId: String, boxUsage: String)
 object Metadata {
   def apply(xml: Elem): Metadata = Metadata(xml \\ "RequestId" text, xml \\ "BoxUsage" text)
 }
 
-trait Result{
+trait Result {
   def metadata: Metadata
 }
 
@@ -19,7 +19,7 @@ trait SimpleResult[T] extends Result {
 }
 
 object SimpleResult {
-  def apply[T](xml: Elem, parser: (Elem => T)): Try[SimpleResult[T]] = Success(new SimpleResult[T]{
+  def apply[T](xml: Elem, parser: (Elem => T)): Try[SimpleResult[T]] = Success(new SimpleResult[T] {
     def metadata = Metadata(xml)
     def body = parser(xml)
   })
