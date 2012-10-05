@@ -4,6 +4,8 @@ import scala.util.{ Try, Success, Failure }
 import scala.xml.Elem
 import play.api.libs.ws.{ Response => WSResponse }
 
+import aws.core.parsers._
+
 case class Metadata(requestId: String, boxUsage: String)
 object Metadata {
   def apply(xml: Elem): Metadata = Metadata(xml \\ "RequestId" text, xml \\ "BoxUsage" text)
@@ -30,11 +32,11 @@ object SimpleResult {
 case class EmptyResult(metadata: Metadata) extends Result
 
 // Would be nice if Error was Exception and SimpleResult
-case class Error(res: SimpleResult[Seq[(String, String)]]) extends Exception
+case class Error(res: SimpleResult[Seq[AWSError]]) extends Exception
 
 object EmptyResult {
   def apply(wsresp: WSResponse): Try[EmptyResult] = wsresp.status match {
     case 200 => Success(EmptyResult(Metadata(wsresp.xml)))
-    case _ => SimpleResult(wsresp.xml, Parsers.errorsParser).flatMap(e => Failure(Error(e)))
+    case _ => SimpleResult(wsresp.xml, Parser.of[Seq[AWSError]]).flatMap(e => Failure(Error(e)))
   }
 }

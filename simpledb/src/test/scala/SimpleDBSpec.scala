@@ -14,7 +14,7 @@ object SimpleDBSpec extends Specification {
   import scala.concurrent.util._
   import java.util.concurrent.TimeUnit._
 
-  implicit val region = SimpleDBRegion.EU_WEST_1
+  implicit val region = SDBRegion.EU_WEST_1
 
   "SimpleDB API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -45,12 +45,12 @@ object SimpleDBSpec extends Specification {
       success
     }
 
-  "Put attributes" in {
+    "Put attributes" in {
       val r = Await.result(SimpleDB.createDomain("test-put-attributes"), Duration(30, SECONDS))
-        .flatMap(_ => Await.result(SimpleDB.putAttributes("test-put-attributes", "theItem", Seq(SimpleDBAttribute("toto", "tata"))), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.putAttributes("test-put-attributes", "theItem", Seq(SDBAttribute("toto", "tata"))), Duration(30, SECONDS)))
         .flatMap(_ => Await.result(SimpleDB.deleteDomain("test-put-attributes"), Duration(30, SECONDS)))
       checkResult(r)
-  }
+    }
 
   }
 }

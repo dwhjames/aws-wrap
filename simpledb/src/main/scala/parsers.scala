@@ -1,8 +1,12 @@
 package aws.simpledb
 
-object Parsers {
-  type Domain = String
+import aws.core.parsers._
+
+object SDBParsers {
   import scala.xml.Elem
 
-  def domainsParsers(xml: Elem): Seq[Domain] = (xml \\ "DomainName").map(_.text)
+  implicit def domainsParser = Parser[Seq[SDBDomain]] { xml: Elem =>
+    (xml \\ "DomainName").map(node => SDBDomain(node.text))
+  }
+
 }
