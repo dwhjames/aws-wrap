@@ -34,6 +34,7 @@ case class EmptyResult(metadata: Metadata) extends Result
 // Would be nice if Error was Exception and SimpleResult
 case class Error(res: SimpleResult[Seq[AWSError]]) extends Exception
 
+// TODO: AWS sometimes returns a 200 when there is an error (example: NoSuchDomain error for DomainMetadata)
 object EmptyResult {
   def apply(wsresp: WSResponse): Try[EmptyResult] = wsresp.status match {
     case 200 => Success(EmptyResult(Metadata(wsresp.xml)))

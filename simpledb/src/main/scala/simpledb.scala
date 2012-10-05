@@ -14,6 +14,15 @@ import aws.simpledb.SDBParsers._
 case class SDBRegion(region: String, endpoint: String)
 case class SDBAttribute(name: String, value: String, replace: Option[Boolean] = None)
 case class SDBDomain(name: String)
+case class SDBDomainMetadata(
+  timestamp: Date,
+  itemCount: Long,
+  attributeValueCount: Long,
+  attributeNameCount: Long,
+  itemNamesSizeBytes: Long,
+  attributeValuesSizeBytes: Long,
+  attributeNamesSizeBytes: Long
+)
 
 object SDBRegion {
   val US_EAST_1 = SDBRegion("US East (Northern Virginia) Region", "sdb.amazonaws.com")
@@ -117,9 +126,9 @@ object SimpleDB {
     }
   }
 
-    /**
-     * Gets one or all Attributes from the given domain name and item name
-     */
+  /**
+   * Gets one or all Attributes from the given domain name and item name
+   */
   def getAttributes(domainName: String,
                     itemName: String,
                     attributeName: Option[String] = None,
@@ -133,6 +142,15 @@ object SimpleDB {
 
     request(params: _*).map { wsresponse =>
       SimpleResult(wsresponse.xml, Parser.of[Seq[SDBAttribute]])
+    }
+  }
+
+  /**
+   * Get detailed information about a domain
+   */
+  def domainMetadata(domainName: String)(implicit region: SDBRegion): Future[Try[SimpleResult[SDBDomainMetadata]]] = {
+    request(Action("DomainMetadata"), DomainName(domainName)).map { wsresponse =>
+      SimpleResult(wsresponse.xml, Parser.of[SDBDomainMetadata])
     }
   }
 

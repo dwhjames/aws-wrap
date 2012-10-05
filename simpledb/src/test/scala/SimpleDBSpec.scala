@@ -20,14 +20,14 @@ object SimpleDBSpec extends Specification {
     import scala.concurrent.ExecutionContext.Implicits.global
 
     def checkResult(r: Try[Result]) = r match {
-      case Success(result) =>
-        result.metadata.requestId must not be empty
+      case Success(result) => result.metadata.requestId must not be empty
       case Failure(Error(SimpleResult(_, errors))) => failure(errors.toString)
       case Failure(t) => failure(t.getMessage)
     }
 
     "Create a domain" in {
       val r = Await.result(SimpleDB.createDomain("test-domain-create"), Duration(30, SECONDS))
+        .flatMap(_ => Await.result(SimpleDB.domainMetadata("test-domain-create"), Duration(30, SECONDS)))
       checkResult(r)
     }
 

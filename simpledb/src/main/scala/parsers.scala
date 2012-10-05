@@ -10,10 +10,20 @@ object SDBParsers {
   }
 
   implicit def attributesParser = Parser[Seq[SDBAttribute]] { xml: Elem =>
-    println("Parsing: " + xml)
     (xml \\ "Attribute").map { node =>
       SDBAttribute(node \ "Name" text, node \ "Value" text)
     }
   }
 
+  implicit def domainMetadataParser = Parser[SDBDomainMetadata] { xml: Elem =>
+    SDBDomainMetadata(
+      new java.util.Date((xml \\ "Timestamp" text).toLong * 1000),
+      (xml \\ "ItemCount").text.toLong,
+      (xml \\ "AttributeValueCount").text.toLong,
+      (xml \\ "AttributeNameCount").text.toLong,
+      (xml \\ "ItemNamesSizeBytes").text.toLong,
+      (xml \\ "AttributeValuesSizeBytes").text.toLong,
+      (xml \\ "AttributeNamesSizeBytes").text.toLong
+    )
+  }
 }
