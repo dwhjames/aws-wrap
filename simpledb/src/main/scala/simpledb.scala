@@ -122,14 +122,14 @@ object SimpleDB {
   }
 
   /**
-   * Delete an entire item
+   * Delete all or some attributes for an item. To delete the whole item, pass its name with an empty attribute list.
    */
-  def deleteAttributes(domainName: String, itemName: String)(implicit region: SDBRegion): Future[Try[EmptyResult]] = {
+  def deleteAttributes(domainName: String, item: SDBItem)(implicit region: SDBRegion): Future[Try[EmptyResult]] = {
     val params = Seq(
       Action("DeleteAttributes"),
       DomainName(domainName),
-      ItemName(itemName)
-    )
+      ItemName(item.name)
+    ) ++ Attributes(item.attributes)
 
     request(params: _*).map { wsresponse =>
       aws.core.EmptyResult(wsresponse)
