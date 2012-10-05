@@ -3,9 +3,16 @@ import sbt._
 import sbt.Default._
 import sbt.Keys._
 
+import scalariform.formatter.preferences._
+import com.typesafe.sbtscalariform.ScalariformPlugin._
+
 object ApplicationBuild extends Build {
 
-    lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ Seq(
+    lazy val projectScalariformSettings = defaultScalariformSettings ++ Seq(
+        ScalariformKeys.preferences := FormattingPreferences().setPreference(AlignParameters, true)
+    )
+
+    lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ projectScalariformSettings ++ Seq(
         organization := "pellucid",
         scalaVersion := "2.9.2",
         version := "0.1-SNAPSHOT",

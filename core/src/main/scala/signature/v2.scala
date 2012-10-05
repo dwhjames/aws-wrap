@@ -18,13 +18,12 @@ object V2 {
       AWSAccessKeyId(AWS.key),
       Version(VERSION),
       SignatureVersion(SIGVERSION),
-      SignatureMethod(SIGMETHOD)
-    )
+      SignatureMethod(SIGMETHOD))
 
     val queryString = (params ++ ps).sortBy(_._1)
       .map { p => encode(p._1) + "=" + encode(p._2) }.mkString("&")
 
-    val toSign = "%s\n%s\n%s\n%s".format(method, region.host , "/", queryString)
+    val toSign = "%s\n%s\n%s\n%s".format(method, region.host, "/", queryString)
 
     "Signature=" + encode(signature(toSign)) + "&" + queryString
   }

@@ -24,15 +24,13 @@ object DynamoDB {
       "host" -> region.host,
       "x-amz-date" -> (new java.util.Date()).toString,
       "x-amz-target" -> ("DynamoDB_" + VERSION + "." + operation),
-      "Authorization" -> "TODO"
-    ).post(body)
+      "Authorization" -> "TODO").post(body)
   }
 
   def listTables(limit: Option[Int] = None, exclusiveStartTableName: Option[String] = None) = {
     val data = (
       limit.map("Limit" -> Json.toJson(_))
-      ++ exclusiveStartTableName.map("ExclusiveStartTableName" -> Json.toJson(_))
-    ).toMap
+      ++ exclusiveStartTableName.map("ExclusiveStartTableName" -> Json.toJson(_))).toMap
     request("ListTables", Json.toJson(data))
   }
 
@@ -40,10 +38,10 @@ object DynamoDB {
 
   // This is known as "Signature v4" by Amazon, and could go to core
   private def signature(service: String)(implicit region: AWSRegion) = {
-    val stringToSign =  ALGO + '\n' +
+    val stringToSign = ALGO + '\n' +
       AWS.isoBasicFormat(new java.util.Date()) + '\n' +
       (VERSION + "/" + region.subdomain + "/" + service + "/aws4_request") + '\n' // +
-      // HexEncode(Hash(CanonicalRequest))
+    // HexEncode(Hash(CanonicalRequest))
   }
 
 }

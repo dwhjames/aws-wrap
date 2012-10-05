@@ -23,8 +23,7 @@ case class SDBDomainMetadata(
   attributeNameCount: Long,
   itemNamesSizeBytes: Long,
   attributeValuesSizeBytes: Long,
-  attributeNamesSizeBytes: Long
-)
+  attributeNamesSizeBytes: Long)
 
 object SDBRegion {
 
@@ -53,8 +52,7 @@ object SimpleDB {
     def Attributes(attrs: Seq[SDBAttribute]): Seq[(String, String)] = (for ((attribute, i) <- attrs.zipWithIndex) yield {
       Seq(
         "Attribute.%d.Name".format(i + 1) -> attribute.name,
-        "Attribute.%d.Value".format(i + 1) -> attribute.value
-      ) ++ {
+        "Attribute.%d.Value".format(i + 1) -> attribute.value) ++ {
           if (attribute.replace.isDefined) Seq("Attribute.%s.Replace".format((i + 1).toString) -> attribute.replace.get.toString) else Nil
         }
     }).flatten
@@ -114,8 +112,7 @@ object SimpleDB {
     val params = Seq(
       Action("PutAttributes"),
       DomainName(domainName),
-      ItemName(itemName)
-    ) ++ Attributes(attributes)
+      ItemName(itemName)) ++ Attributes(attributes)
 
     request(params: _*).map { wsresponse =>
       aws.core.EmptyResult(wsresponse)
@@ -129,8 +126,7 @@ object SimpleDB {
     val params = Seq(
       Action("DeleteAttributes"),
       DomainName(domainName),
-      ItemName(item.name)
-    ) ++ Attributes(item.attributes)
+      ItemName(item.name)) ++ Attributes(item.attributes)
 
     request(params: _*).map { wsresponse =>
       aws.core.EmptyResult(wsresponse)
@@ -148,8 +144,7 @@ object SimpleDB {
       Action("GetAttributes"),
       DomainName(domainName),
       ItemName(itemName),
-      ConsistentRead(consistentRead)
-    ) ++ attributeName.map(AttributeName(_)).toSeq
+      ConsistentRead(consistentRead)) ++ attributeName.map(AttributeName(_)).toSeq
 
     request(params: _*).map { wsresponse =>
       SimpleResult(wsresponse.xml, Parser.of[Seq[SDBAttribute]])
@@ -172,8 +167,7 @@ object SimpleDB {
     val params = Seq(
       Action("Select"),
       SelectExpression(expression),
-      ConsistentRead(consistentRead)
-    ) ++ nextToken.map(NextToken(_)).toSeq
+      ConsistentRead(consistentRead)) ++ nextToken.map(NextToken(_)).toSeq
 
     request(params: _*).map { wsresponse =>
       SimpleResult(wsresponse.xml, Parser.of[Seq[SDBItem]])
@@ -186,8 +180,7 @@ object SimpleDB {
   def batchPutAttributes(domainName: String, items: Seq[SDBItem])(implicit region: AWSRegion): Future[Try[Result]] = {
     val params = Seq(
       Action("BatchPutAttributes"),
-      DomainName(domainName)
-    ) ++ Items(items)
+      DomainName(domainName)) ++ Items(items)
     request(params: _*).map { wsresponse =>
       aws.core.EmptyResult(wsresponse)
     }
@@ -199,8 +192,7 @@ object SimpleDB {
   def batchDeleteAttributes(domainName: String, items: Seq[SDBItem])(implicit region: AWSRegion): Future[Try[Result]] = {
     val params = Seq(
       Action("BatchDeleteAttributes"),
-      DomainName(domainName)
-    ) ++ Items(items)
+      DomainName(domainName)) ++ Items(items)
     request(params: _*).map { wsresponse =>
       aws.core.EmptyResult(wsresponse)
     }
