@@ -85,6 +85,40 @@ object SimpleDBSpec extends Specification {
       checkResult(d)
     }
 
+    "Batch operations" in {
+      val color = SDBAttribute("color", "green")
+      val foobar = SDBItem("foobar", Seq(color))
+      val r = Await.result(SimpleDB.createDomain("test-batch"), Duration(30, SECONDS))
+        .flatMap(_ => Await.result(SimpleDB.batchPutAttributes("test-batch", Seq(foobar)), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.select("select * from `test-batch`", None, true), Duration(30, SECONDS)))
+      r match {
+        case Success(result) if result.body.exists(item => item.name == "foobar" && item.attributes.contains(color)) =>
+          success
+        case Success(result) =>
+          failure("Could not find inserted attribute in " + result.body)
+        case Failure(Error(SimpleResult(_, errors))) =>
+          failure(errors.toString)
+        case Failure(t) =>
+          failure(t.getMessage)
+      }
+
+      val r2 = Await.result(SimpleDB.batchDeleteAttributes("test-batch", Seq(foobar)), Duration(30, SECONDS))
+        .flatMap(_ => Await.result(SimpleDB.select("select * from `test-batch`", None, true), Duration(30, SECONDS)))
+      r2 match {
+        case Success(result) if result.body.exists(item => item.name == "foobar" && item.attributes.contains(color)) =>
+          failure("Batch deletion failed: " + result.body)
+        case Success(result) =>
+          success
+        case Failure(Error(SimpleResult(_, errors))) =>
+          failure(errors.toString)
+        case Failure(t) =>
+          failure(t.getMessage)
+      }
+
+      val d = Await.result(SimpleDB.deleteDomain("test-batch"), Duration(30, SECONDS))
+      checkResult(d)
+    }
+
 
   }
 }

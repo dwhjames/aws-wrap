@@ -48,11 +48,17 @@ object SimpleDB {
     def AttributeName(n: String) = ("AttributeName" -> n)
     def Attributes(attrs: Seq[SDBAttribute]): Seq[(String, String)] = (for ((attribute, i) <- attrs.zipWithIndex) yield {
       Seq(
-        "Attribute.%s.Name".format((i + 1).toString) -> attribute.name,
-        "Attribute.%s.Value".format((i + 1).toString) -> attribute.value
+        "Attribute.%d.Name".format(i + 1) -> attribute.name,
+        "Attribute.%d.Value".format(i + 1) -> attribute.value
       ) ++ {
           if (attribute.replace.isDefined) Seq("Attribute.%s.Replace".format((i + 1).toString) -> attribute.replace.get.toString) else Nil
         }
+    }).flatten
+    def Items(items: Seq[SDBItem]): Seq[(String, String)] = (for ((item, i) <- items.zipWithIndex) yield {
+      val prefix = "Item.%d.".format(i + 1)
+      (prefix + "ItemName" -> item.name) +: Attributes(item.attributes).map { attr =>
+        (prefix + attr._1 -> attr._2)
+      }
     }).flatten
     def SelectExpression(expression: String) = ("SelectExpression" -> expression)
   }
@@ -101,7 +107,9 @@ object SimpleDB {
   /**
    * Puts the attributes into SimpleDB
    */
-  def putAttributes(domainName: String, itemName: String, attributes: Seq[SDBAttribute])(implicit region: SDBRegion): Future[Try[EmptyResult]] = {
+  def putAttributes(domainName: String,
+                    itemName: String,
+                    attributes: Seq[SDBAttribute])(implicit region: SDBRegion): Future[Try[EmptyResult]] = {
     val params = Seq(
       Action("PutAttributes"),
       DomainName(domainName),
@@ -169,7 +177,32 @@ object SimpleDB {
     request(params: _*).map { wsresponse =>
       SimpleResult(wsresponse.xml, Parser.of[Seq[SDBItem]])
     }
+  }
 
+  /**
+   * Put attributes for more than one item
+   */
+  def batchPutAttributes(domainName: String, items: Seq[SDBItem])(implicit region: SDBRegion): Future[Try[Result]] = {
+    val params = Seq(
+      Action("BatchPutAttributes"),
+      DomainName(domainName)
+    ) ++ Items(items)
+    request(params: _*).map { wsresponse =>
+      aws.core.EmptyResult(wsresponse)
+    }
+  }
+
+  /**
+   * Delete attributes for more than one item
+   */
+  def batchDeleteAttributes(domainName: String, items: Seq[SDBItem])(implicit region: SDBRegion): Future[Try[Result]] = {
+    val params = Seq(
+      Action("BatchDeleteAttributes"),
+      DomainName(domainName)
+    ) ++ Items(items)
+    request(params: _*).map { wsresponse =>
+      aws.core.EmptyResult(wsresponse)
+    }
   }
 
 }
