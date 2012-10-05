@@ -69,6 +69,22 @@ object SimpleDBSpec extends Specification {
       checkResult(r)
     }
 
+    "Select attributes" in {
+      val toto = SDBAttribute("toto", "tata")
+      val r = Await.result(SimpleDB.createDomain("test-select-attributes"), Duration(30, SECONDS))
+        .flatMap(_ => Await.result(SimpleDB.putAttributes("test-select-attributes", "theItem", Seq(toto)), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.select("select * from `test-select-attributes`", None, true), Duration(30, SECONDS)))
+      r match {
+        case Success(result) if result.body.exists(item => item.name == "theItem" && item.attributes.contains(toto)) => success
+        case Success(result) => failure("Could not find inserted attribute in " + result.body)
+        case Failure(Error(SimpleResult(_, errors))) => failure(errors.toString)
+        case Failure(t) => failure(t.getMessage)
+      }
+
+      val d = Await.result(SimpleDB.deleteDomain("test-select-attributes"), Duration(30, SECONDS))
+      checkResult(d)
+    }
+
 
   }
 }

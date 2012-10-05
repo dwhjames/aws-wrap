@@ -13,6 +13,7 @@ import aws.simpledb.SDBParsers._
 
 case class SDBRegion(region: String, endpoint: String)
 case class SDBAttribute(name: String, value: String, replace: Option[Boolean] = None)
+case class SDBItem(name: String, attributes: Seq[SDBAttribute])
 case class SDBDomain(name: String)
 case class SDBDomainMetadata(
   timestamp: Date,
@@ -53,6 +54,7 @@ object SimpleDB {
           if (attribute.replace.isDefined) Seq("Attribute.%s.Replace".format((i + 1).toString) -> attribute.replace.get.toString) else Nil
         }
     }).flatten
+    def SelectExpression(expression: String) = ("SelectExpression" -> expression)
   }
 
   import AWS.Parameters._
@@ -152,6 +154,22 @@ object SimpleDB {
     request(Action("DomainMetadata"), DomainName(domainName)).map { wsresponse =>
       SimpleResult(wsresponse.xml, Parser.of[SDBDomainMetadata])
     }
+  }
+
+  /**
+   * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
+   */
+  def select(expression: String, nextToken: Option[String] = None, consistentRead: Boolean = false)(implicit region: SDBRegion): Future[Try[SimpleResult[Seq[SDBItem]]]] = {
+    val params = Seq(
+      Action("Select"),
+      SelectExpression(expression),
+      ConsistentRead(consistentRead)
+    ) ++ nextToken.map(NextToken(_)).toSeq
+
+    request(params: _*).map { wsresponse =>
+      SimpleResult(wsresponse.xml, Parser.of[Seq[SDBItem]])
+    }
+
   }
 
 }

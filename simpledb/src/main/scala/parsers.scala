@@ -26,4 +26,16 @@ object SDBParsers {
       (xml \\ "AttributeNamesSizeBytes").text.toLong
     )
   }
+
+  implicit def itemParser = Parser[Seq[SDBItem]] { xml: Elem =>
+    (xml \\ "Item").map { node =>
+      SDBItem(
+        node \ "Name" text,
+        node \ "Attribute" map { attrNode =>
+          SDBAttribute(attrNode \ "Name" text, attrNode \ "Value" text)
+        }
+      )
+    }
+  }
+
 }
