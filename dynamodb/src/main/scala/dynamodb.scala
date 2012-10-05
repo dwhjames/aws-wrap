@@ -2,7 +2,6 @@ package aws.dynamodb
 
 import scala.concurrent.Future
 
-import play.api.http._
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
 import play.api.libs.json._
@@ -13,10 +12,6 @@ object DynamoDB {
 
   import DDBRegion.DEFAULT
 
-  implicit def contentTypeOf_JsValue: ContentTypeOf[JsValue] = {
-    ContentTypeOf[JsValue](Some("application/x-amz-json-1.0"))
-  }
-
   val VERSION = "20111205"
 
   private def request(operation: String, body: JsValue)(implicit region: AWSRegion): Future[Response] = {
@@ -24,7 +19,8 @@ object DynamoDB {
       "host" -> region.host,
       "x-amz-date" -> (new java.util.Date()).toString,
       "x-amz-target" -> ("DynamoDB_" + VERSION + "." + operation),
-      "Authorization" -> "TODO").post(body)
+      "Content-Type" -> "application/x-amz-json-1.0",
+      "Authorization" -> "TODO").post(body.toString)
   }
 
   def listTables(limit: Option[Int] = None, exclusiveStartTableName: Option[String] = None) = {
