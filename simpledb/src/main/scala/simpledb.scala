@@ -12,7 +12,6 @@ import aws.core._
 import aws.core.parsers._
 import aws.simpledb.SDBParsers._
 
-case class SDBRegion(region: String, endpoint: String)
 case class SDBAttribute(name: String, value: String, replace: Option[Boolean] = None)
 case class SDBItem(name: String, attributes: Seq[SDBAttribute])
 case class SDBDomain(name: String)
@@ -26,19 +25,22 @@ case class SDBDomainMetadata(
   attributeNamesSizeBytes: Long
 )
 
+case class SDBRegion(name: String, host: String)
 @implicitNotFound(
   "You need to import a region to specify which datacenter you want to use. If you don't care, just import aws.simpledb.SDBRegion.DEFAULT"
 )
 object SDBRegion {
-  val US_EAST_1 = SDBRegion("US East (Northern Virginia) Region", "sdb.amazonaws.com")
-  val US_WEST_1 = SDBRegion("US West (Northern California) Region", "sdb.us-west-1.amazonaws.com")
-  val US_WEST_2 = SDBRegion("US West (Oregon) Region", "sdb.us-west-2.amazonaws.com")
-  val EU_WEST_1 = SDBRegion("EU (Ireland) Region", "sdb.eu-west-1.amazonaws.com")
-  val ASIA_SOUTHEAST_1 = SDBRegion("Asia Pacific (Singapore) Region", "sdb.ap-southeast-1.amazonaws.com")
-  val ASIA_NORTHEAST_1 = SDBRegion("Asia Pacific (Tokyo) Region", "sdb.ap-northeast-1.amazonaws.com")
-  val SA_EAST_1 = SDBRegion("South America (Sao Paulo) Region", "sdb.sa-east-1.amazonaws.com")
+  def apply(region: Region) = new SDBRegion(region.name, "sdb." + region.host)
 
-  implicit val DEFAULT = US_EAST_1
+  implicit val DEFAULT = SDBRegion(Region.DEFAULT)
+  val US_EAST_1 = SDBRegion(Region.US_EAST_1)
+  val US_WEST_1 = SDBRegion(Region.US_WEST_1)
+  val US_WEST_2 = SDBRegion(Region.US_WEST_2)
+  val EU_WEST_1 = SDBRegion(Region.EU_WEST_1)
+  val ASIA_SOUTHEAST_1 = SDBRegion(Region.ASIA_SOUTHEAST_1)
+  val ASIA_NORTHEAST_1 = SDBRegion(Region.ASIA_NORTHEAST_1)
+  val SA_EAST_1 = SDBRegion(Region.SA_EAST_1)
+
 }
 
 object SimpleDB {
@@ -71,7 +73,7 @@ object SimpleDB {
   import Parameters._
 
   private def request(parameters: (String, String)*)(implicit region: SDBRegion): Future[Response] = {
-    WS.url("https://" + region.endpoint + "/?" + SimpleDBCalculator.url("GET", parameters)).get()
+    WS.url("https://" + region.host + "/?" + SimpleDBCalculator.url("GET", parameters)).get()
   }
 
   /**
@@ -230,7 +232,7 @@ object SimpleDBCalculator {
     val queryString = (params ++ ps).sortBy(_._1)
       .map { p => encode(p._1) + "=" + encode(p._2) }.mkString("&")
 
-    val toSign = "%s\n%s\n%s\n%s".format(method, region.endpoint, "/", queryString)
+    val toSign = "%s\n%s\n%s\n%s".format(method, region.host , "/", queryString)
 
     "Signature=" + encode(signature(toSign)) + "&" + queryString
   }
