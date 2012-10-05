@@ -9,4 +9,11 @@ object SDBParsers {
     (xml \\ "DomainName").map(node => SDBDomain(node.text))
   }
 
+  implicit def attributesParser = Parser[Seq[SDBAttribute]] { xml: Elem =>
+    println("Parsing: " + xml)
+    (xml \\ "Attribute").map { node =>
+      SDBAttribute(node \ "Name" text, node \ "Value" text)
+    }
+  }
+
 }

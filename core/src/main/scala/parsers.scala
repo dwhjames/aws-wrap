@@ -1,7 +1,11 @@
 package aws.core.parsers
 
+import scala.annotation.implicitNotFound
 import scala.xml.Elem
 
+@implicitNotFound(
+  "No parser found for type ${T}. Try to implement an implicit aws.core.parsers.Parser for this type."
+)
 trait Parser[T] extends (Elem => T)
 
 case class AWSError(code: String, message: String)

@@ -46,11 +46,29 @@ object SimpleDBSpec extends Specification {
     }
 
     "Put attributes" in {
+      val toto = SDBAttribute("toto", "tata")
       val r = Await.result(SimpleDB.createDomain("test-put-attributes"), Duration(30, SECONDS))
-        .flatMap(_ => Await.result(SimpleDB.putAttributes("test-put-attributes", "theItem", Seq(SDBAttribute("toto", "tata"))), Duration(30, SECONDS)))
-        .flatMap(_ => Await.result(SimpleDB.deleteDomain("test-put-attributes"), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.putAttributes("test-put-attributes", "theItem", Seq(toto)), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.getAttributes("test-put-attributes", "theItem", None, true), Duration(30, SECONDS)))
+      r match {
+        case Success(result) if result.body.contains(toto) => success
+        case Success(result) => failure("Could not find inserted attribute in " + result.body)
+        case Failure(Error(SimpleResult(_, errors))) => failure(errors.toString)
+        case Failure(t) => failure(t.getMessage)
+      }
+
+      val d = Await.result(SimpleDB.deleteDomain("test-put-attributes"), Duration(30, SECONDS))
+      checkResult(d)
+    }
+
+    "Delete attributes" in {
+      val r = Await.result(SimpleDB.createDomain("test-delete-attributes"), Duration(30, SECONDS))
+        .flatMap(_ => Await.result(SimpleDB.putAttributes("test-delete-attributes", "theItem", Seq(SDBAttribute("toto", "tata"))), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.deleteAttributes("test-delete-attributes", "theItem"), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.deleteDomain("test-delete-attributes"), Duration(30, SECONDS)))
       checkResult(r)
     }
+
 
   }
 }

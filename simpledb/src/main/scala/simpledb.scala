@@ -34,6 +34,8 @@ object SimpleDB {
     def ItemName(a: String) = ("ItemName" -> a)
     def MaxNumberOfDomains(n: Int) = ("MaxNumberOfDomains" -> n.toString)
     def NextToken(n: String) = ("NextToken" -> n)
+    def ConsistentRead(c: Boolean) = ("ConsistentRead" -> (if (c) "true" else "false"))
+    def AttributeName(n: String) = ("AttributeName" -> n)
     def Attributes(attrs: Seq[SDBAttribute]): Seq[(String, String)] = (for ((attribute, i) <- attrs.zipWithIndex) yield {
       Seq(
         "Attribute.%s.Name".format((i + 1).toString) -> attribute.name,
@@ -90,7 +92,7 @@ object SimpleDB {
    */
   def putAttributes(domainName: String, itemName: String, attributes: Seq[SDBAttribute])(implicit region: SDBRegion): Future[Try[EmptyResult]] = {
     val params = Seq(
-      Action("ListDomains"),
+      Action("PutAttributes"),
       DomainName(domainName),
       ItemName(itemName)
     ) ++ Attributes(attributes)
@@ -99,25 +101,41 @@ object SimpleDB {
       aws.core.EmptyResult(wsresponse)
     }
   }
-  /*
-    /**
-     * Deletes an entire item
-     **/
-    def deleteAttributes(domainName: String, itemName: String)(implicit http: dispatch.Http, region: SimpleDBRegion = US_EAST_1): dispatch.Promise[(Response, Elem)] = {
-        val params: Map[String, String] = Map(ACTION -> "DeleteAttributes", "ItemName" -> itemName, "DomainName" -> domainName)
-                performRequest(host = region.endpoint, params = params, method = POST)
+
+  /**
+   * Delete an entire item
+   */
+  def deleteAttributes(domainName: String, itemName: String)(implicit region: SDBRegion): Future[Try[EmptyResult]] = {
+    val params = Seq(
+      Action("DeleteAttributes"),
+      DomainName(domainName),
+      ItemName(itemName)
+    )
+
+    request(params: _*).map { wsresponse =>
+      aws.core.EmptyResult(wsresponse)
     }
+  }
 
     /**
-     * Gets Attributes from the given domain name
-     **/
-    def getAttributes(domainName: String, itemName: String, attributeName: Option[String] = None, consistentRead: Option[Boolean] = None)(implicit http: dispatch.Http, region: SimpleDBRegion = US_EAST_1): dispatch.Promise[(Response, Elem)] = {
-        val params: Map[String, String] = Map(ACTION -> "GetAttributes", "DomainName" -> domainName, "ItemName" -> itemName) ++
-                {if(attributeName.isDefined) Map("AttributeName" -> attributeName.get) else Map[String, String]()} ++
-                {if(consistentRead.isDefined) Map("ConsistentRead" -> consistentRead.get.toString) else Map[String, String]()}
-                performRequest(host = region.endpoint, params = params)
+     * Gets one or all Attributes from the given domain name and item name
+     */
+  def getAttributes(domainName: String,
+                    itemName: String,
+                    attributeName: Option[String] = None,
+                    consistentRead: Boolean = false)(implicit region: SDBRegion): Future[Try[SimpleResult[Seq[SDBAttribute]]]] = {
+    val params = Seq(
+      Action("GetAttributes"),
+      DomainName(domainName),
+      ItemName(itemName),
+      ConsistentRead(consistentRead)
+    ) ++ attributeName.map(AttributeName(_)).toSeq
+
+    request(params: _*).map { wsresponse =>
+      SimpleResult(wsresponse.xml, Parser.of[Seq[SDBAttribute]])
     }
-*/
+  }
+
 }
 
 object SimpleDBCalculator {
