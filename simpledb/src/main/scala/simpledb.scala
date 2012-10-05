@@ -10,6 +10,7 @@ import play.api.libs.ws._
 
 import aws.core._
 import aws.core.parsers._
+import aws.core.signature.V2
 import aws.simpledb.SDBParsers._
 
 case class SDBAttribute(name: String, value: String, replace: Option[Boolean] = None)
@@ -25,22 +26,19 @@ case class SDBDomainMetadata(
   attributeNamesSizeBytes: Long
 )
 
-case class SDBRegion(name: String, host: String)
-@implicitNotFound(
-  "You need to import a region to specify which datacenter you want to use. If you don't care, just import aws.simpledb.SDBRegion.DEFAULT"
-)
 object SDBRegion {
-  def apply(region: Region) = new SDBRegion(region.name, "sdb." + region.host)
 
-  implicit val DEFAULT = SDBRegion(Region.DEFAULT)
-  val US_EAST_1 = SDBRegion(Region.US_EAST_1)
-  val US_WEST_1 = SDBRegion(Region.US_WEST_1)
-  val US_WEST_2 = SDBRegion(Region.US_WEST_2)
-  val EU_WEST_1 = SDBRegion(Region.EU_WEST_1)
-  val ASIA_SOUTHEAST_1 = SDBRegion(Region.ASIA_SOUTHEAST_1)
-  val ASIA_NORTHEAST_1 = SDBRegion(Region.ASIA_NORTHEAST_1)
-  val SA_EAST_1 = SDBRegion(Region.SA_EAST_1)
+  val NAME = "sdb"
 
+  val US_EAST_1 = AWSRegion.US_EAST_1(NAME)
+  val US_WEST_1 = AWSRegion.US_WEST_1(NAME)
+  val US_WEST_2 = AWSRegion.US_WEST_2(NAME)
+  val EU_WEST_1 = AWSRegion.EU_WEST_1(NAME)
+  val ASIA_SOUTHEAST_1 = AWSRegion.ASIA_SOUTHEAST_1(NAME)
+  val ASIA_NORTHEAST_1 = AWSRegion.ASIA_NORTHEAST_1(NAME)
+  val SA_EAST_1 = AWSRegion.SA_EAST_1(NAME)
+
+  implicit val DEFAULT = US_EAST_1
 }
 
 object SimpleDB {
@@ -72,14 +70,14 @@ object SimpleDB {
   import AWS.Parameters._
   import Parameters._
 
-  private def request(parameters: (String, String)*)(implicit region: SDBRegion): Future[Response] = {
-    WS.url("https://" + region.host + "/?" + SimpleDBCalculator.url("GET", parameters)).get()
+  private def request(parameters: (String, String)*)(implicit region: AWSRegion): Future[Response] = {
+    WS.url("https://" + region.host + "/?" + V2.signedUrl("GET", parameters)).get()
   }
 
   /**
    * Creates a domain with the given name
    */
-  def createDomain(domainName: String)(implicit region: SDBRegion): Future[Try[Result]] = {
+  def createDomain(domainName: String)(implicit region: AWSRegion): Future[Try[Result]] = {
     request(Action("CreateDomain"), DomainName(domainName)).map { wsresponse =>
       aws.core.EmptyResult(wsresponse)
     }
@@ -88,7 +86,7 @@ object SimpleDB {
   /**
    * Deletes the given domain
    */
-  def deleteDomain(domainName: String)(implicit region: SDBRegion): Future[Try[Result]] = {
+  def deleteDomain(domainName: String)(implicit region: AWSRegion): Future[Try[Result]] = {
     request(Action("DeleteDomain"), DomainName(domainName)).map { wsresponse =>
       aws.core.EmptyResult(wsresponse)
     }
@@ -97,7 +95,7 @@ object SimpleDB {
   /**
    * Lists domains starting with the nextToken, if present, and giving the max number of domains given
    */
-  def listDomains(maxNumberOfDomains: Int = 100, nextToken: Option[String] = None)(implicit region: SDBRegion): Future[Try[SimpleResult[Seq[SDBDomain]]]] = {
+  def listDomains(maxNumberOfDomains: Int = 100, nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Try[SimpleResult[Seq[SDBDomain]]]] = {
     val params = Seq(
       Action("ListDomains"),
       MaxNumberOfDomains(maxNumberOfDomains)) ++ nextToken.map(NextToken(_)).toSeq
@@ -112,7 +110,7 @@ object SimpleDB {
    */
   def putAttributes(domainName: String,
                     itemName: String,
-                    attributes: Seq[SDBAttribute])(implicit region: SDBRegion): Future[Try[EmptyResult]] = {
+                    attributes: Seq[SDBAttribute])(implicit region: AWSRegion): Future[Try[EmptyResult]] = {
     val params = Seq(
       Action("PutAttributes"),
       DomainName(domainName),
@@ -127,7 +125,7 @@ object SimpleDB {
   /**
    * Delete all or some attributes for an item. To delete the whole item, pass its name with an empty attribute list.
    */
-  def deleteAttributes(domainName: String, item: SDBItem)(implicit region: SDBRegion): Future[Try[EmptyResult]] = {
+  def deleteAttributes(domainName: String, item: SDBItem)(implicit region: AWSRegion): Future[Try[EmptyResult]] = {
     val params = Seq(
       Action("DeleteAttributes"),
       DomainName(domainName),
@@ -145,7 +143,7 @@ object SimpleDB {
   def getAttributes(domainName: String,
                     itemName: String,
                     attributeName: Option[String] = None,
-                    consistentRead: Boolean = false)(implicit region: SDBRegion): Future[Try[SimpleResult[Seq[SDBAttribute]]]] = {
+                    consistentRead: Boolean = false)(implicit region: AWSRegion): Future[Try[SimpleResult[Seq[SDBAttribute]]]] = {
     val params = Seq(
       Action("GetAttributes"),
       DomainName(domainName),
@@ -161,7 +159,7 @@ object SimpleDB {
   /**
    * Get detailed information about a domain
    */
-  def domainMetadata(domainName: String)(implicit region: SDBRegion): Future[Try[SimpleResult[SDBDomainMetadata]]] = {
+  def domainMetadata(domainName: String)(implicit region: AWSRegion): Future[Try[SimpleResult[SDBDomainMetadata]]] = {
     request(Action("DomainMetadata"), DomainName(domainName)).map { wsresponse =>
       SimpleResult(wsresponse.xml, Parser.of[SDBDomainMetadata])
     }
@@ -170,7 +168,7 @@ object SimpleDB {
   /**
    * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
    */
-  def select(expression: String, nextToken: Option[String] = None, consistentRead: Boolean = false)(implicit region: SDBRegion): Future[Try[SimpleResult[Seq[SDBItem]]]] = {
+  def select(expression: String, nextToken: Option[String] = None, consistentRead: Boolean = false)(implicit region: AWSRegion): Future[Try[SimpleResult[Seq[SDBItem]]]] = {
     val params = Seq(
       Action("Select"),
       SelectExpression(expression),
@@ -185,7 +183,7 @@ object SimpleDB {
   /**
    * Put attributes for more than one item
    */
-  def batchPutAttributes(domainName: String, items: Seq[SDBItem])(implicit region: SDBRegion): Future[Try[Result]] = {
+  def batchPutAttributes(domainName: String, items: Seq[SDBItem])(implicit region: AWSRegion): Future[Try[Result]] = {
     val params = Seq(
       Action("BatchPutAttributes"),
       DomainName(domainName)
@@ -198,7 +196,7 @@ object SimpleDB {
   /**
    * Delete attributes for more than one item
    */
-  def batchDeleteAttributes(domainName: String, items: Seq[SDBItem])(implicit region: SDBRegion): Future[Try[Result]] = {
+  def batchDeleteAttributes(domainName: String, items: Seq[SDBItem])(implicit region: AWSRegion): Future[Try[Result]] = {
     val params = Seq(
       Action("BatchDeleteAttributes"),
       DomainName(domainName)
@@ -210,33 +208,3 @@ object SimpleDB {
 
 }
 
-object SimpleDBCalculator {
-
-  val VERSION = "2009-04-15"
-  val SIGVERSION = "2"
-  val SIGMETHOD = "HmacSHA1"
-
-  def url(method: String, params: Seq[(String, String)])(implicit region: SDBRegion): String = {
-
-    import AWS.Parameters._
-    import aws.core.SignerEncoder.encode
-
-    val ps = Seq(
-      Expires(600L),
-      AWSAccessKeyId(AWS.key),
-      Version(VERSION),
-      SignatureVersion(SIGVERSION),
-      SignatureMethod(SIGMETHOD)
-    )
-
-    val queryString = (params ++ ps).sortBy(_._1)
-      .map { p => encode(p._1) + "=" + encode(p._2) }.mkString("&")
-
-    val toSign = "%s\n%s\n%s\n%s".format(method, region.host , "/", queryString)
-
-    "Signature=" + encode(signature(toSign)) + "&" + queryString
-  }
-
-  def signature(data: String) = HmacSha1.calculate(data, AWS.secret)
-
-}
