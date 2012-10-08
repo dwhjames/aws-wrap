@@ -14,6 +14,8 @@ object SimpleDBSpec extends Specification {
   import scala.concurrent.util._
   import java.util.concurrent.TimeUnit._
 
+  import aws.core.parsers.Errors
+
   implicit val region = SDBRegion.EU_WEST_1
 
   "SimpleDB API" should {
@@ -21,13 +23,12 @@ object SimpleDBSpec extends Specification {
 
     def checkResult(r: Try[Result]) = r match {
       case Success(result) => result.metadata.requestId must not be empty
-      case Failure(Error(SimpleResult(_, errors))) => failure(errors.toString)
+      case Failure(Errors(errors)) => failure(errors.toString)
       case Failure(t) => failure(t.getMessage)
     }
 
     "Create a domain" in {
       val r = Await.result(SimpleDB.createDomain("test-domain-create"), Duration(30, SECONDS))
-        .flatMap(_ => Await.result(SimpleDB.domainMetadata("test-domain-create"), Duration(30, SECONDS)))
       checkResult(r)
     }
 
@@ -53,7 +54,7 @@ object SimpleDBSpec extends Specification {
       r match {
         case Success(result) if result.body.contains(toto) => success
         case Success(result) => failure("Could not find inserted attribute in " + result.body)
-        case Failure(Error(SimpleResult(_, errors))) => failure(errors.toString)
+        case Failure(Errors(errors)) => failure(errors.toString)
         case Failure(t) => failure(t.getMessage)
       }
 
@@ -78,7 +79,7 @@ object SimpleDBSpec extends Specification {
       r match {
         case Success(result) if result.body.exists(item => item.name == "theItem" && item.attributes.contains(toto)) => success
         case Success(result) => failure("Could not find inserted attribute in " + result.body)
-        case Failure(Error(SimpleResult(_, errors))) => failure(errors.toString)
+        case Failure(Errors(errors)) => failure(errors.toString)
         case Failure(t) => failure(t.getMessage)
       }
 
@@ -97,7 +98,7 @@ object SimpleDBSpec extends Specification {
           success
         case Success(result) =>
           failure("Could not find inserted attribute in " + result.body)
-        case Failure(Error(SimpleResult(_, errors))) =>
+        case Failure(Errors(errors)) =>
           failure(errors.toString)
         case Failure(t) =>
           failure(t.getMessage)
@@ -110,7 +111,7 @@ object SimpleDBSpec extends Specification {
           failure("Batch deletion failed: " + result.body)
         case Success(result) =>
           success
-        case Failure(Error(SimpleResult(_, errors))) =>
+        case Failure(Errors(errors)) =>
           failure(errors.toString)
         case Failure(t) =>
           failure(t.getMessage)
@@ -119,7 +120,6 @@ object SimpleDBSpec extends Specification {
       val d = Await.result(SimpleDB.deleteDomain("test-batch"), Duration(30, SECONDS))
       checkResult(d)
     }
-
 
   }
 }

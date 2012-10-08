@@ -77,7 +77,7 @@ object SimpleDB {
    */
   def createDomain(domainName: String)(implicit region: AWSRegion): Future[Try[Result]] = {
     request(Action("CreateDomain"), DomainName(domainName)).map { wsresponse =>
-      aws.core.EmptyResult(wsresponse)
+      EmptyResult(wsresponse)
     }
   }
 
@@ -86,7 +86,7 @@ object SimpleDB {
    */
   def deleteDomain(domainName: String)(implicit region: AWSRegion): Future[Try[Result]] = {
     request(Action("DeleteDomain"), DomainName(domainName)).map { wsresponse =>
-      aws.core.EmptyResult(wsresponse)
+      EmptyResult(wsresponse)
     }
   }
 
@@ -99,7 +99,7 @@ object SimpleDB {
       MaxNumberOfDomains(maxNumberOfDomains)) ++ nextToken.map(NextToken(_)).toSeq
 
     request(params: _*).map { wsresponse =>
-      SimpleResult[Seq[SDBDomain]](wsresponse.xml)
+      SimpleResult[Seq[SDBDomain]](wsresponse)
     }
   }
 
@@ -115,7 +115,7 @@ object SimpleDB {
       ItemName(itemName)) ++ Attributes(attributes)
 
     request(params: _*).map { wsresponse =>
-      aws.core.EmptyResult(wsresponse)
+      EmptyResult(wsresponse)
     }
   }
 
@@ -129,7 +129,7 @@ object SimpleDB {
       ItemName(item.name)) ++ Attributes(item.attributes)
 
     request(params: _*).map { wsresponse =>
-      aws.core.EmptyResult(wsresponse)
+      EmptyResult(wsresponse)
     }
   }
 
@@ -147,7 +147,7 @@ object SimpleDB {
       ConsistentRead(consistentRead)) ++ attributeName.map(AttributeName(_)).toSeq
 
     request(params: _*).map { wsresponse =>
-      SimpleResult[Seq[SDBAttribute]](wsresponse.xml)
+      SimpleResult[Seq[SDBAttribute]](wsresponse)
     }
   }
 
@@ -156,7 +156,7 @@ object SimpleDB {
    */
   def domainMetadata(domainName: String)(implicit region: AWSRegion): Future[Try[SimpleResult[SDBDomainMetadata]]] = {
     request(Action("DomainMetadata"), DomainName(domainName)).map { wsresponse =>
-      SimpleResult[SDBDomainMetadata](wsresponse.xml)
+      SimpleResult[SDBDomainMetadata](wsresponse)
     }
   }
 
@@ -170,7 +170,7 @@ object SimpleDB {
       ConsistentRead(consistentRead)) ++ nextToken.map(NextToken(_)).toSeq
 
     request(params: _*).map { wsresponse =>
-      SimpleResult[Seq[SDBItem]](wsresponse.xml)
+      SimpleResult[Seq[SDBItem]](wsresponse)
     }
   }
 
@@ -182,7 +182,7 @@ object SimpleDB {
       Action("BatchPutAttributes"),
       DomainName(domainName)) ++ Items(items)
     request(params: _*).map { wsresponse =>
-      aws.core.EmptyResult(wsresponse)
+      EmptyResult(wsresponse)
     }
   }
 
@@ -194,7 +194,7 @@ object SimpleDB {
       Action("BatchDeleteAttributes"),
       DomainName(domainName)) ++ Items(items)
     request(params: _*).map { wsresponse =>
-      aws.core.EmptyResult(wsresponse)
+      EmptyResult(wsresponse)
     }
   }
 
