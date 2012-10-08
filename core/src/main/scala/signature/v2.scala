@@ -1,6 +1,7 @@
 package aws.core.signature
 
 import aws.core._
+import aws.core.utils._
 
 object V2 {
 
@@ -28,7 +29,7 @@ object V2 {
     "Signature=" + encode(signature(toSign)) + "&" + queryString
   }
 
-  private def signature(data: String) = HmacSha1.calculate(data, AWS.secret)
+  private def signature(data: String) = Crypto.base64(Crypto.hmacSHA1(data.getBytes(), AWS.secret))
 
 }
 
