@@ -99,7 +99,7 @@ object SimpleDB {
       MaxNumberOfDomains(maxNumberOfDomains)) ++ nextToken.map(NextToken(_)).toSeq
 
     request(params: _*).map { wsresponse =>
-      SimpleResult(wsresponse.xml, Parser.of[Seq[SDBDomain]])
+      SimpleResult[Seq[SDBDomain]](wsresponse.xml)
     }
   }
 
@@ -147,7 +147,7 @@ object SimpleDB {
       ConsistentRead(consistentRead)) ++ attributeName.map(AttributeName(_)).toSeq
 
     request(params: _*).map { wsresponse =>
-      SimpleResult(wsresponse.xml, Parser.of[Seq[SDBAttribute]])
+      SimpleResult[Seq[SDBAttribute]](wsresponse.xml)
     }
   }
 
@@ -156,7 +156,7 @@ object SimpleDB {
    */
   def domainMetadata(domainName: String)(implicit region: AWSRegion): Future[Try[SimpleResult[SDBDomainMetadata]]] = {
     request(Action("DomainMetadata"), DomainName(domainName)).map { wsresponse =>
-      SimpleResult(wsresponse.xml, Parser.of[SDBDomainMetadata])
+      SimpleResult[SDBDomainMetadata](wsresponse.xml)
     }
   }
 
@@ -170,7 +170,7 @@ object SimpleDB {
       ConsistentRead(consistentRead)) ++ nextToken.map(NextToken(_)).toSeq
 
     request(params: _*).map { wsresponse =>
-      SimpleResult(wsresponse.xml, Parser.of[Seq[SDBItem]])
+      SimpleResult[Seq[SDBItem]](wsresponse.xml)
     }
   }
 

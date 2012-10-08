@@ -21,9 +21,9 @@ trait SimpleResult[T] extends Result {
 }
 
 object SimpleResult {
-  def apply[T](xml: Elem, parser: (Elem => T)): Try[SimpleResult[T]] = Success(new SimpleResult[T] {
+  def apply[T](xml: Elem)(implicit extractor: Parser[T]): Try[SimpleResult[T]] = Success(new SimpleResult[T] {
     def metadata = Metadata(xml)
-    def body = parser(xml)
+    def body = extractor(xml)
   })
 
   def unapply[T](s: SimpleResult[T]): Option[(Metadata, T)] = Some((s.metadata, s.body))
@@ -38,6 +38,6 @@ case class Error(res: SimpleResult[Seq[AWSError]]) extends Exception
 object EmptyResult {
   def apply(wsresp: WSResponse): Try[EmptyResult] = wsresp.status match {
     case 200 => Success(EmptyResult(Metadata(wsresp.xml)))
-    case _ => SimpleResult(wsresp.xml, Parser.of[Seq[AWSError]]).flatMap(e => Failure(Error(e)))
+    case _ => SimpleResult[Seq[AWSError]](wsresp.xml).flatMap(e => Failure(Error(e)))
   }
 }
