@@ -8,6 +8,12 @@ import com.typesafe.sbtscalariform.ScalariformPlugin._
 
 object ApplicationBuild extends Build {
 
+    val pattern = Patterns(
+      Seq("[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).ivy"),
+      Seq("[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"),
+      true
+    )
+
     lazy val projectScalariformSettings = defaultScalariformSettings ++ Seq(
         ScalariformKeys.preferences := FormattingPreferences().setPreference(AlignParameters, true)
     )
@@ -16,8 +22,7 @@ object ApplicationBuild extends Build {
         organization := "pellucid",
         scalaVersion := "2.9.2",
         version := "0.1-SNAPSHOT",
-        resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
-        resolvers += "erwan" at "http://caffeinelab.net/repo",
+        resolvers += Resolver.url("erwan", url("http://caffeinelab.net/repo"))(Resolver.ivyStylePatterns),
         libraryDependencies += "playlibs" %% "ws" % "2.1-20121005",
         libraryDependencies += "org.specs2" %% "specs2" % "1.11" % "test"
     )
