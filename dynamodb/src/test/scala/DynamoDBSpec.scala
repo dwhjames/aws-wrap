@@ -5,6 +5,7 @@ import scala.concurrent.Future
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
 import aws.core._
+import aws.dynamodb.models._
 
 import org.specs2.mutable._
 
@@ -19,16 +20,20 @@ object SimpleDBSpec extends Specification {
   "DynamoDB API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    def checkResult(r: Try[Result]) = r match {
-      case Success(result) => result.metadata.requestId must not be empty
-      case Failure(Error(SimpleResult(_, errors))) => failure(errors.toString)
-      case Failure(t) => failure(t.getMessage)
-    }
-
     "List tables" in {
       val r = Await.result(DynamoDB.listTables(), Duration(30, SECONDS))
-      println("list tables result = " + r.body)
-      r.status should be equalTo(200)
+    }
+
+    "Create and delete tables" in {
+      val schema = KeySchema(KeySchemaElement("id", DDBString))
+      val provisioned = ProvisionedThroughput(5L, 5L)
+      val r = Await.result(DynamoDB.createTable("create-table-test", schema, provisioned), Duration(30, SECONDS))
+      // Wait 30 seconds to leave time for Amazon to create the table (otherwise it's in "CREATING" status and can't be deleted)
+      r.body.status should be equalTo(Status.CREATING)
+      Thread.sleep(30000)
+      val r2 = Await.result(DynamoDB.deleteTable("create-table-test"), Duration(30, SECONDS))
+      // r2.bostatus should be equalTo(200)
+      success
     }
 
   }
