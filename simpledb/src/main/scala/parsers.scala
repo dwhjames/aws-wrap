@@ -23,8 +23,7 @@ object SDBParsers {
       (xml \\ "AttributeNameCount").text.toLong,
       (xml \\ "ItemNamesSizeBytes").text.toLong,
       (xml \\ "AttributeValuesSizeBytes").text.toLong,
-      (xml \\ "AttributeNamesSizeBytes").text.toLong
-    )
+      (xml \\ "AttributeNamesSizeBytes").text.toLong)
   }
 
   implicit def itemParser = Parser[Seq[SDBItem]] { xml: Elem =>
@@ -33,8 +32,7 @@ object SDBParsers {
         node \ "Name" text,
         node \ "Attribute" map { attrNode =>
           SDBAttribute(attrNode \ "Name" text, attrNode \ "Value" text)
-        }
-      )
+        })
     }
   }
 

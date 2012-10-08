@@ -3,8 +3,7 @@ package aws.core
 import scala.annotation.implicitNotFound
 
 @implicitNotFound(
-  "You need to import a region to specify which datacenter you want to use."
-)
+  "You need to import a region to specify which datacenter you want to use.")
 case class AWSRegion(name: String, subdomain: String, service: String) {
   def host = "%s.%s.%s".format(service, subdomain, AWSRegion.BASE)
 }

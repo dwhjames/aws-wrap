@@ -21,8 +21,7 @@ object V2 {
       SignatureVersion(SIGVERSION),
       SignatureMethod(SIGMETHOD))
 
-    val queryString = (params ++ ps).sortBy(_._1)
-      .map { p => encode(p._1) + "=" + encode(p._2) }.mkString("&")
+    val queryString = canonicalQueryString(params ++ ps)
 
     val toSign = "%s\n%s\n%s\n%s".format(method, region.host, "/", queryString)
 

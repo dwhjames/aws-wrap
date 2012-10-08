@@ -15,7 +15,11 @@ object AWS {
 
   def isoDateFormat(date: Date) = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(date)
 
-  def isoBasicFormat(date: Date) = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'").format(date)
+  def isoBasicFormat(date: Date) = {
+    val iso = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
+    iso.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
+    iso.format(date)
+  }
 
   object Parameters {
     def TimeStamp(date: Date) = "Timestamp" -> isoDateFormat(date)
