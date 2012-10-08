@@ -1,7 +1,7 @@
 package aws.dynamodb
 
-import play.api.libs.json._
 import play.api.libs.json.Json.toJson
+import play.api.libs.json._
 
 package object models {
 
@@ -86,32 +86,37 @@ package object models {
       Seq("HashKeyElement" -> toJson(schema.hashKey)) ++ schema.rangeKey.toSeq.map("rangeKeyElement" -> toJson(_)))
     def reads(json: JsValue) = JsSuccess(KeySchema(
       (json \ "HashKeyElement").as[KeySchemaElement],
-      (json \ "RangeKeyElement").asOpt[KeySchemaElement]))
+      (json \ "RangeKeyElement") match {
+        case JsUndefined(e) => None
+        case js => js.asOpt[KeySchemaElement]
+      }))
   }
 
   implicit def ProvisionedThroughputFormat = new Format[ProvisionedThroughput] {
-    def writes(pt: ProvisionedThroughput) = JsObject(Seq(
+    def writes(pt: ProvisionedThroughput) = Json.obj(
       "ReadCapacityUnits" -> Json.toJson(pt.readCapacityUnits),
-      "WriteCapacityUnits" -> Json.toJson(pt.writeCapacityUnits)))
+      "WriteCapacityUnits" -> Json.toJson(pt.writeCapacityUnits))
     def reads(json: JsValue) = JsSuccess(ProvisionedThroughput(
       (json \ "ReadCapacityUnits").as[Long],
       (json \ "WriteCapacityUnits").as[Long]))
   }
 
   implicit def TableDescriptionFormat = new Format[TableDescription] {
-    def writes(desc: TableDescription) = JsObject(Seq(
+    def writes(desc: TableDescription) = Json.obj(
       "TableName" -> Json.toJson(desc.name),
       "KeySchema" -> Json.toJson(desc.keySchema),
       "ProvisionedThroughput" -> Json.toJson(desc.provisionedThroughput),
       "TableSizeBytes" -> Json.toJson(desc.size),
-      "TableStatus" -> Json.toJson(desc.status.status)))
-    def reads(json: JsValue) = JsSuccess(TableDescription(
-      (json \ "TableName").as[String],
-      Status((json \ "TableStatus").as[String]),
-      new java.util.Date((json \ "CreationDateTime").as[Float].toLong),
-      (json \ "KeySchema").as[KeySchema],
-      (json \ "ProvisionedThroughput").as[ProvisionedThroughput],
-      (json \ "TableSizeBytes").asOpt[Long]))
+      "TableStatus" -> Json.toJson(desc.status.status))
+    def reads(json: JsValue) = {
+      JsSuccess(TableDescription(
+        (json \ "TableName").as[String],
+        Status((json \ "TableStatus").as[String]),
+        new java.util.Date((json \ "CreationDateTime").as[Float].toLong),
+        (json \ "KeySchema").as[KeySchema],
+        (json \ "ProvisionedThroughput").as[ProvisionedThroughput],
+        (json \ "TableSizeBytes").asOpt[Long]))
+    }
   }
 
 }
