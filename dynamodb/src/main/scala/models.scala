@@ -2,6 +2,10 @@ package aws.dynamodb
 
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
+import play.api.libs.json.util._
+import play.api.libs.json.Reads._
+import play.api.libs.json.Writes._
+  
 
 package object models {
 
@@ -64,22 +68,33 @@ package object models {
 
   // JSON Formatters
 
-  implicit def KeySchemaElementFormat: Format[KeySchemaElement] = new Format[KeySchemaElement] {
+  /*implicit def KeySchemaElementFormat: Format[KeySchemaElement] = new Format[KeySchemaElement] {
     def writes(element: KeySchemaElement) = JsObject(Seq(
       "AttributeName" -> JsString(element.attributeName),
       "AttributeType" -> JsString(element.attributeType.toString)))
     def reads(json: JsValue) = JsSuccess(KeySchemaElement(
       (json \ "AttributeName").as[String],
       AttributeType((json \ "AttributeType").as[String])))
-  }
+  }*/
 
-  implicit def AttributeTypeFormat: Format[AttributeType] = new Format[AttributeType] {
+  /*implicit def AttributeTypeFormat: Format[AttributeType] = new Format[AttributeType] {
     def writes(t: AttributeType) = JsString(t.typeCode)
     def reads(json: JsValue) = json match {
       case JsString(t) => JsSuccess(AttributeType(t))
       case _ => JsError("String expected")
     }
-  }
+  }*/
+
+  // should be written in a nicer and more symmetric way in more recent code not yet in master ;)
+  implicit val AttributeTypeFormat = Format[AttributeType]( 
+    __.read[String].map(t => AttributeType(t)),
+    Writes( (at: AttributeType) => JsString(at.typeCode) )
+  )
+
+  implicit val KeySchemaElementFormat = (
+    (__ \ 'AttributeName).format[String] and
+    (__ \ 'AttributeType).format[AttributeType]
+  )(KeySchemaElement, unlift(KeySchemaElement.unapply))
 
   implicit def KeySchemaFormat: Format[KeySchema] = new Format[KeySchema] {
     def writes(schema: KeySchema) = JsObject(
