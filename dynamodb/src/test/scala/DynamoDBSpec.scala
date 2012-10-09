@@ -9,7 +9,7 @@ import aws.dynamodb.models._
 
 import org.specs2.mutable._
 
-object SimpleDBSpec extends Specification {
+object DynamoDBSpec extends Specification {
 
   import scala.concurrent._
   import scala.concurrent.util._
