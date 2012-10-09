@@ -13,7 +13,10 @@ trait SimpleDDBResult[T] extends DDBResult {
 
 object SimpleDDBResult {
   def apply[T](json: JsValue)(implicit r: Reads[T]): SimpleDDBResult[T] = new SimpleDDBResult[T] {
-    def body = r.reads(json).get
+    def body = r.reads(json) match {
+      case JsSuccess(js, path) => js
+      case JsError(e) => sys.error("Parsing error: " + e)
+    }
   }
 
   def unapply[T](s: SimpleDDBResult[T]): Option[T] = Some(s.body)

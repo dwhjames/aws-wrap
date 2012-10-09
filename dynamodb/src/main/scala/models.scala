@@ -5,7 +5,6 @@ import play.api.libs.json._
 import play.api.libs.json.util._
 import play.api.libs.json.Reads._
 import play.api.libs.json.Writes._
-  
 
 package object models {
 
@@ -86,53 +85,33 @@ package object models {
   }*/
 
   // should be written in a nicer and more symmetric way in more recent code not yet in master ;)
-  implicit val AttributeTypeFormat = Format[AttributeType]( 
+  implicit val AttributeTypeFormat = Format[AttributeType](
     __.read[String].map(t => AttributeType(t)),
-    Writes( (at: AttributeType) => JsString(at.typeCode) )
-  )
+    Writes((at: AttributeType) => JsString(at.typeCode)))
+
+  implicit val StatusFormat = Format[Status](
+    __.read[String].map(s => Status(s)),
+    Writes((s: Status) => JsString(s.status)))
 
   implicit val KeySchemaElementFormat = (
     (__ \ 'AttributeName).format[String] and
-    (__ \ 'AttributeType).format[AttributeType]
-  )(KeySchemaElement, unlift(KeySchemaElement.unapply))
+    (__ \ 'AttributeType).format[AttributeType])(KeySchemaElement, unlift(KeySchemaElement.unapply))
 
-  implicit def KeySchemaFormat: Format[KeySchema] = new Format[KeySchema] {
-    def writes(schema: KeySchema) = JsObject(
-      Seq("HashKeyElement" -> toJson(schema.hashKey)) ++ schema.rangeKey.toSeq.map("rangeKeyElement" -> toJson(_)))
-    def reads(json: JsValue) = JsSuccess(KeySchema(
-      (json \ "HashKeyElement").as[KeySchemaElement],
-      (json \ "RangeKeyElement") match {
-        case JsUndefined(e) => None
-        case js => js.asOpt[KeySchemaElement]
-      }))
-  }
+  implicit val KeySchemaFormat = (
+    (__ \ 'HashKeyElement).format[KeySchemaElement] and
+    (__ \ 'RangeKeyElement).format[Option[KeySchemaElement]])(KeySchema, unlift(KeySchema.unapply))
 
-  implicit def ProvisionedThroughputFormat = new Format[ProvisionedThroughput] {
-    def writes(pt: ProvisionedThroughput) = Json.obj(
-      "ReadCapacityUnits" -> Json.toJson(pt.readCapacityUnits),
-      "WriteCapacityUnits" -> Json.toJson(pt.writeCapacityUnits))
-    def reads(json: JsValue) = JsSuccess(ProvisionedThroughput(
-      (json \ "ReadCapacityUnits").as[Long],
-      (json \ "WriteCapacityUnits").as[Long]))
-  }
+  implicit val ProvisionedThroughputFormat = (
+    (__ \ 'ReadCapacityUnits).format[Long] and
+    (__ \ 'WriteCapacityUnits).format[Long])(ProvisionedThroughput, unlift(ProvisionedThroughput.unapply))
 
-  implicit def TableDescriptionFormat = new Format[TableDescription] {
-    def writes(desc: TableDescription) = Json.obj(
-      "TableName" -> Json.toJson(desc.name),
-      "KeySchema" -> Json.toJson(desc.keySchema),
-      "ProvisionedThroughput" -> Json.toJson(desc.provisionedThroughput),
-      "TableSizeBytes" -> Json.toJson(desc.size),
-      "TableStatus" -> Json.toJson(desc.status.status))
-    def reads(json: JsValue) = {
-      JsSuccess(TableDescription(
-        (json \ "TableName").as[String],
-        Status((json \ "TableStatus").as[String]),
-        new java.util.Date((json \ "CreationDateTime").as[Float].toLong),
-        (json \ "KeySchema").as[KeySchema],
-        (json \ "ProvisionedThroughput").as[ProvisionedThroughput],
-        (json \ "TableSizeBytes").asOpt[Long]))
-    }
-  }
+  implicit val TableDescriptionFormat = (
+    (__ \ 'TableName).format[String] and
+    (__ \ 'TableStatus).format[Status] and
+    (__ \ 'CreationDateTime).format[java.util.Date] and
+    (__ \ 'KeySchema).format[KeySchema] and
+    (__ \ 'ProvisionedThroughput).format[ProvisionedThroughput] and
+    (__ \ 'TableSizeBytes).format[Option[Long]])(TableDescription, unlift(TableDescription.unapply))
 
 }
 
