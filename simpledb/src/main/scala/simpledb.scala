@@ -9,6 +9,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.ws._
 
 import aws.core._
+import aws.core.Types._
 import aws.core.parsers._
 import aws.core.signature.V2
 import aws.simpledb.SDBParsers._
@@ -24,6 +25,8 @@ case class SDBDomainMetadata(
   itemNamesSizeBytes: Long,
   attributeValuesSizeBytes: Long,
   attributeNamesSizeBytes: Long)
+
+case class SimpleDBMeta(requestId: String, boxUsage: String) extends Metadata
 
 object SDBRegion {
 
@@ -75,9 +78,12 @@ object SimpleDB {
   /**
    * Creates a domain with the given name
    */
-  def createDomain(domainName: String)(implicit region: AWSRegion): Future[Try[Result]] = {
-    request(Action("CreateDomain"), DomainName(domainName)).map { wsresponse =>
-      EmptyResult(wsresponse)
+  def createDomain(domainName: String)(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] = {
+    request(Action("CreateDomain"), DomainName(domainName)).map{ resp =>
+      Parser.parse[Result[SimpleDBMeta, Unit]](resp).fold(
+        e => throw new RuntimeException(e),
+        identity
+      )
     }
   }
 

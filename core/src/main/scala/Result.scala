@@ -7,33 +7,31 @@ import play.api.libs.ws.{ Response => WSResponse }
 import aws.core.parsers._
 import aws.core.parsers.Parser._
 
-case class Metadata(requestId: String, boxUsage: String)
-
-trait Result {
-  def metadata: Metadata
+object Types {
+  type EmptyResult[M <: Metadata] = Result[M, Unit]
 }
 
-trait SimpleResult[T] extends Result {
+trait Metadata
+case object EmptyMeta extends Metadata
+
+sealed trait Result[M <: Metadata, +T] {
+  def metadata: M
   def body: T
-  override def toString = "SimpleResult(%s, %s)".format(metadata, body)
+  def toEither: Either[Errors[M], Result[M, T]]
+  override def toString = "Result(%s, %s, %s)".format(metadata, body)
 }
 
-object SimpleResult {
-  def apply[T](r: WSResponse)(implicit parser: Parser[T], metadataParser: Parser[Metadata]): Try[SimpleResult[T]] = HandleError { r: WSResponse =>
-    for(
-      m <- metadataParser(r);
-      b <- parser(r)
-    ) yield new SimpleResult[T] {
-      def metadata = m
-      def body = b
-    }
-  }(r)
-
-  def unapply[T](s: SimpleResult[T]): Option[(Metadata, T)] = Some((s.metadata, s.body))
+object Result {
+  def apply[M <: Metadata, T](m: M = EmptyMeta, b: T) = new Result[M, T] {
+    def toEither = Right(this)
+    def metadata = m
+    def body = b
+  }
 }
 
-case class EmptyResult(metadata: Metadata) extends Result
+case class AWSError(code: String, message: String)
+case class Errors[M <: Metadata](val metadata: M = EmptyMeta, errors: Seq[AWSError]) extends Result[M, Nothing] {
+  def toEither = Left(this)
+  def body = throw new RuntimeException(errors.toString)
+}
 // TODO: AWS sometimes returns a 200 when there is an error (example: NoSuchDomain error for DomainMetadata)
-object EmptyResult{
-  def apply(r: WSResponse)(implicit parser: Parser[Metadata]): Try[EmptyResult] = parser(r).map(m => new EmptyResult(m))
-}

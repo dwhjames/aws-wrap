@@ -1,24 +1,26 @@
 package aws.simpledb
 
-import scala.util.{ Try, Success, Failure }
 import play.api.libs.ws.Response
 import aws.core.parsers._
-import aws.core.parsers.Parser.HandleError
 
 object SDBParsers {
   import scala.xml.Elem
 
-  implicit def domainsParser = HandleError[Seq[SDBDomain]] { r: Response =>
+  implicit def simpleDBMetaParser = Parser[SimpleDBMeta] { r =>
+    Success(SimpleDBMeta(r.xml \\ "RequestId" text, r.xml \\ "BoxUsage" text))
+  }
+
+  implicit def domainsParser = Parser[Seq[SDBDomain]] { r: Response =>
     Success((r.xml \\ "DomainName").map(node => SDBDomain(node.text)))
   }
 
-  implicit def attributesParser = HandleError[Seq[SDBAttribute]] { r: Response =>
-    Success((r.xml \\ "Attribute").map { node =>
+  implicit def attributesParser = Parser[Seq[SDBAttribute]] { r: Response =>
+   Success((r.xml \\ "Attribute").map { node =>
       SDBAttribute(node \ "Name" text, node \ "Value" text)
-    })
+   })
   }
 
-  implicit def domainMetadataParser = HandleError[SDBDomainMetadata] { r: Response =>
+  implicit def domainMetadataParser = Parser[SDBDomainMetadata] { r: Response =>
     val xml = r.xml
     Success(SDBDomainMetadata(
       new java.util.Date((xml \\ "Timestamp" text).toLong * 1000),
@@ -31,7 +33,7 @@ object SDBParsers {
     ))
   }
 
-  implicit def itemParser = HandleError[Seq[SDBItem]] { r: Response =>
+  implicit def itemParser = Parser[Seq[SDBItem]] { r: Response =>
     Success((r.xml \\ "Item").map { node =>
       SDBItem(
         node \ "Name" text,
