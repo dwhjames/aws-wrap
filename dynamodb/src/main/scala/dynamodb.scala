@@ -66,15 +66,16 @@ object DynamoDB {
   def createTable(name: String,
                   keySchema: KeySchema,
                   provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleDDBResult[TableDescription]] = {
-    val body = JsObject(Seq(
-      "TableName" -> JsString(name),
-      "KeySchema" -> Json.toJson(keySchema),
-      "ProvisionedThroughput" -> Json.toJson(provisionedThroughput)))
+    val body = Json.obj(
+      "TableName" -> name,
+      "KeySchema" -> keySchema,
+      "ProvisionedThroughput" -> provisionedThroughput
+    )
     request[TableDescription]("CreateTable", body, _ \ "TableDescription")
   }
 
   def deleteTable(name: String)(implicit region: AWSRegion) = {
-    val body = JsObject(Seq("TableName" -> JsString(name)))
+    val body = Json.obj("TableName" -> name)
     request("DeleteTable", body)
   }
 

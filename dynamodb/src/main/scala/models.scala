@@ -84,6 +84,10 @@ package object models {
     }
   }*/
 
+
+  def optionalFormat[A](path:JsPath)(implicit reads:Reads[A], writes: Writes[Option[A]]): OFormat[Option[A]] = 
+    OFormat(Reads.optional(path)(reads), Writes.optional(path)(writes))
+
   // should be written in a nicer and more symmetric way in more recent code not yet in master ;)
   implicit val AttributeTypeFormat = Format[AttributeType](
     __.read[String].map(t => AttributeType(t)),
@@ -99,7 +103,8 @@ package object models {
 
   implicit val KeySchemaFormat = (
     (__ \ 'HashKeyElement).format[KeySchemaElement] and
-    (__ \ 'RangeKeyElement).format[Option[KeySchemaElement]])(KeySchema, unlift(KeySchema.unapply))
+    optionalFormat[KeySchemaElement]( __ \ 'RangeKeyElement )
+  )(KeySchema, unlift(KeySchema.unapply))
 
   implicit val ProvisionedThroughputFormat = (
     (__ \ 'ReadCapacityUnits).format[Long] and
@@ -111,7 +116,7 @@ package object models {
     (__ \ 'CreationDateTime).format[java.util.Date] and
     (__ \ 'KeySchema).format[KeySchema] and
     (__ \ 'ProvisionedThroughput).format[ProvisionedThroughput] and
-    (__ \ 'TableSizeBytes).format[Option[Long]])(TableDescription, unlift(TableDescription.unapply))
+    optionalFormat[Long](__ \ 'TableSizeBytes))(TableDescription, unlift(TableDescription.unapply))
 
 }
 
