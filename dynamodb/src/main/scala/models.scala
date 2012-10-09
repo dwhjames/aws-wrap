@@ -36,6 +36,7 @@ package object models {
 
   sealed trait Status {
     def status: String
+    override def toString = status
   }
 
   object Status {

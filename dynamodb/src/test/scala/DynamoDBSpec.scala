@@ -31,8 +31,9 @@ object DynamoDBSpec extends Specification {
       // Wait 30 seconds to leave time for Amazon to create the table (otherwise it's in "CREATING" status and can't be deleted)
       r.body.status should be equalTo(Status.CREATING)
       Thread.sleep(30000)
-      val r2 = Await.result(DynamoDB.deleteTable("create-table-test"), Duration(30, SECONDS))
-      // r2.bostatus should be equalTo(200)
+      val r2 = Await.result(DynamoDB.describeTable("create-table-test"), Duration(30, SECONDS))
+      r.body.status should be equalTo(Status.ACTIVE)
+      val r3 = Await.result(DynamoDB.deleteTable("create-table-test"), Duration(30, SECONDS))
       success
     }
 

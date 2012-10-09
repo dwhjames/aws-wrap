@@ -79,9 +79,12 @@ object DynamoDB {
     request("DeleteTable", body)
   }
 
-  // DeleteItem
+  def describeTable(name: String)(implicit region: AWSRegion) = {
+    val body = JsObject(Seq("TableName" -> JsString(name)))
+    request[TableDescription]("DescribeTable", body, _ \ "Table")
+  }
 
-  // DescribeTable
+  // DeleteItem
 
   // GetItem
 
