@@ -1,7 +1,6 @@
 package aws.core.parsers
 
 import scala.annotation.implicitNotFound
-import scala.xml.Elem
 
 import play.api.libs.ws.Response
 
@@ -54,18 +53,5 @@ object Parser {
   }
 
   implicit def unitParser: Parser[Unit] = Parser.pure(())
-
-  implicit def safeResultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
-    errorsParser.or(resultParser(mp ,p))
-
-  def errorsParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
-    r.status match {
-      // TODO: really test content
-      case 200 => Failure("Not an error")
-      case _ => Success(Errors(meta, (r.xml \\ "Error").map { node =>
-        AWSError(node \ "Code" text, node \ "Message" text)
-      }))
-    }
-  })
 
 }

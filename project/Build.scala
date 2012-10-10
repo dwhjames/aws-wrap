@@ -22,8 +22,9 @@ object ApplicationBuild extends Build {
         organization := "pellucid",
         scalaVersion := "2.9.2",
         version := "0.1-SNAPSHOT",
-        resolvers += Resolver.url("erwan", url("http://caffeinelab.net/repo"))(Resolver.ivyStylePatterns),
-        libraryDependencies += "playlibs" %% "ws" % "2.1-20121005",
+        resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
+        resolvers += "erwan" at "http://caffeinelab.net/repo",
+        libraryDependencies += "play" %% "play" % "2.1-20121003-aws",
         libraryDependencies += "org.specs2" %% "specs2" % "1.11" % "test"
     )
 

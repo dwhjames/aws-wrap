@@ -1,6 +1,5 @@
 package aws.core
 
-import scala.util.{ Try, Success, Failure }
 import scala.xml.Elem
 import play.api.libs.ws.{ Response => WSResponse }
 
@@ -32,6 +31,10 @@ object Result {
     override def foreach(f: (T => Unit)) = f(b)
   }
   def unapply[M <: Metadata, T](r: Result[M, T]): Option[(M, T)] = Some(r.metadata -> r.body)
+}
+
+object EmptyResult {
+  def apply[M <: Metadata](m: M = EmptyMeta) = Result.apply(m, ())
 }
 
 case class AWSError(code: String, message: String)
