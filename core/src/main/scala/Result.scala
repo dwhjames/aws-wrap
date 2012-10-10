@@ -15,8 +15,28 @@ object Types {
 trait Metadata
 case object EmptyMeta extends Metadata
 
+/**
+ * An AWS Result, that can be a success on a error. M represents the metadata (some information always there
+ * whether the result is a success or an error) and T represents the type of the body in case of a success.
+ *
+ * Some services don't have any metadata with responses, in this case `EmptyMeta` will be returned.
+ *
+ * To consume it, you can use pattern matching:
+ * {{{
+ *   r match {
+ *     case Result(metadata, body) => // Do something with the body
+ *     case Errors(metadata, errors) => // Do something with the errors
+ *   }
+ * }}}
+ */
 sealed trait Result[M <: Metadata, +T] {
+  /**
+   * The metadata, `EmptyMeta` if the service doesn't support metadata.
+   */
   def metadata: M
+  /**
+   * Return the body if a success, throws an exception if an error
+   */
   def body: T
   def toEither: Either[Errors[M], Result[M, T]]
   def flatMap[T2](f: (T) => Result[M, T2]): Result[M, T2]
@@ -40,6 +60,7 @@ object EmptyResult {
 }
 
 case class AWSError(code: String, message: String)
+
 class Errors[M <: Metadata](val metadata: M, val errors: Seq[AWSError]) extends Result[M, Nothing] {
   override def toEither = Left(this)
   override def flatMap[T2](f: (Nothing) => Result[M, T2]) = this
