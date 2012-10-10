@@ -12,7 +12,9 @@ import play.api.libs.ws.WS._
 import aws.core._
 import aws.core.Types._
 import aws.core.parsers._
+
 import aws.s3.signature._
+import aws.s3.S3Parsers._
 
 object S3 {
 
@@ -42,21 +44,18 @@ object S3 {
     }
   }
 
-  private def tryParse[M <: Metadata, T](resp: Response)(implicit p: Parser[Result[M,T]]) = Parser.parse[Result[M,T]](resp).fold(
+  private def tryParse[T](resp: Response)(implicit p: Parser[SimpleResult[T]]) = Parser.parse[SimpleResult[T]](resp).fold(
     e => throw new RuntimeException(e),
-    identity
-  )
+    identity)
 
   import Parameters._
 
-  implicit def emptyMetaParser: Parser[EmptyMeta.type] = Parser.pure(EmptyMeta)
-
-  def createBucket(bucketname: String)(implicit region: AWSRegion) = {
-      val body =
-        <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-          <LocationConstraint>{region.subdomain}</LocationConstraint>
-        </CreateBucketConfiguration>
-      request(PUT, bucketname, body.toString).map(tryParse[EmptyMeta.type, Unit])
+  def createBucket(bucketname: String)(implicit region: AWSRegion): Future[EmptySimpleResult] = {
+    val body =
+      <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+        <LocationConstraint>{ region.subdomain }</LocationConstraint>
+      </CreateBucketConfiguration>
+    request(PUT, bucketname, body.toString).map(tryParse[Unit])
   }
 
 }

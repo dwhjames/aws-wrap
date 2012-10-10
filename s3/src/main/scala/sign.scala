@@ -16,9 +16,10 @@ object S3Sign {
   def canonicalizedResource(bucketName: String, resource: Option[String] = None, subresource: Option[String] = None) =
     "/%s%s%s".format(bucketName.toLowerCase, resource.getOrElse("/"), subresource.getOrElse(""))
 
-  def canonicalizedAmzHeaders(headers: Seq[(String, String)]) = headers.map{ case (k, v) =>
-    k.toLowerCase -> v
-  }.sortBy(_._1).map{ case (k,v) => k + ":" + v }.mkString("\n")
+  def canonicalizedAmzHeaders(headers: Seq[(String, String)]) = headers.map {
+    case (k, v) =>
+      k.toLowerCase -> v
+  }.sortBy(_._1).map { case (k, v) => k + ":" + v }.mkString("\n")
 
   def toSign(method: String, md5: String, contentType: String, date: String, amzheaders: String, resources: String) =
     "%s\n%s\n%s\n%s\n%s%s".format(method, md5, contentType, date, amzheaders, resources)
@@ -38,7 +39,7 @@ object S3Sign {
       "",
       canonicalizedResource(bucketname))
 
-      ("Authorization" -> ("AWS " + AWS.key + ":" + signature(s))) :: ("Date" -> d) :: Nil
+    ("Authorization" -> ("AWS " + AWS.key + ":" + signature(s))) :: ("Date" -> d) :: Nil
   }
 
   private def signature(data: String) = Crypto.base64(Crypto.hmacSHA1(data.getBytes(), AWS.secret))
