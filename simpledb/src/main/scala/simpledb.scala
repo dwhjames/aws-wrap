@@ -75,16 +75,15 @@ object SimpleDB {
     WS.url("https://" + region.host + "/?" + V2.signedUrl("GET", parameters)).get()
   }
 
-  private def tryParse[M <: Metadata, T](resp: Response)(implicit p: Parser[Result[M,T]]) = Parser.parse[Result[M,T]](resp).fold(
+  private def tryParse[M <: Metadata, T](resp: Response)(implicit p: Parser[Result[M, T]]) = Parser.parse[Result[M, T]](resp).fold(
     e => throw new RuntimeException(e),
-    identity
-  )
+    identity)
 
   /**
-  * This helper will fetch data using request, and try to parse the response to the specified types
-  */
-  private def get[M <: Metadata, T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M,T]]): Future[Result[M,T]] =
-    request(parameters:_*).map(tryParse[M, T])
+   * This helper will fetch data using request, and try to parse the response to the specified types
+   */
+  private def get[M <: Metadata, T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]] =
+    request(parameters: _*).map(tryParse[M, T])
 
   /**
    * Creates a domain with the given name

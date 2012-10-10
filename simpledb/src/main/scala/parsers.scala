@@ -16,9 +16,9 @@ object SDBParsers {
   }
 
   implicit def attributesParser = Parser[Seq[SDBAttribute]] { r: Response =>
-   Success((r.xml \\ "Attribute").map { node =>
+    Success((r.xml \\ "Attribute").map { node =>
       SDBAttribute(node \ "Name" text, node \ "Value" text)
-   })
+    })
   }
 
   implicit def domainMetadataParser = Parser[SDBDomainMetadata] { r: Response =>
@@ -30,8 +30,7 @@ object SDBParsers {
       (xml \\ "AttributeNameCount").text.toLong,
       (xml \\ "ItemNamesSizeBytes").text.toLong,
       (xml \\ "AttributeValuesSizeBytes").text.toLong,
-      (xml \\ "AttributeNamesSizeBytes").text.toLong
-    ))
+      (xml \\ "AttributeNamesSizeBytes").text.toLong))
   }
 
   implicit def itemParser = Parser[Seq[SDBItem]] { r: Response =>
@@ -40,13 +39,12 @@ object SDBParsers {
         node \ "Name" text,
         node \ "Attribute" map { attrNode =>
           SDBAttribute(attrNode \ "Name" text, attrNode \ "Value" text)
-        }
-      )
+        })
     })
   }
 
   implicit def safeResultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
-    errorsParser.or(Parser.resultParser(mp ,p))
+    errorsParser.or(Parser.resultParser(mp, p))
 
   def errorsParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
     r.status match {
