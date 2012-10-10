@@ -11,8 +11,6 @@ import aws.dynamodb.models._
 
 object DDBParsers {
 
-  implicit val emptyMetadataParser: Parser[EmptyMeta.type] = Parser.pure(EmptyMeta)
-
   // TODO: Use a type (we may need Seq[String] for something else)
   implicit def tableListParser = Parser[Seq[String]] { r =>
     Success((r.json \ "TableNames").as[Seq[String]])

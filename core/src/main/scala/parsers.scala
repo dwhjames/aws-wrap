@@ -54,4 +54,6 @@ object Parser {
 
   implicit def unitParser: Parser[Unit] = Parser.pure(())
 
+  implicit val emptyMetadataParser: Parser[EmptyMeta.type] = Parser.pure(EmptyMeta)
+
 }

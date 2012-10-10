@@ -8,6 +8,8 @@ import aws.core.parsers.Parser._
 
 object Types {
   type EmptyResult[M <: Metadata] = Result[M, Unit]
+  type SimpleResult[T] = Result[EmptyMeta.type, T]
+  type EmptySimpleResult = Result[EmptyMeta.type, Unit]
 }
 
 trait Metadata

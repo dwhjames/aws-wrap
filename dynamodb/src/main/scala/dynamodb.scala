@@ -36,19 +36,19 @@ object DynamoDB {
     WS.url("https://" + region.host + "/").withHeaders(allHeaders: _*).post(body.toString)
   }
 
-  private def tryParse[T](resp: Response)(implicit p: Parser[Result[EmptyMeta.type, T]]) = Parser.parse[Result[EmptyMeta.type, T]](resp).fold(
+  private def tryParse[T](resp: Response)(implicit p: Parser[SimpleResult[T]]) = Parser.parse[SimpleResult[T]](resp).fold(
     e => throw new RuntimeException(e),
     identity
   )
 
   private def post[T](operation: String,
                       body: JsValue,
-                      jsonPart: JsValue => JsValue = identity)(implicit p: Parser[T], region: AWSRegion): Future[Result[EmptyMeta.type, T]] = {
+                      jsonPart: JsValue => JsValue = identity)(implicit p: Parser[T], region: AWSRegion): Future[SimpleResult[T]] = {
     request(operation, body).map(r => tryParse[T](r))
   }
 
   def listTables(limit: Option[Int] = None,
-                 exclusiveStartTableName: Option[String] = None)(implicit region: AWSRegion): Future[Result[EmptyMeta.type, Seq[String]]] = {
+                 exclusiveStartTableName: Option[String] = None)(implicit region: AWSRegion): Future[SimpleResult[Seq[String]]] = {
     val data = (
       limit.map("Limit" -> Json.toJson(_))
       ++ exclusiveStartTableName.map("ExclusiveStartTableName" -> Json.toJson(_))).toMap
@@ -57,7 +57,7 @@ object DynamoDB {
 
   def createTable(name: String,
                   keySchema: KeySchema,
-                  provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[Result[EmptyMeta.type, TableDescription]] = {
+                  provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj(
       "TableName" -> name,
       "KeySchema" -> keySchema,
@@ -66,12 +66,12 @@ object DynamoDB {
     post[TableDescription]("CreateTable", body, _ \ "TableDescription")
   }
 
-  def deleteTable(name: String)(implicit region: AWSRegion): Future[EmptyResult[EmptyMeta.type]] = {
+  def deleteTable(name: String)(implicit region: AWSRegion): Future[EmptySimpleResult] = {
     val body = Json.obj("TableName" -> name)
     post[Unit]("DeleteTable", body)
   }
 
-  def describeTable(name: String)(implicit region: AWSRegion): Future[Result[EmptyMeta.type, TableDescription]] = {
+  def describeTable(name: String)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
     val body = JsObject(Seq("TableName" -> JsString(name)))
     post[TableDescription]("DescribeTable", body, _ \ "Table")
   }
