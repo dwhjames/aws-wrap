@@ -30,10 +30,10 @@ object DynamoDB {
     val allHeaders = headers ++ Seq(
       "Authorization" -> V4.authorizationHeader(requestTime, headers, Nil, body.toString))
 
-    WS.url("https://" + region.host + "/").withHeaders(allHeaders: _*).post(body.toString).map { r =>
-      r.status match {
+    WS.url("https://" + region.host + "/").withHeaders(allHeaders: _*).post(body.toString).map { result =>
+      result.status match {
         case 200 => EmptyDDBResult
-        case _ => sys.error("Boo")
+        case _ => sys.error(result.body)
       }
     }
   }
@@ -51,7 +51,10 @@ object DynamoDB {
       "Authorization" -> V4.authorizationHeader(requestTime, headers, Nil, body.toString))
 
     WS.url("https://" + region.host + "/").withHeaders(allHeaders: _*).post(body.toString).map { result =>
-      aws.dynamodb.SimpleDDBResult(jsonPart(result.json))
+      result.status match {
+        case 200 => aws.dynamodb.SimpleDDBResult(jsonPart(result.json))
+        case _ => sys.error(result.body)
+      }
     }
   }
 

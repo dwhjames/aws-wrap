@@ -28,11 +28,9 @@ object DynamoDBSpec extends Specification {
       val schema = KeySchema(KeySchemaElement("id", DDBString))
       val provisioned = ProvisionedThroughput(5L, 5L)
       val r = Await.result(DynamoDB.createTable("create-table-test", schema, provisioned), Duration(30, SECONDS))
-      // Wait 30 seconds to leave time for Amazon to create the table (otherwise it's in "CREATING" status and can't be deleted)
       r.body.status should be equalTo(Status.CREATING)
-      Thread.sleep(30000)
-      val r2 = Await.result(DynamoDB.describeTable("create-table-test"), Duration(30, SECONDS))
-      r.body.status should be equalTo(Status.ACTIVE)
+      // Loop until the table is ready
+      while(Await.result(DynamoDB.describeTable("create-table-test"), Duration(30, SECONDS)).body.status == Status.CREATING) ()
       val r3 = Await.result(DynamoDB.deleteTable("create-table-test"), Duration(30, SECONDS))
       success
     }
