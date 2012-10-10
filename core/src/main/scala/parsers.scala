@@ -2,7 +2,6 @@ package aws.core.parsers
 
 import scala.annotation.implicitNotFound
 import scala.xml.Elem
-import scala.util.{ Try, Success, Failure }
 
 import play.api.libs.ws.Response
 
@@ -11,34 +10,62 @@ import aws.core._
 @implicitNotFound(
   "No parser found for type ${To}. Try to implement an implicit aws.core.parsers.Parser for this type."
 )
-trait Parser[To] extends (Response => Try[To])
+trait Parser[To] extends (Response => ParseResult[To]) {
+  def map[B](f: (To => B)): Parser[B] = this.flatMap { parsed => Parser.pure(f(parsed)) }
+  def flatMap[B](f: (To => Parser[B])) = Parser[B] { r =>
+    this(r).fold[ParseResult[B]](
+      e => Failure(e),
+      parsed => f(parsed)(r)
+    )
+  }
 
-case class AWSError(code: String, message: String)
-case class Errors(errors: Seq[AWSError]) extends RuntimeException
+  def or[Other >: To, B <: Other](alternative: Parser[B]) = Parser[Other] { r =>
+    this(r).fold(
+      e => alternative(r).fold(_ => Failure(e), s => Success(s)): ParseResult[Other],
+      s => Success(s)
+    )
+  }
+}
+
+sealed trait ParseResult[+To] {
+  def fold[U](e: (String => U), s: (To => U)):U
+}
+case class Success[To](value: To) extends ParseResult[To] {
+  override def fold[U](e: (String => U), s: (To => U)):U = s(value)
+}
+case class Failure(failure: String) extends ParseResult[Nothing] {
+  override def fold[U](e: (String => U), s: (Nothing => U)):U = e(failure)
+}
 
 object Parser {
 
-  def apply[To](transformer: (Response => Try[To])): Parser[To] = new Parser[To] {
+  def pure[To](v: To) = Parser[To](_ => Success(v))
+
+  def apply[To](transformer: (Response => ParseResult[To])): Parser[To] = new Parser[To] {
     def apply(r: Response) = transformer(r)
   }
 
-  def of[To](implicit extractor: Parser[To]) = extractor
+  def parse[To](r: Response)(implicit p: Parser[To]): ParseResult[To] = p(r)
 
-  def HandleError[To](p: Response => Try[To]) = new Parser[To]{
-    def apply(r: Response) = r.status match {
-      case 200 => p(r)
-      case _ => errorsParser(r).transform(e => Failure(Errors(e)), Failure(_))
+  def resultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =  mp.flatMap { meta =>
+    p.map { body =>
+      Result(meta, body)
     }
   }
 
-  implicit def metadataParser = Parser[Metadata] { r =>
-    Success(Metadata(r.xml \\ "RequestId" text, r.xml \\ "BoxUsage" text))
-  }
+  implicit def unitParser: Parser[Unit] = Parser.pure(())
 
-  implicit def errorsParser = Parser[Seq[AWSError]] { r =>
-    Success((r.xml \\ "Error").map { node =>
-      AWSError(node \ "Code" text, node \ "Message" text)
-    })
-  }
+  implicit def safeResultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
+    errorsParser.or(resultParser(mp ,p))
+
+  def errorsParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
+    r.status match {
+      // TODO: really test content
+      case 200 => Failure("Not an error")
+      case _ => Success(Errors(meta, (r.xml \\ "Error").map { node =>
+        AWSError(node \ "Code" text, node \ "Message" text)
+      }))
+    }
+  })
 
 }
