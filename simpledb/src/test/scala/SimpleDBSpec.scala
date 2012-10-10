@@ -1,6 +1,5 @@
 package aws.simpledb
 
-import scala.util.{Try, Success, Failure}
 import scala.concurrent.Future
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
@@ -14,17 +13,14 @@ object SimpleDBSpec extends Specification {
   import scala.concurrent.util._
   import java.util.concurrent.TimeUnit._
 
-  import aws.core.parsers.Errors
-
   implicit val region = SDBRegion.EU_WEST_1
 
   "SimpleDB API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    def checkResult(r: Try[Result]) = r match {
-      case Success(result) => result.metadata.requestId must not be empty
-      case Failure(Errors(errors)) => failure(errors.toString)
-      case Failure(t) => failure(t.getMessage)
+    def checkResult[T](r: Result[SimpleDBMeta, T]) = r match {
+      case Errors(errors) => failure(errors.toString)
+      case Result(SimpleDBMeta(requestId, _), _) => requestId must not be empty
     }
 
     "Create a domain" in {
@@ -41,8 +37,8 @@ object SimpleDBSpec extends Specification {
     "List domains" in {
       val r = Await.result(SimpleDB.listDomains(), Duration(30, SECONDS))
       checkResult(r)
-      for(domains <- r)
-        domains.body must not be empty
+      for(body <- r)
+        body must not be empty
       success
     }
 
@@ -52,10 +48,9 @@ object SimpleDBSpec extends Specification {
         .flatMap(_ => Await.result(SimpleDB.putAttributes("test-put-attributes", "theItem", Seq(toto)), Duration(30, SECONDS)))
         .flatMap(_ => Await.result(SimpleDB.getAttributes("test-put-attributes", "theItem", None, true), Duration(30, SECONDS)))
       r match {
-        case Success(result) if result.body.contains(toto) => success
-        case Success(result) => failure("Could not find inserted attribute in " + result.body)
-        case Failure(Errors(errors)) => failure(errors.toString)
-        case Failure(t) => failure(t.getMessage)
+        case Errors(errors) => failure(errors.toString)
+        case Result(_, body) if body.contains(toto) => success
+        case Result(_, body) => failure("Could not find inserted attribute in " + body)
       }
 
       val d = Await.result(SimpleDB.deleteDomain("test-put-attributes"), Duration(30, SECONDS))
@@ -77,10 +72,9 @@ object SimpleDBSpec extends Specification {
         .flatMap(_ => Await.result(SimpleDB.putAttributes("test-select-attributes", "theItem", Seq(toto)), Duration(30, SECONDS)))
         .flatMap(_ => Await.result(SimpleDB.select("select * from `test-select-attributes`", None, true), Duration(30, SECONDS)))
       r match {
-        case Success(result) if result.body.exists(item => item.name == "theItem" && item.attributes.contains(toto)) => success
-        case Success(result) => failure("Could not find inserted attribute in " + result.body)
-        case Failure(Errors(errors)) => failure(errors.toString)
-        case Failure(t) => failure(t.getMessage)
+        case Errors(errors) => failure(errors.toString)
+        case Result(_, body) if body.exists(item => item.name == "theItem" && item.attributes.contains(toto)) => success
+        case Result(_, body) => failure("Could not find inserted attribute in " + body)
       }
 
       val d = Await.result(SimpleDB.deleteDomain("test-select-attributes"), Duration(30, SECONDS))
@@ -94,27 +88,24 @@ object SimpleDBSpec extends Specification {
         .flatMap(_ => Await.result(SimpleDB.batchPutAttributes("test-batch", Seq(foobar)), Duration(30, SECONDS)))
         .flatMap(_ => Await.result(SimpleDB.select("select * from `test-batch`", None, true), Duration(30, SECONDS)))
       r match {
-        case Success(result) if result.body.exists(item => item.name == "foobar" && item.attributes.contains(color)) =>
-          success
-        case Success(result) =>
-          failure("Could not find inserted attribute in " + result.body)
-        case Failure(Errors(errors)) =>
+        case Errors(errors) =>
           failure(errors.toString)
-        case Failure(t) =>
-          failure(t.getMessage)
+        case Result(_, body) if body.exists(item => item.name == "foobar" && item.attributes.contains(color)) =>
+          success
+        case Result(_, body) =>
+          failure("Could not find inserted attribute in " + body)
+
       }
 
       val r2 = Await.result(SimpleDB.batchDeleteAttributes("test-batch", Seq(foobar)), Duration(30, SECONDS))
         .flatMap(_ => Await.result(SimpleDB.select("select * from `test-batch`", None, true), Duration(30, SECONDS)))
       r2 match {
-        case Success(result) if result.body.exists(item => item.name == "foobar" && item.attributes.contains(color)) =>
-          failure("Batch deletion failed: " + result.body)
-        case Success(result) =>
-          success
-        case Failure(Errors(errors)) =>
+        case Errors(errors) =>
           failure(errors.toString)
-        case Failure(t) =>
-          failure(t.getMessage)
+        case Result(_, body) if body.exists(item => item.name == "foobar" && item.attributes.contains(color)) =>
+          failure("Batch deletion failed: " + body)
+        case Result(_, body) =>
+          success
       }
 
       val d = Await.result(SimpleDB.deleteDomain("test-batch"), Duration(30, SECONDS))

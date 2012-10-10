@@ -75,38 +75,38 @@ object SimpleDB {
     WS.url("https://" + region.host + "/?" + V2.signedUrl("GET", parameters)).get()
   }
 
+  private def tryParse[M <: Metadata, T](resp: Response)(implicit p: Parser[Result[M,T]]) = Parser.parse[Result[M,T]](resp).fold(
+    e => throw new RuntimeException(e),
+    identity
+  )
+
+  /**
+  * This helper will fetch data using request, and try to parse the response to the specified types
+  */
+  private def get[M <: Metadata, T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M,T]]): Future[Result[M,T]] =
+    request(parameters:_*).map(tryParse[M, T])
+
   /**
    * Creates a domain with the given name
    */
-  def createDomain(domainName: String)(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] = {
-    request(Action("CreateDomain"), DomainName(domainName)).map{ resp =>
-      Parser.parse[Result[SimpleDBMeta, Unit]](resp).fold(
-        e => throw new RuntimeException(e),
-        identity
-      )
-    }
-  }
+  def createDomain(domainName: String)(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] =
+    get[SimpleDBMeta, Unit](Action("CreateDomain"), DomainName(domainName))
 
   /**
    * Deletes the given domain
    */
-  def deleteDomain(domainName: String)(implicit region: AWSRegion): Future[Try[Result]] = {
-    request(Action("DeleteDomain"), DomainName(domainName)).map { wsresponse =>
-      EmptyResult(wsresponse)
-    }
-  }
+  def deleteDomain(domainName: String)(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] =
+    get[SimpleDBMeta, Unit](Action("DeleteDomain"), DomainName(domainName))
 
   /**
    * Lists domains starting with the nextToken, if present, and giving the max number of domains given
    */
-  def listDomains(maxNumberOfDomains: Int = 100, nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Try[SimpleResult[Seq[SDBDomain]]]] = {
+  def listDomains(maxNumberOfDomains: Int = 100, nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Result[SimpleDBMeta, Seq[SDBDomain]]] = {
     val params = Seq(
       Action("ListDomains"),
       MaxNumberOfDomains(maxNumberOfDomains)) ++ nextToken.map(NextToken(_)).toSeq
 
-    request(params: _*).map { wsresponse =>
-      SimpleResult[Seq[SDBDomain]](wsresponse)
-    }
+    get[SimpleDBMeta, Seq[SDBDomain]](params: _*)
   }
 
   /**
@@ -114,29 +114,25 @@ object SimpleDB {
    */
   def putAttributes(domainName: String,
                     itemName: String,
-                    attributes: Seq[SDBAttribute])(implicit region: AWSRegion): Future[Try[EmptyResult]] = {
+                    attributes: Seq[SDBAttribute])(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] = {
     val params = Seq(
       Action("PutAttributes"),
       DomainName(domainName),
       ItemName(itemName)) ++ Attributes(attributes)
 
-    request(params: _*).map { wsresponse =>
-      EmptyResult(wsresponse)
-    }
+    get[SimpleDBMeta, Unit](params: _*)
   }
 
   /**
    * Delete all or some attributes for an item. To delete the whole item, pass its name with an empty attribute list.
    */
-  def deleteAttributes(domainName: String, item: SDBItem)(implicit region: AWSRegion): Future[Try[EmptyResult]] = {
+  def deleteAttributes(domainName: String, item: SDBItem)(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] = {
     val params = Seq(
       Action("DeleteAttributes"),
       DomainName(domainName),
       ItemName(item.name)) ++ Attributes(item.attributes)
 
-    request(params: _*).map { wsresponse =>
-      EmptyResult(wsresponse)
-    }
+    get[SimpleDBMeta, Unit](params: _*)
   }
 
   /**
@@ -145,63 +141,52 @@ object SimpleDB {
   def getAttributes(domainName: String,
                     itemName: String,
                     attributeName: Option[String] = None,
-                    consistentRead: Boolean = false)(implicit region: AWSRegion): Future[Try[SimpleResult[Seq[SDBAttribute]]]] = {
+                    consistentRead: Boolean = false)(implicit region: AWSRegion): Future[Result[SimpleDBMeta, Seq[SDBAttribute]]] = {
     val params = Seq(
       Action("GetAttributes"),
       DomainName(domainName),
       ItemName(itemName),
       ConsistentRead(consistentRead)) ++ attributeName.map(AttributeName(_)).toSeq
 
-    request(params: _*).map { wsresponse =>
-      SimpleResult[Seq[SDBAttribute]](wsresponse)
-    }
+    get[SimpleDBMeta, Seq[SDBAttribute]](params: _*)
   }
 
   /**
    * Get detailed information about a domain
    */
-  def domainMetadata(domainName: String)(implicit region: AWSRegion): Future[Try[SimpleResult[SDBDomainMetadata]]] = {
-    request(Action("DomainMetadata"), DomainName(domainName)).map { wsresponse =>
-      SimpleResult[SDBDomainMetadata](wsresponse)
-    }
-  }
+  def domainMetadata(domainName: String)(implicit region: AWSRegion): Future[Result[SimpleDBMeta, SDBDomainMetadata]] =
+    get[SimpleDBMeta, SDBDomainMetadata](Action("DomainMetadata"), DomainName(domainName))
 
   /**
    * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
    */
-  def select(expression: String, nextToken: Option[String] = None, consistentRead: Boolean = false)(implicit region: AWSRegion): Future[Try[SimpleResult[Seq[SDBItem]]]] = {
+  def select(expression: String, nextToken: Option[String] = None, consistentRead: Boolean = false)(implicit region: AWSRegion): Future[Result[SimpleDBMeta, Seq[SDBItem]]] = {
     val params = Seq(
       Action("Select"),
       SelectExpression(expression),
       ConsistentRead(consistentRead)) ++ nextToken.map(NextToken(_)).toSeq
 
-    request(params: _*).map { wsresponse =>
-      SimpleResult[Seq[SDBItem]](wsresponse)
-    }
+    get[SimpleDBMeta, Seq[SDBItem]](params: _*)
   }
 
   /**
    * Put attributes for more than one item
    */
-  def batchPutAttributes(domainName: String, items: Seq[SDBItem])(implicit region: AWSRegion): Future[Try[Result]] = {
+  def batchPutAttributes(domainName: String, items: Seq[SDBItem])(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] = {
     val params = Seq(
       Action("BatchPutAttributes"),
       DomainName(domainName)) ++ Items(items)
-    request(params: _*).map { wsresponse =>
-      EmptyResult(wsresponse)
-    }
+    get[SimpleDBMeta, Unit](params: _*)
   }
 
   /**
    * Delete attributes for more than one item
    */
-  def batchDeleteAttributes(domainName: String, items: Seq[SDBItem])(implicit region: AWSRegion): Future[Try[Result]] = {
+  def batchDeleteAttributes(domainName: String, items: Seq[SDBItem])(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] = {
     val params = Seq(
       Action("BatchDeleteAttributes"),
       DomainName(domainName)) ++ Items(items)
-    request(params: _*).map { wsresponse =>
-      EmptyResult(wsresponse)
-    }
+    get[SimpleDBMeta, Unit](params: _*)
   }
 
 }
