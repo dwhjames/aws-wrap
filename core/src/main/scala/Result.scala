@@ -41,7 +41,7 @@ sealed trait Result[M <: Metadata, +T] {
   def toEither: Either[Errors[M], Result[M, T]]
   def flatMap[T2](f: (T) => Result[M, T2]): Result[M, T2]
   def foreach(f: (T => Unit)): Unit
-  override def toString = "Result(%s, %s, %s)".format(metadata, body)
+  override def toString = "Result(%s, %s)".format(metadata, body)
 }
 
 object Result {
