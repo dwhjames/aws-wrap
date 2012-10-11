@@ -65,6 +65,14 @@ object DynamoDB {
     post[TableDescription]("CreateTable", body)
   }
 
+    def updateTable(tableName: String,
+                    provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
+    val body = Json.obj(
+      "TableName" -> tableName,
+      "ProvisionedThroughput" -> provisionedThroughput)
+    post[TableDescription]("UpdateTable", body)
+  }
+
   def deleteTable(tableName: String)(implicit region: AWSRegion): Future[EmptySimpleResult] = {
     val body = Json.obj("TableName" -> tableName)
     post[Unit]("DeleteTable", body)
@@ -108,15 +116,12 @@ object DynamoDB {
       "ConsistentRead" -> JsBoolean(consistentRead))
     post[ItemResponse]("GetItem", body)
   }
-  // GetItem
 
   // Query
 
   // Scan
 
   // UpdateItem
-
-  // UpdateTable
 
   // BatchGetItem
 

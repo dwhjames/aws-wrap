@@ -15,7 +15,24 @@ object DynamoDBSpec extends Specification {
   import scala.concurrent.util._
   import java.util.concurrent.TimeUnit._
 
+  import aws.core._
+  import aws.core.Types._
+
   implicit val region = DDBRegion.EU_WEST_1
+
+  def ensureSuccess[T](r: SimpleResult[T]) = r match {
+    case Result(_, _) => success
+    case Errors(errors) => failure(errors.toString)
+  }
+
+  def waitUntilReady(tableName: String) {
+    while({
+      val status = Await.result(DynamoDB.describeTable("update-table-test"), Duration(30, SECONDS)).body.status
+      status == Status.CREATING || status == Status.UPDATING
+    }) {
+      Thread.sleep(1000)
+    }
+  }
 
   "DynamoDB API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,9 +49,24 @@ object DynamoDBSpec extends Specification {
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
       }
       // Loop until the table is ready
-      while(Await.result(DynamoDB.describeTable("create-table-test"), Duration(30, SECONDS)).body.status == Status.CREATING) ()
-      Await.result(DynamoDB.deleteTable("create-table-test"), Duration(30, SECONDS))
-      success
+      waitUntilReady("create-table-test")
+      ensureSuccess(Await.result(DynamoDB.deleteTable("create-table-test"), Duration(30, SECONDS)))
+    }
+
+    "Update a table" in {
+      val schema = KeySchema(KeySchemaElement("id", DDBString))
+      val provisioned = ProvisionedThroughput(5L, 5L)
+      val newProvisioned = ProvisionedThroughput(10L, 10L)
+      Await.result(DynamoDB.createTable("update-table-test", schema, provisioned), Duration(30, SECONDS)) match {
+        case Errors(errors) => failure(errors.toString)
+        case Result(_, description) => description.status should be equalTo(Status.CREATING)
+      }
+      // Loop until the table is ready
+      waitUntilReady("update-table-test")
+      // Update it
+      ensureSuccess(Await.result(DynamoDB.updateTable("update-table-test", newProvisioned), Duration(30, SECONDS)))
+      waitUntilReady("update-table-test")
+      ensureSuccess(Await.result(DynamoDB.deleteTable("update-table-test"), Duration(30, SECONDS)))
     }
 
     "Put and delete items" in {
@@ -54,13 +86,10 @@ object DynamoDBSpec extends Specification {
       }
 
       // Loop until the table is ready
-      while(Await.result(DynamoDB.describeTable("put-item-test"), Duration(30, SECONDS)).body.status == Status.CREATING) ()
+      waitUntilReady("put-item-test")
 
       // Put the item
-      Await.result(DynamoDB.putItem("put-item-test", item), Duration(30, SECONDS)) match {
-        case Result(_, response) => success
-        case Errors(errors) => failure(errors.toString)
-      }
+      ensureSuccess(Await.result(DynamoDB.putItem("put-item-test", item), Duration(30, SECONDS)))
 
       // Check that it's there
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
@@ -69,10 +98,7 @@ object DynamoDBSpec extends Specification {
       }
 
       // Delete it
-      Await.result(DynamoDB.deleteItem("put-item-test", key), Duration(30, SECONDS)) match {
-        case Result(_, _) => success
-        case Errors(errors) => failure(errors.toString)
-      }
+      ensureSuccess(Await.result(DynamoDB.deleteItem("put-item-test", key), Duration(30, SECONDS)))
 
       // Check that it's gone
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
@@ -81,8 +107,7 @@ object DynamoDBSpec extends Specification {
       }
 
       // Delete the table
-      Await.result(DynamoDB.deleteTable("put-item-test"), Duration(30, SECONDS))
-      success
+      ensureSuccess(Await.result(DynamoDB.deleteTable("put-item-test"), Duration(30, SECONDS)))
     }
 
   }
