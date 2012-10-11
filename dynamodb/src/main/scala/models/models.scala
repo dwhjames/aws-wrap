@@ -6,7 +6,7 @@ sealed trait DDBAttribute {
 
 // TODO: Check the serialization algorithm with AWS
 object DDBAttribute {
-  def apply(typeCode: String, value: String) = typeCode match {
+  def apply(typeCode: String, value: String): DDBAttribute = typeCode match {
     case "N" => DDBNumber(value.toLong)
     case "S" => DDBString(value)
     case "B" => DDBBinary(value.getBytes())

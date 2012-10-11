@@ -44,18 +44,21 @@ package object models {
 
   implicit val DDBAttributeFormat = Format[DDBAttribute](
     Reads((json: JsValue) => json match {
-      case JsObject(o) if o.size > 0 => JsSuccess(DDBAttribute(o.head._1, o.head._2.as[String]))
+      case JsObject(o) if o.size > 0 => JsSuccess(DDBAttribute.apply(o.head._1, o.head._2.as[String]))
       case _ => JsError("Expecting a non empty JsObject")
     }),
     Writes((a: DDBAttribute) => a match {
       case DDBString(s) => Json.obj(a.typeCode -> JsString(s))
       case DDBNumber(n) => Json.obj(a.typeCode -> JsString(n.toString)) // This looks wrong, but AWS actually wants numbers as strings
       case DDBBinary(b) => Json.obj(a.typeCode -> JsString(b.toString))
-    }))
+    })
+  )
 
   implicit val ItemResponseReads = Reads[ItemResponse](json => {
     (json \ "ConsumedCapacityUnits", json \ "Item") match {
-      case (JsNumber(consumed), JsObject(o)) => JsSuccess(ItemResponse(consumed, o.toMap.mapValues(_.as[DDBAttribute](DDBAttributeFormat))))
+      case (JsNumber(consumed), JsObject(o)) => JsSuccess(
+        ItemResponse(consumed, o.toMap.mapValues(_.as[DDBAttribute]))
+      )
       case (JsNumber(consumed), _) => JsSuccess(ItemResponse(consumed, Map.empty))
       case _ => JsError("ConsumedCapacityUnits is required and must be a number")
     }
