@@ -1,7 +1,7 @@
 package aws.dynamodb
 
-import play.api.libs.json.Json.toJson
 import play.api.libs.json._
+import play.api.libs.json.Json._
 import play.api.libs.json.util._
 import play.api.libs.json.Reads._
 import play.api.libs.json.Writes._
@@ -53,18 +53,18 @@ package object models {
       case DDBBinary(b) => Json.obj(a.typeCode -> JsString(b.toString))
     }))
 
-  implicit val ItemResponseFormat = Reads[ItemResponse](json => {
-    (json \ "ConsumedCapacityUnits", json \ "Attributes") match {
-      case (JsNumber(consumed), JsObject(o)) => JsSuccess(ItemResponse(consumed.toLong, o.toMap.mapValues(_.as[DDBAttribute](DDBAttributeFormat))))
-      case (JsNumber(consumed), _) => JsSuccess(ItemResponse(consumed.toLong, Map.empty))
+  implicit val ItemResponseReads = Reads[ItemResponse](json => {
+    (json \ "ConsumedCapacityUnits", json \ "Item") match {
+      case (JsNumber(consumed), JsObject(o)) => JsSuccess(ItemResponse(consumed, o.toMap.mapValues(_.as[DDBAttribute](DDBAttributeFormat))))
+      case (JsNumber(consumed), _) => JsSuccess(ItemResponse(consumed, Map.empty))
       case _ => JsError("ConsumedCapacityUnits is required and must be a number")
     }
   })
 
-  implicit val KeyFormat = (
-    (__ \ 'HashKeyElement).format[DDBAttribute] and
-    optionalFormat[DDBAttribute](__ \ 'RangeKeyElement)
-  )(Key, unlift(Key.unapply))
+  implicit val KeyWrites = Writes[Key](key => {
+    Json.obj("HashKeyElement" -> key.hashKeyElement) ++
+      key.rangeKeyElement.map(range => Json.obj("RangeKeyElement" -> range)).getOrElse(Json.obj())
+  })
 
 }
 

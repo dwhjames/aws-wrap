@@ -4,6 +4,7 @@ sealed trait DDBAttribute {
   def typeCode: String
 }
 
+// TODO: Check the serialization algorithm with AWS
 object DDBAttribute {
   def apply(typeCode: String, value: String) = typeCode match {
     case "N" => DDBNumber(value.toLong)
@@ -93,5 +94,5 @@ object ReturnValues {
   case object ALL_OLD extends ReturnValues { override def toString = "ALL_OLD" }
 }
 
-case class ItemResponse(consumedCapacityUnits: Long, attributes: Map[String, DDBAttribute])
+case class ItemResponse(consumedCapacityUnits: BigDecimal, attributes: Map[String, DDBAttribute])
 

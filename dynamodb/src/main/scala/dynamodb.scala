@@ -86,6 +86,7 @@ object DynamoDB {
     post[ItemResponse]("PutItem", body)
   }
 
+  // TODO: Implement the "Expected" parameter
   def deleteItem(tableName: String,
                  key: Key,
                  returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
@@ -96,6 +97,17 @@ object DynamoDB {
     post[ItemResponse]("DeleteItem", body)
   }
 
+  def getItem(tableName: String,
+              key: Key,
+              attributesToGet: Seq[String],
+              consistentRead: Boolean = false)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
+    val body = Json.obj(
+      "TableName" -> JsString(tableName),
+      "Key" -> Json.toJson(key),
+      "AttributesToGet" -> Json.toJson(attributesToGet),
+      "ConsistentRead" -> JsBoolean(consistentRead))
+    post[ItemResponse]("GetItem", body)
+  }
   // GetItem
 
   // Query

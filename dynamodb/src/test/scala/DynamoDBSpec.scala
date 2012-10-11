@@ -45,6 +45,7 @@ object DynamoDBSpec extends Specification {
         "lastName" -> DDBString("Tesla"),
         "awesomeLevel" -> DDBNumber(1000)
       )
+      val key = Key(DDBString("ntesla"))
       val provisioned = ProvisionedThroughput(5L, 5L)
       // Create a table
       Await.result(DynamoDB.createTable("put-item-test", schema, provisioned), Duration(30, SECONDS)) match {
@@ -61,9 +62,21 @@ object DynamoDBSpec extends Specification {
         case Errors(errors) => failure(errors.toString)
       }
 
+      // Check that it's there
+      Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
+        case Result(_, body) => body.attributes.get("firstName") should be equalTo(Some(DDBString("Nikola")))
+        case Errors(errors) => failure(errors.toString)
+      }
+
       // Delete it
-      Await.result(DynamoDB.deleteItem("put-item-test", Key(DDBString("ntesla"))), Duration(30, SECONDS)) match {
-        case Result(_, response) => success
+      Await.result(DynamoDB.deleteItem("put-item-test", key), Duration(30, SECONDS)) match {
+        case Result(_, _) => success
+        case Errors(errors) => failure(errors.toString)
+      }
+
+      // Check that it's gone
+      Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
+        case Result(_, body) => body.attributes.get("firstName") should be equalTo(None)
         case Errors(errors) => failure(errors.toString)
       }
 
