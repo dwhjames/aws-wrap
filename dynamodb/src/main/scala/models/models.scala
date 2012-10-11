@@ -33,10 +33,10 @@ sealed trait AttributeType {
 case class Item(attributes: Map[String, DDBAttribute])
 
 object AttributeType {
-  def apply(t: String) = t match {
-    case "N" => DDBLong
-    case "S" => DDBString
-    case "B" => DDBBinary
+  def apply(t: String) = t.toLowerCase match {
+    case "n" => DDBLong
+    case "s" => DDBString
+    case "b" => DDBBinary
     case _ => sys.error("Invalid AttributeType: " + t)
   }
 }
@@ -52,6 +52,21 @@ object DDBString extends AttributeType {
 object DDBBinary extends AttributeType {
   override def typeCode = "B"
 }
+
+sealed trait UpdateAction
+
+object UpdateAction {
+  case object PUT extends UpdateAction { override def toString = "PUT" }
+  case object DELETE extends UpdateAction { override def toString = "DELETE" }
+  case object ADD extends UpdateAction { override def toString = "ADD" }
+  def apply(action: String) = action.toLowerCase match {
+    case "put" => PUT
+    case "delete" => DELETE
+    case "add" => ADD
+  }
+}
+
+case class Update(value: DDBAttribute, action: UpdateAction = UpdateAction.PUT)
 
 sealed trait Status {
   def status: String
@@ -93,6 +108,8 @@ object ReturnValues {
   case object NONE extends ReturnValues { override def toString = "NONE" }
   case object ALL_OLD extends ReturnValues { override def toString = "ALL_OLD" }
 }
+
+case class Expected(exists: Option[Boolean] = None, value: Option[DDBAttribute] = None)
 
 case class ItemResponse(consumedCapacityUnits: BigDecimal, attributes: Map[String, DDBAttribute])
 

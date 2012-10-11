@@ -65,8 +65,8 @@ object DynamoDB {
     post[TableDescription]("CreateTable", body)
   }
 
-    def updateTable(tableName: String,
-                    provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
+  def updateTable(tableName: String,
+                  provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj(
       "TableName" -> tableName,
       "ProvisionedThroughput" -> provisionedThroughput)
@@ -83,24 +83,26 @@ object DynamoDB {
     post[TableDescription]("DescribeTable", body)
   }
 
-  // TODO: Implement the "Expected" parameter
   def putItem(tableName: String,
               item: Map[String, DDBAttribute],
+              expected: Map[String, Expected] = Map.empty,
               returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Item" -> Json.toJson(item),
+      "Expected" -> Json.toJson(expected),
       "ReturnValues" -> JsString(returnValues.toString))
     post[ItemResponse]("PutItem", body)
   }
 
-  // TODO: Implement the "Expected" parameter
   def deleteItem(tableName: String,
                  key: Key,
+                 expected: Map[String, Expected] = Map.empty,
                  returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),
+      "Expected" -> Json.toJson(expected),
       "ReturnValues" -> JsString(returnValues.toString))
     post[ItemResponse]("DeleteItem", body)
   }
@@ -117,11 +119,23 @@ object DynamoDB {
     post[ItemResponse]("GetItem", body)
   }
 
+  def updateItem(tableName: String,
+                 key: Key,
+                 attributeUpdates: Map[String, Update],
+                 expected: Map[String, Expected] = Map.empty,
+                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
+    val body = Json.obj(
+      "TableName" -> JsString(tableName),
+      "Key" -> Json.toJson(key),
+      "Expected" -> Json.toJson(expected),
+      "AttributeUpdates" -> Json.toJson(attributeUpdates),
+      "ReturnValues" -> JsString(returnValues.toString))
+    post[ItemResponse]("UpdateItem", body)
+  }
+
   // Query
 
   // Scan
-
-  // UpdateItem
 
   // BatchGetItem
 

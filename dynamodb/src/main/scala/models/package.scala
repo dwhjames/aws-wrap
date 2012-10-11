@@ -51,14 +51,12 @@ package object models {
       case DDBString(s) => Json.obj(a.typeCode -> JsString(s))
       case DDBNumber(n) => Json.obj(a.typeCode -> JsString(n.toString)) // This looks wrong, but AWS actually wants numbers as strings
       case DDBBinary(b) => Json.obj(a.typeCode -> JsString(b.toString))
-    })
-  )
+    }))
 
   implicit val ItemResponseReads = Reads[ItemResponse](json => {
     (json \ "ConsumedCapacityUnits", json \ "Item") match {
       case (JsNumber(consumed), JsObject(o)) => JsSuccess(
-        ItemResponse(consumed, o.toMap.mapValues(_.as[DDBAttribute]))
-      )
+        ItemResponse(consumed, o.toMap.mapValues(_.as[DDBAttribute])))
       case (JsNumber(consumed), _) => JsSuccess(ItemResponse(consumed, Map.empty))
       case _ => JsError("ConsumedCapacityUnits is required and must be a number")
     }
@@ -68,6 +66,20 @@ package object models {
     Json.obj("HashKeyElement" -> key.hashKeyElement) ++
       key.rangeKeyElement.map(range => Json.obj("RangeKeyElement" -> range)).getOrElse(Json.obj())
   })
+
+  implicit val ExpectedWrites = Writes[Expected](expected => {
+    val existsJs = expected.exists.map(ex => Json.obj("Exists" -> JsBoolean(ex))).getOrElse(Json.obj())
+    val valueJs = expected.value.map(v => Json.obj("Exists" -> toJson(v))).getOrElse(Json.obj())
+    existsJs ++ valueJs
+  })
+
+  implicit val AttributeActionFormat = Format[UpdateAction](
+    __.read[String].map(a => UpdateAction(a)),
+    Writes((action: UpdateAction) => JsString(action.toString)))
+
+  implicit val UpdateFormat = (
+    (__ \ 'Value).format[DDBAttribute] and
+    (__ \ 'Action).format[UpdateAction])(Update, unlift(Update.unapply))
 
 }
 

@@ -32,6 +32,7 @@ object DynamoDBSpec extends Specification {
     }) {
       Thread.sleep(1000)
     }
+    Thread.sleep(1000)
   }
 
   "DynamoDB API" should {
@@ -94,6 +95,18 @@ object DynamoDBSpec extends Specification {
       // Check that it's there
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
         case Result(_, body) => body.attributes.get("firstName") should be equalTo(Some(DDBString("Nikola")))
+        case Errors(errors) => failure(errors.toString)
+      }
+
+      // Update it
+      ensureSuccess(Await.result(
+        DynamoDB.updateItem("put-item-test", key, Map("firstName" -> Update(DDBString("Nico"), UpdateAction.PUT))),
+        Duration(30, SECONDS)
+      ))
+
+      // Check that the update was effective
+      Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
+        case Result(_, body) => body.attributes.get("firstName") should be equalTo(Some(DDBString("Nico")))
         case Errors(errors) => failure(errors.toString)
       }
 
