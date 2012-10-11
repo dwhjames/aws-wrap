@@ -25,7 +25,7 @@ object AWS {
     def TimeStamp(date: Date) = "Timestamp" -> isoDateFormat(date)
     def Expires(seconds: Long) = "Expires" -> {
       val now = new Date().getTime()
-      isoDateFormat(new Date(now + seconds * 1000))
+      (now / 1000 + seconds).toString
     }
     def Action(a: String) = ("Action" -> a)
     def AWSAccessKeyId(key: String) = ("AWSAccessKeyId" -> AWS.key)

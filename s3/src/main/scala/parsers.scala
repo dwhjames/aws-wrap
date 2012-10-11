@@ -12,7 +12,7 @@ object S3Parsers {
   def errorsParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
     r.status match {
       // TODO: really test content
-      case 200 => Failure("Not an error")
+      case s if (s < 300) => Failure("Error expected, found success (status 2xx)")
       case _ => Success(Errors(meta, (r.xml \\ "Error").map { node =>
         AWSError(node \ "Code" text, node \ "Message" text)
       }))
