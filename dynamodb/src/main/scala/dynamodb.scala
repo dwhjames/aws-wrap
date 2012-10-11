@@ -65,8 +65,8 @@ object DynamoDB {
     post[TableDescription]("CreateTable", body)
   }
 
-    def updateTable(tableName: String,
-                    provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
+  def updateTable(tableName: String,
+                  provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj(
       "TableName" -> tableName,
       "ProvisionedThroughput" -> provisionedThroughput)
