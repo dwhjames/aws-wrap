@@ -1,10 +1,23 @@
 package aws.s3
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import play.api.libs.ws.Response
 import aws.core._
 import aws.core.parsers._
 
+import aws.s3.models._
+
 object S3Parsers {
+
+  def parseDate(d: String): Date = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'").parse(d)
+
+  implicit def bucketsParser = Parser[Seq[Bucket]]{ r =>
+    Success((r.xml \\ "Bucket").map{ n =>
+       Bucket((n \ "Name").text, parseDate((n \ "CreationDate").text))
+    })
+  }
 
   implicit def safeResultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
     errorsParser.or(Parser.resultParser(mp, p))

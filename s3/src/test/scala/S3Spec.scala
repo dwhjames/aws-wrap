@@ -27,7 +27,7 @@ object S3Spec extends Specification {
       val delete = Await.result(S3.deleteBucket(name), Duration(30, SECONDS))
       checkResult(delete)
     }
-
+/*
     "Create and delete a bucket" in {
       val bucketName = AWS.key + "testBucketCreate"
       val create = Await.result(S3.createBucket(bucketName), Duration(30, SECONDS))
@@ -56,6 +56,12 @@ object S3Spec extends Specification {
       val res = Await.result(S3.createBucket(bucketName, permissions = perms), Duration(30, SECONDS))
       checkResult(res)
       del(bucketName)
+    }
+*/
+    "List buckets" in {
+      val res = Await.result(S3.listBuckets(), Duration(30, SECONDS))
+      println(res)
+      checkResult(res)
     }
   }
 }

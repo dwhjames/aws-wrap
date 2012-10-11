@@ -15,6 +15,7 @@ import aws.core.parsers._
 
 import aws.s3.signature._
 import aws.s3.S3Parsers._
+import aws.s3.models._
 
 object S3 {
 
@@ -63,11 +64,11 @@ object S3 {
     }
   }
 
-  private def ressource(bucketname: String, uri: String, subresource: Option[String] = None) =
-    "/%s\n%s\n?%s".format(bucketname, uri, subresource.getOrElse(""))
+  private def ressource(bucketname: Option[String], uri: String, subresource: Option[String] = None) =
+    "/%s\n%s\n?%s".format(bucketname.getOrElse(""), uri, subresource.getOrElse(""))
 
-  private def request(method: Method, bucketname: String, body: Option[String] = None, parameters: Seq[(String, String)] = Nil)(implicit region: AWSRegion): Future[Response] = {
-    val uri = "https://" + bucketname + ".s3.amazonaws.com"
+  private def request(method: Method, bucketname: Option[String] = None, body: Option[String] = None, parameters: Seq[(String, String)] = Nil): Future[Response] = {
+    val uri = bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com")
     val res = ressource(bucketname, uri)
     // TODO: do not hardcode contentType
     val r = WS.url(uri)
@@ -76,6 +77,7 @@ object S3 {
     method match {
       case PUT => r.put(body.get)
       case DELETE => r.delete()
+      case GET => r.get()
       case _ => throw new RuntimeException("Unsuported method: " + method)
     }
   }
@@ -96,10 +98,13 @@ object S3 {
       </CreateBucketConfiguration>
 
     val ps = acls.map(X_AMZ_ACL(_)).toSeq ++ permissions
-    request(PUT, bucketname, Some(body.toString), ps).map(tryParse[Unit])
+    request(PUT, Some(bucketname), Some(body.toString), ps).map(tryParse[Unit])
   }
 
-  def deleteBucket(bucketname: String)(implicit region: AWSRegion): Future[EmptySimpleResult] =
-    request(DELETE, bucketname).map(tryParse[Unit])
+  def deleteBucket(bucketname: String): Future[EmptySimpleResult] =
+    request(DELETE, Some(bucketname)).map(tryParse[Unit])
+
+  def listBuckets(): Future[SimpleResult[Seq[Bucket]]] =
+    request(GET).map(tryParse[Seq[Bucket]])
 
 }
