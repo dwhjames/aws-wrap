@@ -53,13 +53,18 @@ package object models {
       case DDBBinary(b) => Json.obj(a.typeCode -> JsString(b.toString))
     }))
 
-  implicit val PutItemResponseFormat = Reads[PutItemResponse](json => {
+  implicit val ItemResponseFormat = Reads[ItemResponse](json => {
     (json \ "ConsumedCapacityUnits", json \ "Attributes") match {
-      case (JsNumber(consumed), JsObject(o)) => JsSuccess(PutItemResponse(consumed.toLong, o.toMap.mapValues(_.as[DDBAttribute])))
-      case (JsNumber(consumed), _) => JsSuccess(PutItemResponse(consumed.toLong, Map.empty))
+      case (JsNumber(consumed), JsObject(o)) => JsSuccess(ItemResponse(consumed.toLong, o.toMap.mapValues(_.as[DDBAttribute](DDBAttributeFormat))))
+      case (JsNumber(consumed), _) => JsSuccess(ItemResponse(consumed.toLong, Map.empty))
       case _ => JsError("ConsumedCapacityUnits is required and must be a number")
     }
   })
+
+  implicit val KeyFormat = (
+    (__ \ 'HashKeyElement).format[DDBAttribute] and
+    optionalFormat[DDBAttribute](__ \ 'RangeKeyElement)
+  )(Key, unlift(Key.unapply))
 
 }
 

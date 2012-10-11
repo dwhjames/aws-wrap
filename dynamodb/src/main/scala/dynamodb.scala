@@ -55,38 +55,46 @@ object DynamoDB {
     post[Seq[String]]("ListTables", Json.toJson(data))
   }
 
-  def createTable(name: String,
+  def createTable(tableName: String,
                   keySchema: KeySchema,
                   provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj(
-      "TableName" -> name,
+      "TableName" -> tableName,
       "KeySchema" -> keySchema,
       "ProvisionedThroughput" -> provisionedThroughput)
     post[TableDescription]("CreateTable", body)
   }
 
-  def deleteTable(name: String)(implicit region: AWSRegion): Future[EmptySimpleResult] = {
-    val body = Json.obj("TableName" -> name)
+  def deleteTable(tableName: String)(implicit region: AWSRegion): Future[EmptySimpleResult] = {
+    val body = Json.obj("TableName" -> tableName)
     post[Unit]("DeleteTable", body)
   }
 
-  def describeTable(name: String)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
-    val body = Json.obj("TableName" -> JsString(name))
+  def describeTable(tableName: String)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
+    val body = Json.obj("TableName" -> JsString(tableName))
     post[TableDescription]("DescribeTable", body)
   }
 
   // TODO: Implement the "Expected" parameter
-  def putItem(name: String,
+  def putItem(tableName: String,
               item: Map[String, DDBAttribute],
-              returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[PutItemResponse]] = {
+              returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
-      "TableName" -> JsString(name),
+      "TableName" -> JsString(tableName),
       "Item" -> Json.toJson(item),
       "ReturnValues" -> JsString(returnValues.toString))
-    post[PutItemResponse]("PutItem", body)
+    post[ItemResponse]("PutItem", body)
   }
 
-  // DeleteItem
+  def deleteItem(tableName: String,
+                 key: Key,
+                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
+    val body = Json.obj(
+      "TableName" -> JsString(tableName),
+      "Key" -> Json.toJson(key),
+      "ReturnValues" -> JsString(returnValues.toString))
+    post[ItemResponse]("DeleteItem", body)
+  }
 
   // GetItem
 

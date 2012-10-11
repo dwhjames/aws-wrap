@@ -23,7 +23,7 @@ object DynamoDBSpec extends Specification {
     "List tables" in {
       val r = Await.result(DynamoDB.listTables(), Duration(30, SECONDS))
     }
-/*
+
     "Create and delete tables" in {
       val schema = KeySchema(KeySchemaElement("id", DDBString))
       val provisioned = ProvisionedThroughput(5L, 5L)
@@ -36,8 +36,8 @@ object DynamoDBSpec extends Specification {
       Await.result(DynamoDB.deleteTable("create-table-test"), Duration(30, SECONDS))
       success
     }
-*/
-    "Put elements" in {
+
+    "Put and delete items" in {
       val schema = KeySchema(KeySchemaElement("id", DDBString))
       val item: Map[String, DDBAttribute] = Map(
         "id" -> DDBString("ntesla"),
@@ -54,8 +54,15 @@ object DynamoDBSpec extends Specification {
 
       // Loop until the table is ready
       while(Await.result(DynamoDB.describeTable("put-item-test"), Duration(30, SECONDS)).body.status == Status.CREATING) ()
+
       // Put the item
       Await.result(DynamoDB.putItem("put-item-test", item), Duration(30, SECONDS)) match {
+        case Result(_, response) => success
+        case Errors(errors) => failure(errors.toString)
+      }
+
+      // Delete it
+      Await.result(DynamoDB.deleteItem("put-item-test", Key(DDBString("ntesla"))), Duration(30, SECONDS)) match {
         case Result(_, response) => success
         case Errors(errors) => failure(errors.toString)
       }

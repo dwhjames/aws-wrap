@@ -75,6 +75,8 @@ case class KeySchemaElement(attributeName: String, attributeType: AttributeType)
 
 case class KeySchema(hashKey: KeySchemaElement, rangeKey: Option[KeySchemaElement] = None)
 
+case class Key(hashKeyElement: DDBAttribute, rangeKeyElement: Option[DDBAttribute] = None)
+
 case class ProvisionedThroughput(readCapacityUnits: Long, writeCapacityUnits: Long)
 
 case class TableDescription(name: String,
@@ -91,5 +93,5 @@ object ReturnValues {
   case object ALL_OLD extends ReturnValues { override def toString = "ALL_OLD" }
 }
 
-case class PutItemResponse(consumedCapacityUnits: Long, attributes: Map[String, DDBAttribute])
+case class ItemResponse(consumedCapacityUnits: Long, attributes: Map[String, DDBAttribute])
 
