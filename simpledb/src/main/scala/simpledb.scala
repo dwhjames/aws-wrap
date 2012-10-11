@@ -3,7 +3,6 @@ package aws.simpledb
 import java.util.Date
 
 import scala.annotation.implicitNotFound
-import scala.util.{ Try, Success }
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.ws._
