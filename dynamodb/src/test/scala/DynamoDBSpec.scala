@@ -185,5 +185,54 @@ object DynamoDBSpec extends Specification {
       ensureSuccess(Await.result(DynamoDB.deleteTable("scan-test"), Duration(30, SECONDS)))
     }
 
+    "Batch operations" in {
+      val schema = PrimaryKey(KeySchemaElement("id", DDBString))
+      val niko: Map[String, DDBAttribute] = Map(
+        "id" -> DDBString("ntesla"),
+        "firstName" -> DDBString("Nikola"),
+        "lastName" -> DDBString("Tesla"),
+        "awesomeLevel" -> DDBNumber(1000)
+      )
+      val tom: Map[String, DDBAttribute] = Map(
+        "id" -> DDBString("tedison"),
+        "firstName" -> DDBString("Thomas"),
+        "lastName" -> DDBString("Edison"),
+        "awesomeLevel" -> DDBNumber(800)
+      )
+      // Create a table
+      Await.result(DynamoDB.createTable("batch-test", schema, provisioned), Duration(30, SECONDS)) match {
+        case Errors(errors) => failure(errors.toString)
+        case Result(_, description) => description.status should be equalTo(Status.CREATING)
+      }
+
+      // Loop until the table is ready
+      waitUntilReady("batch-test")
+
+      // Add items as a batch
+      val batchWrite = Map(
+        "batch-test" -> Seq(
+          PutRequest(niko),
+          PutRequest(tom)
+        )
+      )
+      ensureSuccess(Await.result(DynamoDB.batchWriteItem(batchWrite), Duration(30, SECONDS)))
+
+      // Get items as a batch
+      val batchGet = Map(
+        "batch-test" -> GetRequest(Seq(Key(DDBString("tedison"))))
+      )
+      Await.result(DynamoDB.batchGetItem(batchGet), Duration(30, SECONDS)) match {
+        case Errors(errors) => failure(errors.toString)
+        case Result(_, response) => {
+          println("Success = " + success)
+          success
+        }
+      }
+
+
+      // Delete the table
+      ensureSuccess(Await.result(DynamoDB.deleteTable("batch-test"), Duration(30, SECONDS)))
+    }
+
   }
 }

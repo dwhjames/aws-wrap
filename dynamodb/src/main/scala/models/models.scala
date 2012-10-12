@@ -57,9 +57,8 @@ case class ItemResponse(attributes: Map[String, DDBAttribute], consumedCapacityU
 
 case class QueryResponse(
   items: Seq[Map[String, DDBAttribute]],
-  count: Long,
+  count: Option[Long],
   scannedCount: Option[Long],
   lastEvaluatedKey: Option[Key],
   consumedCapacityUnits: BigDecimal)
-
 

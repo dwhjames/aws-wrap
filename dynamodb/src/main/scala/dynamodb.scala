@@ -145,8 +145,7 @@ object DynamoDB {
            exclusiveStartKey: Option[PrimaryKey] = None)(implicit region: AWSRegion): Future[SimpleResult[QueryResponse]] = {
     val data = Seq(
       "TableName" -> JsString(tableName),
-      "Count" -> JsBoolean(count)
-    ) ++
+      "Count" -> JsBoolean(count)) ++
       Some(attributesToGet).filterNot(_.isEmpty).map("AttributesToGet" -> Json.toJson(_)) ++
       limit.map("Limit" -> Json.toJson(_)) ++
       scanFilter.map("ScanFilter" -> Json.toJson(_)) ++
@@ -155,9 +154,15 @@ object DynamoDB {
     post[QueryResponse]("Scan", Json.toJson(data.toMap))
   }
 
-  // BatchGetItem
+  def batchWriteItem(requestItems: Map[String, Seq[WriteRequest]])(implicit region: AWSRegion): Future[SimpleResult[BatchWriteResponse]] = {
+    post[BatchWriteResponse]("BatchWriteItem", Json.obj(
+      "RequestItems" -> Json.toJson(requestItems)))
+  }
 
-  // BatchWriteItem
+  def batchGetItem(requestItems: Map[String, GetRequest])(implicit region: AWSRegion): Future[SimpleResult[BatchGetResponse]] = {
+    post[BatchGetResponse]("BatchGetItem", Json.obj(
+      "RequestItems" -> Json.toJson(requestItems)))
+  }
 
 }
 

@@ -30,13 +30,11 @@ package object models {
 
   implicit val HashKeyFormat = Format[HashKey](
     (__ \ 'HashKeyElement).read[KeySchemaElement].map(e => HashKey(e)),
-    Writes((key: HashKey) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKey)))
-  )
+    Writes((key: HashKey) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKey))))
 
   implicit val CompositeKeyFormat = (
     (__ \ 'HashKeyElement).format[KeySchemaElement] and
-    (__ \ 'RangeKeyElement).format[KeySchemaElement]
-  )(CompositeKey, unlift(CompositeKey.unapply))
+    (__ \ 'RangeKeyElement).format[KeySchemaElement])(CompositeKey, unlift(CompositeKey.unapply))
 
   implicit val PrimaryKeyFormat = Format[PrimaryKey](
     Reads((json: JsValue) => ((json \ "HashKeyElement").validate[KeySchemaElement], (json \ "RangeKeyElement").asOpt[KeySchemaElement]) match {
@@ -45,10 +43,9 @@ package object models {
       case (err: JsError, _) => err
     }),
     Writes((key: PrimaryKey) => key match {
-      case h:HashKey => Json.toJson(h)
-      case c:CompositeKey => Json.toJson(c)
-    })
-  )
+      case h: HashKey => Json.toJson(h)
+      case c: CompositeKey => Json.toJson(c)
+    }))
 
   implicit val ProvisionedThroughputFormat = (
     (__ \ 'ReadCapacityUnits).format[Long] and
@@ -80,8 +77,7 @@ package object models {
       case DDBStringSet(ss) => Json.obj(a.typeCode -> Json.toJson(ss))
       case DDBNumberSet(ns) => Json.obj(a.typeCode -> Json.toJson(ns))
       case DDBBinarySet(bs) => Json.obj(a.typeCode -> Json.toJson(bs.map(Crypto.base64(_))))
-    })
-  )
+    }))
 
   implicit val ItemResponseReads = Reads[ItemResponse](json => {
     (json \ "ConsumedCapacityUnits", json \ "Item") match {
@@ -152,11 +148,51 @@ package object models {
       case JsArray(a) => a.map(_.as[Map[String, DDBAttribute]])
       case _ => Nil
     }
-    val count = (json \ "Count").as[Long]
+    val count = (json \ "Count").asOpt[Long]
     val scannedCount = (json \ "ScannedCount").asOpt[Long]
     val lastEvaluatedKey = (json \ "LastEvaluatedKey").asOpt[Key]
     val consumedCapacityUnits = (json \ "ConsumedCapacityUnits").as[BigDecimal]
     JsSuccess(QueryResponse(items, count, scannedCount, lastEvaluatedKey, consumedCapacityUnits))
+  })
+
+  implicit val WriteRequestFormat = Format[WriteRequest](
+    Reads((json: JsValue) => ((json \ "PutRequest" \ "Item").validate[Map[String, DDBAttribute]],
+      (json \ "DeleteRequest" \ "Key").validate[Key]) match {
+        case (JsSuccess(items, _), _) => JsSuccess(PutRequest(items))
+        case (_, JsSuccess(key, _)) => JsSuccess(DeleteRequest(key))
+        case (err: JsError, _) => err
+        case (_, err: JsError) => err
+      }),
+    Writes((request: WriteRequest) => request match {
+      case PutRequest(items) => Json.obj("PutRequest" ->
+        Json.obj("Item" -> Json.toJson(items.toMap)))
+      case DeleteRequest(key) => Json.obj("DeleteRequest" ->
+        Json.obj("Key" -> Json.toJson(key)))
+    }))
+
+  implicit val BatchGetRequestWrites = Format[GetRequest](
+    Reads(json => ((json \ "Keys").validate[Seq[Key]], (json \ "AttributesToGet").validate[Seq[String]]) match {
+      case (JsSuccess(keys, _), JsSuccess(attr, _)) => JsSuccess(GetRequest(keys, attr))
+      case (JsSuccess(keys, _), _) => JsSuccess(GetRequest(keys))
+      case (err: JsError, _) => err
+    }),
+    Writes(request =>
+      Json.obj("Keys" -> Json.toJson(request.keys)) ++
+        (request.attributesToGet match {
+          case Nil => Json.obj()
+          case attr => Json.obj("AttributesToGet" -> Json.toJson(attr))
+        })))
+
+  implicit val BatchWriteResponseReads = Reads[BatchWriteResponse](json => {
+    val responses = (json \ "Responses").as[Map[String, QueryResponse]].toSeq
+    val unprocessed = (json \ "UnprocessedItems").as[Map[String, Seq[WriteRequest]]].toSeq
+    JsSuccess(BatchWriteResponse(responses, unprocessed))
+  })
+
+  implicit val BatchGetResponseReads = Reads[BatchGetResponse](json => {
+    val responses = (json \ "Responses").as[Map[String, QueryResponse]].toSeq
+    val unprocessed = (json \ "UnprocessedKeys").as[Map[String, Seq[GetRequest]]].toSeq
+    JsSuccess(BatchGetResponse(responses, unprocessed))
   })
 
 }
