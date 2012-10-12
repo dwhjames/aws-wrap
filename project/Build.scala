@@ -24,7 +24,7 @@ object ApplicationBuild extends Build {
         version := "0.1-SNAPSHOT",
         resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
         resolvers += "erwan" at "http://caffeinelab.net/repo",
-        libraryDependencies += "play" %% "play" % "2.1-20121011-erw",
+        libraryDependencies += "play" %% "play" % "2.1-20121012-erw",
         libraryDependencies += "org.specs2" %% "specs2" % "1.11" % "test"
     )
 
