@@ -56,7 +56,7 @@ object DynamoDB {
   }
 
   def createTable(tableName: String,
-                  keySchema: KeySchema,
+                  keySchema: PrimaryKey,
                   provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj(
       "TableName" -> tableName,
@@ -83,30 +83,32 @@ object DynamoDB {
     post[TableDescription]("DescribeTable", body)
   }
 
-  // TODO: Implement the "Expected" parameter
   def putItem(tableName: String,
               item: Map[String, DDBAttribute],
+              expected: Map[String, Expected] = Map.empty,
               returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Item" -> Json.toJson(item),
+      "Expected" -> Json.toJson(expected),
       "ReturnValues" -> JsString(returnValues.toString))
     post[ItemResponse]("PutItem", body)
   }
 
-  // TODO: Implement the "Expected" parameter
   def deleteItem(tableName: String,
-                 key: Key,
+                 key: KeyValue,
+                 expected: Map[String, Expected] = Map.empty,
                  returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),
+      "Expected" -> Json.toJson(expected),
       "ReturnValues" -> JsString(returnValues.toString))
     post[ItemResponse]("DeleteItem", body)
   }
 
   def getItem(tableName: String,
-              key: Key,
+              key: KeyValue,
               attributesToGet: Seq[String],
               consistentRead: Boolean = false)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
@@ -117,15 +119,50 @@ object DynamoDB {
     post[ItemResponse]("GetItem", body)
   }
 
-  // Query
+  def updateItem(tableName: String,
+                 key: KeyValue,
+                 attributeUpdates: Map[String, Update],
+                 expected: Map[String, Expected] = Map.empty,
+                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
+    val body = Json.obj(
+      "TableName" -> JsString(tableName),
+      "Key" -> Json.toJson(key),
+      "Expected" -> Json.toJson(expected),
+      "AttributeUpdates" -> Json.toJson(attributeUpdates),
+      "ReturnValues" -> JsString(returnValues.toString))
+    post[ItemResponse]("UpdateItem", body)
+  }
 
-  // Scan
+  def query(query: Query)(implicit region: AWSRegion): Future[SimpleResult[QueryResponse]] = {
+    post[QueryResponse]("Query", Json.toJson(query))
+  }
 
-  // UpdateItem
+  def scan(tableName: String,
+           attributesToGet: Seq[String] = Nil,
+           limit: Option[Long] = None,
+           count: Boolean = false,
+           scanFilter: Option[KeyCondition] = None,
+           exclusiveStartKey: Option[PrimaryKey] = None)(implicit region: AWSRegion): Future[SimpleResult[QueryResponse]] = {
+    val data = Seq(
+      "TableName" -> JsString(tableName),
+      "Count" -> JsBoolean(count)) ++
+      Some(attributesToGet).filterNot(_.isEmpty).map("AttributesToGet" -> Json.toJson(_)) ++
+      limit.map("Limit" -> Json.toJson(_)) ++
+      scanFilter.map("ScanFilter" -> Json.toJson(_)) ++
+      exclusiveStartKey.map("ExclusiveStartKey" -> Json.toJson(_))
 
-  // BatchGetItem
+    post[QueryResponse]("Scan", Json.toJson(data.toMap))
+  }
 
-  // BatchWriteItem
+  def batchWriteItem(requestItems: Map[String, Seq[WriteRequest]])(implicit region: AWSRegion): Future[SimpleResult[BatchWriteResponse]] = {
+    post[BatchWriteResponse]("BatchWriteItem", Json.obj(
+      "RequestItems" -> Json.toJson(requestItems)))
+  }
+
+  def batchGetItem(requestItems: Map[String, GetRequest])(implicit region: AWSRegion): Future[SimpleResult[BatchGetResponse]] = {
+    post[BatchGetResponse]("BatchGetItem", Json.obj(
+      "RequestItems" -> Json.toJson(requestItems)))
+  }
 
 }
 

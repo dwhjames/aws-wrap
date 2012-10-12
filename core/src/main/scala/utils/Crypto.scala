@@ -22,4 +22,6 @@ object Crypto {
 
   def base64(data: Array[Byte]) = new sun.misc.BASE64Encoder().encode(data)
 
+  def decodeBase64(b64: String) = new sun.misc.BASE64Decoder().decodeBuffer(b64)
+
 }

@@ -1,6 +1,5 @@
 package aws.core
 
-import scala.xml.Elem
 import play.api.libs.ws.{ Response => WSResponse }
 
 import aws.core.parsers._
@@ -41,7 +40,7 @@ sealed trait Result[M <: Metadata, +T] {
   def toEither: Either[Errors[M], Result[M, T]]
   def flatMap[T2](f: (T) => Result[M, T2]): Result[M, T2]
   def foreach(f: (T => Unit)): Unit
-  override def toString = "Result(%s, %s, %s)".format(metadata, body)
+  override def toString = "Result(%s, %s)".format(metadata, body)
 }
 
 object Result {

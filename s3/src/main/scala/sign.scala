@@ -13,8 +13,8 @@ object S3Sign {
 
   def dateFormat(d: Date) = new java.text.SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z").format(d)
 
-  def canonicalizedResource(bucketName: String, resource: Option[String] = None, subresource: Option[String] = None) =
-    "/%s%s%s".format(bucketName.toLowerCase, resource.getOrElse("/"), subresource.getOrElse(""))
+  def canonicalizedResource(bucketName: Option[String], resource: Option[String] = None, subresource: Option[String] = None) =
+    "%s%s%s".format(bucketName.map("/" + _.toLowerCase).getOrElse(""), resource.getOrElse("/"), subresource.getOrElse(""))
 
   def canonicalizedAmzHeaders(headers: Seq[(String, String)]) = headers.map {
     case (k, v) =>
@@ -24,7 +24,7 @@ object S3Sign {
   def toSign(method: String, md5: String, contentType: String, date: String, amzheaders: String, resources: String) =
     "%s\n%s\n%s\n%s\n%s%s".format(method, md5, contentType, date, amzheaders, resources)
 
-  def sign(method: String, bucketname: String, md5: Option[String] = None, contentType: Option[String] = None): Seq[(String, String)] = {
+  def sign(method: String, bucketname: Option[String], md5: Option[String] = None, contentType: Option[String] = None): Seq[(String, String)] = {
 
     import AWS.Parameters._
     import aws.core.SignerEncoder.encode

@@ -1,10 +1,23 @@
 package aws.s3
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import play.api.libs.ws.Response
 import aws.core._
 import aws.core.parsers._
 
+import aws.s3.models._
+
 object S3Parsers {
+
+  def parseDate(d: String): Date = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'").parse(d)
+
+  implicit def bucketsParser = Parser[Seq[Bucket]] { r =>
+    Success((r.xml \\ "Bucket").map { n =>
+      Bucket((n \ "Name").text, parseDate((n \ "CreationDate").text))
+    })
+  }
 
   implicit def safeResultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
     errorsParser.or(Parser.resultParser(mp, p))
@@ -12,7 +25,7 @@ object S3Parsers {
   def errorsParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
     r.status match {
       // TODO: really test content
-      case 200 => Failure("Not an error")
+      case s if (s < 300) => Failure("Error expected, found success (status 2xx)")
       case _ => Success(Errors(meta, (r.xml \\ "Error").map { node =>
         AWSError(node \ "Code" text, node \ "Message" text)
       }))
