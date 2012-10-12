@@ -6,6 +6,8 @@ import play.api.libs.json.util._
 import play.api.libs.json.Reads._
 import play.api.libs.json.Writes._
 
+import aws.core.utils.Crypto
+
 package object models {
 
   // JSON Formatters
@@ -62,14 +64,24 @@ package object models {
 
   implicit val DDBAttributeFormat = Format[DDBAttribute](
     Reads((json: JsValue) => json match {
-      case JsObject(o) if o.size > 0 => JsSuccess(DDBAttribute.apply(o.head._1, o.head._2.as[String]))
+      case JsObject(o) if o.size > 0 => {
+        o.head._1 match {
+          case attr if Set("N", "S", "B")(attr) => JsSuccess(DDBAttribute.apply(o.head._1, o.head._2.as[String]))
+          case attr if Set("NS", "SS", "BS")(attr) => JsSuccess(DDBAttribute.apply(o.head._1, o.head._2.as[Set[String]]))
+          case attr => JsError("Unkown attribute type " + attr)
+        }
+      }
       case _ => JsError("Expecting a non empty JsObject")
     }),
     Writes((a: DDBAttribute) => a match {
       case DDBString(s) => Json.obj(a.typeCode -> JsString(s))
       case DDBNumber(n) => Json.obj(a.typeCode -> JsString(n.toString)) // This looks wrong, but AWS actually wants numbers as strings
-      case DDBBinary(b) => Json.obj(a.typeCode -> JsString(b.toString))
-    }))
+      case DDBBinary(b) => Json.obj(a.typeCode -> JsString(Crypto.base64(b)))
+      case DDBStringSet(ss) => Json.obj(a.typeCode -> Json.toJson(ss))
+      case DDBNumberSet(ns) => Json.obj(a.typeCode -> Json.toJson(ns))
+      case DDBBinarySet(bs) => Json.obj(a.typeCode -> Json.toJson(bs.map(Crypto.base64(_))))
+    })
+  )
 
   implicit val ItemResponseReads = Reads[ItemResponse](json => {
     (json \ "ConsumedCapacityUnits", json \ "Item") match {

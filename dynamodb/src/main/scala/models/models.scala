@@ -1,59 +1,6 @@
 package aws.dynamodb.models
 
-import aws.core.utils.Crypto
-
-sealed trait DDBAttribute {
-  def typeCode: String
-}
-
-object DDBAttribute {
-  def apply(typeCode: String, value: String): DDBAttribute = typeCode match {
-    case "N" => DDBNumber(value.toLong)
-    case "S" => DDBString(value)
-    case "B" => DDBBinary(Crypto.decodeBase64(value))
-  }
-}
-
-case class DDBNumber(value: Long) extends DDBAttribute {
-  def typeCode = "N"
-}
-
-case class DDBString(value: String) extends DDBAttribute {
-  def typeCode = "S"
-}
-
-case class DDBBinary(value: Array[Byte]) extends DDBAttribute {
-  def typeCode = "B"
-  override def toString = Crypto.base64(value)
-}
-
-sealed trait AttributeType {
-  def typeCode: String
-  override def toString = typeCode
-}
-
 case class Item(attributes: Map[String, DDBAttribute])
-
-object AttributeType {
-  def apply(t: String) = t.toLowerCase match {
-    case "n" => DDBLong
-    case "s" => DDBString
-    case "b" => DDBBinary
-    case _ => sys.error("Invalid AttributeType: " + t)
-  }
-}
-
-object DDBLong extends AttributeType {
-  override def typeCode = "N"
-}
-
-object DDBString extends AttributeType {
-  override def typeCode = "S"
-}
-
-object DDBBinary extends AttributeType {
-  override def typeCode = "B"
-}
 
 sealed trait UpdateAction
 
