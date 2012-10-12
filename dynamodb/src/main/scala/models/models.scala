@@ -1,15 +1,16 @@
 package aws.dynamodb.models
 
+import aws.core.utils.Crypto
+
 sealed trait DDBAttribute {
   def typeCode: String
 }
 
-// TODO: Check the serialization algorithm with AWS
 object DDBAttribute {
   def apply(typeCode: String, value: String): DDBAttribute = typeCode match {
     case "N" => DDBNumber(value.toLong)
     case "S" => DDBString(value)
-    case "B" => DDBBinary(value.getBytes())
+    case "B" => DDBBinary(Crypto.decodeBase64(value))
   }
 }
 
@@ -23,6 +24,7 @@ case class DDBString(value: String) extends DDBAttribute {
 
 case class DDBBinary(value: Array[Byte]) extends DDBAttribute {
   def typeCode = "B"
+  override def toString = Crypto.base64(value)
 }
 
 sealed trait AttributeType {
