@@ -24,4 +24,4 @@ case class Query(tableName: String,
                  count: Boolean = false,
                  rangeKeyCondition: Option[KeyCondition] = None,
                  scanIndexForward: Boolean = true,
-                 exclusiveStartKey: Option[KeySchema] = None)
+                 exclusiveStartKey: Option[PrimaryKey] = None)

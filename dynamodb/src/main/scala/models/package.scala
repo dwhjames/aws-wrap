@@ -26,9 +26,27 @@ package object models {
     (__ \ 'AttributeName).format[String] and
     (__ \ 'AttributeType).format[AttributeType])(KeySchemaElement, unlift(KeySchemaElement.unapply))
 
-  implicit val KeySchemaFormat = (
+  implicit val HashKeyFormat = Format[HashKey](
+    (__ \ 'HashKeyElement).read[KeySchemaElement].map(e => HashKey(e)),
+    Writes((key: HashKey) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKey)))
+  )
+
+  implicit val CompositeKeyFormat = (
     (__ \ 'HashKeyElement).format[KeySchemaElement] and
-    optionalFormat[KeySchemaElement](__ \ 'RangeKeyElement))(KeySchema, unlift(KeySchema.unapply))
+    (__ \ 'RangeKeyElement).format[KeySchemaElement]
+  )(CompositeKey, unlift(CompositeKey.unapply))
+
+  implicit val PrimaryKeyFormat = Format[PrimaryKey](
+    Reads((json: JsValue) => ((json \ "HashKeyElement").validate[KeySchemaElement], (json \ "RangeKeyElement").asOpt[KeySchemaElement]) match {
+      case (JsSuccess(hashKeyElt, _), None) => JsSuccess(HashKey(hashKeyElt))
+      case (JsSuccess(hashKeyElt, _), Some(rangeKeyElt)) => JsSuccess(CompositeKey(hashKeyElt, rangeKeyElt))
+      case (err: JsError, _) => err
+    }),
+    Writes((key: PrimaryKey) => key match {
+      case h:HashKey => Json.toJson(h)
+      case c:CompositeKey => Json.toJson(c)
+    })
+  )
 
   implicit val ProvisionedThroughputFormat = (
     (__ \ 'ReadCapacityUnits).format[Long] and
@@ -38,7 +56,7 @@ package object models {
     (__ \ 'TableName).format[String] and
     (__ \ 'TableStatus).format[Status] and
     (__ \ 'CreationDateTime).format[java.util.Date] and
-    (__ \ 'KeySchema).format[KeySchema] and
+    (__ \ 'KeySchema).format[PrimaryKey] and
     (__ \ 'ProvisionedThroughput).format[ProvisionedThroughput] and
     optionalFormat[Long](__ \ 'TableSizeBytes))(TableDescription, unlift(TableDescription.unapply))
 

@@ -70,28 +70,21 @@ object UpdateAction {
 
 case class Update(value: DDBAttribute, action: UpdateAction = UpdateAction.PUT)
 
-sealed trait Status {
-  def status: String
-  override def toString = status
-}
-
-object Status {
-  object CREATING extends Status { override def status = "Creating" }
-  object ACTIVE extends Status { override def status = "Active" }
-  object DELETING extends Status { override def status = "Deleting" }
-  object UPDATING extends Status { override def status = "Updating" }
-  def apply(s: String) = s.toLowerCase match {
-    case "creating" => CREATING
-    case "active" => ACTIVE
-    case "deleting" => DELETING
-    case "updating" => UPDATING
-    case _ => sys.error("Invalid table status: " + s)
-  }
-}
-
 case class KeySchemaElement(attributeName: String, attributeType: AttributeType)
 
-case class KeySchema(hashKey: KeySchemaElement, rangeKey: Option[KeySchemaElement] = None)
+sealed trait PrimaryKey
+
+case class HashKey(hashKey: KeySchemaElement) extends PrimaryKey
+
+case class CompositeKey(hashKey: KeySchemaElement, rangeKey: KeySchemaElement) extends PrimaryKey
+
+object PrimaryKey {
+
+  def apply(hashKey: KeySchemaElement) = HashKey(hashKey)
+
+  def apply(hashKey: KeySchemaElement, rangeKey: KeySchemaElement) = CompositeKey(hashKey, rangeKey)
+
+}
 
 case class Key(hashKeyElement: DDBAttribute, rangeKeyElement: Option[DDBAttribute] = None)
 
@@ -100,7 +93,7 @@ case class ProvisionedThroughput(readCapacityUnits: Long, writeCapacityUnits: Lo
 case class TableDescription(name: String,
                             status: Status,
                             creationDateTime: java.util.Date,
-                            keySchema: KeySchema,
+                            keySchema: PrimaryKey,
                             provisionedThroughput: ProvisionedThroughput,
                             size: Option[Long])
 

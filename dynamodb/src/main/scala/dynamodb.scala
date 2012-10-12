@@ -56,7 +56,7 @@ object DynamoDB {
   }
 
   def createTable(tableName: String,
-                  keySchema: KeySchema,
+                  keySchema: PrimaryKey,
                   provisionedThroughput: ProvisionedThroughput)(implicit region: AWSRegion): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj(
       "TableName" -> tableName,
@@ -142,7 +142,7 @@ object DynamoDB {
            limit: Option[Long] = None,
            count: Boolean = false,
            scanFilter: Option[KeyCondition] = None,
-           exclusiveStartKey: Option[KeySchema] = None)(implicit region: AWSRegion): Future[SimpleResult[QueryResponse]] = {
+           exclusiveStartKey: Option[PrimaryKey] = None)(implicit region: AWSRegion): Future[SimpleResult[QueryResponse]] = {
     val data = Seq(
       "TableName" -> JsString(tableName),
       "Count" -> JsBoolean(count)

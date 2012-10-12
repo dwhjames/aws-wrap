@@ -30,10 +30,12 @@ object DynamoDBSpec extends Specification {
       val status = Await.result(DynamoDB.describeTable(tableName), Duration(30, SECONDS)).body.status
       status == Status.CREATING || status == Status.UPDATING
     }) {
-      Thread.sleep(1000)
+      Thread.sleep(2000)
     }
-    Thread.sleep(1000)
+    Thread.sleep(2000)
   }
+
+  val provisioned = ProvisionedThroughput(10L, 10L)
 
   "DynamoDB API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,8 +45,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Create and delete tables" in {
-      val schema = KeySchema(KeySchemaElement("id", DDBString))
-      val provisioned = ProvisionedThroughput(5L, 5L)
+      val schema = PrimaryKey(KeySchemaElement("id", DDBString))
       Await.result(DynamoDB.createTable("create-table-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
@@ -55,9 +56,8 @@ object DynamoDBSpec extends Specification {
     }
 
     "Update a table" in {
-      val schema = KeySchema(KeySchemaElement("id", DDBString))
-      val provisioned = ProvisionedThroughput(5L, 5L)
-      val newProvisioned = ProvisionedThroughput(10L, 10L)
+      val schema = PrimaryKey(KeySchemaElement("id", DDBString))
+      val newProvisioned = ProvisionedThroughput(15L, 15L)
       Await.result(DynamoDB.createTable("update-table-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
@@ -71,7 +71,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Put and delete items" in {
-      val schema = KeySchema(KeySchemaElement("id", DDBString))
+      val schema = PrimaryKey(KeySchemaElement("id", DDBString))
       val item: Map[String, DDBAttribute] = Map(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
@@ -79,7 +79,6 @@ object DynamoDBSpec extends Specification {
         "awesomeLevel" -> DDBNumber(1000)
       )
       val key = Key(DDBString("ntesla"))
-      val provisioned = ProvisionedThroughput(5L, 5L)
       // Create a table
       Await.result(DynamoDB.createTable("put-item-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
@@ -124,7 +123,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Do a query" in {
-      val schema = KeySchema(KeySchemaElement("id", DDBString), Some(KeySchemaElement("lastName", DDBString)))
+      val schema = PrimaryKey(KeySchemaElement("id", DDBString), KeySchemaElement("lastName", DDBString))
       val item: Map[String, DDBAttribute] = Map(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
@@ -132,7 +131,6 @@ object DynamoDBSpec extends Specification {
         "awesomeLevel" -> DDBNumber(1000)
       )
       val key = Key(DDBString("ntesla"))
-      val provisioned = ProvisionedThroughput(5L, 5L)
       // Create a table
       Await.result(DynamoDB.createTable("query-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
@@ -157,7 +155,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Do a scan" in {
-      val schema = KeySchema(KeySchemaElement("id", DDBString), Some(KeySchemaElement("lastName", DDBString)))
+      val schema = PrimaryKey(KeySchemaElement("id", DDBString), KeySchemaElement("lastName", DDBString))
       val item: Map[String, DDBAttribute] = Map(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
@@ -165,7 +163,6 @@ object DynamoDBSpec extends Specification {
         "awesomeLevel" -> DDBNumber(1000)
       )
       val key = Key(DDBString("ntesla"))
-      val provisioned = ProvisionedThroughput(5L, 5L)
       // Create a table
       Await.result(DynamoDB.createTable("scan-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
