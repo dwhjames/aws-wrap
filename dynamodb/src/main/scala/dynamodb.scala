@@ -96,7 +96,7 @@ object DynamoDB {
   }
 
   def deleteItem(tableName: String,
-                 key: Key,
+                 key: KeyValue,
                  expected: Map[String, Expected] = Map.empty,
                  returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
@@ -108,7 +108,7 @@ object DynamoDB {
   }
 
   def getItem(tableName: String,
-              key: Key,
+              key: KeyValue,
               attributesToGet: Seq[String],
               consistentRead: Boolean = false)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
@@ -120,7 +120,7 @@ object DynamoDB {
   }
 
   def updateItem(tableName: String,
-                 key: Key,
+                 key: KeyValue,
                  attributeUpdates: Map[String, Update],
                  expected: Map[String, Expected] = Map.empty,
                  returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {

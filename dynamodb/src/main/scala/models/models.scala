@@ -19,7 +19,9 @@ case class Update(value: DDBAttribute, action: UpdateAction = UpdateAction.PUT)
 
 case class KeySchemaElement(attributeName: String, attributeType: AttributeType)
 
-sealed trait PrimaryKey
+sealed trait PrimaryKey {
+  def hashKey: KeySchemaElement
+}
 
 case class HashKey(hashKey: KeySchemaElement) extends PrimaryKey
 
@@ -33,7 +35,33 @@ object PrimaryKey {
 
 }
 
-case class Key(hashKeyElement: DDBAttribute, rangeKeyElement: Option[DDBAttribute] = None)
+sealed trait KeyValue {
+  def hashKeyElement: DDBAttribute
+}
+
+case class HashKeyValue(hashKeyElement: DDBAttribute) extends KeyValue
+
+object HashKeyValue {
+  def apply(value: String) = new HashKeyValue(DDBString(value))
+  def apply(value: Long) = new HashKeyValue(DDBNumber(value))
+  def apply(value: Array[Byte]) = new HashKeyValue(DDBBinary(value))
+}
+
+case class CompositeKeyValue(hashKeyElement: DDBAttribute, rangeKeyElement: DDBAttribute) extends KeyValue
+
+object CompositeKeyValue {
+  def apply(hash: String, range: String) = new CompositeKeyValue(DDBString(hash), DDBString(range))
+  def apply(hash: Long, range: String) = new CompositeKeyValue(DDBNumber(hash), DDBString(range))
+  def apply(hash: Array[Byte], range: String) = new CompositeKeyValue(DDBBinary(hash), DDBString(range))
+
+  def apply(hash: String, range: Long) = new CompositeKeyValue(DDBString(hash), DDBNumber(range))
+  def apply(hash: Long, range: Long) = new CompositeKeyValue(DDBNumber(hash), DDBNumber(range))
+  def apply(hash: Array[Byte], range: Long) = new CompositeKeyValue(DDBBinary(hash), DDBNumber(range))
+
+  def apply(hash: String, range: Array[Byte]) = new CompositeKeyValue(DDBString(hash), DDBBinary(range))
+  def apply(hash: Long, range: Array[Byte]) = new CompositeKeyValue(DDBNumber(hash), DDBBinary(range))
+  def apply(hash: Array[Byte], range: Array[Byte]) = new CompositeKeyValue(DDBBinary(hash), DDBBinary(range))
+}
 
 case class ProvisionedThroughput(readCapacityUnits: Long, writeCapacityUnits: Long)
 
@@ -59,6 +87,6 @@ case class QueryResponse(
   items: Seq[Map[String, DDBAttribute]],
   count: Option[Long],
   scannedCount: Option[Long],
-  lastEvaluatedKey: Option[Key],
+  lastEvaluatedKey: Option[KeyValue],
   consumedCapacityUnits: BigDecimal)
 

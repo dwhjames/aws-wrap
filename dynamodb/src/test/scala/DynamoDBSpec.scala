@@ -78,7 +78,7 @@ object DynamoDBSpec extends Specification {
         "lastName" -> DDBString("Tesla"),
         "awesomeLevel" -> DDBNumber(1000)
       )
-      val key = Key(DDBString("ntesla"))
+      val key = HashKeyValue("ntesla")
       // Create a table
       Await.result(DynamoDB.createTable("put-item-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
@@ -130,7 +130,7 @@ object DynamoDBSpec extends Specification {
         "lastName" -> DDBString("Tesla"),
         "awesomeLevel" -> DDBNumber(1000)
       )
-      val key = Key(DDBString("ntesla"))
+      val key = HashKeyValue("ntesla")
       // Create a table
       Await.result(DynamoDB.createTable("query-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
@@ -162,7 +162,7 @@ object DynamoDBSpec extends Specification {
         "lastName" -> DDBString("Tesla"),
         "awesomeLevel" -> DDBNumber(1000)
       )
-      val key = Key(DDBString("ntesla"))
+      val key = HashKeyValue("ntesla")
       // Create a table
       Await.result(DynamoDB.createTable("scan-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
@@ -219,7 +219,7 @@ object DynamoDBSpec extends Specification {
 
       // Get items as a batch
       val batchGet = Map(
-        "batch-test" -> GetRequest(Seq(Key(DDBString("tedison"))))
+        "batch-test" -> GetRequest(Seq(HashKeyValue("tedison")))
       )
       Await.result(DynamoDB.batchGetItem(batchGet), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)

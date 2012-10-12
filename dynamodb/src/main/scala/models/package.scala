@@ -88,14 +88,26 @@ package object models {
     }
   })
 
-  implicit val KeyFormat = Format[Key](
+  implicit val HashKeyValueFormat = Format[HashKeyValue](
+    (__ \ 'HashKeyElement).read[DDBAttribute].map(e => HashKeyValue(e)),
+    Writes((key: HashKeyValue) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKeyElement)))
+  )
+
+  implicit val CompositeKeyValueFormat = (
+    (__ \ 'HashKeyElement).format[DDBAttribute] and
+    (__ \ 'RangeKeyElement).format[DDBAttribute])(CompositeKeyValue.apply _, unlift(CompositeKeyValue.unapply))
+
+  implicit val KeyValueFormat = Format[KeyValue](
     Reads((json: JsValue) =>
-      ((json \ "HashKeyElement").validate[DDBAttribute], (json \ "RangeKeyElement").asOpt[DDBAttribute]) match {
+      ((json \ "HashKeyElement").validate[DDBAttribute], (json \ "RangeKeyElement").validate[DDBAttribute]) match {
         case (err: JsError, _) => err
-        case (JsSuccess(hashKey, _), rangeKeyOpt) => JsSuccess(Key(hashKey, rangeKeyOpt))
+        case (JsSuccess(hashKey, _), JsSuccess(rangeKey, _)) => JsSuccess(CompositeKeyValue(hashKey, rangeKey))
+        case (JsSuccess(hashKey, _), _) => JsSuccess(HashKeyValue(hashKey))
       }),
-    Writes((key: Key) => Json.obj("HashKeyElement" -> key.hashKeyElement) ++
-      key.rangeKeyElement.map(range => Json.obj("RangeKeyElement" -> range)).getOrElse(Json.obj())))
+    Writes((key: KeyValue) => key match {
+      case h: HashKeyValue => Json.toJson(h)
+      case c: CompositeKeyValue => Json.toJson(c)
+    }))
 
   implicit val ExpectedWrites = Writes[Expected](expected => {
     val existsJs = expected.exists.map(ex => Json.obj("Exists" -> JsBoolean(ex))).getOrElse(Json.obj())
@@ -150,14 +162,14 @@ package object models {
     }
     val count = (json \ "Count").asOpt[Long]
     val scannedCount = (json \ "ScannedCount").asOpt[Long]
-    val lastEvaluatedKey = (json \ "LastEvaluatedKey").asOpt[Key]
+    val lastEvaluatedKey = (json \ "LastEvaluatedKey").asOpt[KeyValue]
     val consumedCapacityUnits = (json \ "ConsumedCapacityUnits").as[BigDecimal]
     JsSuccess(QueryResponse(items, count, scannedCount, lastEvaluatedKey, consumedCapacityUnits))
   })
 
   implicit val WriteRequestFormat = Format[WriteRequest](
     Reads((json: JsValue) => ((json \ "PutRequest" \ "Item").validate[Map[String, DDBAttribute]],
-      (json \ "DeleteRequest" \ "Key").validate[Key]) match {
+      (json \ "DeleteRequest" \ "Key").validate[KeyValue]) match {
         case (JsSuccess(items, _), _) => JsSuccess(PutRequest(items))
         case (_, JsSuccess(key, _)) => JsSuccess(DeleteRequest(key))
         case (err: JsError, _) => err
@@ -171,7 +183,7 @@ package object models {
     }))
 
   implicit val BatchGetRequestWrites = Format[GetRequest](
-    Reads(json => ((json \ "Keys").validate[Seq[Key]], (json \ "AttributesToGet").validate[Seq[String]]) match {
+    Reads(json => ((json \ "Keys").validate[Seq[KeyValue]], (json \ "AttributesToGet").validate[Seq[String]]) match {
       case (JsSuccess(keys, _), JsSuccess(attr, _)) => JsSuccess(GetRequest(keys, attr))
       case (JsSuccess(keys, _), _) => JsSuccess(GetRequest(keys))
       case (err: JsError, _) => err
