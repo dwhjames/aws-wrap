@@ -53,7 +53,7 @@ object S3 {
       def X_AMZ_ACL(acl: ACL) = ("x-amz-acl" -> acl)
 
       import Grantees._
-      private def s(gs: Seq[Grantee]) = gs.map{ case Grantee(n,v) => """%s="%s"""".format(n,v) }.mkString(", ")
+      private def s(gs: Seq[Grantee]) = gs.map { case Grantee(n, v) => """%s="%s"""".format(n, v) }.mkString(", ")
 
       type Grant = (String, String)
       def GRANT_READ(gs: Grantee*): Grant = "x-amz-grant-read" -> s(gs)

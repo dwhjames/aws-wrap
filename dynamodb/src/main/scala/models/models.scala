@@ -111,5 +111,11 @@ object ReturnValues {
 
 case class Expected(exists: Option[Boolean] = None, value: Option[DDBAttribute] = None)
 
-case class ItemResponse(consumedCapacityUnits: BigDecimal, attributes: Map[String, DDBAttribute])
+case class ItemResponse(attributes: Map[String, DDBAttribute], consumedCapacityUnits: BigDecimal)
+
+case class QueryResponse(
+  items: Seq[Map[String, DDBAttribute]],
+  count: Long,
+  lastEvaluatedKey: Option[Key],
+  consumedCapacityUnits: BigDecimal)
 

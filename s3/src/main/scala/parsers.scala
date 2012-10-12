@@ -13,9 +13,9 @@ object S3Parsers {
 
   def parseDate(d: String): Date = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'").parse(d)
 
-  implicit def bucketsParser = Parser[Seq[Bucket]]{ r =>
-    Success((r.xml \\ "Bucket").map{ n =>
-       Bucket((n \ "Name").text, parseDate((n \ "CreationDate").text))
+  implicit def bucketsParser = Parser[Seq[Bucket]] { r =>
+    Success((r.xml \\ "Bucket").map { n =>
+      Bucket((n \ "Name").text, parseDate((n \ "CreationDate").text))
     })
   }
 

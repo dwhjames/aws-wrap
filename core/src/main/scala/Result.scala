@@ -1,6 +1,5 @@
 package aws.core
 
-import scala.xml.Elem
 import play.api.libs.ws.{ Response => WSResponse }
 
 import aws.core.parsers._

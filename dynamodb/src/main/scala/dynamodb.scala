@@ -133,6 +133,10 @@ object DynamoDB {
     post[ItemResponse]("UpdateItem", body)
   }
 
+  def query(query: Query)(implicit region: AWSRegion): Future[SimpleResult[QueryResponse]] = {
+    post[QueryResponse]("Query", Json.toJson(query))
+  }
+
   // Query
 
   // Scan
