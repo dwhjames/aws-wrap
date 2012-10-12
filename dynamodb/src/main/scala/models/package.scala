@@ -123,9 +123,10 @@ package object models {
       case _ => Nil
     }
     val count = (json \ "Count").as[Long]
+    val scannedCount = (json \ "ScannedCount").asOpt[Long]
     val lastEvaluatedKey = (json \ "LastEvaluatedKey").asOpt[Key]
     val consumedCapacityUnits = (json \ "ConsumedCapacityUnits").as[BigDecimal]
-    JsSuccess(QueryResponse(items, count, lastEvaluatedKey, consumedCapacityUnits))
+    JsSuccess(QueryResponse(items, count, scannedCount, lastEvaluatedKey, consumedCapacityUnits))
   })
 
 }

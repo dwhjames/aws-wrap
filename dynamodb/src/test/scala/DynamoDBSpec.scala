@@ -156,5 +156,37 @@ object DynamoDBSpec extends Specification {
       ensureSuccess(Await.result(DynamoDB.deleteTable("query-test"), Duration(30, SECONDS)))
     }
 
+    "Do a scan" in {
+      val schema = KeySchema(KeySchemaElement("id", DDBString), Some(KeySchemaElement("lastName", DDBString)))
+      val item: Map[String, DDBAttribute] = Map(
+        "id" -> DDBString("ntesla"),
+        "firstName" -> DDBString("Nikola"),
+        "lastName" -> DDBString("Tesla"),
+        "awesomeLevel" -> DDBNumber(1000)
+      )
+      val key = Key(DDBString("ntesla"))
+      val provisioned = ProvisionedThroughput(5L, 5L)
+      // Create a table
+      Await.result(DynamoDB.createTable("scan-test", schema, provisioned), Duration(30, SECONDS)) match {
+        case Errors(errors) => failure(errors.toString)
+        case Result(_, description) => description.status should be equalTo(Status.CREATING)
+      }
+
+      // Loop until the table is ready
+      waitUntilReady("scan-test")
+
+      // Put the item
+      ensureSuccess(Await.result(DynamoDB.putItem("scan-test", item), Duration(30, SECONDS)))
+
+      // Try a scan
+      Await.result(DynamoDB.scan("scan-test"), Duration(30, SECONDS)) match {
+        case Result(_, body) => body.items should be equalTo(Seq(item))
+        case Errors(errors) => failure(errors.toString)
+      }
+
+      // Delete the table
+      ensureSuccess(Await.result(DynamoDB.deleteTable("scan-test"), Duration(30, SECONDS)))
+    }
+
   }
 }

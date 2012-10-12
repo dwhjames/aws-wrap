@@ -137,9 +137,23 @@ object DynamoDB {
     post[QueryResponse]("Query", Json.toJson(query))
   }
 
-  // Query
+  def scan(tableName: String,
+           attributesToGet: Seq[String] = Nil,
+           limit: Option[Long] = None,
+           count: Boolean = false,
+           scanFilter: Option[KeyCondition] = None,
+           exclusiveStartKey: Option[KeySchema] = None)(implicit region: AWSRegion): Future[SimpleResult[QueryResponse]] = {
+    val data = Seq(
+      "TableName" -> JsString(tableName),
+      "Count" -> JsBoolean(count)
+    ) ++
+      Some(attributesToGet).filterNot(_.isEmpty).map("AttributesToGet" -> Json.toJson(_)) ++
+      limit.map("Limit" -> Json.toJson(_)) ++
+      scanFilter.map("ScanFilter" -> Json.toJson(_)) ++
+      exclusiveStartKey.map("ExclusiveStartKey" -> Json.toJson(_))
 
-  // Scan
+    post[QueryResponse]("Scan", Json.toJson(data.toMap))
+  }
 
   // BatchGetItem
 
