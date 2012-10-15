@@ -1,7 +1,5 @@
 package aws.dynamodb.models
 
-case class Item(attributes: Map[String, DDBAttribute])
-
 sealed trait UpdateAction
 
 object UpdateAction {
@@ -17,7 +15,22 @@ object UpdateAction {
 
 case class Update(value: DDBAttribute, action: UpdateAction = UpdateAction.PUT)
 
-case class KeySchemaElement(attributeName: String, attributeType: AttributeType)
+sealed trait KeySchemaElement {
+  def attribute: String
+  def typeCode: String
+}
+
+case class StringKey(attribute: String) extends KeySchemaElement {
+  val typeCode = "S"
+}
+
+case class NumberKey(attribute: String) extends KeySchemaElement {
+  val typeCode = "N"
+}
+
+case class BinaryKey(attribute: String) extends KeySchemaElement {
+  val typeCode = "B"
+}
 
 sealed trait PrimaryKey {
   def hashKey: KeySchemaElement

@@ -31,6 +31,13 @@ object DDBSet {
 object DDBAttribute {
   def apply(typeCode: String, value: String) = DDBScalar(typeCode, value)
   def apply(typeCode: String, value: Set[String]) = DDBSet(typeCode, value)
+
+  def apply(value: String) = DDBString(value)
+  def apply(value: Double) = DDBNumber(value)
+  def apply(value: Array[Byte]) = DDBBinary(value)
+  def apply(value: Iterable[String]) = DDBStringSet(value.toSet)
+  def apply(value: Iterable[Double]) = DDBNumberSet(value.toSet)
+  def apply(value: Iterable[Array[Byte]]) = DDBBinarySet(value.toSet)
 }
 
 case class DDBNumber(value: Double) extends DDBScalar {
@@ -56,30 +63,4 @@ case class DDBStringSet(value: Set[String]) extends DDBSet {
 
 case class DDBBinarySet(value: Set[Array[Byte]]) extends DDBSet {
   def typeCode = "BS"
-}
-
-sealed trait AttributeType {
-  def typeCode: String
-  override def toString = typeCode
-}
-
-object AttributeType {
-  def apply(t: String) = t.toLowerCase match {
-    case "n" => DDBNumber
-    case "s" => DDBString
-    case "b" => DDBBinary
-    case _ => sys.error("Invalid AttributeType: " + t)
-  }
-}
-
-object DDBNumber extends AttributeType {
-  override def typeCode = "N"
-}
-
-object DDBString extends AttributeType {
-  override def typeCode = "S"
-}
-
-object DDBBinary extends AttributeType {
-  override def typeCode = "B"
 }

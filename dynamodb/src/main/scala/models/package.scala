@@ -15,18 +15,24 @@ package object models {
   def optionalFormat[A](path: JsPath)(implicit reads: Reads[A], writes: Writes[Option[A]]): OFormat[Option[A]] =
     OFormat(Reads.optional(path)(reads), Writes.optional(path)(writes))
 
-  // should be written in a nicer and more symmetric way in more recent code not yet in master ;)
-  implicit val AttributeTypeFormat = Format[AttributeType](
-    __.read[String].map(t => AttributeType(t)),
-    Writes((at: AttributeType) => JsString(at.typeCode)))
-
   implicit val StatusFormat = Format[Status](
     __.read[String].map(s => Status(s)),
     Writes((s: Status) => JsString(s.status)))
 
-  implicit val KeySchemaElementFormat = (
-    (__ \ 'AttributeName).format[String] and
-    (__ \ 'AttributeType).format[AttributeType])(KeySchemaElement, unlift(KeySchemaElement.unapply))
+  implicit val KeySchemaElementFormat = Format[KeySchemaElement](
+    Reads((json: JsValue) => ((json \ "AttributeType").validate[String], (json \ "AttributeName").validate[String]) match {
+      case (JsSuccess("S", _), JsSuccess(name, _)) => JsSuccess(StringKey(name))
+      case (JsSuccess("N", _), JsSuccess(name, _)) => JsSuccess(NumberKey(name))
+      case (JsSuccess("B", _), JsSuccess(name, _)) => JsSuccess(BinaryKey(name))
+      case (JsSuccess(t, _), _) => JsError("Unknown attribute type: " + t)
+      case (err: JsError, _) => err
+      case (_, err: JsError) => err
+    }),
+    Writes((key: KeySchemaElement) => Json.obj(
+      "AttributeType" -> key.typeCode,
+      "AttributeName" -> key.attribute
+    ))
+  )
 
   implicit val HashKeyFormat = Format[HashKey](
     (__ \ 'HashKeyElement).read[KeySchemaElement].map(e => HashKey(e)),

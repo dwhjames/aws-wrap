@@ -45,7 +45,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Create and delete tables" in {
-      val schema = PrimaryKey(KeySchemaElement("id", DDBString))
+      val schema = PrimaryKey(StringKey("id"))
       Await.result(DynamoDB.createTable("create-table-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
@@ -56,7 +56,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Update a table" in {
-      val schema = PrimaryKey(KeySchemaElement("id", DDBString))
+      val schema = PrimaryKey(StringKey("id"))
       val newProvisioned = ProvisionedThroughput(15L, 15L)
       Await.result(DynamoDB.createTable("update-table-test", schema, provisioned), Duration(30, SECONDS)) match {
         case Errors(errors) => failure(errors.toString)
@@ -71,7 +71,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Put and delete items" in {
-      val schema = PrimaryKey(KeySchemaElement("id", DDBString))
+      val schema = PrimaryKey(StringKey("id"))
       val item: Map[String, DDBAttribute] = Map(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
@@ -123,7 +123,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Do a query" in {
-      val schema = PrimaryKey(KeySchemaElement("id", DDBString), KeySchemaElement("lastName", DDBString))
+      val schema = PrimaryKey(StringKey("id"), StringKey("lastName"))
       val item: Map[String, DDBAttribute] = Map(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
@@ -155,7 +155,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Do a scan" in {
-      val schema = PrimaryKey(KeySchemaElement("id", DDBString), KeySchemaElement("lastName", DDBString))
+      val schema = PrimaryKey(StringKey("id"), StringKey("lastName"))
       val item: Map[String, DDBAttribute] = Map(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
@@ -186,7 +186,7 @@ object DynamoDBSpec extends Specification {
     }
 
     "Batch operations" in {
-      val schema = PrimaryKey(KeySchemaElement("id", DDBString))
+      val schema = PrimaryKey(StringKey("id"))
       val niko: Map[String, DDBAttribute] = Map(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
