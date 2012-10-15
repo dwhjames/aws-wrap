@@ -51,7 +51,11 @@ object Result {
     override def flatMap[T2](f: (T) => Result[M, T2]) = f(this.body)
     override def foreach(f: (T => Unit)) = f(b)
   }
-  def unapply[M <: Metadata, T](r: Result[M, T]): Option[(M, T)] = Some(r.metadata -> r.body)
+  def unapply[M <: Metadata, T](r: Result[M, T]): Option[(M, T)] = r match {
+    case Errors(_) => None
+    case _ => Some(r.metadata -> r.body)
+  }
+
 }
 
 object EmptyResult {
