@@ -12,7 +12,7 @@ sealed trait DDBSet extends DDBAttribute
 
 object DDBScalar {
   def apply(typeCode: String, value: String): DDBScalar = typeCode match {
-    case "N" => DDBNumber(value.toLong)
+    case "N" => DDBNumber(value.toDouble)
     case "S" => DDBString(value)
     case "B" => DDBBinary(Crypto.decodeBase64(value))
     case _ => sys.error("Invalid type code for scalar: " + typeCode)
@@ -21,7 +21,7 @@ object DDBScalar {
 
 object DDBSet {
   def apply(typeCode: String, value: Set[String]): DDBSet = typeCode match {
-    case "NS" => DDBNumberSet(value.map(_.toLong))
+    case "NS" => DDBNumberSet(value.map(_.toDouble))
     case "SS" => DDBStringSet(value)
     case "BS" => DDBBinarySet(value.map(Crypto.decodeBase64(_)))
     case _ => sys.error("Invalid type code for set: " + typeCode)
@@ -33,7 +33,7 @@ object DDBAttribute {
   def apply(typeCode: String, value: Set[String]) = DDBSet(typeCode, value)
 }
 
-case class DDBNumber(value: Long) extends DDBScalar {
+case class DDBNumber(value: Double) extends DDBScalar {
   def typeCode = "N"
 }
 
@@ -46,7 +46,7 @@ case class DDBBinary(value: Array[Byte]) extends DDBScalar {
   override def toString = Crypto.base64(value)
 }
 
-case class DDBNumberSet(value: Set[Long]) extends DDBSet {
+case class DDBNumberSet(value: Set[Double]) extends DDBSet {
   def typeCode = "NS"
 }
 
@@ -65,14 +65,14 @@ sealed trait AttributeType {
 
 object AttributeType {
   def apply(t: String) = t.toLowerCase match {
-    case "n" => DDBLong
+    case "n" => DDBNumber
     case "s" => DDBString
     case "b" => DDBBinary
     case _ => sys.error("Invalid AttributeType: " + t)
   }
 }
 
-object DDBLong extends AttributeType {
+object DDBNumber extends AttributeType {
   override def typeCode = "N"
 }
 
