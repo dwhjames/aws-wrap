@@ -1,4 +1,4 @@
-package aws.simpledb.models
+package aws.simpledb
 
 import java.util.Date
 

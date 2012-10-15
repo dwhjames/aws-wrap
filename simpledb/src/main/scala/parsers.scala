@@ -3,7 +3,6 @@ package aws.simpledb
 import play.api.libs.ws.Response
 import aws.core._
 import aws.core.parsers._
-import aws.simpledb.models._
 
 object SDBParsers {
   import scala.xml.Elem

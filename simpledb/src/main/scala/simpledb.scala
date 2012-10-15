@@ -13,7 +13,6 @@ import aws.core.parsers._
 import aws.core.signature.V2
 
 import aws.simpledb.SDBParsers._
-import aws.simpledb.models._
 
 case class SimpleDBMeta(requestId: String, boxUsage: String) extends Metadata
 

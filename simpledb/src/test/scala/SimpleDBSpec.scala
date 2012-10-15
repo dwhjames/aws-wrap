@@ -61,7 +61,7 @@ object SimpleDBSpec extends Specification {
       val foobar = SDBItem("foobar", Nil)
       val r = Await.result(SimpleDB.createDomain("test-delete-attributes"), Duration(30, SECONDS))
         .flatMap(_ => Await.result(SimpleDB.putAttributes("test-delete-attributes", foobar.name, Seq(SDBAttribute("toto", "tata"))), Duration(30, SECONDS)))
-        .flatMap(_ => Await.result(SimpleDB.deleteAttributes("test-delete-attributes", foobar), Duration(30, SECONDS)))
+        .flatMap(_ => Await.result(SimpleDB.deleteAttributes("test-delete-attributes", foobar.name), Duration(30, SECONDS)))
         .flatMap(_ => Await.result(SimpleDB.deleteDomain("test-delete-attributes"), Duration(30, SECONDS)))
       checkResult(r)
     }
