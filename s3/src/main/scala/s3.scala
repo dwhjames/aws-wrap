@@ -34,7 +34,14 @@ object S3 {
     object Permisions {
 
       object Grantees {
-        sealed case class Grantee(name: String, value: String)
+        sealed class Grantee(n: String, v: String) {
+          val name = n
+          val value =  v
+        }
+        object Grantee {
+          def apply(name: String, value: String) = new Grantee(name, value)
+          def unapply(g: Grantee): Option[(String, String)] = Some((g.name, g.value))
+        }
         case class Email(override val value: String) extends Grantee("emailAddress", value)
         case class Id(override val value: String) extends Grantee("id", value)
         case class Uri(override val value: String) extends Grantee("uri", value)
