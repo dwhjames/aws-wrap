@@ -20,12 +20,13 @@ object ApplicationBuild extends Build {
 
     lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ projectScalariformSettings ++ Seq(
         organization := "pellucid",
-        scalaVersion := "2.9.2",
+        scalaVersion := "2.10.0-M7",
         version := "0.1-SNAPSHOT",
         resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
         resolvers += "erwan" at "http://caffeinelab.net/repo",
-        libraryDependencies += "play" %% "play" % "2.1-20121003-aws",
-        libraryDependencies += "org.specs2" %% "specs2" % "1.11" % "test"
+        resolvers ++= Seq("sonatype" at "http://oss.sonatype.org/content/repositories/releases"),
+        libraryDependencies += "play" %% "play" % "2.1-20121012-erw",
+        libraryDependencies += "org.specs2" % "specs2_2.10.0-M7" % "1.12.1.1" % "test"
     )
 
     lazy val core = Project("core", file("core"), settings = commonSettings)

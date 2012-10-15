@@ -20,8 +20,6 @@ object DynamoDB {
 
   import aws.dynamodb._
 
-  import DDBRegion.DEFAULT
-
   private def request(operation: String,
                       body: JsValue)(implicit region: AWSRegion): Future[Response] = {
     val requestTime = new java.util.Date()
