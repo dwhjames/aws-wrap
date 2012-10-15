@@ -43,10 +43,10 @@ object SDBParsers {
     })
   }
 
-  implicit def safeResultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
-    errorsParser.or(Parser.resultParser(mp, p))
+  implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SimpleDBMeta, T]] =
+    errorsParser.or(Parser.resultParser(simpleDBMetaParser, p))
 
-  def errorsParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
+  def errorsParser = simpleDBMetaParser.flatMap(meta => Parser[Errors[SimpleDBMeta]] { r =>
     r.status match {
       // TODO: really test content
       case 200 => Failure("Not an error")
