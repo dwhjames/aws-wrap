@@ -107,13 +107,16 @@ object DynamoDB {
 
   def getItem(tableName: String,
               key: KeyValue,
-              attributesToGet: Seq[String],
+              attributesToGet: Seq[String] = Nil,
               consistentRead: Boolean = false)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),
-      "AttributesToGet" -> Json.toJson(attributesToGet),
-      "ConsistentRead" -> JsBoolean(consistentRead))
+      "ConsistentRead" -> JsBoolean(consistentRead)
+    ) ++ (attributesToGet match {
+      case Nil => Json.obj()
+      case _ => Json.obj("AttributesToGet" -> Json.toJson(attributesToGet))
+    })
     post[ItemResponse]("GetItem", body)
   }
 
