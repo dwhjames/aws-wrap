@@ -1,22 +1,5 @@
 package aws.s3
 
-import java.util.Date
-
-import scala.concurrent.Future
-import scala.xml.Elem
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import play.api.libs.ws._
-import play.api.libs.ws.WS._
-
-import aws.core._
-import aws.core.Types._
-import aws.core.parsers._
-
-import aws.s3.signature._
-import aws.s3.S3Parsers._
-import aws.s3.models._
-
 object S3 {
 
   val ACCESS_KEY_ID = ""
@@ -29,7 +12,7 @@ object S3 {
   import HTTPMethods._
 
   object Parameters {
-    import AWS._
+    import aws.core.AWS._
 
     object Permisions {
 
@@ -70,48 +53,5 @@ object S3 {
       def GRANT_FULL_CONTROL(gs: Grantee*): Grant = "x-amz-grant-full-control" -> s(gs)
     }
   }
-
-  private def ressource(bucketname: Option[String], uri: String, subresource: Option[String] = None) =
-    "/%s\n%s\n?%s".format(bucketname.getOrElse(""), uri, subresource.getOrElse(""))
-
-  private def request(method: Method, bucketname: Option[String] = None, body: Option[String] = None, parameters: Seq[(String, String)] = Nil): Future[Response] = {
-    val uri = bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com")
-    val res = ressource(bucketname, uri)
-    // TODO: do not hardcode contentType
-    val r = WS.url(uri)
-      .withHeaders(S3Sign.sign(method.toString, bucketname, contentType = body.map(_ => "text/plain; charset=utf-8")): _*)
-
-    method match {
-      case PUT => r.put(body.get)
-      case DELETE => r.delete()
-      case GET => r.get()
-      case _ => throw new RuntimeException("Unsuported method: " + method)
-    }
-  }
-
-  private def tryParse[T](resp: Response)(implicit p: Parser[SimpleResult[T]]) = Parser.parse[SimpleResult[T]](resp).fold(
-    e => throw new RuntimeException(e),
-    identity)
-
-  import Parameters._
-  import Permisions._
-  import ACLs._
-  import Grantees._
-
-  def createBucket(bucketname: String, acls: Option[ACL] = None, permissions: Seq[Grant] = Nil)(implicit region: AWSRegion): Future[EmptySimpleResult] = {
-    val body =
-      <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-        <LocationConstraint>{ region.subdomain }</LocationConstraint>
-      </CreateBucketConfiguration>
-
-    val ps = acls.map(X_AMZ_ACL(_)).toSeq ++ permissions
-    request(PUT, Some(bucketname), Some(body.toString), ps).map(tryParse[Unit])
-  }
-
-  def deleteBucket(bucketname: String): Future[EmptySimpleResult] =
-    request(DELETE, Some(bucketname)).map(tryParse[Unit])
-
-  def listBuckets(): Future[SimpleResult[Seq[Bucket]]] =
-    request(GET).map(tryParse[Seq[Bucket]])
 
 }
