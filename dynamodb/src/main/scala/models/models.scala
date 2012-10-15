@@ -54,15 +54,13 @@ sealed trait KeyValue {
 
 case class HashKeyValue(hashKeyElement: DDBAttribute) extends KeyValue
 
-object HashKeyValue {
+case class CompositeKeyValue(hashKeyElement: DDBAttribute, rangeKeyElement: DDBAttribute) extends KeyValue
+
+object KeyValue {
   def apply(value: String) = new HashKeyValue(DDBString(value))
   def apply(value: Long) = new HashKeyValue(DDBNumber(value))
   def apply(value: Array[Byte]) = new HashKeyValue(DDBBinary(value))
-}
 
-case class CompositeKeyValue(hashKeyElement: DDBAttribute, rangeKeyElement: DDBAttribute) extends KeyValue
-
-object CompositeKeyValue {
   def apply(hash: String, range: String) = new CompositeKeyValue(DDBString(hash), DDBString(range))
   def apply(hash: Long, range: String) = new CompositeKeyValue(DDBNumber(hash), DDBString(range))
   def apply(hash: Array[Byte], range: String) = new CompositeKeyValue(DDBBinary(hash), DDBString(range))
