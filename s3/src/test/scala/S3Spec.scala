@@ -75,7 +75,7 @@ object LoggingSpec extends Specification {
 
     "Enable Logging" in {
       import Grantees._
-      val ps = 
+      val ps =
         GRANT_WRITE(Uri("http://acs.amazonaws.com/groups/s3/LogDelivery")) ::
         GRANT_READ_ACP(Uri("http://acs.amazonaws.com/groups/s3/LogDelivery")) :: Nil
 
@@ -85,7 +85,7 @@ object LoggingSpec extends Specification {
       val logged = AWS.key + "testBucketLogging"
       Await.result(Bucket.create(logged), Duration(30, SECONDS))
 
-      val res = Await.result(Bucket.Logging.enable(logged, target), Duration(30, SECONDS))
+      val res = Await.result(Logging.enable(logged, target), Duration(30, SECONDS))
 
       del(logged)
       del(target)
@@ -96,10 +96,22 @@ object LoggingSpec extends Specification {
     "Show Logging Statuses" in {
       val bucketName = AWS.key + "testBucketLoggingStatuses"
       Await.result(Bucket.create(bucketName), Duration(30, SECONDS))
-      val res = Await.result(Bucket.Logging.get(bucketName), Duration(30, SECONDS))
+      val res = Await.result(Logging.get(bucketName), Duration(30, SECONDS))
       checkResult(res)
       del(bucketName)
     }
 
+  }
+}
+
+object TagSpec extends Specification {
+  "S3 Bucket Tagging API" should {
+    "create tags" in {
+      val tagged = AWS.key + "testBucketLoggingTagged"
+      val c = Await.result(Bucket.create(tagged), Duration(30, SECONDS))
+      val res = Await.result(Tag.create(tagged, Tag("Project", "Project One"), Tag("User", "jsmith")), Duration(30, SECONDS))
+      del(tagged)
+      checkResult(res)
+    }
   }
 }

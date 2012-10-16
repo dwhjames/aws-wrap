@@ -14,6 +14,8 @@ object S3 {
   object Parameters {
     import aws.core.AWS._
 
+    def MD5(content: String) = ("Content-MD5" -> aws.core.utils.Crypto.base64(java.security.MessageDigest.getInstance("MD5").digest(content.getBytes)))
+
     object Permisions {
 
       object Grantees {

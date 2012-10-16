@@ -17,7 +17,7 @@ object S3Sign {
     "%s%s%s".format(bucketName.map("/" + _.toLowerCase).getOrElse(""), resource.getOrElse("/"), subresource.map("?" + _).getOrElse(""))
 
   def canonicalizedAmzHeaders(headers: Seq[(String, String)]) = {
-    headers match {
+    headers.filter(_._1.startsWith("x-amz")) match {
       case Nil => ""
       case _ => headers.map {
         case (k, v) =>

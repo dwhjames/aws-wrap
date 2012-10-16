@@ -32,15 +32,14 @@ object S3Parsers {
     }
   })
 
-  implicit def loggingStatusParser = Parser[Seq[Bucket.LoggingStatus]] { r =>
-    println(r.body)
+  implicit def loggingStatusParser = Parser[Seq[LoggingStatus]] { r =>
     Success( (r.xml \\ "LoggingEnabled").map { n =>
       val grants = (n \ "TargetGrants" \ "Grant").toSeq.map { g =>
           val mail = (g \ "Grantee" \ "EmailAddress" ).text
           val perm = (g \ "Permission").text
           S3.Parameters.Permisions.Grantees.Email(mail) -> perm
         }
-      Bucket.LoggingStatus((n \ "TargetBucket").text, (n \ "TargetPrefix").text, grants)
+      LoggingStatus((n \ "TargetBucket").text, (n \ "TargetPrefix").text, grants)
     })
   }
 
