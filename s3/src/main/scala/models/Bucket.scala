@@ -21,7 +21,7 @@ object Bucket {
   import Permisions._
   import ACLs._
 
-  def create(bucketname: String, acls: Option[ACL] = None, permissions: Seq[Grant] = Nil)(implicit region: AWSRegion): Future[EmptySimpleResult] = {
+  def create(bucketname: String, acls: Option[ACL] = None, permissions: Seq[Grant] = Nil)(implicit region: AWSRegion): Future[EmptyResult[S3Metadata]] = {
     val body =
       <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
         <LocationConstraint>{ region.subdomain }</LocationConstraint>
@@ -31,9 +31,9 @@ object Bucket {
     request[Unit](PUT, Some(bucketname), body = Some(body.toString), parameters = ps)
   }
 
-  def delete(bucketname: String): Future[EmptySimpleResult] =
+  def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
     request[Unit](DELETE, Some(bucketname))
 
-  def list(): Future[SimpleResult[Seq[Bucket]]] =
+  def list(): Future[Result[S3Metadata, Seq[Bucket]]] =
     request[Seq[Bucket]](GET)
 }

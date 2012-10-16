@@ -19,6 +19,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import aws.s3.S3.Parameters.Permisions.Grantees._
 
+case class S3Metadata(requestId: String, id2: String, versionId: Option[String] = None, deleteMarker: Boolean = false) extends Metadata
+
 private[models] object Http {
 
   import aws.s3.signature.S3Sign
@@ -31,7 +33,7 @@ private[models] object Http {
     bucketname: Option[String] = None,
     subresource: Option[String] = None,
     body: Option[String] = None,
-    parameters: Seq[(String, String)] = Nil)(implicit p: Parser[SimpleResult[T]]): Future[SimpleResult[T]] = {
+    parameters: Seq[(String, String)] = Nil)(implicit p: Parser[Result[S3Metadata, T]]): Future[Result[S3Metadata, T]] = {
 
     val uri = bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com") + subresource.map("/?" + _).getOrElse("")
     val res = ressource(bucketname, uri)
@@ -59,7 +61,7 @@ private[models] object Http {
     }).map(tryParse[T])
   }
 
-  private def tryParse[T](resp: Response)(implicit p: Parser[SimpleResult[T]]) =
-    Parser.parse[SimpleResult[T]](resp).fold( e => throw new RuntimeException(e), identity)
+  private def tryParse[T](resp: Response)(implicit p: Parser[Result[S3Metadata, T]]) =
+    Parser.parse[Result[S3Metadata, T]](resp).fold( e => throw new RuntimeException(e), identity)
 
 }

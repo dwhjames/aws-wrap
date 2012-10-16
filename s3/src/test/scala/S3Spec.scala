@@ -160,6 +160,7 @@ object CORSSpec extends Specification {
           methods = PUT :: POST :: GET :: Nil))
 
       val res = waitFor(CORSRule.create(cors, rules: _*))
+
       del(cors)
       checkResult(res)
     }

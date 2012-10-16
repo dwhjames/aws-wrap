@@ -20,10 +20,18 @@ object S3Parsers {
     })
   }
 
-  implicit def safeResultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
-    errorsParser.or(Parser.resultParser(mp, p))
+  implicit def safeResultParser[M <: S3Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
+    errorsParser(mp).or(Parser.resultParser(mp, p))
 
-  def errorsParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
+  implicit def s3MetadataParser = Parser[S3Metadata] { r =>
+    Success(S3Metadata(
+      requestId = r.header("x-amz-request-id").get,
+      id2 = r.header("x-amz-id-2").get,
+      versionId = r.header("x-amz-version-id"),
+      deleteMarker = r.header("x-amz-delete-marker").map(java.lang.Boolean.parseBoolean).getOrElse(false)))
+  }
+
+  def errorsParser[M <: S3Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
     r.status match {
       // TODO: really test content
       case s if (s < 300) => Failure("Error expected, found success (status 2xx)")
