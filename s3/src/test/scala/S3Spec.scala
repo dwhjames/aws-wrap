@@ -113,5 +113,21 @@ object TagSpec extends Specification {
       del(tagged)
       checkResult(res)
     }
+
+    "list tags" in {
+
+      val tagged = AWS.key + "testBucketLoggingTaggedList"
+      val c = Await.result(Bucket.create(tagged), Duration(30, SECONDS))
+      val tags = Seq(Tag("Project", "Project One"), Tag("User", "jsmith"))
+      Await.result(Tag.create(tagged, tags: _*), Duration(30, SECONDS))
+
+      val res = Await.result(Tag.get(tagged), Duration(30, SECONDS))
+
+      del(tagged)
+
+      checkResult(res)
+      tags must haveSize(2)
+      tags must containAllOf(tags)
+    }
   }
 }

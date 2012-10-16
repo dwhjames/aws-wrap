@@ -54,9 +54,7 @@ private[models] object Http {
     }
   }
 
-  def tryParse[T](resp: Response)(implicit p: Parser[SimpleResult[T]]) = {
-    println(resp.body)
+  def tryParse[T](resp: Response)(implicit p: Parser[SimpleResult[T]]) =
     Parser.parse[SimpleResult[T]](resp).fold( e => throw new RuntimeException(e), identity)
-  }
 
 }

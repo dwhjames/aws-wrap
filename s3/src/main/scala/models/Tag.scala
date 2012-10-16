@@ -23,6 +23,9 @@ case class Tag(name: String, value: String)
 object Tag {
   import Http._
 
+  def get(bucketname: String) =
+    request(GET, Some(bucketname), subresource = Some("tagging")).map(tryParse[Seq[Tag]])
+
   def create(bucketname: String, tags: Tag*) = {
     val body =
       <Tagging>

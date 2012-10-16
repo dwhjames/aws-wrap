@@ -43,4 +43,10 @@ object S3Parsers {
     })
   }
 
+  implicit def tagsParser = Parser[Seq[Tag]] { r =>
+    Success( (r.xml \\ "Tag").map { t =>
+      Tag((t \ "Key").text, (t \ "Value").text)
+    })
+  }
+
 }
