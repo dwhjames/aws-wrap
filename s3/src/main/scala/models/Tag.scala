@@ -23,8 +23,11 @@ case class Tag(name: String, value: String)
 object Tag {
   import Http._
 
+  def delete(bucketname: String) =
+    request[Unit](DELETE, Some(bucketname), subresource = Some("tagging"))
+
   def get(bucketname: String) =
-    request(GET, Some(bucketname), subresource = Some("tagging")).map(tryParse[Seq[Tag]])
+    request[Seq[Tag]](GET, Some(bucketname), subresource = Some("tagging"))
 
   def create(bucketname: String, tags: Tag*) = {
     val body =
@@ -33,13 +36,13 @@ object Tag {
           {
           for (t <- tags) yield
             <Tag>
-             <Key>{ t.name }</Key>
-             <Value>{ t.value }</Value>
+              <Key>{ t.name }</Key>
+              <Value>{ t.value }</Value>
             </Tag>
           }
         </TagSet>
       </Tagging>
     val ps = Seq(Parameters.MD5(body.mkString))
-    request(PUT, Some(bucketname), body = Some(body.mkString), subresource = Some("tagging"), parameters = ps).map(tryParse[Unit])
+    request[Unit](PUT, Some(bucketname), body = Some(body.mkString), subresource = Some("tagging"), parameters = ps)
   }
 }

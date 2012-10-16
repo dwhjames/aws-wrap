@@ -26,12 +26,17 @@ private[models] object Http {
   def ressource(bucketname: Option[String], uri: String, subresource: Option[String] = None) =
     "/%s\n%s\n?%s".format(bucketname.getOrElse(""), uri, subresource.getOrElse(""))
 
-  def request(method: Method, bucketname: Option[String] = None, subresource: Option[String] = None, body: Option[String] = None, parameters: Seq[(String, String)] = Nil): Future[Response] = {
+  def request[T](
+    method: Method,
+    bucketname: Option[String] = None,
+    subresource: Option[String] = None,
+    body: Option[String] = None,
+    parameters: Seq[(String, String)] = Nil)(implicit p: Parser[SimpleResult[T]]): Future[SimpleResult[T]] = {
 
     val uri = bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com") + subresource.map("/?" + _).getOrElse("")
     val res = ressource(bucketname, uri)
-    // TODO: do not hardcode contentType
 
+    // TODO: do not hardcode contentType
     val r = WS.url(uri)
       .withHeaders(
         parameters ++
@@ -46,15 +51,15 @@ private[models] object Http {
           }.headOption
       ): _*)
 
-    method match {
+    (method match {
       case PUT => r.put(body.get)
       case DELETE => r.delete()
       case GET => r.get()
       case _ => throw new RuntimeException("Unsuported method: " + method)
-    }
+    }).map(tryParse[T])
   }
 
-  def tryParse[T](resp: Response)(implicit p: Parser[SimpleResult[T]]) =
+  private def tryParse[T](resp: Response)(implicit p: Parser[SimpleResult[T]]) =
     Parser.parse[SimpleResult[T]](resp).fold( e => throw new RuntimeException(e), identity)
 
 }

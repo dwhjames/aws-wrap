@@ -23,8 +23,10 @@ object TestUtils extends Specification { // Evil hack to access Failure
     case Result(_, _) => success
   }
 
+  def waitFor[T](f: Future[T]) = Await.result(f, Duration(30, SECONDS))
+
   def del(name: String) = {
-    val delete = Await.result(Bucket.delete(name), Duration(30, SECONDS))
+    val delete = waitFor(Bucket.delete(name))
     checkResult(delete)
   }
 }
@@ -37,7 +39,7 @@ object BucketSpec extends Specification {
 
     "Create and delete a bucket" in {
       val bucketName = AWS.key + "testBucketCreate"
-      val create = Await.result(Bucket.create(bucketName), Duration(30, SECONDS))
+      val create = waitFor(Bucket.create(bucketName))
       checkResult(create)
       del(bucketName)
     }
@@ -45,7 +47,7 @@ object BucketSpec extends Specification {
     "Create a private bucket using canned ACL" in {
       import aws.s3.S3.Parameters.Permisions.ACLs._
       val bucketName = AWS.key + "testBucketAcl"
-      val res = Await.result(Bucket.create(bucketName, Some(PRIVATE)), Duration(30, SECONDS))
+      val res = waitFor(Bucket.create(bucketName, Some(PRIVATE)))
       checkResult(res)
       del(bucketName)
     }
@@ -58,13 +60,13 @@ object BucketSpec extends Specification {
         GRANT_WRITE(Email("erwan.loisant@pellucid.com")) ::
         GRANT_READ_ACP(Email("erwan.loisant@pellucid.com")) :: Nil
 
-      val res = Await.result(Bucket.create(bucketName, permissions = perms), Duration(30, SECONDS))
+      val res = waitFor(Bucket.create(bucketName, permissions = perms))
       checkResult(res)
       del(bucketName)
     }
 
     "List buckets" in {
-      val res = Await.result(Bucket.list(), Duration(30, SECONDS))
+      val res = waitFor(Bucket.list())
       checkResult(res)
     }
   }
@@ -80,12 +82,12 @@ object LoggingSpec extends Specification {
         GRANT_READ_ACP(Uri("http://acs.amazonaws.com/groups/s3/LogDelivery")) :: Nil
 
       val target = AWS.key + "testBucketLoggingTarget"
-      val t = Await.result(Bucket.create(target, permissions = ps), Duration(30, SECONDS))
+      val t = waitFor(Bucket.create(target, permissions = ps))
 
       val logged = AWS.key + "testBucketLogging"
-      Await.result(Bucket.create(logged), Duration(30, SECONDS))
+      waitFor(Bucket.create(logged))
 
-      val res = Await.result(Logging.enable(logged, target), Duration(30, SECONDS))
+      val res = waitFor(Logging.enable(logged, target))
 
       del(logged)
       del(target)
@@ -95,8 +97,8 @@ object LoggingSpec extends Specification {
 
     "Show Logging Statuses" in {
       val bucketName = AWS.key + "testBucketLoggingStatuses"
-      Await.result(Bucket.create(bucketName), Duration(30, SECONDS))
-      val res = Await.result(Logging.get(bucketName), Duration(30, SECONDS))
+      waitFor(Bucket.create(bucketName))
+      val res = waitFor(Logging.get(bucketName))
       checkResult(res)
       del(bucketName)
     }
@@ -108,26 +110,58 @@ object TagSpec extends Specification {
   "S3 Bucket Tagging API" should {
     "create tags" in {
       val tagged = AWS.key + "testBucketLoggingTagged"
-      val c = Await.result(Bucket.create(tagged), Duration(30, SECONDS))
-      val res = Await.result(Tag.create(tagged, Tag("Project", "Project One"), Tag("User", "jsmith")), Duration(30, SECONDS))
+      val c = waitFor(Bucket.create(tagged))
+      val res = waitFor(Tag.create(tagged, Tag("Project", "Project One"), Tag("User", "jsmith")))
       del(tagged)
       checkResult(res)
     }
 
     "list tags" in {
-
       val tagged = AWS.key + "testBucketLoggingTaggedList"
-      val c = Await.result(Bucket.create(tagged), Duration(30, SECONDS))
+      val c = waitFor(Bucket.create(tagged))
       val tags = Seq(Tag("Project", "Project One"), Tag("User", "jsmith"))
-      Await.result(Tag.create(tagged, tags: _*), Duration(30, SECONDS))
+      waitFor(Tag.create(tagged, tags: _*))
 
-      val res = Await.result(Tag.get(tagged), Duration(30, SECONDS))
+      val res = waitFor(Tag.get(tagged))
 
       del(tagged)
 
       checkResult(res)
-      tags must haveSize(2)
-      tags must containAllOf(tags)
+      res.body must haveSize(2)
+      res.body must containAllOf(tags)
+    }
+
+    "delete tags" in {
+      val tagged = AWS.key + "testBucketLoggingTaggedDelete"
+      val c = waitFor(Bucket.create(tagged))
+      val tags = Seq(Tag("Project", "Project One"), Tag("User", "jsmith"))
+      waitFor(Tag.create(tagged, tags: _*))
+      val res = waitFor(Tag.delete(tagged))
+      // get returns "AWSError(NoSuchTagSet,The TagSet does not exist)"
+      //val res = Await.result(Tag.get(tagged), Duration(30, SECONDS))
+      del(tagged)
+      checkResult(res)
+    }
+  }
+}
+
+object CORSSpec extends Specification {
+
+  import S3.HTTPMethods._
+
+  "S3 Bucket CORS API" should {
+    "create cors" in {
+      val cors = AWS.key + "testBucketCors"
+      val cr = waitFor(Bucket.create(cors))
+
+      val rules = Seq(
+        CORSRule(
+          origins = Seq("http://*.zenexity.com"),
+          methods = PUT :: POST :: GET :: Nil))
+
+      val res = waitFor(CORSRule.create(cors, rules: _*))
+      //del(cors)
+      checkResult(res)
     }
   }
 }

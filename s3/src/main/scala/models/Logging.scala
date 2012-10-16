@@ -42,9 +42,9 @@ object Logging {
         </LoggingEnabled>
       </BucketLoggingStatus>
 
-    request(PUT, Some(loggedBucket), body = Some(body.toString), subresource = Some("logging")).map(tryParse[Unit])
+    request[Unit](PUT, Some(loggedBucket), body = Some(body.toString), subresource = Some("logging"))
   }
 
   def get(bucketName: String) =
-    request(GET, Some(bucketName), subresource = Some("logging")).map(tryParse[Seq[LoggingStatus]])
+    request[Seq[LoggingStatus]](GET, Some(bucketName), subresource = Some("logging"))
 }

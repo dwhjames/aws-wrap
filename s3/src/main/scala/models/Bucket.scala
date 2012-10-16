@@ -28,12 +28,12 @@ object Bucket {
       </CreateBucketConfiguration>
 
     val ps = acls.map(X_AMZ_ACL(_)).toSeq ++ permissions
-    request(PUT, Some(bucketname), body = Some(body.toString), parameters = ps).map(tryParse[Unit])
+    request[Unit](PUT, Some(bucketname), body = Some(body.toString), parameters = ps)
   }
 
   def delete(bucketname: String): Future[EmptySimpleResult] =
-    request(DELETE, Some(bucketname)).map(tryParse[Unit])
+    request[Unit](DELETE, Some(bucketname))
 
   def list(): Future[SimpleResult[Seq[Bucket]]] =
-    request(GET).map(tryParse[Seq[Bucket]])
+    request[Seq[Bucket]](GET)
 }
