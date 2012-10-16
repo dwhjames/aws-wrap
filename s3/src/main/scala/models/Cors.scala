@@ -54,4 +54,10 @@ object CORSRule {
     val ps = Seq(Parameters.MD5(body.mkString))
     request[Unit](PUT, Some(bucketName), body = Some(body.mkString), subresource = Some("cors"), parameters = ps)
   }
+
+  def get(bucketName: String) =
+    request[Seq[CORSRule]](GET, Some(bucketName), subresource = Some("cors"))
+
+  def delete(bucketName: String) =
+    request[Unit](DELETE, Some(bucketName), subresource = Some("cors"))
 }

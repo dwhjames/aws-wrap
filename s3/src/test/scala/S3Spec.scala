@@ -160,7 +160,43 @@ object CORSSpec extends Specification {
           methods = PUT :: POST :: GET :: Nil))
 
       val res = waitFor(CORSRule.create(cors, rules: _*))
-      //del(cors)
+      del(cors)
+      checkResult(res)
+    }
+
+    "get cors" in {
+      val cors = AWS.key + "testBucketCorsGet"
+      val cr = waitFor(Bucket.create(cors))
+
+      val rules = Seq(
+        CORSRule(
+          origins = Seq("http://*.zenexity.com"),
+          methods = PUT :: POST :: GET :: Nil))
+
+      waitFor(CORSRule.create(cors, rules: _*))
+
+      var res = waitFor(CORSRule.get(cors))
+      del(cors)
+      checkResult(res)
+
+      res.body must haveSize(1)
+      res.body must containAllOf(rules)
+    }
+
+    "delete cors" in {
+      val cors = AWS.key + "testBucketCorsDelete"
+      val cr = waitFor(Bucket.create(cors))
+
+      val rules = Seq(
+        CORSRule(
+          origins = Seq("http://*.zenexity.com"),
+          methods = PUT :: POST :: GET :: Nil))
+
+      waitFor(CORSRule.create(cors, rules: _*))
+      waitFor(CORSRule.get(cors))
+      val res = waitFor(CORSRule.delete(cors))
+
+      del(cors)
       checkResult(res)
     }
   }

@@ -8,6 +8,7 @@ import aws.core._
 import aws.core.parsers._
 
 import aws.s3.models._
+import aws.s3.S3.HTTPMethods
 
 object S3Parsers {
 
@@ -46,6 +47,17 @@ object S3Parsers {
   implicit def tagsParser = Parser[Seq[Tag]] { r =>
     Success( (r.xml \\ "Tag").map { t =>
       Tag((t \ "Key").text, (t \ "Value").text)
+    })
+  }
+
+  implicit def corsRulesParser = Parser[Seq[CORSRule]] { r =>
+    Success( (r.xml \\ "CORSRule").map { c =>
+      CORSRule(
+        origins = (c \ "AllowedOrigin").map(_.text),
+        methods = (c \ "AllowedMethod").map(n => HTTPMethods.withName(n.text)),
+        headers = (c \ "AllowedHeader").map(_.text),
+        maxAge  = (c \ "MaxAgeSeconds").map(l => java.lang.Long.parseLong(l.text)).headOption,
+        exposeHeaders = (c \ "ExposeHeader").map(_.text))
     })
   }
 
