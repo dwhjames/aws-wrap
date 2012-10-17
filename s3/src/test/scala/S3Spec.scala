@@ -241,3 +241,19 @@ object LifecycleSpec extends Specification {
     }
   }
 }
+
+object S3ObjectSpec extends Specification {
+
+  "S3 Object API" should {
+    "get versions" in {
+      val bucketName = AWS.key + "testBucketVersions"
+      val cr = waitFor(Bucket.create(bucketName))
+
+      // TODO: put objects to get versions
+      val res = waitFor(S3Object.getVersions(bucketName))
+
+      del(bucketName)
+      checkResult(res)
+    }
+  }
+}

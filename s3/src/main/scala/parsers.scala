@@ -3,6 +3,10 @@ package aws.s3
 import java.text.SimpleDateFormat
 import java.util.Date
 
+import java.lang.{ Boolean => JBool, Integer => JInt, Long => JLong }
+
+import scala.xml.Node
+
 import play.api.libs.ws.Response
 import aws.core._
 import aws.core.parsers._
@@ -29,7 +33,7 @@ object S3Parsers {
       requestId = r.header("x-amz-request-id").get,
       id2 = r.header("x-amz-id-2").get,
       versionId = r.header("x-amz-version-id"),
-      deleteMarker = r.header("x-amz-delete-marker").map(java.lang.Boolean.parseBoolean).getOrElse(false)))
+      deleteMarker = r.header("x-amz-delete-marker").map(JBool.parseBoolean).getOrElse(false)))
   }
 
   def errorsParser[M <: S3Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
@@ -65,7 +69,7 @@ object S3Parsers {
         origins = (c \ "AllowedOrigin").map(_.text),
         methods = (c \ "AllowedMethod").map(n => HTTPMethods.withName(n.text)),
         headers = (c \ "AllowedHeader").map(_.text),
-        maxAge  = (c \ "MaxAgeSeconds").map(l => java.lang.Long.parseLong(l.text)).headOption,
+        maxAge  = (c \ "MaxAgeSeconds").map(l => JLong.parseLong(l.text)).headOption,
         exposeHeaders = (c \ "ExposeHeader").map(_.text))
     })
   }
@@ -82,6 +86,49 @@ object S3Parsers {
         lifetime = (l \ "Expiration" \ "Days").map(v => Duration(java.lang.Integer.parseInt(v.text), DAYS)).headOption.get
       )
     })
+  }
+
+  //XXX: not really a Parser
+  import S3Object.StorageClasses
+  private def containerParser[T](node: Node, f: (Option[String], String, Boolean, Date, String, Long, StorageClasses.StorageClass, Owner) => T): T = {
+    f((node \ "VersionId").map(_.text).headOption,
+    (node \ "Key").text,
+    (node \ "IsLatest").map(n => JBool.parseBoolean(n.text)).headOption.get,
+    // TODO: date format
+    (node \ "LastModified").map(n => new Date()).headOption.get,
+    (node \ "ETag").text,
+    (node \ "Size").map(n => JLong.parseLong(n.text)).headOption.get,
+    (node \ "StorageClass").map(n => StorageClasses.withName(n.text)).headOption.get,
+    (node \ "Owner").map(ownerParser).headOption.get)
+  }
+
+  private def ownerParser(node: Node): Owner = {
+    Owner(
+      id = (node \ "ID").text,
+      name = (node \ "DisplayName").map(_.text).headOption)
+  }
+
+  <ListVersionsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Name>akiaj2cwuhzxqhtqzu6atestbucketversions</Name>
+    <Prefix/>
+    <KeyMarker/>
+    <VersionIdMarker/>
+    <MaxKeys>1000</MaxKeys>
+    <IsTruncated>false</IsTruncated>
+  </ListVersionsResult>
+
+  implicit def versionsParser = Parser[Versions] { r =>
+    println(r.xml)
+    val xml = r.xml
+    Success(Versions(
+      name = (xml \ "Name").text,
+      prefix = (xml \ "Prefix").map(_.text).headOption,
+      key = (xml \ "KeyMarker").map(_.text).headOption,
+      versionId = (xml \ "VersionIdMarker").map(_.text).headOption,
+      maxKeys = (xml \ "MaxKeys").headOption.map(n => JLong.parseLong(n.text)).get,
+      isTruncated = (xml \ "IsTruncated").headOption.map(n => JBool.parseBoolean(n.text)).get,
+      versions = (xml \ "Version").map(containerParser(_, Version.apply)),
+      deleteMarkers = (xml \ "DeleteMarker").map(containerParser(_, DeleteMarker.apply))))
   }
 
 }
