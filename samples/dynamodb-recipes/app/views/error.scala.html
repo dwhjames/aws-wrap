@@ -1,0 +1,15 @@
+@(errors: Seq[aws.core.AWSError])
+
+@main("Recipes Note") {
+
+<h2>Oops, got an error from Amazon</h2>
+
+<table class="table">
+
+@errors.map { error =>
+    <tr><td>@error.code</td><td>@error.message</td></tr>
+}
+
+</table>
+
+}

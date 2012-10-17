@@ -1,0 +1,19 @@
+@(all: Seq[Recipe])
+
+@main("Recipes Note") {
+
+<table class="table table-bordered">
+
+@all.map { recipe =>
+    <tr>
+        <td>@recipe.name</td>
+        <td>1h</td>
+        <td><a href="@routes.Application.show(recipe.id)">Read it</a></td>
+    </tr>
+}
+
+</table>
+
+<a href="@routes.Application.create()" class="btn btn-primary">Add a recipe</a>
+
+}
