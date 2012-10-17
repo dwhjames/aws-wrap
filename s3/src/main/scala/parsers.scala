@@ -11,6 +11,7 @@ import aws.s3.models._
 import aws.s3.S3.HTTPMethods
 
 object S3Parsers {
+  import language.postfixOps
 
   def parseDate(d: String): Date = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'").parse(d)
 
