@@ -70,4 +70,18 @@ object S3Parsers {
     })
   }
 
+  implicit def lifecyclesParser = Parser[Seq[LifecycleConf]] { r =>
+    import scala.concurrent.util.Duration
+    import java.util.concurrent.TimeUnit._
+
+    Success((r.xml \ "Rule").map{ l =>
+      LifecycleConf(
+        id = (l \ "ID").map(_.text).headOption,
+        prefix = (l \ "Prefix").text,
+        status = (l \ "Status").map(n => LifecycleConf.Statuses.withName(n.text)).headOption.get,
+        lifetime = (l \ "Expiration" \ "Days").map(v => Duration(java.lang.Integer.parseInt(v.text), DAYS)).headOption.get
+      )
+    })
+  }
+
 }

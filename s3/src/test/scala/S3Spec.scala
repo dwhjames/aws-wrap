@@ -202,3 +202,42 @@ object CORSSpec extends Specification {
     }
   }
 }
+
+object LifecycleSpec extends Specification {
+
+  "S3 Bucket lifecycle API" should {
+    "create lifecycle" in {
+      val bucketName = AWS.key + "testBucketLifecycle"
+
+      val cr = waitFor(Bucket.create(bucketName))
+      val res = waitFor(LifecycleConf.create(bucketName, LifecycleConf(Some("42"), "test-", LifecycleConf.Statuses.ENABLED, Duration(42, DAYS))))
+
+      del(bucketName)
+      checkResult(res)
+    }
+
+    "delete lifecycle" in {
+      val bucketName = AWS.key + "testBucketLifecycleDelete"
+
+      val cr = waitFor(Bucket.create(bucketName))
+      waitFor(LifecycleConf.create(bucketName, LifecycleConf(Some("42"), "test-", LifecycleConf.Statuses.ENABLED, Duration(42, DAYS))))
+      val res = waitFor(LifecycleConf.delete(bucketName))
+
+      del(bucketName)
+      checkResult(res)
+    }
+
+    "get lifecycle" in {
+      val bucketName = AWS.key + "testBucketLifecycleGet"
+
+      val cr = waitFor(Bucket.create(bucketName))
+      val conf = LifecycleConf(Some("42"), "test-", LifecycleConf.Statuses.ENABLED, Duration(42, DAYS))
+      waitFor(LifecycleConf.create(bucketName, conf))
+      val res = waitFor(LifecycleConf.get(bucketName))
+
+      del(bucketName)
+      checkResult(res)
+      res.body must_== Seq(conf)
+    }
+  }
+}
