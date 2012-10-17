@@ -12,9 +12,6 @@ object JsonFormats {
 
   // JSON Formatters
 
-  def optionalFormat[A](path: JsPath)(implicit reads: Reads[A], writes: Writes[Option[A]]): OFormat[Option[A]] =
-    OFormat(Reads.optional(path)(reads), Writes.optional(path)(writes))
-
   implicit val StatusFormat = Format[Status](
     __.read[String].map(s => Status(s)),
     Writes((s: Status) => JsString(s.status)))
@@ -61,7 +58,7 @@ object JsonFormats {
     (__ \ 'CreationDateTime).format[java.util.Date] and
     (__ \ 'KeySchema).format[PrimaryKey] and
     (__ \ 'ProvisionedThroughput).format[ProvisionedThroughput] and
-    optionalFormat[Long](__ \ 'TableSizeBytes))(TableDescription, unlift(TableDescription.unapply))
+    Format.optional[Long](__ \ 'TableSizeBytes))(TableDescription, unlift(TableDescription.unapply))
 
   implicit val DDBAttributeFormat = Format[DDBAttribute](
     Reads((json: JsValue) => json match {
