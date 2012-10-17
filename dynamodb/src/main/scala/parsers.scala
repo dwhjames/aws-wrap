@@ -44,10 +44,16 @@ object DDBParsers {
   })
 
   implicit val AWSErrorFormat = Reads[AWSError](js => (js \ "__type", js \ "Message", js \ "message") match {
-    case (JsString(t), JsString(m), _) => JsSuccess(AWSError(t, m))
-    case (JsString(t), _, JsString(m)) => JsSuccess(AWSError(t, m))
+    case (JsString(t), JsString(m), _) => JsSuccess(AWSError(errorCode(t), m))
+    case (JsString(t), _, JsString(m)) => JsSuccess(AWSError(errorCode(t), m))
     case _ => JsError("JsObject expected")
   })
+
+  /**
+   * Amazon returns errors such as com.amazonaws.dynamodb.v20111205#ProvisionedThroughputExceededException
+   * but per their documentation only the portion after # matters
+   */
+  private def errorCode(errorType: String): String = errorType.split("#").last
 
 }
 
