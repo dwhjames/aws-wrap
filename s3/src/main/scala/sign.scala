@@ -22,7 +22,7 @@ object S3Sign {
       case _ => headers.map {
         case (k, v) =>
           k.toLowerCase -> v
-        }.sortBy(_._1).map { case (k, v) => k + ":" + v }.mkString("\n") + "\n"
+      }.sortBy(_._1).map { case (k, v) => k + ":" + v }.mkString("\n") + "\n"
     }
   }
 

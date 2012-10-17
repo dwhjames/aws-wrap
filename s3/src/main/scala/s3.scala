@@ -21,7 +21,7 @@ object S3 {
       object Grantees {
         sealed class Grantee(n: String, v: String) {
           val name = n
-          val value =  v
+          val value = v
         }
         object Grantee {
           def apply(name: String, value: String) = new Grantee(name, value)

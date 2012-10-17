@@ -47,29 +47,29 @@ object S3Parsers {
   })
 
   implicit def loggingStatusParser = Parser[Seq[LoggingStatus]] { r =>
-    Success( (r.xml \\ "LoggingEnabled").map { n =>
+    Success((r.xml \\ "LoggingEnabled").map { n =>
       val grants = (n \ "TargetGrants" \ "Grant").toSeq.map { g =>
-          val mail = (g \ "Grantee" \ "EmailAddress" ).text
-          val perm = (g \ "Permission").text
-          S3.Parameters.Permisions.Grantees.Email(mail) -> perm
-        }
+        val mail = (g \ "Grantee" \ "EmailAddress").text
+        val perm = (g \ "Permission").text
+        S3.Parameters.Permisions.Grantees.Email(mail) -> perm
+      }
       LoggingStatus((n \ "TargetBucket").text, (n \ "TargetPrefix").text, grants)
     })
   }
 
   implicit def tagsParser = Parser[Seq[Tag]] { r =>
-    Success( (r.xml \\ "Tag").map { t =>
+    Success((r.xml \\ "Tag").map { t =>
       Tag((t \ "Key").text, (t \ "Value").text)
     })
   }
 
   implicit def corsRulesParser = Parser[Seq[CORSRule]] { r =>
-    Success( (r.xml \\ "CORSRule").map { c =>
+    Success((r.xml \\ "CORSRule").map { c =>
       CORSRule(
         origins = (c \ "AllowedOrigin").map(_.text),
         methods = (c \ "AllowedMethod").map(n => HTTPMethods.withName(n.text)),
         headers = (c \ "AllowedHeader").map(_.text),
-        maxAge  = (c \ "MaxAgeSeconds").map(l => JLong.parseLong(l.text)).headOption,
+        maxAge = (c \ "MaxAgeSeconds").map(l => JLong.parseLong(l.text)).headOption,
         exposeHeaders = (c \ "ExposeHeader").map(_.text))
     })
   }
@@ -78,13 +78,12 @@ object S3Parsers {
     import scala.concurrent.util.Duration
     import java.util.concurrent.TimeUnit._
 
-    Success((r.xml \ "Rule").map{ l =>
+    Success((r.xml \ "Rule").map { l =>
       LifecycleConf(
         id = (l \ "ID").map(_.text).headOption,
         prefix = (l \ "Prefix").text,
         status = (l \ "Status").map(n => LifecycleConf.Statuses.withName(n.text)).headOption.get,
-        lifetime = (l \ "Expiration" \ "Days").map(v => Duration(java.lang.Integer.parseInt(v.text), DAYS)).headOption.get
-      )
+        lifetime = (l \ "Expiration" \ "Days").map(v => Duration(java.lang.Integer.parseInt(v.text), DAYS)).headOption.get)
     })
   }
 
@@ -92,14 +91,14 @@ object S3Parsers {
   import S3Object.StorageClasses
   private def containerParser[T](node: Node, f: (Option[String], String, Boolean, Date, String, Long, StorageClasses.StorageClass, Owner) => T): T = {
     f((node \ "VersionId").map(_.text).headOption,
-    (node \ "Key").text,
-    (node \ "IsLatest").map(n => JBool.parseBoolean(n.text)).headOption.get,
-    // TODO: date format
-    (node \ "LastModified").map(n => new Date()).headOption.get,
-    (node \ "ETag").text,
-    (node \ "Size").map(n => JLong.parseLong(n.text)).headOption.get,
-    (node \ "StorageClass").map(n => StorageClasses.withName(n.text)).headOption.get,
-    (node \ "Owner").map(ownerParser).headOption.get)
+      (node \ "Key").text,
+      (node \ "IsLatest").map(n => JBool.parseBoolean(n.text)).headOption.get,
+      // TODO: date format
+      (node \ "LastModified").map(n => new Date()).headOption.get,
+      (node \ "ETag").text,
+      (node \ "Size").map(n => JLong.parseLong(n.text)).headOption.get,
+      (node \ "StorageClass").map(n => StorageClasses.withName(n.text)).headOption.get,
+      (node \ "Owner").map(ownerParser).headOption.get)
   }
 
   private def ownerParser(node: Node): Owner = {
@@ -107,15 +106,6 @@ object S3Parsers {
       id = (node \ "ID").text,
       name = (node \ "DisplayName").map(_.text).headOption)
   }
-
-  <ListVersionsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-    <Name>akiaj2cwuhzxqhtqzu6atestbucketversions</Name>
-    <Prefix/>
-    <KeyMarker/>
-    <VersionIdMarker/>
-    <MaxKeys>1000</MaxKeys>
-    <IsTruncated>false</IsTruncated>
-  </ListVersionsResult>
 
   implicit def versionsParser = Parser[Versions] { r =>
     println(r.xml)

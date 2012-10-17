@@ -23,7 +23,7 @@ case class Owner(id: String, name: Option[String])
 
 import S3Object.StorageClasses.StorageClass
 
-trait Container{
+trait Container {
   val id: Option[String]
   val key: String
   val isLatest: Boolean

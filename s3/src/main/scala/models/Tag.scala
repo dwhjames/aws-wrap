@@ -34,11 +34,10 @@ object Tag {
       <Tagging>
         <TagSet>
           {
-          for (t <- tags) yield
-            <Tag>
-              <Key>{ t.name }</Key>
-              <Value>{ t.value }</Value>
-            </Tag>
+            for (t <- tags) yield <Tag>
+                                    <Key>{ t.name }</Key>
+                                    <Value>{ t.value }</Value>
+                                  </Tag>
           }
         </TagSet>
       </Tagging>

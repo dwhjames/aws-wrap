@@ -42,16 +42,15 @@ private[models] object Http {
     val r = WS.url(uri)
       .withHeaders(
         parameters ++
-        S3Sign.sign(method.toString,
-          bucketname,
-          subresource,
-          contentType = body.map(_ => "text/plain; charset=utf-8"),
-          headers = parameters,
-          md5 = parameters.flatMap{
-            case ("Content-MD5", v) => Seq(v) // XXX
-            case _ => Nil
-          }.headOption
-      ): _*)
+          S3Sign.sign(method.toString,
+            bucketname,
+            subresource,
+            contentType = body.map(_ => "text/plain; charset=utf-8"),
+            headers = parameters,
+            md5 = parameters.flatMap {
+              case ("Content-MD5", v) => Seq(v) // XXX
+              case _ => Nil
+            }.headOption): _*)
 
     (method match {
       case PUT => r.put(body.get)
@@ -62,6 +61,6 @@ private[models] object Http {
   }
 
   private def tryParse[T](resp: Response)(implicit p: Parser[Result[S3Metadata, T]]) =
-    Parser.parse[Result[S3Metadata, T]](resp).fold( e => throw new RuntimeException(e), identity)
+    Parser.parse[Result[S3Metadata, T]](resp).fold(e => throw new RuntimeException(e), identity)
 
 }

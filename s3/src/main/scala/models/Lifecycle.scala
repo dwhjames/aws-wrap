@@ -32,18 +32,19 @@ object LifecycleConf {
   def create(bucketname: String, confs: LifecycleConf*): Future[EmptyResult[S3Metadata]] = {
     val body =
       <LifecycleConfiguration>
-        {for(c <- confs) yield
-          <Rule>
-            {for(i <- c.id.toSeq)
-              yield <ID>{ i }</ID>
-            }
-            <Prefix>{ c.prefix }</Prefix>
-            <Status>{ c.status }</Status>
-            <Expiration>
-              <Days>{ c.lifetime.toDays }</Days>
-            </Expiration>
-          </Rule>
-       }
+        {
+          for (c <- confs) yield <Rule>
+                                   {
+                                     for (i <- c.id.toSeq)
+                                       yield <ID>{ i }</ID>
+                                   }
+                                   <Prefix>{ c.prefix }</Prefix>
+                                   <Status>{ c.status }</Status>
+                                   <Expiration>
+                                     <Days>{ c.lifetime.toDays }</Days>
+                                   </Expiration>
+                                 </Rule>
+        }
       </LifecycleConfiguration>
 
     val ps = Seq(Parameters.MD5(body.mkString))
