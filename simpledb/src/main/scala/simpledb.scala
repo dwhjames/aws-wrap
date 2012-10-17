@@ -44,8 +44,7 @@ object SimpleDB {
       Seq(
         "Attribute.%d.Name".format(i + 1) -> attribute.name,
         "Attribute.%d.Value".format(i + 1) -> attribute.value,
-        "Attribute.%s.Replace".format(i + 1) -> (if (attribute.replace) "true" else "false")
-      )
+        "Attribute.%s.Replace".format(i + 1) -> (if (attribute.replace) "true" else "false"))
     }).flatten
     def Items(items: Seq[SDBItem]): Seq[(String, String)] = (for ((item, i) <- items.zipWithIndex) yield {
       val prefix = "Item.%d.".format(i + 1)
@@ -57,8 +56,7 @@ object SimpleDB {
       Seq("Attribute.%d.Name".format(i + 1) -> attribute.name) ++ attribute.value.map { v =>
         Seq("Attribute.%d.Value".format(i + 1) -> v)
       }.getOrElse(
-        Seq("Attribute.%d.Expected".format(i + 1) -> "true")
-      )
+        Seq("Attribute.%d.Expected".format(i + 1) -> "true"))
     }).flatten
     def SelectExpression(expression: String) = ("SelectExpression" -> expression)
   }
@@ -81,7 +79,7 @@ object SimpleDB {
     request(parameters: _*).map(tryParse[M, T])
 
   /**
-   * Creates a new domain. The domain name must be unique among the domains associated with the Access Key ID used. 
+   * Creates a new domain. The domain name must be unique among the domains associated with the Access Key ID used.
    * The CreateDomain operation might take 10 or more seconds to complete.
    * CreateDomain is an idempotent operation; running it multiple times using the same domain name will not result
    * in an error response.
@@ -97,7 +95,7 @@ object SimpleDB {
   /**
    * Deletes the given domain. Any items (and their attributes) in the domain are deleted as well.
    * The DeleteDomain operation might take 10 or more seconds to complete.
-   * 
+   *
    * Running DeleteDomain on a domain that does not exist or running the function multiple times
    * using the same domain name will not result in an error response.
    *
@@ -124,7 +122,7 @@ object SimpleDB {
 
   /**
    * Creates or replaces attributes in an item.
-   * 
+   *
    * Using PutAttributes to replace attribute values that do not exist will not result in an error response.
    *
    * When using eventually consistent reads, a GetAttributes or Select request (read) immediately after a DeleteAttributes or PutAttributes request (write) might not return the updated data. A consistent read always reflects all writes that received a successful response prior to the read. For more information, see Consistency.
@@ -167,7 +165,7 @@ object SimpleDB {
    * @param expected if defined, perform the expected conditional check on one attribute. If expected.value is None,
    *                 will check that the attribute exists. If expected.value is defined, will check that the attribute
    *                 exists and has the specified value.
-
+   *
    */
   def deleteAttributes(domainName: String,
                        itemName: String,

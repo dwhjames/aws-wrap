@@ -6,6 +6,7 @@ import aws.core.parsers._
 
 object SDBParsers {
   import scala.xml.Elem
+  import language.postfixOps
 
   implicit def simpleDBMetaParser = Parser[SimpleDBMeta] { r =>
     Success(SimpleDBMeta(r.xml \\ "RequestId" text, r.xml \\ "BoxUsage" text))

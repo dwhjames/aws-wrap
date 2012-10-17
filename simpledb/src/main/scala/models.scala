@@ -7,7 +7,7 @@ import java.util.Date
  *
  * @param name
  * @param value
- * @param replace Makes sense only in putAttributes or putBatchAttributes. If 
+ * @param replace Makes sense only in putAttributes or putBatchAttributes. If
  */
 case class SDBAttribute(name: String, value: String, replace: Boolean = false)
 
