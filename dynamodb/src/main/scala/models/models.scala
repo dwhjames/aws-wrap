@@ -1,4 +1,4 @@
-package aws.dynamodb.models
+package aws.dynamodb
 
 sealed trait UpdateAction
 

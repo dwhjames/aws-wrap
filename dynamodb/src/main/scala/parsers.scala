@@ -7,7 +7,7 @@ import play.api.libs.json.Writes._
 
 import aws.core._
 import aws.core.parsers._
-import aws.dynamodb.models._
+import aws.dynamodb.JsonFormats._
 
 object DDBParsers {
 

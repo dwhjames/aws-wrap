@@ -1,4 +1,4 @@
-package aws.dynamodb.models
+package aws.dynamodb
 
 /**
  * Represents the status of a table

@@ -13,7 +13,7 @@ import aws.core.parsers._
 import aws.core.utils._
 import aws.core.signature._
 
-import aws.dynamodb.models._
+import aws.dynamodb.JsonFormats._
 import aws.dynamodb.DDBParsers._
 
 object DynamoDB {
@@ -112,11 +112,10 @@ object DynamoDB {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),
-      "ConsistentRead" -> JsBoolean(consistentRead)
-    ) ++ (attributesToGet match {
-      case Nil => Json.obj()
-      case _ => Json.obj("AttributesToGet" -> Json.toJson(attributesToGet))
-    })
+      "ConsistentRead" -> JsBoolean(consistentRead)) ++ (attributesToGet match {
+        case Nil => Json.obj()
+        case _ => Json.obj("AttributesToGet" -> Json.toJson(attributesToGet))
+      })
     post[ItemResponse]("GetItem", body)
   }
 

@@ -8,7 +8,7 @@ import play.api.libs.json.Writes._
 
 import aws.core.utils.Crypto
 
-package object models {
+object JsonFormats {
 
   // JSON Formatters
 
@@ -30,9 +30,7 @@ package object models {
     }),
     Writes((key: KeySchemaElement) => Json.obj(
       "AttributeType" -> key.typeCode,
-      "AttributeName" -> key.attribute
-    ))
-  )
+      "AttributeName" -> key.attribute)))
 
   implicit val HashKeyFormat = Format[HashKey](
     (__ \ 'HashKeyElement).read[KeySchemaElement].map(e => HashKey(e)),
@@ -96,8 +94,7 @@ package object models {
 
   implicit val HashKeyValueFormat = Format[HashKeyValue](
     (__ \ 'HashKeyElement).read[DDBAttribute].map(e => HashKeyValue(e)),
-    Writes((key: HashKeyValue) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKeyElement)))
-  )
+    Writes((key: HashKeyValue) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKeyElement))))
 
   implicit val CompositeKeyValueFormat = (
     (__ \ 'HashKeyElement).format[DDBAttribute] and

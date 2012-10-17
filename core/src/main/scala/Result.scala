@@ -38,16 +38,18 @@ sealed trait Result[M <: Metadata, +T] {
    */
   def body: T
   def toEither: Either[Errors[M], Result[M, T]]
+  def map[T2](f: (T) => T2): Result[M, T2]
   def flatMap[T2](f: (T) => Result[M, T2]): Result[M, T2]
   def foreach(f: (T => Unit)): Unit
   override def toString = "Result(%s, %s)".format(metadata, body)
 }
 
 object Result {
-  def apply[M <: Metadata, T](m: M = EmptyMeta, b: T) = new Result[M, T] {
+  def apply[M <: Metadata, T](m: M = EmptyMeta, b: T): Result[M, T] = new Result[M, T] {
     override def toEither = Right(this)
     override def metadata = m
     override def body = b
+    override def map[T2](f: (T) => T2) = Result(this.metadata, f(this.body))
     override def flatMap[T2](f: (T) => Result[M, T2]) = f(this.body)
     override def foreach(f: (T => Unit)) = f(b)
   }
@@ -66,6 +68,7 @@ case class AWSError(code: String, message: String)
 
 class Errors[M <: Metadata](val metadata: M, val errors: Seq[AWSError]) extends Result[M, Nothing] {
   override def toEither = Left(this)
+  override def map[T2](f: (Nothing) => T2) = this
   override def flatMap[T2](f: (Nothing) => Result[M, T2]) = this
   override def body = throw new RuntimeException(errors.toString)
   override def foreach(f: (Nothing => Unit)) = ()

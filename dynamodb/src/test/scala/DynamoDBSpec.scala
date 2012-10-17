@@ -5,7 +5,6 @@ import scala.concurrent.Future
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
 import aws.core._
-import aws.dynamodb.models._
 
 import org.specs2.mutable._
 

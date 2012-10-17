@@ -1,9 +1,11 @@
-package aws.dynamodb.models
+package aws.dynamodb
 
 import aws.core.utils.Crypto
 
 sealed trait DDBAttribute {
   def typeCode: String
+  def asOpt[T](implicit ac: AttributeConverter[T]) = ac.convert(this)
+  def as[T](implicit ac: AttributeConverter[T]) = asOpt(ac).getOrElse(sys.error("Failed conversion"))
 }
 
 sealed trait DDBScalar extends DDBAttribute

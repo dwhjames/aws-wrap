@@ -21,6 +21,7 @@ object ApplicationBuild extends Build {
     lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ projectScalariformSettings ++ Seq(
         organization := "aws",
         scalaVersion := "2.10.0-M7",
+        scalacOptions += "-feature",
         version := "0.1-SNAPSHOT",
         resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
         resolvers += "erwan" at "http://caffeinelab.net/repo",
