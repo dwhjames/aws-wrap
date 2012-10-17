@@ -15,7 +15,9 @@ object ApplicationBuild extends Build {
     )
 
     lazy val projectScalariformSettings = defaultScalariformSettings ++ Seq(
-        ScalariformKeys.preferences := FormattingPreferences().setPreference(AlignParameters, true)
+        ScalariformKeys.preferences := FormattingPreferences()
+            .setPreference(AlignParameters, true)
+            .setPreference(FormatXml, false)
     )
 
     lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ projectScalariformSettings ++ Seq(
