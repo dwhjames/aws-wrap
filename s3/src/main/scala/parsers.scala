@@ -108,17 +108,28 @@ object S3Parsers {
   }
 
   implicit def versionsParser = Parser[Versions] { r =>
-    println(r.xml)
     val xml = r.xml
     Success(Versions(
       name = (xml \ "Name").text,
-      prefix = (xml \ "Prefix").map(_.text).headOption,
-      key = (xml \ "KeyMarker").map(_.text).headOption,
-      versionId = (xml \ "VersionIdMarker").map(_.text).headOption,
+      prefix = (xml \ "Prefix").filter(!_.text.isEmpty).map(_.text).headOption,
+      key = (xml \ "KeyMarker").filter(!_.text.isEmpty).map(_.text).headOption,
+      versionId = (xml \ "VersionIdMarker").filter(!_.text.isEmpty).map(_.text).headOption,
       maxKeys = (xml \ "MaxKeys").headOption.map(n => JLong.parseLong(n.text)).get,
       isTruncated = (xml \ "IsTruncated").headOption.map(n => JBool.parseBoolean(n.text)).get,
       versions = (xml \ "Version").map(containerParser(_, Version.apply)),
       deleteMarkers = (xml \ "DeleteMarker").map(containerParser(_, DeleteMarker.apply))))
+  }
+
+  implicit def s3ObjectParser = Parser[S3Object] { r =>
+    val xml = r.xml
+    println(xml)
+    Success(S3Object(
+      name = (xml \ "Name").text,
+      prefix = (xml \ "Prefix").headOption.filter(!_.text.isEmpty).map(_.text),
+      marker = (xml \ "Marker").headOption.filter(!_.text.isEmpty).map(_.text),
+      maxKeys = (xml \ "MaxKeys").headOption.map(n => JLong.parseLong(n.text)).get,
+      isTruncated = (xml \ "IsTruncated").headOption.map(n => JBool.parseBoolean(n.text)).get,
+      contents = (xml \ "Contents").map(containerParser(_, Content.apply))))
   }
 
 }

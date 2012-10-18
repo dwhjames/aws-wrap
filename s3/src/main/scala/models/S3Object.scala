@@ -65,6 +65,24 @@ case class Versions(
   deleteMarkers: Seq[DeleteMarker],
   versionId: Option[String])
 
+case class S3Object(
+  name: String,
+  prefix: Option[String],
+  marker: Option[String],
+  maxKeys: Long,
+  isTruncated: Boolean,
+  contents: Seq[Content])
+
+case class Content(
+  id: Option[String],
+  key: String,
+  isLatest: Boolean,
+  lastModified: Date,
+  etag: String,
+  size: Long,
+  storageClass: StorageClass = S3Object.StorageClasses.STANDARD,
+  owner: Owner) extends Container
+
 object S3Object {
   import Http._
 
@@ -72,6 +90,9 @@ object S3Object {
     type StorageClass = Value
     val STANDARD = Value
   }
+
+  def content(bucketname: String) =
+    request[S3Object](GET, Some(bucketname))
 
   def getVersions(bucketname: String) =
     request[Versions](GET, Some(bucketname), subresource = Some("versions"))

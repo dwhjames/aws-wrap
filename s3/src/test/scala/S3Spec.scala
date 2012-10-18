@@ -255,5 +255,16 @@ object S3ObjectSpec extends Specification {
       del(bucketName)
       checkResult(res)
     }
+
+    "get contents" in {
+      val bucketName = AWS.key + "testBucketContent"
+      val cr = waitFor(Bucket.create(bucketName))
+
+      // TODO: put objects to get versions
+      val res = waitFor(S3Object.content(bucketName))
+      println(res)
+      del(bucketName)
+      checkResult(res)
+    }
   }
 }
