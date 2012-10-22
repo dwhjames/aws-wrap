@@ -262,8 +262,33 @@ object S3ObjectSpec extends Specification {
 
       // TODO: put objects to get versions
       val res = waitFor(S3Object.content(bucketName))
-      println(res)
       del(bucketName)
+      checkResult(res)
+    }
+  }
+}
+
+object PolicySpec extends Specification {
+
+  "S3 Policy API" should {
+
+    "create policy" in {
+      val bucketName = AWS.key + "testBucketPoliciesCreate"
+      val cr = waitFor(Bucket.create(bucketName))
+
+      val p = Policy(
+        id = Some("aaaa-bbbb-cccc-dddd"),
+        statements = Seq(
+          Statement(
+            effect = Policy.Effects.ALLOW,
+            sid = Some("1"),
+            principal = Some("AWS" -> Seq("*")),
+            action = Seq("s3:GetObject*"),
+            resource = Seq("arn:aws:s3:::%s/*".format(bucketName)))))
+
+      val res = waitFor(Policy.create(bucketName, p))
+
+      //del(bucketName)
       checkResult(res)
     }
   }

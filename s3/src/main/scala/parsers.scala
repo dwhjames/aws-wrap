@@ -122,7 +122,6 @@ object S3Parsers {
 
   implicit def s3ObjectParser = Parser[S3Object] { r =>
     val xml = r.xml
-    println(xml)
     Success(S3Object(
       name = (xml \ "Name").text,
       prefix = (xml \ "Prefix").headOption.filter(!_.text.isEmpty).map(_.text),
