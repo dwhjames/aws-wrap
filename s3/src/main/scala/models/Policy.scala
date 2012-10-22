@@ -28,7 +28,7 @@ case class Statement(
   action: Seq[String],
   notAction: Seq[String] = Nil,
   resource: Seq[String],
-  conditions: Seq[Policy.Conditions.Condition[_, _]] = Nil)
+  conditions: Seq[Policy.Conditions.Condition[_]] = Nil)
 
 case class Policy(
   id: Option[String],
@@ -48,18 +48,17 @@ object Policy {
 
   object Conditions {
 
-    trait Condition[K <: Keys.Key[V], V] {
+    trait Condition[V] {
+      parent =>
+
       import Conditions.Keys.Key
 
       def name: String
-      def values: (Key[V], Seq[V])
+      def values: Seq[(Key[V], Seq[V])]
 
-      def or(other: Condition[K, V]): Condition[K, V] = {
-        val c = this
-        new Condition[K, V]{
-          def name = c.name
-          def values = c.values._1 -> (c.values._2 ++ other.values._2)
-        }
+      def and(k: Key[V], u: V*): Condition[V] = new Condition[V] {
+        def name = parent.name
+        def values = parent.values :+ (k -> u)
       }
 
       override def toString = s"Condition($name, $values)"
@@ -68,133 +67,110 @@ object Policy {
     object Keys {
       trait Key[T] {
         val name: String
-
+        val format: Format[T]
         override def toString = s"Key($name)"
       }
 
       type IP = String
       type ARN = String
 
-      object CURRENT_TIME extends Key[Date] { val name = "aws:CurrentTime" }
-      object MULTI_FACTOR_AUTH_AGE extends Key[Long] { val name = "aws:MultiFactorAuthAge" }
-      object SECURE_TRANSPORT extends Key[Boolean] { val name = "aws:SecureTransport" }
-      object SOURCE_IP extends Key[IP]{ val name = "aws:SourceIp" }
-      object USER_AGENT extends Key[String] { val name = "aws:UserAgent" }
-      object EPOCH_TIME extends Key[Long] { val name = "aws:EpochTime" }
-      object REFERER extends Key[String] { val name = "aws:Referer" }
-
-      case class KeyFor[V](k: Key[V]) extends Key[Boolean] { val name = k.name }
+      object CURRENT_TIME extends Key[Date] {
+        val name = "aws:CurrentTime"
+        val format = implicitly[Format[Date]]
+      }
+      object MULTI_FACTOR_AUTH_AGE extends Key[Long] {
+        val name = "aws:MultiFactorAuthAge"
+        val format = implicitly[Format[Long]]
+      }
+      object SECURE_TRANSPORT extends Key[Boolean] {
+        val name = "aws:SecureTransport"
+        val format = implicitly[Format[Boolean]]
+      }
+      object SOURCE_IP extends Key[IP]{
+        val name = "aws:SourceIp"
+        val format = implicitly[Format[IP]]
+      }
+      object USER_AGENT extends Key[String] {
+        val name = "aws:UserAgent"
+        val format = implicitly[Format[String]]
+      }
+      object EPOCH_TIME extends Key[Long] {
+        val name = "aws:EpochTime"
+        val format = implicitly[Format[Long]]
+      }
+      object REFERER extends Key[String] {
+        val name = "aws:Referer"
+        val format = implicitly[Format[String]]
+      }
+      case class KeyFor[V](k: Key[V]) extends Key[Boolean] {
+        val name = k.name
+        val format = implicitly[Format[Boolean]]
+      }
     }
 
     import Conditions.Keys.Key
 
-    case class Exists[V](values: (Keys.KeyFor[V], Seq[Boolean])) extends Condition[Keys.KeyFor[V], Boolean] {
+    case class Exists[V](values: (Keys.KeyFor[V], Seq[Boolean])*) extends Condition[Boolean] {
       def name = "Null"
     }
 
-    object Strings {
-      case class Equals[K <: Key[String]](values: (K, Seq[String])) extends Condition[K, String] {
-        def name = "StringEquals"
+    class ConditionBuilder[A](n: String) {
+      def apply(v: (Key[A], Seq[A])*): Condition[A] = new Condition[A] {
+        def name = n
+        def values = v
       }
-      case class NotEquals[K <: Key[String]](values: (K, Seq[String])) extends Condition[K, String] {
-        def name = "StringNotEquals"
-      }
-      /*
-      case class EqualsIgnoreCase(values: (Key[String], Seq[String])*) extends Condition[EqualsIgnoreCase, String] {
-        def name = "StringEqualsIgnoreCase"
-      }
-      case class NotEqualsIgnoreCase(values: (Key[String], Seq[String])*) extends Condition[NotEqualsIgnoreCase, String] {
-        def name = "StringNotEqualsIgnoreCase"
-      }
-      case class Like(values: (Key[String], Seq[String])*) extends Condition[Like, String] {
-        def name = "StringLike"
-      }
-      case class NotLike(values: (Key[String], Seq[String])*) extends Condition[NotLike, String] {
-        def name = "StringNotLike"
-      }
-      */
     }
 
-    /*
-    object Nums {
-      case class Equals(values: (Key[Number], Seq[Number])*) extends Condition[Equals, Number] {
-        def name = "NumericEquals"
-      }
-      case class NotEquals(values: (Key[Number], Seq[Number])*) extends Condition[NotEquals, Number] {
-        def name = "NumericNotEquals"
-      }
-      case class LessThan(values: (Key[Number], Seq[Number])*) extends Condition[LessThan, Number] {
-        def name = "NumericLessThan"
-      }
-      case class LessThanEquals(values: (Key[Number], Seq[Number])*) extends Condition[LessThanEquals, Number] {
-        def name = "NumericLessThanEquals"
-      }
-      case class GreaterThan(values: (Key[Number], Seq[Number])*) extends Condition[GreaterThan, Number] {
-        def name = "NumericGreaterThan"
-      }
-      case class GreaterThanEquals(values: (Key[Number], Seq[Number])*) extends Condition[GreaterThanEquals, Number] {
-        def name = "NumericGreaterThanEquals"
-      }
+    object Strings {
+      val Equals = new ConditionBuilder[String]("StringEquals")
+      val NotEquals = new ConditionBuilder[String]("StringNotEquals")
+      val EqualsIgnoreCase = new ConditionBuilder[String]("StringEqualsIgnoreCase")
+      val NotEqualsIgnoreCase = new ConditionBuilder[String]("StringNotEqualsIgnoreCase")
+      val Like = new ConditionBuilder[String]("StringLike")
+      val NotLike = new ConditionBuilder[String]("StringNotLike")
     }
+
+
+    object Nums {
+      val Equals = new ConditionBuilder[Number]("NumericEquals")
+      val NotEquals = new ConditionBuilder[Number]("NumericNotEquals")
+      val LessThan = new ConditionBuilder[Number]("NumericLessThan")
+      val LessThanEquals = new ConditionBuilder[Number]("NumericLessThanEquals")
+      val GreaterThan = new ConditionBuilder[Number]("NumericGreaterThan")
+      val GreaterThanEquals = new ConditionBuilder[Number]("NumericGreaterThanEquals")
+    }
+
 
     object Dates {
-      case class Equals(values: (Key[Date], Seq[Date])*) extends Condition[Equals, Date] {
-        def name = "DateEquals"
-      }
-      case class NotEquals(values: (Key[Date], Seq[Date])*) extends Condition[NotEquals, Date] {
-        def name = "DateNotEquals"
-      }
-      case class LessThan(values: (Key[Date], Seq[Date])*) extends Condition[LessThan, Date] {
-        def name = "DateLessThan"
-      }
-      case class LessThanEquals(values: (Key[Date], Seq[Date])*) extends Condition[LessThanEquals, Date] {
-        def name = "DateLessThanEquals"
-      }
-      case class GreaterThan(values: (Key[Date], Seq[Date])*) extends Condition[GreaterThan, Date] {
-        def name = "DateGreaterThan"
-      }
-      case class GreaterThanEquals(values: (Key[Date], Seq[Date])*) extends Condition[GreaterThanEquals, Date] {
-        def name = "DateGreaterThanEquals"
-      }
+      val Equals = new ConditionBuilder[Date]("DateEquals")
+      val NotEquals = new ConditionBuilder[Date]("DateNotEquals")
+      val LessThan = new ConditionBuilder[Date]("DateLessThan")
+      val LessThanEquals = new ConditionBuilder[Date]("DateLessThanEquals")
+      val GreaterThan = new ConditionBuilder[Date]("DateGreaterThan")
+      val GreaterThanEquals = new ConditionBuilder[Date]("DateGreaterThanEquals")
     }
 
     object Booleans {
-      case class Equals(values: (Key[Boolean], Seq[Boolean])*) extends Condition[Equals, Boolean] {
-        def name = "Bool"
-      }
+      val Equals = new ConditionBuilder[Boolean]("Bool")
     }
 
     object IPS {
       import Keys.IP
-      case class Equals(values: (Key[IP], Seq[IP])*) extends Condition[Equals, IP] {
-        def name = "IpAddress"
-      }
-      case class NotEquals(values: (Key[IP], Seq[IP])*) extends Condition[NotEquals, IP] {
-        def name = "NotIpAddress"
-      }
+      val Equals = new ConditionBuilder[IP]("IpAddress")
+      val NotEquals = new ConditionBuilder[IP]("NotIpAddress")
     }
 
     object ARNS {
       import Keys.ARN
-      case class Equals(values: (Key[ARN], Seq[ARN])*) extends Condition[Equals, ARN] {
-        def name = "ArnEquals"
-      }
-      case class NotEquals(values: (Key[ARN], Seq[ARN])*) extends Condition[NotEquals, ARN] {
-        def name = "ArnNotEquals"
-      }
-      case class Like(values: (Key[ARN], Seq[ARN])*) extends Condition[Like, ARN] {
-        def name = "ArnLike"
-      }
-      case class NotLike(values: (Key[ARN], Seq[ARN])*) extends Condition[NotLike, ARN] {
-        def name = "ArnNotLike"
-      }
+      val Equals = new ConditionBuilder[ARN]("ArnEquals")
+      val NotEquals = new ConditionBuilder[ARN]("ArnNotEquals")
+      val Like = new ConditionBuilder[ARN]("ArnLike")
+      val NotLike = new ConditionBuilder[ARN]("ArnNotLike")
     }
-    */
   }
 
   def create(bucketname: String, policy: Policy) = {
     val body = Json.toJson(policy)
-    println(body)
     request[Unit](PUT, Some(bucketname), body = Some(body.toString), subresource = Some("policy"))
   }
 }

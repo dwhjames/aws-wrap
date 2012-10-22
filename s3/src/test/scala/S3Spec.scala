@@ -272,6 +272,9 @@ object PolicySpec extends Specification {
 
   "S3 Policy API" should {
 
+    import Policy.Conditions
+    import Conditions.Keys._
+
     "create policy" in {
       val bucketName = AWS.key + "testBucketPoliciesCreate"
       val cr = waitFor(Bucket.create(bucketName))
@@ -284,11 +287,14 @@ object PolicySpec extends Specification {
             sid = Some("1"),
             principal = Some("AWS" -> Seq("*")),
             action = Seq("s3:GetObject*"),
+            conditions = Seq(
+              Conditions.Strings.Equals(USER_AGENT -> Seq("PAF")),
+              Conditions.Exists(KeyFor(REFERER) -> Seq(true))),
             resource = Seq("arn:aws:s3:::%s/*".format(bucketName)))))
 
       val res = waitFor(Policy.create(bucketName, p))
 
-      //del(bucketName)
+      del(bucketName)
       checkResult(res)
     }
   }

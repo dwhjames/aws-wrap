@@ -31,30 +31,13 @@ object CORSRule {
   def create(bucketName: String, rules: CORSRule*) = {
     val body =
       <CORSConfiguration>
-        {
-          for (r <- rules) yield <CORSRule>
-                                   {
-                                     for (o <- r.origins)
-                                       yield <AllowedOrigin>{ o }</AllowedOrigin>
-                                   }
-                                   {
-                                     for (m <- r.methods)
-                                       yield <AllowedMethod>{ m }</AllowedMethod>
-                                   }
-                                   {
-                                     for (h <- r.headers)
-                                       yield <AllowedHeader>{ h }</AllowedHeader>
-                                   }
-                                   {
-                                     for (a <- r.maxAge.toSeq)
-                                       yield <MaxAgeSeconds>{ a }</MaxAgeSeconds>
-                                   }
-                                   {
-                                     for (e <- r.exposeHeaders)
-                                       yield <ExposeHeader>{ e }</ExposeHeader>
-                                   }
-                                 </CORSRule>
-        }
+        { for (r <- rules) yield <CORSRule>
+                                   { for (o <- r.origins) yield <AllowedOrigin>{ o }</AllowedOrigin> }
+                                   { for (m <- r.methods) yield <AllowedMethod>{ m }</AllowedMethod> }
+                                   { for (h <- r.headers) yield <AllowedHeader>{ h }</AllowedHeader> }
+                                   { for (a <- r.maxAge.toSeq) yield <MaxAgeSeconds>{ a }</MaxAgeSeconds> }
+                                   { for (e <- r.exposeHeaders) yield <ExposeHeader>{ e }</ExposeHeader> }
+                                 </CORSRule> }
       </CORSConfiguration>
 
     val ps = Seq(Parameters.MD5(body.mkString))
