@@ -71,8 +71,20 @@ object Policy {
         override def toString = s"Key($name)"
       }
 
+      def withName(s: String) =
+        ALL.find(_.name == s).getOrElse{ throw new RuntimeException(s"Unknown Key name: $s") }
+
       type IP = String
       type ARN = String
+
+      val ALL = Seq[Key[_]](
+        CURRENT_TIME,
+        MULTI_FACTOR_AUTH_AGE,
+        SECURE_TRANSPORT,
+        SOURCE_IP,
+        USER_AGENT,
+        EPOCH_TIME,
+        REFERER)
 
       object CURRENT_TIME extends Key[Date] {
         val name = "aws:CurrentTime"
@@ -173,4 +185,8 @@ object Policy {
     val body = Json.toJson(policy)
     request[Unit](PUT, Some(bucketname), body = Some(body.toString), subresource = Some("policy"))
   }
+
+  def get(bucketname: String) =
+    request[Policy](GET, Some(bucketname), subresource = Some("policy"))
+
 }

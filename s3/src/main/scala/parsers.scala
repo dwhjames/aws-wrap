@@ -131,4 +131,9 @@ object S3Parsers {
       contents = (xml \ "Contents").map(containerParser(_, Content.apply))))
   }
 
+  implicit def policyParser = Parser[Policy] { r =>
+    import aws.s3.JsonFormats._
+    Success(r.json.as[Policy])
+  }
+
 }

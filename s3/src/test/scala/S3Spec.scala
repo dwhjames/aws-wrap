@@ -275,27 +275,41 @@ object PolicySpec extends Specification {
     import Policy.Conditions
     import Conditions.Keys._
 
+    def policy(bucketName: String) = Policy(
+      id = Some("aaaa-bbbb-cccc-dddd"),
+      statements = Seq(
+        Statement(
+          effect = Policy.Effects.ALLOW,
+          sid = Some("1"),
+          principal = Some("AWS" -> Seq("*")),
+          action = Seq("s3:GetObject*"),
+          conditions = Seq(
+            Conditions.Strings.Equals(USER_AGENT -> Seq("PAF")),
+            Conditions.Exists(KeyFor(REFERER) -> Seq(true))),
+          resource = Seq("arn:aws:s3:::%s/*".format(bucketName.toLowerCase)))))
+
     "create policy" in {
       val bucketName = AWS.key + "testBucketPoliciesCreate"
       val cr = waitFor(Bucket.create(bucketName))
-
-      val p = Policy(
-        id = Some("aaaa-bbbb-cccc-dddd"),
-        statements = Seq(
-          Statement(
-            effect = Policy.Effects.ALLOW,
-            sid = Some("1"),
-            principal = Some("AWS" -> Seq("*")),
-            action = Seq("s3:GetObject*"),
-            conditions = Seq(
-              Conditions.Strings.Equals(USER_AGENT -> Seq("PAF")),
-              Conditions.Exists(KeyFor(REFERER) -> Seq(true))),
-            resource = Seq("arn:aws:s3:::%s/*".format(bucketName)))))
-
-      val res = waitFor(Policy.create(bucketName, p))
+      val res = waitFor(Policy.create(bucketName, policy(bucketName)))
 
       del(bucketName)
       checkResult(res)
     }
+
+    "get policy" in {
+      val bucketName = AWS.key + "testBucketPoliciesGet"
+      val cr = waitFor(Bucket.create(bucketName))
+      waitFor(Policy.create(bucketName, policy(bucketName)))
+
+      val res = waitFor(Policy.get(bucketName))
+
+      del(bucketName)
+      checkResult(res)
+
+      // XXX: toString == Evil workaround
+      res.body.toString must_== policy(bucketName).toString
+    }
+
   }
 }
