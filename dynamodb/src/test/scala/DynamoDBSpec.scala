@@ -71,7 +71,7 @@ object DynamoDBSpec extends Specification {
 
     "Put and delete items" in {
       val schema = PrimaryKey(StringKey("id"))
-      val item: Map[String, DDBAttribute] = Map(
+      val item = Item.build(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
         "lastName" -> DDBString("Tesla"),
@@ -92,7 +92,7 @@ object DynamoDBSpec extends Specification {
 
       // Check that it's there
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
-        case Result(_, body) => body.attributes.get("firstName") should be equalTo(Some(DDBString("Nikola")))
+        case Result(_, body) => body.item.get("firstName") should be equalTo(Some(DDBString("Nikola")))
         case Errors(errors) => failure(errors.toString)
       }
 
@@ -104,7 +104,7 @@ object DynamoDBSpec extends Specification {
 
       // Check that the update was effective
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
-        case Result(_, body) => body.attributes.get("firstName") should be equalTo(Some(DDBString("Nico")))
+        case Result(_, body) => body.item.get("firstName") should be equalTo(Some(DDBString("Nico")))
         case Errors(errors) => failure(errors.toString)
       }
 
@@ -113,7 +113,7 @@ object DynamoDBSpec extends Specification {
 
       // Check that it's gone
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
-        case Result(_, body) => body.attributes.get("firstName") should be equalTo(None)
+        case Result(_, body) => body.item.get("firstName") should be equalTo(None)
         case Errors(errors) => failure(errors.toString)
       }
 
@@ -123,7 +123,7 @@ object DynamoDBSpec extends Specification {
 
     "Do a query" in {
       val schema = PrimaryKey(StringKey("id"), StringKey("lastName"))
-      val item: Map[String, DDBAttribute] = Map(
+      val item = Item.build(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
         "lastName" -> DDBString("Tesla"),
@@ -145,7 +145,7 @@ object DynamoDBSpec extends Specification {
       // Try a query
       val q = Query("query-test", DDBString("ntesla"))
       Await.result(DynamoDB.query(q), Duration(30, SECONDS)) match {
-        case Result(_, body) => body.items should be equalTo(Seq(item))
+        case Result(_, body) => body.items(0).toMap should be equalTo(item.toMap)
         case Errors(errors) => failure(errors.toString)
       }
 
@@ -155,7 +155,7 @@ object DynamoDBSpec extends Specification {
 
     "Do a scan" in {
       val schema = PrimaryKey(StringKey("id"), StringKey("lastName"))
-      val item: Map[String, DDBAttribute] = Map(
+      val item = Item.build(
         "id" -> DDBString("ntesla"),
         "firstName" -> DDBString("Nikola"),
         "lastName" -> DDBString("Tesla"),
@@ -176,7 +176,7 @@ object DynamoDBSpec extends Specification {
 
       // Try a scan
       Await.result(DynamoDB.scan("scan-test"), Duration(30, SECONDS)) match {
-        case Result(_, body) => body.items should be equalTo(Seq(item))
+        case Result(_, body) => body.items(0).toMap should be equalTo(item.toMap)
         case Errors(errors) => failure(errors.toString)
       }
 

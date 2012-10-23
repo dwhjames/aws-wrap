@@ -151,7 +151,7 @@ object DynamoDB {
    * Other attribute name-value pairs can be provided for the item. For more information about primary keys, see [[PrimaryKey]].
    */
   def putItem(tableName: String,
-              item: Map[String, DDBAttribute],
+              item: Item,
               expected: Map[String, Expected] = Map.empty,
               returnValues: ReturnValues = ReturnValues.NONE)(implicit region: AWSRegion): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(

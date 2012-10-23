@@ -100,10 +100,10 @@ object ReturnValues {
 
 case class Expected(exists: Option[Boolean] = None, value: Option[DDBAttribute] = None)
 
-case class ItemResponse(attributes: Map[String, DDBAttribute], consumedCapacityUnits: BigDecimal)
+case class ItemResponse(item: Item, consumedCapacityUnits: BigDecimal)
 
 case class QueryResponse(
-  items: Seq[Map[String, DDBAttribute]],
+  items: Seq[Item],
   count: Option[Long],
   scannedCount: Option[Long],
   lastEvaluatedKey: Option[KeyValue],

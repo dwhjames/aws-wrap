@@ -80,11 +80,20 @@ object JsonFormats {
       case DDBBinarySet(bs) => Json.obj(a.typeCode -> Json.toJson(bs.map(Crypto.base64(_))))
     }))
 
+  implicit val ItemFormat = Format[Item](
+    Reads((json: JsValue) => json match {
+      case JsObject(o) => JsSuccess(
+        Item(o.map(pair => (pair._1 -> pair._2.as[DDBAttribute])))
+      )
+      case _ => JsError("Expected a JsObject")
+    }),
+    Writes((item: Item) => Json.toJson(item.attributes.toMap))
+  )
+
   implicit val ItemResponseReads = Reads[ItemResponse](json => {
-    (json \ "ConsumedCapacityUnits", json \ "Item") match {
-      case (JsNumber(consumed), JsObject(o)) => JsSuccess(
-        ItemResponse(o.toMap.mapValues(_.as[DDBAttribute]), consumed))
-      case (JsNumber(consumed), _) => JsSuccess(ItemResponse(Map.empty, consumed))
+    ((json \ "ConsumedCapacityUnits").validate[BigDecimal], (json \ "Item").validate[Item]) match {
+      case (JsSuccess(consumed, _), JsSuccess(item, _)) => JsSuccess(ItemResponse(item, consumed))
+      case (JsSuccess(consumed, _), _) => JsSuccess(ItemResponse(Item.empty, consumed))
       case _ => JsError("ConsumedCapacityUnits is required and must be a number")
     }
   })
@@ -156,8 +165,8 @@ object JsonFormats {
       query.exclusiveStartKey.map(start => Json.obj("ExclusiveStartKey" -> Json.toJson(start))).getOrElse(Json.obj()))
 
   implicit val QueryResponseReads = Reads[QueryResponse](json => {
-    val items: Seq[Map[String, DDBAttribute]] = (json \ "Items") match {
-      case JsArray(a) => a.map(_.as[Map[String, DDBAttribute]])
+    val items: Seq[Item] = (json \ "Items").validate[Seq[Item]] match {
+      case JsSuccess(items, _) => items
       case _ => Nil
     }
     val count = (json \ "Count").asOpt[Long]

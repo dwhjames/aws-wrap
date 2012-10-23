@@ -16,11 +16,11 @@ case class Recipe(
   name: Option[String]
 ) {
 
-  def asItem: Map[String, DDBAttribute] = Map(
+  def asItem = Item.build(
     "id" -> DDBString(id)
   ) ++ name.map { n =>
-    Map("name" -> DDBString(n))
-  }.getOrElse(Nil)
+    Item.build("name" -> DDBString(n))
+  }.getOrElse(Item.empty)
 
 }
 
@@ -41,8 +41,8 @@ object Recipe {
   def byId(id: String): Future[SimpleResult[Recipe]] = {
     DynamoDB.getItem(TABLE_NAME, KeyValue(id)).map { response =>
       response.flatMap(itemResponse => {
-        fromAWS(itemResponse.attributes).map { item =>
-          Result(EmptyMeta, item)
+        fromAWS(itemResponse.item).map { recipe =>
+          Result(EmptyMeta, recipe)
         }.getOrElse(
           Errors(EmptyMeta, Seq(AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, "")))
         )
@@ -58,9 +58,9 @@ object Recipe {
     }
   }
 
-  def fromAWS(attributes: Map[String, DDBAttribute]): Option[Recipe] = {
-    val idOpt = attributes.get("id").flatMap(_.asOpt[String])
-    val name = attributes.get("name").flatMap(_.asOpt[String])
+  def fromAWS(item: Item): Option[Recipe] = {
+    val idOpt = item.get("id").flatMap(_.asOpt[String])
+    val name = item.get("name").flatMap(_.asOpt[String])
     idOpt.map { id => Recipe(id, name) }
   }
 
