@@ -5,7 +5,7 @@ import aws.core._
 import aws.core.parsers._
 
 object SNSParsers {
-  import scala.xml.Elem
+  import scala.xml.Node
   import language.postfixOps
 
   implicit def snsMetaParser = Parser[SNSMeta] { r =>
@@ -25,14 +25,31 @@ object SNSParsers {
     )
   }
 
-  implicit def subscribeResultParser = Parser[SubscribeResult] { r: Response =>
+  implicit def subscribeResultParser = Parser[SubscriptionResult] { r: Response =>
     Success(
-      SubscribeResult((r.xml \\ "SubscriptionArn").text)
+      SubscriptionResult((r.xml \\ "SubscriptionArn").text)
+    )
+  }
+
+  implicit def subscriptionListResultParser = Parser[SubscriptionListResult] { r: Response =>
+    Success(
+      SubscriptionListResult(
+        (r.xml \\ "Subscriptions").map(parseSubscription(_)).flatten,
+        (r.xml \\ "NextToken").headOption.map(_.text)
+      )
     )
   }
 
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SNSMeta, T]] =
     errorsParser.or(Parser.resultParser(snsMetaParser, p))
+
+  def parseSubscription(node: Node): Option[Subscription] = for (
+    topicArn <- (node \\ "TopicArn").headOption.map(_.text);
+    subscriptionArn <- (node \\ "SubscriptionArn").headOption.map(_.text);
+    owner <- (node \\ "Owner").headOption.map(_.text);
+    endpoint <- (node \\ "Endpoint").headOption.map(_.text);
+    protocol <- (node \\ "Protocol").headOption.map(_.text)
+  ) yield Subscription(topicArn, subscriptionArn, owner, Endpoint(endpoint, protocol))
 
   def errorsParser = snsMetaParser.flatMap(meta => Parser[Errors[SNSMeta]] { r =>
     r.status match {

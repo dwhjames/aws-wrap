@@ -38,20 +38,42 @@ object SNS extends V2[SNSMeta] {
   object Parameters {
     def NextToken(nextToken: Option[String]):Seq[(String, String)] = nextToken.toSeq.map("NextToken" -> _)
     def Name(name: String) = ("Name" -> name)
-    def TopicArn(name: String) = ("TopicArn" -> name)
+    def TopicArn(arn: String) = ("TopicArn" -> arn)
+    def Label(name: String) = ("Label" -> name)
     def EndpointProtocol(endpoint: Endpoint) = Seq(
       "Endpoint" -> endpoint.value,
       "Protocol" -> endpoint.protocol
     )
     def SubscriptionArn(arn: String) = ("SubscriptionArn" -> arn)
+    def AuthenticateOnUnsubscribe(auth: Boolean) = ("AuthenticateOnUnsubscribe" -> (if (auth) "true" else "false"))
+    def AWSAccounts(accounts: Seq[String]):Seq[(String, String)] = (for ((account, i) <- accounts.zipWithIndex) yield {
+      (("AWSAccountId.member." + i) -> account)
+    })
+    def ActionList(actions: Seq[Action]):Seq[(String, String)] = (for ((action, i) <- actions.zipWithIndex) yield {
+      (("ActionName.member." + i) -> action.toString)
+    })
+
   }
 
   import AWS.Parameters._
   import Parameters._
 
-  // AddPermission
+  def addPermission(topicArn: String, label: String, awsAccounts: Seq[String], actions: Seq[Action])(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+    val params = Seq(
+      Action("AddPermission"),
+      TopicArn(topicArn),
+      Label(label)
+    ) ++ AWSAccounts(awsAccounts) ++ ActionList(actions)
+    get[Unit](params:_*)
+  }
 
-  // ConfirmSubscription
+  def confirmSubscription(topicArn: String, token: String, authenticateOnUnsubscribe: Boolean = false)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
+    get[SubscriptionResult](
+      Action("ConfirmSubscription"),
+      TopicArn(topicArn),
+      AuthenticateOnUnsubscribe(authenticateOnUnsubscribe)
+    )
+  }
 
   def createTopic(name: String)(implicit region: AWSRegion): Future[Result[SNSMeta, CreateTopicResult]] = {
     get[CreateTopicResult](Action("CreateTopic"), Name(name))
@@ -68,9 +90,18 @@ object SNS extends V2[SNSMeta] {
 
   // GetTopicAttributes
 
-  // ListSubscriptions
+  def listSubscriptions(nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
+    val params = Seq(Action("ListSubscriptions")) ++ NextToken(nextToken)
+    get[SubscriptionListResult](params:_*)
+  }
 
-  // ListSubscriptionsByTopic
+  def listSubscriptionsByTopic(topicArn: String, nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
+    val params = Seq(
+      Action("ListSubscriptionsByTopic"),
+      TopicArn(topicArn)
+    ) ++ NextToken(nextToken)
+    get[SubscriptionListResult](params:_*)
+  }
 
   def listTopics(nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, ListTopicsResult]] = {
     val params = Seq(Action("ListTopics")) ++ NextToken(nextToken)
@@ -85,9 +116,9 @@ object SNS extends V2[SNSMeta] {
 
   // SetTopicAttributes
 
-  def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscribeResult]] = {
+  def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
     val params = Seq(Action("Subscribe"), TopicArn(topicArn)) ++ EndpointProtocol(endpoint)
-    get[SubscribeResult](params:_*)
+    get[SubscriptionResult](params:_*)
   }
 
   def unsubscribe(subscriptionArn: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
