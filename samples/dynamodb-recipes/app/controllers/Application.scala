@@ -27,8 +27,8 @@ object Application extends Controller {
     Async {
       Recipe.all().map {
         case Result(_, recipes) => Ok(views.html.index(recipes))
-        case Errors(Seq(AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _))) => Redirect(routes.Application.notready())
-        case Errors(errors) => InternalServerError(views.html.error(errors))
+        case AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _) => Redirect(routes.Application.notready())
+        case err@AWSError(_, _) => InternalServerError(views.html.error(err))
       }
     }
   }
@@ -41,7 +41,7 @@ object Application extends Controller {
     Async {
       Recipe.initialize().map {
         case Result(_, table) => Redirect(routes.Application.index())
-        case Errors(errors) => InternalServerError(views.html.error(errors))
+        case err@AWSError(_, _) => InternalServerError(views.html.error(err))
       }
     }
   }
@@ -50,8 +50,8 @@ object Application extends Controller {
     Async {
       Recipe.byId(id).map {
         case Result(_, recipe: Recipe) => Ok(recipe.name.getOrElse("noname"))
-        case Errors(Seq(AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _))) => NotFound("Recipe not found")
-        case Errors(errors) => InternalServerError(views.html.error(errors))
+        case AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _) => NotFound("Recipe not found")
+        case err@AWSError(_, _) => InternalServerError(views.html.error(err))
       }
     }
   }
@@ -67,7 +67,7 @@ object Application extends Controller {
         Async {
           Recipe.insert(recipe).map {
             case Result(_, _) => Redirect(routes.Application.index())
-            case Errors(errors) => InternalServerError(views.html.error(errors))
+            case err@AWSError(_, _) => InternalServerError(views.html.error(err))
           }
         }
       }

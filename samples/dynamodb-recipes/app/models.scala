@@ -44,7 +44,7 @@ object Recipe {
         fromAWS(itemResponse.item).map { recipe =>
           Result(EmptyMeta, recipe)
         }.getOrElse(
-          Errors(EmptyMeta, Seq(AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, "")))
+          AWSError(EmptyMeta, DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, "")
         )
       })
     }
