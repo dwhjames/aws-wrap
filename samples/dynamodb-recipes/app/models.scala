@@ -13,13 +13,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 case class Recipe(
   id: String,
-  name: Option[String]
+  name: Option[String],
+  description: Option[String]
 ) {
 
   def asItem = Item.build(
     "id" -> DDBString(id)
-  ) ++ name.map { n =>
+  ) ++ (name.map { n =>
     Item.build("name" -> DDBString(n))
+  }.getOrElse(Item.empty)
+  ) ++ description.map { d =>
+    Item.build("description" -> DDBString(d))
   }.getOrElse(Item.empty)
 
 }
@@ -36,6 +40,10 @@ object Recipe {
 
   def insert(recipe: Recipe): Future[SimpleResult[ItemResponse]] = {
     DynamoDB.putItem(TABLE_NAME, recipe.asItem)
+  }
+
+  def delete(id: String): Future[SimpleResult[ItemResponse]] = {
+    DynamoDB.deleteItem(TABLE_NAME, KeyValue(id))
   }
 
   def byId(id: String): Future[SimpleResult[Recipe]] = {
@@ -61,7 +69,8 @@ object Recipe {
   def fromAWS(item: Item): Option[Recipe] = {
     val idOpt = item.get("id").flatMap(_.asOpt[String])
     val name = item.get("name").flatMap(_.asOpt[String])
-    idOpt.map { id => Recipe(id, name) }
+    val description = item.get("description").flatMap(_.asOpt[String])
+    idOpt.map { id => Recipe(id, name, description) }
   }
 
 }

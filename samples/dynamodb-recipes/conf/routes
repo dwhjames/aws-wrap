@@ -11,6 +11,7 @@ GET     /init                       controllers.Application.init
 GET     /recipe/create              controllers.Application.create
 POST    /recipe/create              controllers.Application.createPost
 GET     /recipe/:id                 controllers.Application.show(id)
+POST    /recipe/:id/delete          controllers.Application.delete(id)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

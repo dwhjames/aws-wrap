@@ -8,16 +8,15 @@
 @helper.form(action = routes.Application.createPost) {
 
     @inputText(
-        recipeForm("id"),
-        '_label -> "Unique id"
-    )
-
-    @inputText(
         recipeForm("name"),
         '_label -> "Recipe name"
     )
 
-    
+    @textarea(
+        recipeForm("description"),
+        '_label -> "Description"
+    )
+
     <div class="actions">
         <input type="submit" class="btn btn-primary" value="Create">
         <a href="@routes.Application.index" class="btn">Cancel</a>

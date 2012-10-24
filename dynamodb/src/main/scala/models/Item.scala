@@ -44,5 +44,7 @@ object Item {
 
   def build(attrs: (String, DDBAttribute)*) = new Item(attrs.toSeq)
 
+  def randomUUID: String = java.util.UUID.randomUUID().toString
+
 }
 

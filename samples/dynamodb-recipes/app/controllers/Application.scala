@@ -15,18 +15,21 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object Application extends Controller {
 
-  val recipeForm: Form[Recipe] = Form(
+  val createRecipeForm: Form[Recipe] = Form(
     mapping(
-      "id" -> nonEmptyText,
-      "name" -> optional(text)
-    )(Recipe.apply)(Recipe.unapply)
-
+      "name" -> optional(text),
+      "description" -> optional(text)
+    )((name, description) =>
+      Recipe(Item.randomUUID, name, description)
+    )(recipe => (Some(recipe.name, recipe.description)))
   )
 
-  def index = Action {
+  def index = Action { implicit request =>
+    val success = request.flash.get("success")
+    val error = request.flash.get("error")
     Async {
       Recipe.all().map {
-        case Result(_, recipes) => Ok(views.html.index(recipes))
+        case Result(_, recipes) => Ok(views.html.index(recipes, success, error))
         case AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _) => Redirect(routes.Application.notready())
         case err@AWSError(_, _) => InternalServerError(views.html.error(err))
       }
@@ -49,24 +52,33 @@ object Application extends Controller {
   def show(id: String) = Action {
     Async {
       Recipe.byId(id).map {
-        case Result(_, recipe: Recipe) => Ok(recipe.name.getOrElse("noname"))
+        case Result(_, recipe: Recipe) => Ok(views.html.show(recipe))
         case AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _) => NotFound("Recipe not found")
         case err@AWSError(_, _) => InternalServerError(views.html.error(err))
       }
     }
   }
 
+  def delete(id: String) = Action {
+    Async {
+      Recipe.delete(id).map {
+        case Result(_, _) => Redirect(routes.Application.index).flashing("success" -> "Item successfully deleted")
+        case AWSError(code, message) => Redirect(routes.Application.index).flashing("error" -> ("Error deleting: " + message))
+      }
+    }
+  }
+
   def create = Action {
-    Ok(views.html.create(recipeForm))
+    Ok(views.html.create(createRecipeForm))
   }
 
   def createPost = Action { implicit request =>
-    recipeForm.bindFromRequest.fold(
+    createRecipeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.create(errors)),
       recipe => {
         Async {
           Recipe.insert(recipe).map {
-            case Result(_, _) => Redirect(routes.Application.index())
+            case Result(_, _) => Redirect(routes.Application.index()).flashing("success" -> "Recipe created")
             case err@AWSError(_, _) => InternalServerError(views.html.error(err))
           }
         }
