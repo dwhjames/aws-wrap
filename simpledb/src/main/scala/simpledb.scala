@@ -65,7 +65,7 @@ object SimpleDB {
   import Parameters._
 
   private def request(parameters: (String, String)*)(implicit region: AWSRegion): Future[Response] = {
-    WS.url("https://" + region.host + "/?" + V2.signedUrl("GET", parameters)).get()
+    V2.request("GET", parameters)
   }
 
   private def tryParse[M <: Metadata, T](resp: Response)(implicit p: Parser[Result[M, T]]) = Parser.parse[Result[M, T]](resp).fold(
