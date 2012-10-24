@@ -40,11 +40,25 @@ case class Item(attributes: Seq[(String, DDBAttribute)]) {
 
 object Item {
 
+  import AttributeWrite._
+  import language.implicitConversions
+
   val empty = Item(Nil)
 
-  def build(attrs: (String, DDBAttribute)*) = new Item(attrs.toSeq)
+  def build(attrs: (String, AttributeWrapper)*) = new Item(
+    attrs.toSeq
+      .map(pair => (pair._1 -> pair._2.asInstanceOf[AttributeWrapperImpl].attr))
+      .filterNot(_._2 == DDBNone))
 
   def randomUUID: String = java.util.UUID.randomUUID().toString
+
+  // This is what allows to do Item.build nicely
+
+  sealed trait AttributeWrapper
+
+  private case class AttributeWrapperImpl(attr: DDBAttribute) extends AttributeWrapper
+
+  implicit def toAttributeWrapper[T](field: T)(implicit w: AttributeWrite[T]): AttributeWrapper = AttributeWrapperImpl(w.writes(field))
 
 }
 

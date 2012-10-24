@@ -72,6 +72,7 @@ object JsonFormats {
       case _ => JsError("Expecting a non empty JsObject")
     }),
     Writes((a: DDBAttribute) => a match {
+      case DDBNone => Json.obj()
       case DDBString(s) => Json.obj(a.typeCode -> JsString(s))
       case DDBNumber(n) => Json.obj(a.typeCode -> JsString(n.toString)) // This looks wrong, but AWS actually wants numbers as strings
       case DDBBinary(b) => Json.obj(a.typeCode -> JsString(Crypto.base64(b)))

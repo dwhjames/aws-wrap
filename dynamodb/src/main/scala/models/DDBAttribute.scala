@@ -4,13 +4,21 @@ import aws.core.utils.Crypto
 
 sealed trait DDBAttribute {
   def typeCode: String
-  def asOpt[T](implicit ac: AttributeConverter[T]) = ac.convert(this)
-  def as[T](implicit ac: AttributeConverter[T]) = asOpt(ac).getOrElse(sys.error("Failed conversion"))
+  def asOpt[T](implicit ac: AttributeRead[T]) = ac.convert(this)
+  def as[T](implicit ac: AttributeRead[T]) = asOpt(ac).getOrElse(sys.error("Failed conversion"))
 }
 
 sealed trait DDBScalar extends DDBAttribute
 
 sealed trait DDBSet extends DDBAttribute
+
+/**
+ * This will never be sent to Amazon, this type is only here to ease creation of an item with optional attributes
+ */
+case object DDBNone extends DDBAttribute {
+  def typeCode = "none"
+  def asOpt[T] = None
+}
 
 object DDBScalar {
   def apply(typeCode: String, value: String): DDBScalar = typeCode match {
@@ -40,6 +48,9 @@ object DDBAttribute {
   def apply(value: Iterable[String]) = DDBStringSet(value.toSet)
   def apply(value: Iterable[Double]) = DDBNumberSet(value.toSet)
   def apply(value: Iterable[Array[Byte]]) = DDBBinarySet(value.toSet)
+
+  def write[T](t: T)(implicit aw: AttributeWrite[T]) = aw.writes(t)
+
 }
 
 case class DDBNumber(value: Double) extends DDBScalar {

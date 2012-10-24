@@ -18,13 +18,10 @@ case class Recipe(
 ) {
 
   def asItem = Item.build(
-    "id" -> DDBString(id)
-  ) ++ (name.map { n =>
-    Item.build("name" -> DDBString(n))
-  }.getOrElse(Item.empty)
-  ) ++ description.map { d =>
-    Item.build("description" -> DDBString(d))
-  }.getOrElse(Item.empty)
+    "id" -> id,
+    "name" -> name,
+    "description" -> description
+  )
 
 }
 

@@ -80,10 +80,10 @@ object DynamoDBSpec extends Specification {
     "Put and delete items" in {
       val schema = PrimaryKey(StringKey("id"))
       val item = Item.build(
-        "id" -> DDBString("ntesla"),
-        "firstName" -> DDBString("Nikola"),
-        "lastName" -> DDBString("Tesla"),
-        "awesomeLevel" -> DDBNumber(1000)
+        "id" -> "ntesla",
+        "firstName" -> "Nikola",
+        "lastName" -> "Tesla",
+        "awesomeLevel" -> 1000
       )
       val key = KeyValue("ntesla")
       // Create a table
