@@ -49,7 +49,7 @@ sealed trait Result[M <: Metadata, +T] {
    * Return the body if a success, throws an exception if an error
    */
   def body: T
-  def toEither: Either[Errors[M], Result[M, T]]
+  def toEither: Either[AWSError[M], Result[M, T]]
   def map[T2](f: (T) => T2): Result[M, T2]
   def flatMap[T2](f: (T) => Result[M, T2]): Result[M, T2]
   def foreach(f: (T => Unit)): Unit
@@ -66,7 +66,7 @@ object Result {
     override def foreach(f: (T => Unit)) = f(b)
   }
   def unapply[M <: Metadata, T](r: Result[M, T]): Option[(M, T)] = r match {
-    case Errors(_) => None
+    case AWSError(_, _) => None
     case _ => Some(r.metadata -> r.body)
   }
 
@@ -76,18 +76,17 @@ object EmptyResult {
   def apply[M <: Metadata](m: M = EmptyMeta) = Result.apply(m, ())
 }
 
-case class AWSError(code: String, message: String)
-
-class Errors[M <: Metadata](val metadata: M, val errors: Seq[AWSError]) extends Result[M, Nothing] {
+class AWSError[M <: Metadata](val metadata: M, val code: String, val message: String) extends Result[M, Nothing] {
   override def toEither = Left(this)
   override def map[T2](f: (Nothing) => T2) = this
   override def flatMap[T2](f: (Nothing) => Result[M, T2]) = this
-  override def body = throw new RuntimeException(errors.toString)
+  override def body = throw new RuntimeException(this.toString)
   override def foreach(f: (Nothing => Unit)) = ()
+  override def toString = ("AWSError: " + code +" - " + message)
 }
 
-object Errors {
-  def apply[M <: Metadata](metadata: M = EmptyMeta, errors: Seq[AWSError]) = new Errors(metadata, errors)
-  def unapply[M <: Metadata](e: Errors[M]): Option[Seq[AWSError]] = Some(e.errors)
+object AWSError {
+  def apply[M <: Metadata](metadata: M = EmptyMeta, code: String, message: String) = new AWSError(metadata, code, message)
+  def unapply[M <: Metadata](e: AWSError[M]): Option[(String, String)] = Some((e.code, e.message))
 }
 // TODO: AWS sometimes returns a 200 when there is an error (example: NoSuchDomain error for DomainMetadata)

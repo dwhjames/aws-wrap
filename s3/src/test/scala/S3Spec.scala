@@ -19,7 +19,7 @@ object TestUtils extends Specification { // Evil hack to access Failure
   implicit val region = S3Region.EU_WEST_1
 
   def checkResult[M <: Metadata, T](r: Result[M, T]) = r match {
-    case Errors(errors) => failure(errors.toString)
+    case AWSError(code, message) => failure(message)
     case Result(_, _) => success
   }
 

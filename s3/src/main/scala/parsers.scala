@@ -25,9 +25,6 @@ object S3Parsers {
     })
   }
 
-  implicit def safeResultParser[M <: S3Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
-    errorsParser(mp).or(Parser.resultParser(mp, p))
-
   implicit def s3MetadataParser = Parser[S3Metadata] { r =>
     Success(S3Metadata(
       requestId = r.header("x-amz-request-id").get,
@@ -36,15 +33,19 @@ object S3Parsers {
       deleteMarker = r.header("x-amz-delete-marker").map(JBool.parseBoolean).getOrElse(false)))
   }
 
-  def errorsParser[M <: S3Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
-    r.status match {
-      // TODO: really test content
-      case s if (s < 300) => Failure("Error expected, found success (status 2xx)")
-      case _ => Success(Errors(meta, (r.xml \\ "Error").map { node =>
-        AWSError(node \ "Code" text, node \ "Message" text)
-      }))
-    }
+  def errorsParser = s3MetadataParser.flatMap(meta => Parser[AWSError[S3Metadata]] { r =>
+    (r.status match {
+      // TODO: really test content (some errors come with a 200)
+      case s if (s < 300) => Some(Failure("Error expected, found success (status 2xx)"))
+      case _ => for (
+        code <- (r.xml \\ "Error" \ "Code").headOption.map(_.text);
+        message <- (r.xml \\ "Error" \ "Message").headOption.map(_.text)
+      ) yield Success(AWSError(meta, code, message))
+    }).getOrElse(sys.error("Failed to parse error: " + r.body))
   })
+
+  implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[S3Metadata, T]] =
+    errorsParser.or(Parser.resultParser(s3MetadataParser, p))
 
   implicit def loggingStatusParser = Parser[Seq[LoggingStatus]] { r =>
     Success((r.xml \\ "LoggingEnabled").map { n =>

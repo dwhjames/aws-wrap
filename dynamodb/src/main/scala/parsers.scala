@@ -6,6 +6,7 @@ import play.api.libs.json.Reads._
 import play.api.libs.json.Writes._
 
 import aws.core._
+import aws.core.Types._
 import aws.core.parsers._
 import aws.dynamodb.JsonFormats._
 
@@ -33,21 +34,23 @@ object DDBParsers {
     }
   }
 
-  implicit def safeResultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] =
-    jsonErrorsParser.or(Parser.resultParser(mp, p))
+  implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[EmptyMeta.type, T]] =
+    jsonErrorsParser.or(Parser.resultParser(Parser.emptyMetadataParser, p))
 
-  def jsonErrorsParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[Errors[M]] { r =>
-    r.status match {
-      case 200 => Failure("Not an error")
-      case _ => Success(Errors(meta, Seq(r.json.as[AWSError])))
+  implicit val awsErrorFormat = Reads[AWSError[EmptyMeta.type]](js => {
+    (js \ "__type", js \ "Message", js \ "message") match {
+      case (JsString(t), JsString(m), _) => JsSuccess(AWSError(EmptyMeta, errorCode(t), m))
+      case (JsString(t), _, JsString(m)) => JsSuccess(AWSError(EmptyMeta, errorCode(t), m))
+      case _ => JsError("JsObject expected")
     }
   })
 
-  implicit val AWSErrorFormat = Reads[AWSError](js => (js \ "__type", js \ "Message", js \ "message") match {
-    case (JsString(t), JsString(m), _) => JsSuccess(AWSError(errorCode(t), m))
-    case (JsString(t), _, JsString(m)) => JsSuccess(AWSError(errorCode(t), m))
-    case _ => JsError("JsObject expected")
-  })
+  val jsonErrorsParser = Parser[AWSError[EmptyMeta.type]] { r =>
+    r.status match {
+      case 200 => Failure("Not an error")
+      case _ => Success(r.json.as[AWSError[EmptyMeta.type]])
+    }
+  }
 
   /**
    * Amazon returns errors such as com.amazonaws.dynamodb.v20111205#ProvisionedThroughputExceededException

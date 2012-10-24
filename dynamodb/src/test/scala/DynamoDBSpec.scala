@@ -21,7 +21,7 @@ object DynamoDBSpec extends Specification {
 
   def ensureSuccess[T](r: SimpleResult[T]) = r match {
     case Result(_, _) => success
-    case Errors(errors) => failure(errors.toString)
+    case AWSError(code, message) => failure(message)
   }
 
   def waitUntilReady(tableName: String) {
@@ -41,12 +41,20 @@ object DynamoDBSpec extends Specification {
 
     "List tables" in {
       val r = Await.result(DynamoDB.listTables(), Duration(30, SECONDS))
+      ensureSuccess(r)
+    }
+
+    "Parse errors correctly" in {
+      Await.result(DynamoDB.deleteTable("does-not-exist"), Duration(30, SECONDS)) match {
+        case Result(_, _) => failure("This is supposed to be an error, the table doesn't exist!")
+        case AWSError(code, message) => code must beEqualTo("ResourceNotFoundException")
+      }
     }
 
     "Create and delete tables" in {
       val schema = PrimaryKey(StringKey("id"))
       Await.result(DynamoDB.createTable("create-table-test", schema, provisioned), Duration(30, SECONDS)) match {
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
       }
       // Loop until the table is ready
@@ -58,7 +66,7 @@ object DynamoDBSpec extends Specification {
       val schema = PrimaryKey(StringKey("id"))
       val newProvisioned = ProvisionedThroughput(15L, 15L)
       Await.result(DynamoDB.createTable("update-table-test", schema, provisioned), Duration(30, SECONDS)) match {
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
       }
       // Loop until the table is ready
@@ -80,7 +88,7 @@ object DynamoDBSpec extends Specification {
       val key = KeyValue("ntesla")
       // Create a table
       Await.result(DynamoDB.createTable("put-item-test", schema, provisioned), Duration(30, SECONDS)) match {
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
       }
 
@@ -93,7 +101,7 @@ object DynamoDBSpec extends Specification {
       // Check that it's there
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
         case Result(_, body) => body.item.get("firstName") should be equalTo(Some(DDBString("Nikola")))
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
       }
 
       // Update it
@@ -105,7 +113,7 @@ object DynamoDBSpec extends Specification {
       // Check that the update was effective
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
         case Result(_, body) => body.item.get("firstName") should be equalTo(Some(DDBString("Nico")))
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
       }
 
       // Delete it
@@ -114,7 +122,7 @@ object DynamoDBSpec extends Specification {
       // Check that it's gone
       Await.result(DynamoDB.getItem("put-item-test", key, Seq("firstName"), true), Duration(30, SECONDS)) match {
         case Result(_, body) => body.item.get("firstName") should be equalTo(None)
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
       }
 
       // Delete the table
@@ -132,7 +140,7 @@ object DynamoDBSpec extends Specification {
       val key = KeyValue("ntesla")
       // Create a table
       Await.result(DynamoDB.createTable("query-test", schema, provisioned), Duration(30, SECONDS)) match {
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
       }
 
@@ -146,7 +154,7 @@ object DynamoDBSpec extends Specification {
       val q = Query("query-test", DDBString("ntesla"))
       Await.result(DynamoDB.query(q), Duration(30, SECONDS)) match {
         case Result(_, body) => body.items(0).toMap should be equalTo(item.toMap)
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
       }
 
       // Delete the table
@@ -164,7 +172,7 @@ object DynamoDBSpec extends Specification {
       val key = KeyValue("ntesla")
       // Create a table
       Await.result(DynamoDB.createTable("scan-test", schema, provisioned), Duration(30, SECONDS)) match {
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
       }
 
@@ -177,7 +185,7 @@ object DynamoDBSpec extends Specification {
       // Try a scan
       Await.result(DynamoDB.scan("scan-test"), Duration(30, SECONDS)) match {
         case Result(_, body) => body.items(0).toMap should be equalTo(item.toMap)
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
       }
 
       // Delete the table
@@ -200,7 +208,7 @@ object DynamoDBSpec extends Specification {
       )
       // Create a table
       Await.result(DynamoDB.createTable("batch-test", schema, provisioned), Duration(30, SECONDS)) match {
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
         case Result(_, description) => description.status should be equalTo(Status.CREATING)
       }
 
@@ -221,9 +229,8 @@ object DynamoDBSpec extends Specification {
         "batch-test" -> GetRequest(Seq(KeyValue("tedison")))
       )
       Await.result(DynamoDB.batchGetItem(batchGet), Duration(30, SECONDS)) match {
-        case Errors(errors) => failure(errors.toString)
+        case AWSError(code, message) => failure(message)
         case Result(_, response) => {
-          println("Success = " + success)
           success
         }
       }

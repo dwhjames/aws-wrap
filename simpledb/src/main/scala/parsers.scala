@@ -47,14 +47,15 @@ object SDBParsers {
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SimpleDBMeta, T]] =
     errorsParser.or(Parser.resultParser(simpleDBMetaParser, p))
 
-  def errorsParser = simpleDBMetaParser.flatMap(meta => Parser[Errors[SimpleDBMeta]] { r =>
-    r.status match {
-      // TODO: really test content
-      case 200 => Failure("Not an error")
-      case _ => Success(Errors(meta, (r.xml \\ "Error").map { node =>
-        AWSError(node \ "Code" text, node \ "Message" text)
-      }))
-    }
+  def errorsParser = simpleDBMetaParser.flatMap(meta => Parser[AWSError[SimpleDBMeta]] { r =>
+    (r.status match {
+      // TODO: really test content (some errors come with a 200)
+      case 200 => Some(Failure("Not an error"))
+      case _ => for (
+        code <- (r.xml \\ "Error" \ "Code").headOption.map(_.text);
+        message <- (r.xml \\ "Error" \ "Message").headOption.map(_.text)
+      ) yield Success(AWSError(meta, code, message))
+    }).getOrElse(sys.error("Failed to parse error: " + r.body))
   })
 
 }

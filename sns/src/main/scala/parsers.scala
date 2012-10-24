@@ -51,14 +51,15 @@ object SNSParsers {
     protocol <- (node \\ "Protocol").headOption.map(_.text)
   ) yield Subscription(topicArn, subscriptionArn, owner, Endpoint(endpoint, protocol))
 
-  def errorsParser = snsMetaParser.flatMap(meta => Parser[Errors[SNSMeta]] { r =>
-    r.status match {
+  def errorsParser = snsMetaParser.flatMap(meta => Parser[AWSError[SNSMeta]] { r =>
+    (r.status match {
       // TODO: really test content
-      case 200 => Failure("Not an error")
-      case _ => Success(Errors(meta, (r.xml \\ "Error").map { node =>
-        AWSError(node \ "Code" text, node \ "Message" text)
-      }))
-    }
+      case 200 => Some(Failure("Not an error"))
+      case _ => for (
+        code <- (r.xml \\ "Error" \ "Code").headOption.map(_.text);
+        message <- (r.xml \\ "Error" \ "Message").headOption.map(_.text)
+      ) yield Success(AWSError(meta, code, message))
+    }).getOrElse(sys.error("Failed to parse error: " + r.body))
   })
 
 }
