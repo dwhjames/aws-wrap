@@ -3,7 +3,7 @@ package aws.sns
 sealed trait Action
 
 object Action {
-  
+
   case object AddPermission extends Action {
     override def toString = "AddPermission"
   }

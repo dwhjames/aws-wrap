@@ -15,29 +15,24 @@ object SNSParsers {
   implicit def listTopicsResultParser = Parser[ListTopicsResult] { r: Response =>
     Success(ListTopicsResult(
       (r.xml \\ "TopicArn").map(_.text),
-      (r.xml \\ "NextToken").headOption.map(_.text))
-    )
+      (r.xml \\ "NextToken").headOption.map(_.text)))
   }
 
   implicit def createTopicsResultParser = Parser[CreateTopicResult] { r: Response =>
     Success(
-      CreateTopicResult((r.xml \\ "TopicArn").text)
-    )
+      CreateTopicResult((r.xml \\ "TopicArn").text))
   }
 
   implicit def subscribeResultParser = Parser[SubscriptionResult] { r: Response =>
     Success(
-      SubscriptionResult((r.xml \\ "SubscriptionArn").text)
-    )
+      SubscriptionResult((r.xml \\ "SubscriptionArn").text))
   }
 
   implicit def subscriptionListResultParser = Parser[SubscriptionListResult] { r: Response =>
     Success(
       SubscriptionListResult(
         (r.xml \\ "Subscriptions").map(parseSubscription(_)).flatten,
-        (r.xml \\ "NextToken").headOption.map(_.text)
-      )
-    )
+        (r.xml \\ "NextToken").headOption.map(_.text)))
   }
 
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SNSMeta, T]] =

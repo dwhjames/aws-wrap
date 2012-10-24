@@ -82,7 +82,7 @@ class AWSError[M <: Metadata](val metadata: M, val code: String, val message: St
   override def flatMap[T2](f: (Nothing) => Result[M, T2]) = this
   override def body = throw new RuntimeException(this.toString)
   override def foreach(f: (Nothing => Unit)) = ()
-  override def toString = ("AWSError: " + code +" - " + message)
+  override def toString = ("AWSError: " + code + " - " + message)
 }
 
 object AWSError {
