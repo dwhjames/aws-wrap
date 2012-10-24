@@ -16,12 +16,12 @@ case class Item(attributes: Seq[(String, DDBAttribute)]) {
   /**
    * removes one field from the Item, returning a new Item
    */
-  def -(otherField: String): Item = Item(attributes.filterNot( _._1 == otherField))
+  def -(otherField: String): Item = Item(attributes.filterNot(_._1 == otherField))
 
   /**
    * adds one field to Item, returning a new Item
    */
-  def +(otherField: (String, DDBAttribute)): Item = Item(attributes :+ otherField)  
+  def +(otherField: (String, DDBAttribute)): Item = Item(attributes :+ otherField)
 
   /**
    * Optionally return the attribute corresponding to the key

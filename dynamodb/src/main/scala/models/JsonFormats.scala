@@ -83,12 +83,10 @@ object JsonFormats {
   implicit val ItemFormat = Format[Item](
     Reads((json: JsValue) => json match {
       case JsObject(o) => JsSuccess(
-        Item(o.map(pair => (pair._1 -> pair._2.as[DDBAttribute])))
-      )
+        Item(o.map(pair => (pair._1 -> pair._2.as[DDBAttribute]))))
       case _ => JsError("Expected a JsObject")
     }),
-    Writes((item: Item) => Json.toJson(item.attributes.toMap))
-  )
+    Writes((item: Item) => Json.toJson(item.attributes.toMap)))
 
   implicit val ItemResponseReads = Reads[ItemResponse](json => {
     ((json \ "ConsumedCapacityUnits").validate[BigDecimal], (json \ "Item").validate[Item]) match {

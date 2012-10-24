@@ -13,7 +13,6 @@ object AttributeConverter {
     def convert(attribute: DDBAttribute) = f(attribute)
   }
 
-
   implicit val stringConvert = AttributeConverter[String](_ match {
     case DDBString(s) => Some(s)
     case _ => None

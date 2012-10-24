@@ -31,7 +31,7 @@ object SDBRegion {
   implicit val DEFAULT = US_EAST_1
 }
 
-object SimpleDB {
+object SimpleDB extends V2[SimpleDBMeta] {
 
   object Parameters {
     def DomainName(a: String) = ("DomainName" -> a)
@@ -64,20 +64,6 @@ object SimpleDB {
   import AWS.Parameters._
   import Parameters._
 
-  private def request(parameters: (String, String)*)(implicit region: AWSRegion): Future[Response] = {
-    V2.request("GET", parameters)
-  }
-
-  private def tryParse[M <: Metadata, T](resp: Response)(implicit p: Parser[Result[M, T]]) = Parser.parse[Result[M, T]](resp).fold(
-    e => throw new RuntimeException(e),
-    identity)
-
-  /**
-   * This helper will fetch data using request, and try to parse the response to the specified types
-   */
-  private def get[M <: Metadata, T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]] =
-    request(parameters: _*).map(tryParse[M, T])
-
   /**
    * Creates a new domain. The domain name must be unique among the domains associated with the Access Key ID used.
    * The CreateDomain operation might take 10 or more seconds to complete.
@@ -90,7 +76,7 @@ object SimpleDB {
    * @param domainName
    */
   def createDomain(domainName: String)(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] =
-    get[SimpleDBMeta, Unit](Action("CreateDomain"), DomainName(domainName))
+    get[Unit](Action("CreateDomain"), DomainName(domainName))
 
   /**
    * Deletes the given domain. Any items (and their attributes) in the domain are deleted as well.
@@ -102,7 +88,7 @@ object SimpleDB {
    * @param domainName
    */
   def deleteDomain(domainName: String)(implicit region: AWSRegion): Future[EmptyResult[SimpleDBMeta]] =
-    get[SimpleDBMeta, Unit](Action("DeleteDomain"), DomainName(domainName))
+    get[Unit](Action("DeleteDomain"), DomainName(domainName))
 
   /**
    * Lists all domains associated with the Access Key ID.
@@ -117,7 +103,7 @@ object SimpleDB {
       Action("ListDomains"),
       MaxNumberOfDomains(maxNumberOfDomains)) ++ nextToken.map(NextToken(_)).toSeq
 
-    get[SimpleDBMeta, Seq[SDBDomain]](params: _*)
+    get[Seq[SDBDomain]](params: _*)
   }
 
   /**
@@ -143,7 +129,7 @@ object SimpleDB {
       DomainName(domainName),
       ItemName(itemName)) ++ Attributes(attributes) ++ Expected(expected)
 
-    get[SimpleDBMeta, Unit](params: _*)
+    get[Unit](params: _*)
   }
 
   /**
@@ -176,7 +162,7 @@ object SimpleDB {
       DomainName(domainName),
       ItemName(itemName)) ++ Attributes(attributes) ++ Expected(expected)
 
-    get[SimpleDBMeta, Unit](params: _*)
+    get[Unit](params: _*)
   }
 
   /**
@@ -201,14 +187,14 @@ object SimpleDB {
       ItemName(itemName),
       ConsistentRead(consistentRead)) ++ attributeName.map(AttributeName(_)).toSeq
 
-    get[SimpleDBMeta, Seq[SDBAttribute]](params: _*)
+    get[Seq[SDBAttribute]](params: _*)
   }
 
   /**
    * Get detailed information about a domain
    */
   def domainMetadata(domainName: String)(implicit region: AWSRegion): Future[Result[SimpleDBMeta, SDBDomainMetadata]] =
-    get[SimpleDBMeta, SDBDomainMetadata](Action("DomainMetadata"), DomainName(domainName))
+    get[SDBDomainMetadata](Action("DomainMetadata"), DomainName(domainName))
 
   /**
    * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
@@ -219,7 +205,7 @@ object SimpleDB {
       SelectExpression(expression),
       ConsistentRead(consistentRead)) ++ nextToken.map(NextToken(_)).toSeq
 
-    get[SimpleDBMeta, Seq[SDBItem]](params: _*)
+    get[Seq[SDBItem]](params: _*)
   }
 
   /**
@@ -229,7 +215,7 @@ object SimpleDB {
     val params = Seq(
       Action("BatchPutAttributes"),
       DomainName(domainName)) ++ Items(items)
-    get[SimpleDBMeta, Unit](params: _*)
+    get[Unit](params: _*)
   }
 
   /**
@@ -239,7 +225,7 @@ object SimpleDB {
     val params = Seq(
       Action("BatchDeleteAttributes"),
       DomainName(domainName)) ++ Items(items)
-    get[SimpleDBMeta, Unit](params: _*)
+    get[Unit](params: _*)
   }
 
 }
