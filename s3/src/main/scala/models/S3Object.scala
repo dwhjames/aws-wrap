@@ -84,6 +84,8 @@ case class Content(
   owner: Owner) extends Container
 
 object S3Object {
+
+  import play.api.libs.iteratee._
   import Http._
 
   object StorageClasses extends Enumeration {
@@ -97,7 +99,9 @@ object S3Object {
   def getVersions(bucketname: String) =
     request[Versions](GET, Some(bucketname), subresource = Some("versions"))
 
-  def put(bucketname: String) =
-    request[Unit](PUT, Some(bucketname))
+  // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
+  // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
+  def put(bucketname: String, name: String, body: Enumerator[Array[Byte]], contentLength: Long) =
+    request[Unit](PUT, Some(bucketname), objectName = Some(name), body = Some(body))
 
 }

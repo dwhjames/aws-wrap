@@ -265,6 +265,18 @@ object S3ObjectSpec extends Specification {
       del(bucketName)
       checkResult(res)
     }
+
+    "upload objects" in {
+      import play.api.libs.iteratee._
+
+      val bucketName = AWS.key + "testBucketUp"
+      val cr = waitFor(Bucket.create(bucketName))
+
+      var r = Enumerator.fromStream(getClass.getResourceAsStream("/fry.gif"))
+      val res = waitFor(S3Object.put(bucketName, "fry.gif", r, 11249))
+      //del(bucketName)
+      checkResult(res)
+    }
   }
 }
 
@@ -309,6 +321,15 @@ object PolicySpec extends Specification {
 
       // XXX: toString == Evil workaround
       res.body.toString must_== policy(bucketName).toString
+    }
+
+    "delete policy" in {
+      val bucketName = AWS.key + "testBucketPoliciesDelete"
+      val cr = waitFor(Bucket.create(bucketName))
+      waitFor(Policy.create(bucketName, policy(bucketName)))
+      val res = waitFor(Policy.delete(bucketName))
+      del(bucketName)
+      checkResult(res)
     }
 
   }

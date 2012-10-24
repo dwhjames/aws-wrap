@@ -48,7 +48,7 @@ object LifecycleConf {
       </LifecycleConfiguration>
 
     val ps = Seq(Parameters.MD5(body.mkString))
-    request[Unit](PUT, Some(bucketname), body = Some(body.mkString), subresource = Some("lifecycle"), parameters = ps)
+    request[Unit](PUT, Some(bucketname), body = Some(enumString(body.mkString)), subresource = Some("lifecycle"), parameters = ps)
   }
 
   def get(bucketname: String): Future[Result[S3Metadata, Seq[LifecycleConf]]] =

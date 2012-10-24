@@ -23,41 +23,57 @@ case class S3Metadata(requestId: String, id2: String, versionId: Option[String] 
 
 private[models] object Http {
 
+  import play.api.libs.iteratee._
   import aws.s3.signature.S3Sign
 
   def ressource(bucketname: Option[String], uri: String, subresource: Option[String] = None) =
     "/%s\n%s\n?%s".format(bucketname.getOrElse(""), uri, subresource.getOrElse(""))
 
+  def enumString(s: String): Enumerator[Array[Byte]] =
+    Enumerator.fromStream(new java.io.ByteArrayInputStream(s.getBytes))
+
+  // TODO; refactor
+  // - contentType
   def request[T](
     method: Method,
     bucketname: Option[String] = None,
+    objectName: Option[String] = None,
     subresource: Option[String] = None,
-    body: Option[String] = None,
+    body: Option[Enumerator[Array[Byte]]] = None,
     parameters: Seq[(String, String)] = Nil)(implicit p: Parser[Result[S3Metadata, T]]): Future[Result[S3Metadata, T]] = {
 
-    val uri = bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com") + subresource.map("/?" + _).getOrElse("")
+    val uri = Seq(
+        Some(bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com")),
+        objectName,
+        subresource.map("?" + _)).flatten.mkString("/")
+
     val res = ressource(bucketname, uri)
 
     // TODO: do not hardcode contentType
+    val sign = S3Sign.sign(method.toString,
+      bucketname,
+      objectName,
+      subresource,
+      // contentType = body.map(_ => "text/plain; charset=utf-8"),
+      headers = parameters,
+      md5 = parameters.flatMap {
+        case ("Content-MD5", v) => Seq(v) // XXX
+        case _ => Nil
+      }.headOption)
+
     val r = WS.url(uri)
       .withHeaders(
-        parameters ++
-          S3Sign.sign(method.toString,
-            bucketname,
-            subresource,
-            contentType = body.map(_ => "text/plain; charset=utf-8"),
-            headers = parameters,
-            md5 = parameters.flatMap {
-              case ("Content-MD5", v) => Seq(v) // XXX
-              case _ => Nil
-            }.headOption): _*)
+        (parameters ++ sign): _*)
 
     (method match {
       case PUT => r.put(body.get)
       case DELETE => r.delete()
       case GET => r.get()
       case _ => throw new RuntimeException("Unsuported method: " + method)
-    }).map(tryParse[T])
+    }).map{ r =>
+      println(r.body)
+      tryParse[T](r)
+    }
   }
 
   private def tryParse[T](resp: Response)(implicit p: Parser[Result[S3Metadata, T]]) =

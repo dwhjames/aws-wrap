@@ -28,7 +28,7 @@ object Bucket {
       </CreateBucketConfiguration>
 
     val ps = acls.map(X_AMZ_ACL(_)).toSeq ++ permissions
-    request[Unit](PUT, Some(bucketname), body = Some(body.toString), parameters = ps)
+    request[Unit](PUT, Some(bucketname), body = Some(enumString(body.toString)), parameters = ps)
   }
 
   def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =

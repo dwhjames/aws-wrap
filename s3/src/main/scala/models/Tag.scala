@@ -42,6 +42,6 @@ object Tag {
         </TagSet>
       </Tagging>
     val ps = Seq(Parameters.MD5(body.mkString))
-    request[Unit](PUT, Some(bucketname), body = Some(body.mkString), subresource = Some("tagging"), parameters = ps)
+    request[Unit](PUT, Some(bucketname), body = Some(enumString(body.mkString)), subresource = Some("tagging"), parameters = ps)
   }
 }

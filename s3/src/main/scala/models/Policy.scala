@@ -183,10 +183,13 @@ object Policy {
 
   def create(bucketname: String, policy: Policy) = {
     val body = Json.toJson(policy)
-    request[Unit](PUT, Some(bucketname), body = Some(body.toString), subresource = Some("policy"))
+    request[Unit](PUT, Some(bucketname), body = Some(enumString(body.toString)), subresource = Some("policy"))
   }
 
   def get(bucketname: String) =
     request[Policy](GET, Some(bucketname), subresource = Some("policy"))
+
+  def delete(bucketname: String) =
+    request[Unit](DELETE, Some(bucketname), subresource = Some("policy"))
 
 }

@@ -42,7 +42,7 @@ object Logging {
         </LoggingEnabled>
       </BucketLoggingStatus>
 
-    request[Unit](PUT, Some(loggedBucket), body = Some(body.toString), subresource = Some("logging"))
+    request[Unit](PUT, Some(loggedBucket), body = Some(enumString(body.toString)), subresource = Some("logging"))
   }
 
   def get(bucketName: String) =
