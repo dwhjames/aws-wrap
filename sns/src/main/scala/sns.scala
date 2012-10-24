@@ -105,7 +105,13 @@ object SNS extends V2[SNSMeta] {
 
   // Publish
 
-  // RemovePermission
+  def removePermission(topicArn: String, label: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+    get[Unit](
+      Action("RemovePermission"),
+      TopicArn(topicArn),
+      Label(label)
+    )
+  }
 
   // SetSubscriptionAttributes
 
