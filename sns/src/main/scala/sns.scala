@@ -39,6 +39,11 @@ object SNS extends V2[SNSMeta] {
     def NextToken(nextToken: Option[String]):Seq[(String, String)] = nextToken.toSeq.map("NextToken" -> _)
     def Name(name: String) = ("Name" -> name)
     def TopicArn(name: String) = ("TopicArn" -> name)
+    def EndpointProtocol(endpoint: Endpoint) = Seq(
+      "Endpoint" -> endpoint.value,
+      "Protocol" -> endpoint.protocol
+    )
+    def SubscriptionArn(arn: String) = ("SubscriptionArn" -> arn)
   }
 
   import AWS.Parameters._
@@ -80,9 +85,14 @@ object SNS extends V2[SNSMeta] {
 
   // SetTopicAttributes
 
-  // Subscribe
+  def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscribeResult]] = {
+    val params = Seq(Action("Subscribe"), TopicArn(topicArn)) ++ EndpointProtocol(endpoint)
+    get[SubscribeResult](params:_*)
+  }
 
-  // Unsubscribe
+  def unsubscribe(subscriptionArn: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+    get[Unit](Action("Unsubscribe"), SubscriptionArn(subscriptionArn))
+  }
 
 }
 

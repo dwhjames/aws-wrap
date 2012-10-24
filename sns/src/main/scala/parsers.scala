@@ -25,6 +25,12 @@ object SNSParsers {
     )
   }
 
+  implicit def subscribeResultParser = Parser[SubscribeResult] { r: Response =>
+    Success(
+      SubscribeResult((r.xml \\ "SubscriptionArn").text)
+    )
+  }
+
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SNSMeta, T]] =
     errorsParser.or(Parser.resultParser(snsMetaParser, p))
 

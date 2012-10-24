@@ -48,8 +48,31 @@ object SNSSpec extends Specification {
           }
         }
       }
-
     }
+
+    "Subscribe" in {
+      val subscribeFuture = SNS.createTopic("test-subsciptions").flatMap(_ match {
+        case e@Errors(errors) => Future.successful(e)
+        case Result(_, createRes) => SNS.subscribe(Endpoint.Http("http://example.com"), createRes.topicArn)
+      })
+
+      val r = Await.result(subscribeFuture, Duration(30, SECONDS))
+      checkResult(r)
+    }
+
+    // Deactivated because a confirmation is necessary to actually create the subscription (so we can't unsubscribe)
+/*    "Unsubscribe" in {
+      val unsubscribeFuture = SNS.createTopic("test-subsciptions").flatMap(_ match {
+        case e@Errors(errors) => Future.successful(e)
+        case Result(_, createRes) => SNS.subscribe(Endpoint.Http("http://example.com"), createRes.topicArn)
+      }).flatMap(_ match {
+        case e@Errors(errors) => Future.successful(e)
+        case Result(_, subscribeRes) => SNS.unsubscribe(subscribeRes.subscriptionArn)
+      })
+
+      val r = Await.result(unsubscribeFuture, Duration(30, SECONDS))
+      checkResult(r)
+    }*/
 
   }
 }
