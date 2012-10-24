@@ -52,4 +52,15 @@ object Parser {
 
   implicit val emptyMetadataParser: Parser[EmptyMeta.type] = Parser.pure(EmptyMeta)
 
+  def xmlErrorParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[AWSError[M]] { r =>
+    (r.status match {
+      // TODO: really test content
+      case s if (s / 100 == 2) => Some(Failure("Error expected, found success (status 2xx)"))
+      case _ => for (
+        code <- (r.xml \\ "Error" \ "Code").headOption.map(_.text);
+        message <- (r.xml \\ "Error" \ "Message").headOption.map(_.text)
+      ) yield Success(AWSError(meta, code, message))
+    }).getOrElse(sys.error("Failed to parse error: " + r.body))
+  })
+
 }

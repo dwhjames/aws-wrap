@@ -41,7 +41,7 @@ object SNSParsers {
   }
 
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SNSMeta, T]] =
-    errorsParser.or(Parser.resultParser(snsMetaParser, p))
+    Parser.xmlErrorParser[SNSMeta].or(Parser.resultParser(snsMetaParser, p))
 
   def parseSubscription(node: Node): Option[Subscription] = for (
     topicArn <- (node \\ "TopicArn").headOption.map(_.text);
@@ -50,16 +50,5 @@ object SNSParsers {
     endpoint <- (node \\ "Endpoint").headOption.map(_.text);
     protocol <- (node \\ "Protocol").headOption.map(_.text)
   ) yield Subscription(topicArn, subscriptionArn, owner, Endpoint(endpoint, protocol))
-
-  def errorsParser = snsMetaParser.flatMap(meta => Parser[AWSError[SNSMeta]] { r =>
-    (r.status match {
-      // TODO: really test content
-      case 200 => Some(Failure("Not an error"))
-      case _ => for (
-        code <- (r.xml \\ "Error" \ "Code").headOption.map(_.text);
-        message <- (r.xml \\ "Error" \ "Message").headOption.map(_.text)
-      ) yield Success(AWSError(meta, code, message))
-    }).getOrElse(sys.error("Failed to parse error: " + r.body))
-  })
 
 }
