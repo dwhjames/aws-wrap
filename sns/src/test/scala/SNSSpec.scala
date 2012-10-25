@@ -67,6 +67,16 @@ object SNSSpec extends Specification {
       checkResult(r)
     }
 
+    "Publish" in {
+      val publishFuture = SNS.createTopic("test-publish").flatMap(_ match {
+        case e@AWSError(_, _) => Future.successful(e)
+        case Result(_, createRes) => SNS.publish(createRes.topicArn, Message("hello, there", Some("just for http")))
+      })
+
+      val r = Await.result(publishFuture, Duration(30, SECONDS))
+      checkResult(r)
+    }
+
     "Add and remove permissions" in {
       val accounts = Seq("foobar@example.com")
       val actions = Seq(Action.ListTopics)

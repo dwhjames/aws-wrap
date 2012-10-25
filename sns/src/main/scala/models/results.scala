@@ -12,3 +12,5 @@ case class Subscription(topicArn: String, subscriptionArn: String, owner: String
 
 case class SubscriptionListResult(subscriptions: Seq[Subscription], nextToken: Option[String])
 
+case class PublishResult(messageId: String)
+

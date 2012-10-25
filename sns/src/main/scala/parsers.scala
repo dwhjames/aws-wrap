@@ -28,6 +28,11 @@ object SNSParsers {
       SubscriptionResult((r.xml \\ "SubscriptionArn").text))
   }
 
+  implicit def publishResultParser = Parser[PublishResult] { r: Response =>
+    Success(
+      PublishResult((r.xml \\ "MessageId").text))
+  }
+
   implicit def subscriptionListResultParser = Parser[SubscriptionListResult] { r: Response =>
     Success(
       SubscriptionListResult(

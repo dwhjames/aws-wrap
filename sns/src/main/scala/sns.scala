@@ -51,7 +51,9 @@ object SNS extends V2[SNSMeta] {
     def ActionList(actions: Seq[Action]): Seq[(String, String)] = (for ((action, i) <- actions.zipWithIndex) yield {
       (("ActionName.member." + (i + 1)) -> action.toString)
     })
-
+    def MessageParameters(message: Message) =
+      Seq("Message" -> message.serialize) ++ (if (message.json) Seq("MessageStructure" -> "json") else Nil)
+    def Subject(subject: Option[String]) = subject.toSeq.map("Subject" -> _)
   }
 
   import AWS.Parameters._
@@ -103,7 +105,12 @@ object SNS extends V2[SNSMeta] {
     get[ListTopicsResult](params: _*)
   }
 
-  // Publish
+  def publish(topicArn: String,
+              message: Message,
+              subject: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, PublishResult]] = {
+    val params = Seq(Action("Publish"), TopicArn(topicArn)) ++ MessageParameters(message) ++ Subject(subject)
+    get[PublishResult](params: _*)
+  }
 
   def removePermission(topicArn: String, label: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
     get[Unit](
