@@ -85,6 +85,7 @@ case class Content(
 
 object S3Object {
 
+  import java.io.File
   import play.api.libs.iteratee._
   import Http._
 
@@ -101,7 +102,10 @@ object S3Object {
 
   // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
   // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
-  def put(bucketname: String, name: String, body: Enumerator[Array[Byte]], contentLength: Long) =
-    request[Unit](PUT, Some(bucketname), objectName = Some(name), body = Some(body))
+  def put(bucketname: String, body: File) =
+    upload[Unit](PUT, bucketname, body.getName, body)
+
+  def delete(bucketname: String, objectName: String) =
+    request[Unit](DELETE, Some(bucketname), Some(objectName))
 
 }

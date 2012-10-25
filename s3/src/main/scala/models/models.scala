@@ -32,6 +32,43 @@ private[models] object Http {
   def enumString(s: String): Enumerator[Array[Byte]] =
     Enumerator.fromStream(new java.io.ByteArrayInputStream(s.getBytes))
 
+
+  def upload[T](
+    method: Method,
+    bucketname: String,
+    objectName: String,
+    body: java.io.File,
+    parameters: Seq[(String, String)] = Nil)(implicit p: Parser[Result[S3Metadata, T]]): Future[Result[S3Metadata, T]] = {
+
+      val uri = s"https://$bucketname.s3.amazonaws.com/" + objectName
+      val res = ressource(Some(bucketname), uri)
+      val ct = new javax.activation.MimetypesFileTypeMap().getContentType(body.getName)
+      val ps = parameters :+ ("Content-Type" -> ct)
+
+      // TODO: do not hardcode contentType
+      val sign = S3Sign.sign(method.toString,
+        Some(bucketname),
+        Some(objectName),
+        None,
+        contentType = Some(ct),
+        headers = ps,
+        md5 = parameters.flatMap {
+          case ("Content-MD5", v) => Seq(v) // XXX
+          case _ => Nil
+        }.headOption)
+
+      val r = WS.url(uri)
+        .withHeaders(
+          (ps ++ sign): _*)
+
+      (method match {
+        case PUT => r.put(body)
+        case DELETE => r.delete()
+        case GET => r.get()
+        case _ => throw new RuntimeException("Unsuported method: " + method)
+      }).map(tryParse[T])
+    }
+
   // TODO; refactor
   // - contentType
   def request[T](
@@ -70,10 +107,7 @@ private[models] object Http {
       case DELETE => r.delete()
       case GET => r.get()
       case _ => throw new RuntimeException("Unsuported method: " + method)
-    }).map{ r =>
-      println(r.body)
-      tryParse[T](r)
-    }
+    }).map(tryParse[T])
   }
 
   private def tryParse[T](resp: Response)(implicit p: Parser[Result[S3Metadata, T]]) =

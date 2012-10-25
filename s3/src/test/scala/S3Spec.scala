@@ -266,16 +266,21 @@ object S3ObjectSpec extends Specification {
       checkResult(res)
     }
 
-    "upload objects" in {
+    "upload & delete objects" in {
       import play.api.libs.iteratee._
 
       val bucketName = AWS.key + "testBucketUp"
       val cr = waitFor(Bucket.create(bucketName))
 
-      var r = Enumerator.fromStream(getClass.getResourceAsStream("/fry.gif"))
-      val res = waitFor(S3Object.put(bucketName, "fry.gif", r, 11249))
-      //del(bucketName)
-      checkResult(res)
+      val f = new java.io.File("s3/src/test/resources/fry.gif")
+      if(!f.exists)
+        skipped(s"File not found: $f")
+
+      val resUp = waitFor(S3Object.put(bucketName, f))
+      val resDel = waitFor(S3Object.delete(bucketName, f.getName))
+      del(bucketName)
+      checkResult(resUp)
+      checkResult(resDel)
     }
   }
 }
