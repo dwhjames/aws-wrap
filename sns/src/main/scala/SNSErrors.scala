@@ -28,6 +28,11 @@ object SNSErrors {
   val INVALID_PARAMETER_COMBINATION = "InvalidParameterCombination"
 
   /**
+   * Bad parameter. See the message for details about which parameter is bad.
+   */
+  val INVALID_PARAMETER = "InvalidParameter"
+
+  /**
    * A bad or out-of-range value was supplied for the input parameter.
    */
   val INVALID_PARAMETER_VALUE = "InvalidParameterValue"

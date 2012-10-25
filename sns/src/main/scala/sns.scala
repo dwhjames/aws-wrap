@@ -46,10 +46,10 @@ object SNS extends V2[SNSMeta] {
     def SubscriptionArn(arn: String) = ("SubscriptionArn" -> arn)
     def AuthenticateOnUnsubscribe(auth: Boolean) = ("AuthenticateOnUnsubscribe" -> (if (auth) "true" else "false"))
     def AWSAccounts(accounts: Seq[String]): Seq[(String, String)] = (for ((account, i) <- accounts.zipWithIndex) yield {
-      (("AWSAccountId.member." + i) -> account)
+      (("AWSAccountId.member." + (i + 1)) -> account)
     })
     def ActionList(actions: Seq[Action]): Seq[(String, String)] = (for ((action, i) <- actions.zipWithIndex) yield {
-      (("ActionName.member." + i) -> action.toString)
+      (("ActionName.member." + (i + 1)) -> action.toString)
     })
 
   }
