@@ -5,7 +5,9 @@ import java.util.Date
 import scala.annotation.implicitNotFound
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+
 import play.api.libs.ws._
+import play.api.libs.json._
 
 import aws.core._
 import aws.core.Types._
@@ -40,6 +42,8 @@ object SNS extends V2[SNSMeta] {
     def Name(name: String) = ("Name" -> name)
     def TopicArn(arn: String) = ("TopicArn" -> arn)
     def Label(name: String) = ("Label" -> name)
+    def AttributeName(name: String) = ("AttributeName" -> name)
+    def AttributeValue(value: String) = ("AttributeValue" -> value)
     def EndpointProtocol(endpoint: Endpoint) = Seq(
       "Endpoint" -> endpoint.value,
       "Protocol" -> endpoint.protocol)
@@ -122,7 +126,25 @@ object SNS extends V2[SNSMeta] {
 
   // SetSubscriptionAttributes
 
-  // SetTopicAttributes
+  private def setTopicAttributes(topicArn: String,
+                                attributeName: String,
+                                attributeValue: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+    get[Unit](
+      Action("SetTopicAttribute"),
+      TopicArn(topicArn),
+      AttributeName(attributeName),
+      AttributeValue(attributeValue)
+    )
+  }
+
+  def setTopicDisplayName(topicArn: String, name: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =
+    setTopicAttributes(topicArn, "DisplayName", name)
+
+  def setTopicPolicy(topicArn: String, policy: JsValue)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =
+    setTopicAttributes(topicArn, "Policy", policy.toString)
+
+  def setTopicDeliveryPolicy(topicArn: String, deliveryPolicy: JsValue)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =
+    setTopicAttributes(topicArn, "DisplayName", deliveryPolicy.toString)
 
   def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
     val params = Seq(Action("Subscribe"), TopicArn(topicArn)) ++ EndpointProtocol(endpoint)
