@@ -123,13 +123,15 @@ object JsonFormats {
     existsJs ++ valueJs
   })
 
-  implicit val AttributeActionFormat = Format[UpdateAction](
-    __.read[String].map(a => UpdateAction(a)),
-    Writes((action: UpdateAction) => JsString(action.toString)))
-
-  implicit val UpdateFormat = (
-    (__ \ 'Value).format[DDBAttribute] and
-    (__ \ 'Action).format[UpdateAction])(Update, unlift(Update.unapply))
+  implicit val UpdateFormat = Format[Update](
+    Reads((json: JsValue) => ((json \ "Action").validate[String], (json \ "Value").validate[DDBAttribute]) match {
+      case (JsSuccess(action, _), JsSuccess(value, _)) => JsSuccess(Update(action, value))
+      case (err: JsError, _) => err
+      case (_, err: JsError) => err
+    }),
+    Writes((update: Update) => Json.obj(
+      "Action" -> update.action,
+      "Value" -> update.value)))
 
   implicit val KeyConditionWrites = Writes[KeyCondition](_ match {
     case KeyCondition.EqualTo(value) => Json.obj(

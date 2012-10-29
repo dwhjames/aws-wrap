@@ -2,6 +2,9 @@ package aws.dynamodb
 
 import scala.annotation.implicitNotFound
 
+/**
+ * Define an instance of this type to allow conversion of a DDBAttribute to T.
+ */
 @implicitNotFound("I don't know how to convert a DDBAttribute to a ${To}. Provide an implicit AttributeRead for this type.")
 trait AttributeRead[To] {
   def convert(attribute: DDBAttribute): Option[To]

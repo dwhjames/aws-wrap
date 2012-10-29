@@ -1,5 +1,22 @@
 package aws.dynamodb
 
+/**
+ * An item in DynamoDB.
+ *
+ * Building an Item:
+ * {{{
+ * val item = Item.build(
+ *   "id" -> "john@example.com",
+ *   "name" -> "John Martin",
+ *   "age" -> 25,
+ *   "groups" -> Set("admin", "developers", "users")
+ * )
+ * item: aws.dynamodb.Item = Item(ArrayBuffer((id,DDBString(john@example.com)),
+ *       (name,DDBString(John Martin)),
+ *       (age,DDBNumber(25.0)),
+ *       (groups,DDBStringSet(Set(admin, developers, users)))))
+ * }}}
+ */
 case class Item(attributes: Seq[(String, DDBAttribute)]) {
 
   def keys: Set[String] = attributes.map(_._1).toSet
@@ -45,6 +62,23 @@ object Item {
 
   val empty = Item(Nil)
 
+  /**
+   * Build a DynamoDB item, using any type where a [[AttributeWrite]] is available.
+   *
+   * Example:
+   * {{{
+   * val item = Item.build(
+   *   "id" -> "john@example.com",
+   *   "name" -> "John Martin",
+   *   "age" -> 25,
+   *   "groups" -> Set("admin", "developers", "users")
+   * )
+   * item: aws.dynamodb.Item = Item(ArrayBuffer((id,DDBString(john@example.com)),
+   *       (name,DDBString(John Martin)),
+   *       (age,DDBNumber(25.0)),
+   *       (groups,DDBStringSet(Set(admin, developers, users)))))
+   * }}}
+   */
   def build(attrs: (String, AttributeWrapper)*) = new Item(
     attrs.toSeq
       .map(pair => (pair._1 -> pair._2.asInstanceOf[AttributeWrapperImpl].attr))

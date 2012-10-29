@@ -1,19 +1,40 @@
 package aws.dynamodb
 
-sealed trait UpdateAction
-
-object UpdateAction {
-  case object PUT extends UpdateAction { override def toString = "PUT" }
-  case object DELETE extends UpdateAction { override def toString = "DELETE" }
-  case object ADD extends UpdateAction { override def toString = "ADD" }
-  def apply(action: String) = action.toLowerCase match {
-    case "put" => PUT
-    case "delete" => DELETE
-    case "add" => ADD
-  }
+/**
+ * Action to be used in [[DynamoDB.updateItem]].
+ */
+sealed trait Update {
+  def value: DDBAttribute
+  def action: String
 }
 
-case class Update(value: DDBAttribute, action: UpdateAction = UpdateAction.PUT)
+object Update {
+
+  case class Put(value: DDBAttribute) extends Update {
+    override def action = "PUT"
+  }
+
+  case class Delete(value: DDBAttribute) extends Update {
+    override def action = "DELETE"
+  }
+
+  case class Add(value: DDBAttribute) extends Update {
+    override def action = "ADD"
+  }
+
+  def put[T](value: T)(implicit wrt: AttributeWrite[T]) = Put(wrt.writes(value))
+
+  def delete[T](value: T)(implicit wrt: AttributeWrite[T]) = Delete(wrt.writes(value))
+
+  def add[T](value: T)(implicit wrt: AttributeWrite[T]) = Add(wrt.writes(value))
+
+  def apply(action: String, value: DDBAttribute) = action.toLowerCase match {
+    case "put" => Put(value)
+    case "delete" => Delete(value)
+    case "add" => Add(value)
+    case action => sys.error("Unkown action for Update: " + action)
+  }
+}
 
 sealed trait KeySchemaElement {
   def attribute: String

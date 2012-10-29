@@ -147,7 +147,7 @@ object DynamoDB {
    * If an item already exists in the specified table with the same primary key, the new item completely replaces the existing item. You can perform a conditional put (insert a new item if one with the specified primary key doesn't exist), or replace an existing item if it has certain attribute values.
    *
    * @param tableName
-   * @param item A map of the attributes for the item, and must include the primary key values that define the item.
+   * @param item The [[Item]] to put. Must include the primary key values that define the item.
    * Other attribute name-value pairs can be provided for the item. For more information about primary keys, see [[PrimaryKey]].
    */
   def putItem(tableName: String,
@@ -162,6 +162,22 @@ object DynamoDB {
     post[ItemResponse]("PutItem", body)
   }
 
+  /**
+   * Deletes a single item in a table by primary key.
+   * You can perform a conditional delete operation that deletes the item if it exists,
+   * or if it has an expected attribute value.
+   *
+   * Unless you specify conditions, the DeleteItem is an idempotent operation; running it multiple times on the same item or attribute does not result in an error response.
+   *
+   * @param tableName
+   * @param key the primary key that defines the item. See [[PrimaryKey]] for more information.
+   * @param expected Designates an attribute for a conditional delete. If empty, all the attributes for the item are deleted.
+   *                 If not, it allows deleting items and attributes if specific conditions are met.
+   *                 If the conditions are met, Amazon DynamoDB performs the delete. Otherwise, the item is not deleted.
+   * @param returnValues Use this parameter if you want to get the attribute name-value pairs before they were deleted.
+   * If [[ReturnValues.ALL_OLD]] is specified, the content of the old item is returned.
+   * If [[ReturnValues.NONE]] is provided (the default value), nothing is returned.
+   */
   def deleteItem(tableName: String,
                  key: KeyValue,
                  expected: Map[String, Expected] = Map.empty,
@@ -174,6 +190,14 @@ object DynamoDB {
     post[ItemResponse]("DeleteItem", body)
   }
 
+  /**
+   * The GetItem operation returns a set of Attributes for an item that matches the primary key.
+   *
+   * The GetItem operation provides an eventually consistent read by default.
+   * If eventually consistent reads are not acceptable for your application, use ConsistentRead.
+   * Although this operation might take longer than a standard read, it always returns the last updated value.
+   * For more information, see [[http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/APISummary.html#DataReadConsistency Data Read and Consistency Considerations]].
+   */
   def getItem(tableName: String,
               key: KeyValue,
               attributesToGet: Seq[String] = Nil,

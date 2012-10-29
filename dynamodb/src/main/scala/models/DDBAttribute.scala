@@ -3,8 +3,21 @@ package aws.dynamodb
 import aws.core.utils.Crypto
 
 sealed trait DDBAttribute {
+
+  /**
+   * Type code as AWS expects it
+   */
   def typeCode: String
+
+  /**
+   * Tries to convert the DDBAttribute to a T.
+   * @return None if the conversion fails, Some(t) if it succeeds
+   */
   def asOpt[T](implicit ac: AttributeRead[T]) = ac.convert(this)
+
+  /**
+   * Tries to convert the DDBAttribute to a T, throws an error if it fails
+   */
   def as[T](implicit ac: AttributeRead[T]) = asOpt(ac).getOrElse(sys.error("Failed conversion"))
 }
 

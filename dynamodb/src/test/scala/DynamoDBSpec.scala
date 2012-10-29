@@ -106,7 +106,7 @@ object DynamoDBSpec extends Specification {
 
       // Update it
       ensureSuccess(Await.result(
-        DynamoDB.updateItem("put-item-test", key, Map("firstName" -> Update(DDBString("Nico"), UpdateAction.PUT))),
+        DynamoDB.updateItem("put-item-test", key, Map("firstName" -> Update.put("Nico"))),
         Duration(30, SECONDS)
       ))
 

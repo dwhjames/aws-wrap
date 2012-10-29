@@ -2,6 +2,10 @@ package aws.dynamodb
 
 import scala.annotation.implicitNotFound
 
+/**
+ * Define an instance of this type to allow conversion of a T to a [[DDBAttribute]].
+ * This is in particular useful when using [[Item.build]].
+ */
 @implicitNotFound("I don't know how to convert a ${T} to a DDBAttribute. Provide an implicit AttributeWrite for this type.")
 trait AttributeWrite[-T] {
   def writes(t: T): DDBAttribute
