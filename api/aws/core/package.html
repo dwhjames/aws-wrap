@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>core - aws.core</title>
+          <meta name="description" content="core - aws.core" />
+          <meta name="keywords" content="core aws.core" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'aws.core.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="aws">aws</a></p>
+        <h1>core</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">core</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The core project contains objects and classes shared by all services.</p><ul><li>parsing</li><li>results</li><li>signatures</li></ul></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="aws.core"><span>core</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="aws.core.AWSError" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AWSError[M&lt;:aws.core.Metadata]extendsResult[M,Nothing]"></a>
+      <a id="AWSError[M&lt;:Metadata]:AWSError[M]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AWSError.html"><span class="name">AWSError</span></a><span class="tparams">[<span name="M">M &lt;: <a href="Metadata.html" class="extype" name="aws.core.Metadata">Metadata</a></span>]</span><span class="result"> extends <a href="Result.html" class="extype" name="aws.core.Result">Result</a>[<span class="extype" name="aws.core.AWSError.M">M</span>, <span class="extype" name="scala.Nothing">Nothing</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.AWSRegion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AWSRegionextendsProductwithSerializable"></a>
+      <a id="AWSRegion:AWSRegion"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AWSRegion.html"><span class="name">AWSRegion</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="subdomain">subdomain: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="service">service: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.Metadata" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MetadataextendsObject"></a>
+      <a id="Metadata:Metadata"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Metadata.html"><span class="name">Metadata</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Metadata returned in a response wether the result was an error or not.</p>
+    </li><li name="aws.core.Result" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Result[M&lt;:aws.core.Metadata,+T]extendsObject"></a>
+      <a id="Result[M&lt;:Metadata,+T]:Result[M,T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Result.html"><span class="name">Result</span></a><span class="tparams">[<span name="M">M &lt;: <a href="Metadata.html" class="extype" name="aws.core.Metadata">Metadata</a></span>, <span name="T">+T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">An AWS Result, that can be a success on a error.</p>
+    </li><li name="aws.core.SignerEncoder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SignerEncoderextendsObject"></a>
+      <a id="SignerEncoder:SignerEncoder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SignerEncoder.html"><span class="name">SignerEncoder</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="aws.core.AWS" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AWS"></a>
+      <a id="AWS:AWS"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AWS$.html"><span class="name">AWS</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.AWSError" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AWSError"></a>
+      <a id="AWSError:AWSError"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AWSError$.html"><span class="name">AWSError</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.AWSRegion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AWSRegion"></a>
+      <a id="AWSRegion:AWSRegion"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AWSRegion$.html"><span class="name">AWSRegion</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.EmptyMeta" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EmptyMeta"></a>
+      <a id="EmptyMeta:EmptyMeta"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="EmptyMeta$.html"><span class="name">EmptyMeta</span></a><span class="result"> extends <a href="Metadata.html" class="extype" name="aws.core.Metadata">Metadata</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.EmptyResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EmptyResult"></a>
+      <a id="EmptyResult:EmptyResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="EmptyResult$.html"><span class="name">EmptyResult</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.Result" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Result"></a>
+      <a id="Result:Result"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Result$.html"><span class="name">Result</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.Types" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Types"></a>
+      <a id="Types:Types"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Types$.html"><span class="name">Types</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.parsers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="parsers"></a>
+      <a id="parsers:parsers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="parsers/package.html"><span class="name">parsers</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.signature" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="signature"></a>
+      <a id="signature:signature"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="signature/package.html"><span class="name">signature</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.core.utils" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="utils"></a>
+      <a id="utils:utils"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="utils/package.html"><span class="name">utils</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

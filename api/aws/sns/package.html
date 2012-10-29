@@ -1,0 +1,354 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>sns - aws.sns</title>
+          <meta name="description" content="sns - aws.sns" />
+          <meta name="keywords" content="sns aws.sns" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'aws.sns.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="aws">aws</a></p>
+        <h1>sns</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sns</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="aws.sns.Action" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ActionextendsObject"></a>
+      <a id="Action:Action"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Action.html"><span class="name">Action</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.CreateTopicResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CreateTopicResultextendsProductwithSerializable"></a>
+      <a id="CreateTopicResult:CreateTopicResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CreateTopicResult.html"><span class="name">CreateTopicResult</span></a><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.Endpoint" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="EndpointextendsObject"></a>
+      <a id="Endpoint:Endpoint"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Endpoint.html"><span class="name">Endpoint</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.ListTopicsResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ListTopicsResultextendsProductwithSerializable"></a>
+      <a id="ListTopicsResult:ListTopicsResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ListTopicsResult.html"><span class="name">ListTopicsResult</span></a><span class="params">(<span name="topics">topics: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.Message" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageextendsProductwithSerializable"></a>
+      <a id="Message:Message"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Message.html"><span class="name">Message</span></a><span class="params">(<span name="default">default: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="http">http: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="https">https: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="email">email: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="emailJson">emailJson: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="sqs">sqs: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.PublishResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PublishResultextendsProductwithSerializable"></a>
+      <a id="PublishResult:PublishResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PublishResult.html"><span class="name">PublishResult</span></a><span class="params">(<span name="messageId">messageId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SNSMeta" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SNSMetaextendsMetadatawithProductwithSerializable"></a>
+      <a id="SNSMeta:SNSMeta"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SNSMeta.html"><span class="name">SNSMeta</span></a><span class="params">(<span name="requestId">requestId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="../core/Metadata.html" class="extype" name="aws.core.Metadata">Metadata</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SNSRegion" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SNSRegionextendsAWSRegion"></a>
+      <a id="SNSRegion:SNSRegion"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SNSRegion.html"><span class="name">SNSRegion</span></a><span class="result"> extends <a href="../core/AWSRegion.html" class="extype" name="aws.core.AWSRegion">AWSRegion</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@implicitNotFound</span><span class="args">(<span>
+      
+      <span class="defval" name="&quot;You need to import a region to specify which datacenter you want to use.&quot;">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="aws.sns.Subscription" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SubscriptionextendsProductwithSerializable"></a>
+      <a id="Subscription:Subscription"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Subscription.html"><span class="name">Subscription</span></a><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="subscriptionArn">subscriptionArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="owner">owner: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="endpoint">endpoint: <a href="Endpoint.html" class="extype" name="aws.sns.Endpoint">Endpoint</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SubscriptionAttributesResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SubscriptionAttributesResultextendsProductwithSerializable"></a>
+      <a id="SubscriptionAttributesResult:SubscriptionAttributesResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SubscriptionAttributesResult.html"><span class="name">SubscriptionAttributesResult</span></a><span class="params">(<span name="subscriptionArn">subscriptionArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="owner">owner: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="confirmationWasAuthenticated">confirmationWasAuthenticated: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="deliveryPolicy">deliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="effectiveDeliveryPolicy">effectiveDeliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SubscriptionListResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SubscriptionListResultextendsProductwithSerializable"></a>
+      <a id="SubscriptionListResult:SubscriptionListResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SubscriptionListResult.html"><span class="name">SubscriptionListResult</span></a><span class="params">(<span name="subscriptions">subscriptions: <span class="extype" name="scala.Seq">Seq</span>[<a href="Subscription.html" class="extype" name="aws.sns.Subscription">Subscription</a>]</span>, <span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SubscriptionResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SubscriptionResultextendsProductwithSerializable"></a>
+      <a id="SubscriptionResult:SubscriptionResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SubscriptionResult.html"><span class="name">SubscriptionResult</span></a><span class="params">(<span name="subscriptionArn">subscriptionArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.TopicAttributesResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TopicAttributesResultextendsProductwithSerializable"></a>
+      <a id="TopicAttributesResult:TopicAttributesResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TopicAttributesResult.html"><span class="name">TopicAttributesResult</span></a><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="owner">owner: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="displayName">displayName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="subscriptionsPending">subscriptionsPending: <span class="extype" name="scala.Int">Int</span></span>, <span name="subscriptionsConfirmed">subscriptionsConfirmed: <span class="extype" name="scala.Int">Int</span></span>, <span name="subscriptionsDeleted">subscriptionsDeleted: <span class="extype" name="scala.Int">Int</span></span>, <span name="policy">policy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="deliveryPolicy">deliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="effectiveDeliveryPolicy">effectiveDeliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="aws.sns.Action" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Action"></a>
+      <a id="Action:Action"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Action$.html"><span class="name">Action</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.Endpoint" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Endpoint"></a>
+      <a id="Endpoint:Endpoint"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Endpoint$.html"><span class="name">Endpoint</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SNS" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SNS"></a>
+      <a id="SNS:SNS"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SNS$.html"><span class="name">SNS</span></a><span class="result"> extends <a href="../core/signature/V2.html" class="extype" name="aws.core.signature.V2">V2</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SNSErrors" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SNSErrors"></a>
+      <a id="SNSErrors:SNSErrors"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SNSErrors$.html"><span class="name">SNSErrors</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SNSParsers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SNSParsers"></a>
+      <a id="SNSParsers:SNSParsers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SNSParsers$.html"><span class="name">SNSParsers</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sns.SNSRegion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SNSRegion"></a>
+      <a id="SNSRegion:SNSRegion"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SNSRegion$.html"><span class="name">SNSRegion</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
