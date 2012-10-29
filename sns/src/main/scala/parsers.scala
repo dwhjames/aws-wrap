@@ -48,6 +48,17 @@ object SNSParsers {
       entries.get("EffectiveDeliveryPolicy").map(Json.parse(_))))
   }
 
+  implicit def subscriptionAttributesResultParser = Parser[SubscriptionAttributesResult] { r: Response =>
+    val entries = parseAttributes(r.xml \\ "Attributes" head)
+    Success(SubscriptionAttributesResult(
+      entries("SubscriptionArn"),
+      entries("TopicArn"),
+      entries("Owner"),
+      entries.get("ConfirmationWasAuthenticated").map(_.toLowerCase == "true").getOrElse(false),
+      entries.get("DeliveryPolicy").map(Json.parse(_)),
+      entries.get("EffectiveDeliveryPolicy").map(Json.parse(_))))
+  }
+
   implicit def subscriptionListResultParser = Parser[SubscriptionListResult] { r: Response =>
     Success(
       SubscriptionListResult(

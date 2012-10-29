@@ -28,3 +28,12 @@ case class TopicAttributesResult(
   effectiveDeliveryPolicy: Option[JsValue] // the JSON serialization of the effective delivery policy which takes into account system defaults    
   )
 
+case class SubscriptionAttributesResult(
+  subscriptionArn: String, // the subscription's ARN
+  topicArn: String, // the topic ARN which the subscription is associated with
+  owner: String, // the AWS account ID of the subscription's owner
+  confirmationWasAuthenticated: Boolean, // True if the subscription confirmation request was authenticated
+  deliveryPolicy: Option[JsValue], // the JSON serialization of the subscription's delivery policy
+  effectiveDeliveryPolicy: Option[JsValue] // the JSON serialization of the effective delivery policy which takes into the topic delivery policy and account system defaults
+  )
+

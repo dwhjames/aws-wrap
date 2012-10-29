@@ -88,9 +88,12 @@ object SNS extends V2[SNSMeta] {
       TopicArn(topicArn))
   }
 
-  // GetSubscriptionAttributes
+  def getSubscriptionAttributes(subscriptionArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionAttributesResult]] = {
+    get[SubscriptionAttributesResult](
+      Action("SubscriptionAttributesResult"),
+      SubscriptionArn(subscriptionArn))
+  }
 
-  // GetTopicAttributes
   def getTopicAttributes(topicArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, TopicAttributesResult]] = {
     get[TopicAttributesResult](Action("GetTopicAttributes"), TopicArn(topicArn))
   }
@@ -126,7 +129,19 @@ object SNS extends V2[SNSMeta] {
       Label(label))
   }
 
-  // SetSubscriptionAttributes
+  private def setSubscriptionAttributes(subscriptionArn: String,
+                                        attributeName: String,
+                                        attributeValue: JsValue)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+    get[Unit](
+      Action("SetSubscriptionAttributes"),
+      SubscriptionArn(subscriptionArn),
+      AttributeName(attributeName),
+      AttributeValue(attributeValue.toString))
+  }
+
+  def setSubscriptionDeliveryPolicy(subscriptionArn: String,
+                                    deliveryPolicy: JsValue)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =
+    setSubscriptionAttributes(subscriptionArn, "DeliveryPolicy", deliveryPolicy)
 
   private def setTopicAttributes(topicArn: String,
                                  attributeName: String,
