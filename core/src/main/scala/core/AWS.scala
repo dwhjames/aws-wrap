@@ -9,12 +9,24 @@ import java.text.SimpleDateFormat
 import com.ning.http.client.Realm.{ AuthScheme, RealmBuilder }
 
 object AWS {
-  val awsVersion = "2009-04-15"
+  /**
+   * The current AWS key, read from the first line of `~/.awssecret`
+   */
   lazy val key: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(0)
+
+  /**
+   * The current AWS secret, read from the second line of `~/.awssecret`
+   */
   lazy val secret: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(1)
 
+  /**
+   * Format the date in ISO: `yyyy-MM-dd'T'HH:mm:ssZ`
+   */
   def isoDateFormat(date: Date) = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(date)
 
+  /**
+   * Format the date in ISO basic, in GMT: `yyyyMMdd'T'HHmmss'Z`
+   */
   def isoBasicFormat(date: Date) = {
     val iso = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
     iso.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));

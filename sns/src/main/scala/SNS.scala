@@ -2,7 +2,6 @@ package aws.sns
 
 import java.util.Date
 
-import scala.annotation.implicitNotFound
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -17,21 +16,6 @@ import aws.core.signature.V2
 import aws.sns.SNSParsers._
 
 case class SNSMeta(requestId: String) extends Metadata
-
-object SNSRegion {
-
-  val NAME = "sns"
-
-  val US_EAST_1 = AWSRegion.US_EAST_1(NAME)
-  val US_WEST_1 = AWSRegion.US_WEST_1(NAME)
-  val US_WEST_2 = AWSRegion.US_WEST_2(NAME)
-  val EU_WEST_1 = AWSRegion.EU_WEST_1(NAME)
-  val ASIA_SOUTHEAST_1 = AWSRegion.ASIA_SOUTHEAST_1(NAME)
-  val ASIA_NORTHEAST_1 = AWSRegion.ASIA_NORTHEAST_1(NAME)
-  val SA_EAST_1 = AWSRegion.SA_EAST_1(NAME)
-
-  implicit val DEFAULT = US_EAST_1
-}
 
 object SNS extends V2[SNSMeta](version = "2010-03-31") {
 
@@ -61,7 +45,7 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
   import AWS.Parameters._
   import Parameters._
 
-  def addPermission(topicArn: String, label: String, awsAccounts: Seq[String], actions: Seq[Action])(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+  def addPermission(topicArn: String, label: String, awsAccounts: Seq[String], actions: Seq[Action])(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
     val params = Seq(
       Action("AddPermission"),
       TopicArn(topicArn),
@@ -69,58 +53,58 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
     get[Unit](params: _*)
   }
 
-  def confirmSubscription(topicArn: String, token: String, authenticateOnUnsubscribe: Boolean = false)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
+  def confirmSubscription(topicArn: String, token: String, authenticateOnUnsubscribe: Boolean = false)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
     get[SubscriptionResult](
       Action("ConfirmSubscription"),
       TopicArn(topicArn),
       AuthenticateOnUnsubscribe(authenticateOnUnsubscribe))
   }
 
-  def createTopic(name: String)(implicit region: AWSRegion): Future[Result[SNSMeta, CreateTopicResult]] = {
+  def createTopic(name: String)(implicit region: SNSRegion): Future[Result[SNSMeta, CreateTopicResult]] = {
     get[CreateTopicResult](Action("CreateTopic"), Name(name))
   }
 
-  def deleteTopic(topicArn: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+  def deleteTopic(topicArn: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
     get[Unit](
       Action("DeleteTopic"),
       TopicArn(topicArn))
   }
 
-  def getSubscriptionAttributes(subscriptionArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionAttributesResult]] = {
+  def getSubscriptionAttributes(subscriptionArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionAttributesResult]] = {
     get[SubscriptionAttributesResult](
       Action("SubscriptionAttributesResult"),
       SubscriptionArn(subscriptionArn))
   }
 
-  def getTopicAttributes(topicArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, TopicAttributesResult]] = {
+  def getTopicAttributes(topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, TopicAttributesResult]] = {
     get[TopicAttributesResult](Action("GetTopicAttributes"), TopicArn(topicArn))
   }
 
-  def listSubscriptions(nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
+  def listSubscriptions(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
     val params = Seq(Action("ListSubscriptions")) ++ NextToken(nextToken)
     get[SubscriptionListResult](params: _*)
   }
 
-  def listSubscriptionsByTopic(topicArn: String, nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
+  def listSubscriptionsByTopic(topicArn: String, nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
     val params = Seq(
       Action("ListSubscriptionsByTopic"),
       TopicArn(topicArn)) ++ NextToken(nextToken)
     get[SubscriptionListResult](params: _*)
   }
 
-  def listTopics(nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, ListTopicsResult]] = {
+  def listTopics(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, ListTopicsResult]] = {
     val params = Seq(Action("ListTopics")) ++ NextToken(nextToken)
     get[ListTopicsResult](params: _*)
   }
 
   def publish(topicArn: String,
               message: Message,
-              subject: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, PublishResult]] = {
+              subject: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, PublishResult]] = {
     val params = Seq(Action("Publish"), TopicArn(topicArn)) ++ MessageParameters(message) ++ Subject(subject)
     get[PublishResult](params: _*)
   }
 
-  def removePermission(topicArn: String, label: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+  def removePermission(topicArn: String, label: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
     get[Unit](
       Action("RemovePermission"),
       TopicArn(topicArn),
@@ -129,7 +113,7 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
 
   private def setSubscriptionAttributes(subscriptionArn: String,
                                         attributeName: String,
-                                        attributeValue: JsValue)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+                                        attributeValue: JsValue)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
     get[Unit](
       Action("SetSubscriptionAttributes"),
       SubscriptionArn(subscriptionArn),
@@ -138,12 +122,12 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
   }
 
   def setSubscriptionDeliveryPolicy(subscriptionArn: String,
-                                    deliveryPolicy: JsValue)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =
+                                    deliveryPolicy: JsValue)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] =
     setSubscriptionAttributes(subscriptionArn, "DeliveryPolicy", deliveryPolicy)
 
   private def setTopicAttributes(topicArn: String,
                                  attributeName: String,
-                                 attributeValue: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+                                 attributeValue: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
     get[Unit](
       Action("SetTopicAttributes"),
       TopicArn(topicArn),
@@ -151,21 +135,21 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
       AttributeValue(attributeValue))
   }
 
-  def setTopicDisplayName(topicArn: String, name: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =
+  def setTopicDisplayName(topicArn: String, name: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] =
     setTopicAttributes(topicArn, "DisplayName", name)
 
-  def setTopicPolicy(topicArn: String, policy: JsValue)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =
+  def setTopicPolicy(topicArn: String, policy: JsValue)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] =
     setTopicAttributes(topicArn, "Policy", policy.toString)
 
-  def setTopicDeliveryPolicy(topicArn: String, deliveryPolicy: JsValue)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =
+  def setTopicDeliveryPolicy(topicArn: String, deliveryPolicy: JsValue)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] =
     setTopicAttributes(topicArn, "DisplayName", deliveryPolicy.toString)
 
-  def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
+  def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
     val params = Seq(Action("Subscribe"), TopicArn(topicArn)) ++ EndpointProtocol(endpoint)
     get[SubscriptionResult](params: _*)
   }
 
-  def unsubscribe(subscriptionArn: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+  def unsubscribe(subscriptionArn: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
     get[Unit](Action("Unsubscribe"), SubscriptionArn(subscriptionArn))
   }
 

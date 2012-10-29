@@ -8,7 +8,7 @@ import aws.core._
 import aws.core.parsers._
 import aws.core.utils._
 
-case class V2[M <: Metadata](val version: String = "2009-01-15") {
+case class V2[M <: Metadata](val version: String = "2009-04-15") {
 
   private val SIGVERSION = "2"
   private val SIGMETHOD = "HmacSHA1"
