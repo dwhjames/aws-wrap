@@ -17,8 +17,7 @@ case class Message(default: String,
       "https" -> hs,
       "email" -> e,
       "emailJson" -> ej,
-      "sqs" -> s
-    ).toString
+      "sqs" -> s).toString
   }
 
   def json: Boolean = this match {
@@ -27,5 +26,4 @@ case class Message(default: String,
   }
 
 }
-
 

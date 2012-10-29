@@ -38,14 +38,13 @@ object SNSSpec extends Specification {
     "Delete a topic" in {
       val r = Await.result(SNS.createTopic("test-topic-delete"), Duration(30, SECONDS)) match {
         case AWSError(code, message) => failure(code + ": " + message)
-        case Result(_, result) => 
-          Await.result(SNS.deleteTopic(result.topicArn), Duration(30, SECONDS))
+        case Result(_, result) => Await.result(SNS.deleteTopic(result.topicArn), Duration(30, SECONDS))
       }
       checkResult(r)
     }
 
     "List topics" in {
-      val topicArn = Await.result(SNS.createTopic("test-topic-list"), Duration(30, SECONDS)) match {
+      Await.result(SNS.createTopic("test-topic-list"), Duration(30, SECONDS)) match {
         case AWSError(code, message) => failure(code + ": " + message)
         case Result(_, result) => {
           val newTopic = result.topicArn
@@ -86,6 +85,21 @@ object SNSSpec extends Specification {
           val newTopic = result.topicArn
           checkResult(Await.result(SNS.addPermission(newTopic, "Foobar", accounts, actions), Duration(30, SECONDS)))
           checkResult(Await.result(SNS.removePermission(newTopic, "Foobar"), Duration(30, SECONDS)))
+        }
+      }
+    }
+
+    "Set/get topic attributes" in {
+      val displayName = "Some Display Name"
+      Await.result(SNS.createTopic("test-topic-attributes"), Duration(30, SECONDS)) match {
+        case AWSError(code, message) => failure(code + ": " + message)
+        case Result(_, createResult) => {
+          val topicArn = createResult.topicArn
+          checkResult(Await.result(SNS.setTopicDisplayName(topicArn, displayName), Duration(30, SECONDS)))
+          Await.result(SNS.getTopicAttributes(topicArn), Duration(30, SECONDS)) match {
+            case AWSError(code, message) => failure(code + ": " + message)
+            case Result(_, result) => result.displayName must beEqualTo(displayName)
+          }
         }
       }
     }

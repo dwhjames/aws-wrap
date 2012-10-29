@@ -28,7 +28,7 @@ object ApplicationBuild extends Build {
         resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
         resolvers += "erwan" at "http://caffeinelab.net/repo",
         resolvers ++= Seq("sonatype" at "http://oss.sonatype.org/content/repositories/releases"),
-        libraryDependencies += "play" %% "play" % "2.1_UP-SNAPSHOT",
+        libraryDependencies += "play" %% "play" % "2.1-20121017-erw",
         libraryDependencies += "org.specs2" % "specs2_2.10.0-M7" % "1.12.1.1" % "test"
     )
 

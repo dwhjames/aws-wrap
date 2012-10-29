@@ -91,6 +91,9 @@ object SNS extends V2[SNSMeta] {
   // GetSubscriptionAttributes
 
   // GetTopicAttributes
+  def getTopicAttributes(topicArn: String)(implicit region: AWSRegion): Future[Result[SNSMeta, TopicAttributesResult]] = {
+    get[TopicAttributesResult](Action("GetTopicAttributes"), TopicArn(topicArn))
+  }
 
   def listSubscriptions(nextToken: Option[String] = None)(implicit region: AWSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
     val params = Seq(Action("ListSubscriptions")) ++ NextToken(nextToken)
@@ -120,21 +123,19 @@ object SNS extends V2[SNSMeta] {
     get[Unit](
       Action("RemovePermission"),
       TopicArn(topicArn),
-      Label(label)
-    )
+      Label(label))
   }
 
   // SetSubscriptionAttributes
 
   private def setTopicAttributes(topicArn: String,
-                                attributeName: String,
-                                attributeValue: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
+                                 attributeName: String,
+                                 attributeValue: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] = {
     get[Unit](
-      Action("SetTopicAttribute"),
+      Action("SetTopicAttributes"),
       TopicArn(topicArn),
       AttributeName(attributeName),
-      AttributeValue(attributeValue)
-    )
+      AttributeValue(attributeValue))
   }
 
   def setTopicDisplayName(topicArn: String, name: String)(implicit region: AWSRegion): Future[EmptyResult[SNSMeta]] =

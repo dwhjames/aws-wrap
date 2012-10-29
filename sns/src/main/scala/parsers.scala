@@ -1,5 +1,6 @@
 package aws.sns
 
+import play.api.libs.json._
 import play.api.libs.ws.Response
 import aws.core._
 import aws.core.parsers._
@@ -33,6 +34,20 @@ object SNSParsers {
       PublishResult((r.xml \\ "MessageId").text))
   }
 
+  implicit def topicAttributesResultParser = Parser[TopicAttributesResult] { r: Response =>
+    val entries = parseAttributes(r.xml \\ "Attributes" head)
+    Success(TopicAttributesResult(
+      entries("TopicArn"),
+      entries("Owner"),
+      entries("DisplayName"),
+      entries("SubscriptionsPending").toInt,
+      entries("SubscriptionsConfirmed").toInt,
+      entries("SubscriptionsDeleted").toInt,
+      entries.get("Policy").map(Json.parse(_)),
+      entries.get("DeliveryPolicy").map(Json.parse(_)),
+      entries.get("EffectiveDeliveryPolicy").map(Json.parse(_))))
+  }
+
   implicit def subscriptionListResultParser = Parser[SubscriptionListResult] { r: Response =>
     Success(
       SubscriptionListResult(
@@ -43,7 +58,14 @@ object SNSParsers {
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SNSMeta, T]] =
     Parser.xmlErrorParser[SNSMeta].or(Parser.resultParser(snsMetaParser, p))
 
-  def parseSubscription(node: Node): Option[Subscription] = for (
+  // Transform a set of <entry><key>xxx</key><value>yyy</value></entry> into a Map
+  private def parseAttributes(node: Node): Map[String, String] = {
+    (node \ "entry").map { n =>
+      ((n \ "key").text) -> (n \ "value").text
+    }.toMap
+  }
+
+  private def parseSubscription(node: Node): Option[Subscription] = for (
     topicArn <- (node \\ "TopicArn").headOption.map(_.text);
     subscriptionArn <- (node \\ "SubscriptionArn").headOption.map(_.text);
     owner <- (node \\ "Owner").headOption.map(_.text);
