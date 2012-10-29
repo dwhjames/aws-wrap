@@ -65,7 +65,7 @@ object S3Parsers {
   }
 
   implicit def lifecyclesParser = Parser[Seq[LifecycleConf]] { r =>
-    import scala.concurrent.util.Duration
+    import scala.concurrent.duration.Duration
     import java.util.concurrent.TimeUnit._
 
     Success((r.xml \ "Rule").map { l =>

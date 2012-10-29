@@ -10,7 +10,7 @@ import aws.s3.S3.Parameters.Permisions._
 import org.specs2.mutable._
 
 import scala.concurrent._
-import scala.concurrent.util._
+import scala.concurrent.duration.Duration
 import java.util.concurrent.TimeUnit._
 
 import scala.concurrent.ExecutionContext.Implicits.global

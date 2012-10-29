@@ -10,7 +10,7 @@ import org.specs2.mutable._
 object SNSSpec extends Specification {
 
   import scala.concurrent._
-  import scala.concurrent.util._
+  import scala.concurrent.duration.Duration
   import java.util.concurrent.TimeUnit._
 
   implicit val region = SNSRegion.EU_WEST_1

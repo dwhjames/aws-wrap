@@ -8,12 +8,6 @@ import com.typesafe.sbtscalariform.ScalariformPlugin._
 
 object ApplicationBuild extends Build {
 
-    val pattern = Patterns(
-      Seq("[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).ivy"),
-      Seq("[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"),
-      true
-    )
-
     lazy val projectScalariformSettings = defaultScalariformSettings ++ Seq(
         ScalariformKeys.preferences := FormattingPreferences()
             .setPreference(AlignParameters, true)
@@ -22,14 +16,14 @@ object ApplicationBuild extends Build {
 
     lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ projectScalariformSettings ++ Seq(
         organization := "aws",
-        scalaVersion := "2.10.0-M7",
+        scalaVersion := "2.10.0-RC1",
         scalacOptions += "-feature",
         version := "0.1-SNAPSHOT",
         resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
-        resolvers += "erwan" at "http://caffeinelab.net/repo",
+        resolvers += "Caffeine Lab" at "http://caffeinelab.net/repo",
         resolvers ++= Seq("sonatype" at "http://oss.sonatype.org/content/repositories/releases"),
-        libraryDependencies += "play" %% "play" % "2.1-20121017-erw",
-        libraryDependencies += "org.specs2" % "specs2_2.10.0-M7" % "1.12.1.1" % "test"
+        libraryDependencies += "play" %% "play" % "2.1-20121029-UP",
+        libraryDependencies += "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2" % "test"
     )
 
     lazy val core = Project("core", file("core"), settings = commonSettings)
