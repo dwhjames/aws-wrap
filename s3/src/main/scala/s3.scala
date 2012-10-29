@@ -21,28 +21,27 @@ object S3 {
 
     def MD5(content: String) = ("Content-MD5" -> aws.core.utils.Crypto.base64(java.security.MessageDigest.getInstance("MD5").digest(content.getBytes)))
 
-    object S3Objects {
-      type MimeType = String
+    type MimeType = String
 
-      def CacheControl(s: String) = ("Cache-Control" -> s)
-      def ContentDisposition(s: String) = ("Content-Disposition" -> s)
-      def ContentEncoding(c: java.nio.charset.Charset) = ("Content-Encoding" -> c.name)
-      def ContentLength(l: Long) = ("Content-Length" -> l.toString)
-      def ContentType(s: MimeType) = ("Content-Type" -> s)
-      def Expect(s: MimeType) = ("Expect" -> s)
-      def Expires(d: java.util.Date) = {
-        val format = new java.text.SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z")
-        ("Expires" -> format.format(d))
-      }
-      def X_AMZ_META(name: String, value: String) = (s"x-amz-meta-$name" -> value)
-      def X_AMZ_SERVER_SIDE_ENCRYPTION(s: String) = {
-        if(s != "AES256")
-          throw new RuntimeException(s"Unsupported server side encoding: $s, the omly valid value is AES256")
-        ("x-amz-server-side-encryption" -> s)
-      }
-      def X_AMZ_STORAGE_CLASS(s: StorageClasses.StorageClass) = ("x-amz-storage-class" -> s.toString)
-      def X_AMZ_WEBSITE_REDIRECT_LOCATION(s: java.net.URI) = ("x-amz-website-redirect-location" -> s.toString)
+    def CacheControl(s: String) = ("Cache-Control" -> s)
+    def ContentDisposition(s: String) = ("Content-Disposition" -> s)
+    def ContentEncoding(c: java.nio.charset.Charset) = ("Content-Encoding" -> c.name)
+    def ContentLength(l: Long) = ("Content-Length" -> l.toString)
+    def ContentType(s: MimeType) = ("Content-Type" -> s)
+    def Expect(s: MimeType) = ("Expect" -> s)
+    def Expires(d: java.util.Date) = {
+      val format = new java.text.SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z")
+      ("Expires" -> format.format(d))
     }
+    def X_AMZ_META(name: String, value: String) = (s"x-amz-meta-$name" -> value)
+    def X_AMZ_SERVER_SIDE_ENCRYPTION(s: String) = {
+      if(s != "AES256")
+        throw new RuntimeException(s"Unsupported server side encoding: $s, the omly valid value is AES256")
+      ("x-amz-server-side-encryption" -> s)
+    }
+    def X_AMZ_STORAGE_CLASS(s: StorageClasses.StorageClass) = ("x-amz-storage-class" -> s.toString)
+    def X_AMZ_WEBSITE_REDIRECT_LOCATION(s: java.net.URI) = ("x-amz-website-redirect-location" -> s.toString)
+
 
     object Permisions {
 

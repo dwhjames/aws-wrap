@@ -83,6 +83,17 @@ case class Content(
   storageClass: StorageClass = S3Object.StorageClasses.STANDARD,
   owner: Owner) extends Container
 
+case class BatchDeletion(successes: Seq[BatchDeletion.DeletionSuccess], failures: Seq[BatchDeletion.DeletionFailure])
+object BatchDeletion {
+  case class DeletionSuccess(
+    key: String,
+    versionId: Option[String],
+    deleteMarker: Option[String],
+    deleteMarkerVersionId: Option[String])
+
+  case class DeletionFailure(key: String, code: String, message: String)
+}
+
 object S3Object {
 
   import java.io.File
@@ -105,7 +116,37 @@ object S3Object {
   def put(bucketname: String, body: File) =
     upload[Unit](PUT, bucketname, body.getName, body)
 
-  def delete(bucketname: String, objectName: String) =
-    request[Unit](DELETE, Some(bucketname), Some(objectName))
+  // TODO: versionId support
+  def delete(bucketname: String, objectName: String, versionId: Option[String] = None) = {
+    if(versionId.isDefined)
+      ???
+    else
+      request[Unit](DELETE, Some(bucketname), Some(objectName))
+  }
+
+
+  //TODO: WSError: RequestTimeout - Your socket connection to the server was not read from or written to within the timeout period. Idle connections will be closed.
+  def delete(bucketname: String, objects: (String, Option[String])*) = {
+    val body =
+      <Delete>
+        <Quiet>false</Quiet>
+        {
+          for(o <- objects) yield
+          <Object>
+            <Key>{ o._1 }</Key>
+            { for(v <- o._2.toSeq) yield <VersionId>{ v }</VersionId> }
+          </Object>
+        }
+      </Delete>
+
+    val ps = Seq(Parameters.MD5(body.mkString), Parameters.ContentLength(body.mkString.length))
+
+    request[BatchDeletion](POST,
+      Some(bucketname),
+      body = Some(enumString(body.mkString)),
+      subresource = Some("delete"),
+      contentType = Some("text/plain; charset=utf-8"),
+      parameters = ps)
+  }
 
 }

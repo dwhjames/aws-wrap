@@ -77,6 +77,7 @@ private[models] object Http {
     objectName: Option[String] = None,
     subresource: Option[String] = None,
     body: Option[Enumerator[Array[Byte]]] = None,
+    contentType: Option[String] = None,
     parameters: Seq[(String, String)] = Nil)(implicit p: Parser[Result[S3Metadata, T]]): Future[Result[S3Metadata, T]] = {
 
     val uri = Seq(
@@ -91,7 +92,7 @@ private[models] object Http {
       bucketname,
       objectName,
       subresource,
-      // contentType = body.map(_ => "text/plain; charset=utf-8"),
+      contentType = contentType,
       headers = parameters,
       md5 = parameters.flatMap {
         case ("Content-MD5", v) => Seq(v) // XXX
@@ -100,10 +101,11 @@ private[models] object Http {
 
     val r = WS.url(uri)
       .withHeaders(
-        (parameters ++ sign): _*)
+        (parameters ++ sign ++ contentType.map(Parameters.ContentType(_)).toSeq): _*)
 
     (method match {
       case PUT => r.put(body.get)
+      case POST => r.post(body.get)
       case DELETE => r.delete()
       case GET => r.get()
       case _ => throw new RuntimeException("Unsuported method: " + method)

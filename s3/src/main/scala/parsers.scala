@@ -126,4 +126,24 @@ object S3Parsers {
     Success(r.json.as[Policy])
   }
 
+  implicit def deletionsParser = Parser[BatchDeletion] { r =>
+
+    val successes = (r.xml \ "Deleted").map{ s =>
+      BatchDeletion.DeletionSuccess(
+        (s \ "Key").text,
+        (s \ "VersionId").headOption.map(_.text),
+        (s \ "DeleteMarker").headOption.map(_.text),
+        (s \ "DeleteMarkerVersionId").headOption.map(_.text))
+    }
+
+    val failures = (r.xml \ "Error").map{ e =>
+       BatchDeletion.DeletionFailure(
+          (e \ "Key").text,
+          (e \ "Code").text,
+          (e \ "Message").text)
+    }
+
+    Success(BatchDeletion(successes, failures))
+  }
+
 }

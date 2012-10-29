@@ -282,6 +282,32 @@ object S3ObjectSpec extends Specification {
       checkResult(resUp)
       checkResult(resDel)
     }
+
+    "batch delete objects" in {
+      import play.api.libs.iteratee._
+
+      val bucketName = AWS.key + "testBucketDel"
+      val cr = waitFor(Bucket.create(bucketName))
+
+      val f = new java.io.File("s3/src/test/resources/fry.gif")
+      val f2 = new java.io.File("s3/src/test/resources/fry2.jpg")
+
+      if(!f.exists)
+        skipped(s"File not found: $f")
+      if(!f2.exists)
+        skipped(s"File not found: $f2")
+
+      val resUp1 = waitFor(S3Object.put(bucketName, f))
+      val resUp2 = waitFor(S3Object.put(bucketName, f2))
+
+      val resDel = waitFor(S3Object.delete(bucketName, f.getName -> None, f2.getName -> None))
+
+      del(bucketName)
+
+      checkResult(resUp1)
+      checkResult(resUp2)
+      checkResult(resDel)
+    }
   }
 }
 
