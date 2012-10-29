@@ -33,9 +33,7 @@ object SNSRegion {
   implicit val DEFAULT = US_EAST_1
 }
 
-object SNS extends V2[SNSMeta] {
-
-  override val VERSION = "2010-03-31"
+object SNS extends V2[SNSMeta](version = "2010-03-31") {
 
   object Parameters {
     def NextToken(nextToken: Option[String]): Seq[(String, String)] = nextToken.toSeq.map("NextToken" -> _)

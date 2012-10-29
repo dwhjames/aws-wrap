@@ -8,13 +8,12 @@ import aws.core._
 import aws.core.parsers._
 import aws.core.utils._
 
-trait V2[M <: Metadata] {
+case class V2[M <: Metadata](val version: String = "2009-01-15") {
 
-  val VERSION = "2009-04-15"
-  val SIGVERSION = "2"
-  val SIGMETHOD = "HmacSHA1"
+  private val SIGVERSION = "2"
+  private val SIGMETHOD = "HmacSHA1"
 
-  def request(parameters: Seq[(String, String)])(implicit region: AWSRegion): Future[Response] = {
+  protected def request(parameters: Seq[(String, String)])(implicit region: AWSRegion): Future[Response] = {
     WS.url("https://" + region.host + "/?" + signedUrl("GET", parameters)).get()
   }
 
@@ -22,10 +21,10 @@ trait V2[M <: Metadata] {
     e => throw new RuntimeException(e),
     identity)
 
-  def get[T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]] =
+  protected def get[T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]] =
     request(parameters).map(tryParse[T])
 
-  def signedUrl(method: String, params: Seq[(String, String)])(implicit region: AWSRegion): String = {
+  protected def signedUrl(method: String, params: Seq[(String, String)])(implicit region: AWSRegion): String = {
 
     import AWS.Parameters._
     import aws.core.SignerEncoder.encode
@@ -33,7 +32,7 @@ trait V2[M <: Metadata] {
     val ps = Seq(
       TimeStamp(new java.util.Date()),
       AWSAccessKeyId(AWS.key),
-      Version(VERSION),
+      Version(version),
       SignatureVersion(SIGVERSION),
       SignatureMethod(SIGMETHOD))
 

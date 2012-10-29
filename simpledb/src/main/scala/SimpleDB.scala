@@ -33,7 +33,7 @@ object SDBRegion {
 
 object SimpleDB extends V2[SimpleDBMeta] {
 
-  object Parameters {
+  private object Parameters {
     def DomainName(a: String) = ("DomainName" -> a)
     def ItemName(a: String) = ("ItemName" -> a)
     def MaxNumberOfDomains(n: Int) = ("MaxNumberOfDomains" -> n.toString)
