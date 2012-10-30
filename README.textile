@@ -7,12 +7,15 @@ For information on *using* the library, see: http://pellucidanalytics.github.com
 (the "2" is to somehow hide the page to the public, we'll drop it when we release.)
 
 h3. Compiling the project
+
 bc.. sbt build
 
 h3. Running the tests
+
 bc.. sbt test
 
 h3. Generate the unified Scaladoc
+
 bc.. sbt unidoc
 
 h3. Working on the documentation
