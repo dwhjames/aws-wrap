@@ -1,6 +1,7 @@
 ---
 layout: default
 title: AWS by Pellucid
+level: .
 ---
 
 h3. Amazon Web Service Library for Scala.
@@ -14,13 +15,11 @@ We support the following services:
 
 To use it in any SBT project:
 
-<pre><code>"aws" %% "dynamodb" % "0.1-SNAPSHOT"
-</code></pre>
+bc. "aws" %% "dynamodb" % "0.1-SNAPSHOT"
 
 If you're in a Play 2.1 project, make sure to exclude Play from the dependencies:
 
-<pre><code>"aws" %% "dynamodb" % "0.1-SNAPSHOT" exclude("play", "play_2.10")
-</code></pre>
+bc. "aws" %% "dynamodb" % "0.1-SNAPSHOT" exclude("play", "play_2.10")
 
 h3. Contact
 

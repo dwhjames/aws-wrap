@@ -1,0 +1,40 @@
+---
+layout: default
+title: Get Started
+level: ..
+---
+
+h3. Configure your AWS secret
+
+You need to configure your accessid and secret by creating a file @~/.awssecret@.
+The first line should be your accessid, and the second line your secret.
+
+bc. AAAAAAAAAAAAAAAAAAAA
+abcdefghijklmnopkrstuvwx/abcdefghijklmno
+
+h3. Choose your region
+
+AWS provides several regions in the world, the data being usually not shared among the regions.
+For each service you use, you need to import the region you want to use.
+
+For example, if you use SimpleDB and S3 in Europe:
+
+bc. import aws.simpledb.SDBRegion.EU_WEST_1
+import aws.s3.S3Region.EU_WEST_1
+
+Failing to do so will result in a compilation error asking you to import a region.
+
+h3. Making calls to AWS
+
+All calls to AWS are _asynchronous_ and _non blocking_. That means that when you do a call to
+AWS, you do not get a Result but rather a Future[Result].
+
+For example, to retrieve the list of domains from a domains for a SimpleDB account:
+
+bc.. import aws.simpledb._
+import SDBRegion.US_EAST_1
+
+val resultF = SimpleDB.listDomains()
+resultF: scala.concurrent.Future[aws.core.Result[aws.simpledb.SimpleDBMeta,Seq[aws.simpledb.SDBDomain]]]
+    = scala.concurrent.impl.Promise$DefaultPromise@5e9384fb
+
