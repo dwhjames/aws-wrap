@@ -1,11 +1,13 @@
 package aws.sns
 
+/**
+ * An endpoint to receive notifications.
+ */
 sealed trait Endpoint {
   def value: String
   def protocol: String
 }
 
-// TODO: Use macros to validate the inputs?
 object Endpoint {
 
   def apply(endpoint: String, protocol: String) = protocol match {

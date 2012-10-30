@@ -1,7 +1,7 @@
 package aws.dynamodb
 
 /**
- * Represents the status of a table
+ * Represents the status of a table, and whether it is ready for reading or not.
  */
 sealed trait Status {
   def status: String
