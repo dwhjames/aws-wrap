@@ -69,6 +69,32 @@ object BucketSpec extends Specification {
       val res = waitFor(Bucket.list())
       checkResult(res)
     }
+
+    "Enable versionning" in {
+      import play.api.libs.iteratee._
+      import aws.s3.S3._
+
+      val bucketName = AWS.key + "testBucketEnableVersion"
+      val cr = waitFor(Bucket.create(bucketName))
+
+      val res = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED))
+
+      checkResult(res)
+      del(bucketName)
+    }
+
+    "Enable versionning and MFA" in {
+      import play.api.libs.iteratee._
+      import aws.s3.S3._
+
+      val bucketName = AWS.key + "testBucketEnableMFA"
+      val cr = waitFor(Bucket.create(bucketName))
+
+      val res = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED, Some(MFADeleteStates.ENABLED)))
+
+      checkResult(res)
+      del(bucketName)
+    }
   }
 }
 
@@ -289,12 +315,10 @@ object S3ObjectSpec extends Specification {
       import play.api.libs.iteratee._
       import aws.s3.S3._
 
-      val bucketName = AWS.key + "testBucketDelVersion"
+      val bucketName = AWS.key + "testBucketDelVersions"
       val cr = waitFor(Bucket.create(bucketName))
-      println(s"create: $cr")
 
       val vr = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED))
-      println(s"resp: $vr")
 
       val f = new java.io.File("s3/src/test/resources/fry.gif")
       if(!f.exists)
@@ -302,17 +326,24 @@ object S3ObjectSpec extends Specification {
 
       val resUp = waitFor(S3Object.put(bucketName, f))
       var version = resUp.metadata.versionId
-      println(s"version: $version")
 
       val resDel = waitFor(S3Object.delete(bucketName, f.getName, version))
+
+      // cleanup
+      val versions = waitFor(S3Object.getVersions(bucketName))
+      val ids = for(v <- versions.body.versions;
+        id <- v.id
+      ) yield f.getName -> Some(id)
+      waitFor(S3Object.delete(bucketName, ids: _*))
+
       del(bucketName)
       checkResult(resDel)
-
       resDel.metadata.versionId must_== resUp.metadata.versionId
     }
 
     "batch delete objects" in {
       import play.api.libs.iteratee._
+      import scala.language.postfixOps
 
       val bucketName = AWS.key + "testBucketDel"
       val cr = waitFor(Bucket.create(bucketName))
@@ -330,11 +361,16 @@ object S3ObjectSpec extends Specification {
 
       val resDel = waitFor(S3Object.delete(bucketName, f.getName -> None, f2.getName -> None))
 
+      val content = waitFor(S3Object.content(bucketName))
+
+
       del(bucketName)
 
       checkResult(resUp1)
       checkResult(resUp2)
       checkResult(resDel)
+
+      content.body.contents must be empty
     }
 
   }

@@ -18,12 +18,14 @@ object S3 {
 
   object VersionStates extends Enumeration {
     type VersionState = Value
-    val ENABLED, SUSPENDED = Value
+    val ENABLED = Value("Enabled")
+    val SUSPENDED = Value("Suspended")
   }
 
   object MFADeleteStates extends Enumeration {
     type MFADeleteState = Value
-    val DISABLED, ENABLED = Value
+    val DISABLED = Value("Disabled")
+    val ENABLED = Value("Enabled")
   }
 
   object Parameters {

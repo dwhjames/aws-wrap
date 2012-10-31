@@ -32,9 +32,13 @@ object Bucket {
   }
 
   def setVersioningConfiguration(bucketname: String, versionState: VersionStates.VersionState, mfaDeleteState: Option[MFADeleteStates.MFADeleteState] = None) = {
+
+    // TODO: implement MFA support
+    mfaDeleteState.map { _ => ??? }
+
     val b =
       <VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-        <Status>Enabled</Status>
+        <Status>{ versionState }</Status>
         { for(m <- mfaDeleteState.toSeq) yield <MfaDelete>{ m }</MfaDelete> }
       </VersioningConfiguration>
 

@@ -29,8 +29,8 @@ trait Container {
   val isLatest: Boolean
   val lastModified: Date
   val etag: String
-  val size: Long
-  val storageClass: StorageClass
+  val size: Option[Long]
+  val storageClass: Option[StorageClass]
   val owner: Owner
 }
 
@@ -40,8 +40,8 @@ case class DeleteMarker(
   isLatest: Boolean,
   lastModified: Date,
   etag: String,
-  size: Long,
-  storageClass: StorageClass = S3Object.StorageClasses.STANDARD,
+  size: Option[Long],
+  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
   owner: Owner) extends Container
 
 case class Version(
@@ -50,8 +50,8 @@ case class Version(
   isLatest: Boolean,
   lastModified: Date,
   etag: String,
-  size: Long,
-  storageClass: StorageClass = S3Object.StorageClasses.STANDARD,
+  size: Option[Long],
+  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
   owner: Owner) extends Container
 
 // TODO: Add content
@@ -79,8 +79,8 @@ case class Content(
   isLatest: Boolean,
   lastModified: Date,
   etag: String,
-  size: Long,
-  storageClass: StorageClass = S3Object.StorageClasses.STANDARD,
+  size: Option[Long],
+  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
   owner: Owner) extends Container
 
 case class BatchDeletion(successes: Seq[BatchDeletion.DeletionSuccess], failures: Seq[BatchDeletion.DeletionFailure])

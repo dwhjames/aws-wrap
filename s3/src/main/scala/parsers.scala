@@ -79,15 +79,15 @@ object S3Parsers {
 
   //XXX: not really a Parser
   import S3Object.StorageClasses
-  private def containerParser[T](node: Node, f: (Option[String], String, Boolean, Date, String, Long, StorageClasses.StorageClass, Owner) => T): T = {
+  private def containerParser[T](node: Node, f: (Option[String], String, Boolean, Date, String, Option[Long], Option[StorageClasses.StorageClass], Owner) => T): T = {
     f((node \ "VersionId").map(_.text).headOption,
       (node \ "Key").text,
       (node \ "IsLatest").map(n => JBool.parseBoolean(n.text)).headOption.get,
       // TODO: date format
       (node \ "LastModified").map(n => new Date()).headOption.get,
       (node \ "ETag").text,
-      (node \ "Size").map(n => JLong.parseLong(n.text)).headOption.get,
-      (node \ "StorageClass").map(n => StorageClasses.withName(n.text)).headOption.get,
+      (node \ "Size").map(n => JLong.parseLong(n.text)).headOption,
+      (node \ "StorageClass").map(n => StorageClasses.withName(n.text)).headOption,
       (node \ "Owner").map(ownerParser).headOption.get)
   }
 
