@@ -29,10 +29,6 @@ private[models] object Http {
   def ressource(bucketname: Option[String], uri: String, subresource: Option[String] = None) =
     "/%s\n%s\n?%s".format(bucketname.getOrElse(""), uri, subresource.getOrElse(""))
 
-  def enumString(s: String): Enumerator[Array[Byte]] =
-    Enumerator.fromStream(new java.io.ByteArrayInputStream(s.getBytes))
-
-
   def upload[T](
     method: Method,
     bucketname: String,
@@ -69,30 +65,73 @@ private[models] object Http {
       }).map(tryParse[T])
     }
 
-  // TODO; refactor
-  // - contentType
-  def request[T](
-    method: Method,
+  import play.api.http._
+  private object Writes {
+    implicit def writeableOf_Nothing[Nothing] = Writeable[Unit](content => Array[Byte]())
+    implicit def contentTypeOf_Nothing = ContentTypeOf[Nothing](None)
+  }
+
+  def get[T](
     bucketname: Option[String] = None,
     objectName: Option[String] = None,
     subresource: Option[String] = None,
-    body: Option[Enumerator[Array[Byte]]] = None,
-    contentType: Option[String] = None,
-    parameters: Seq[(String, String)] = Nil)(implicit p: Parser[Result[S3Metadata, T]]): Future[Result[S3Metadata, T]] = {
+    queryString: Seq[(String, String)] = Nil,
+    parameters: Seq[(String, String)] = Nil)(implicit p: Parser[Result[S3Metadata, T]]) = {
+      import Writes._
+      request[Nothing, T](GET, bucketname, objectName, subresource, queryString, None, parameters)
+    }
+
+  def delete[T](
+    bucketname: Option[String] = None,
+    objectName: Option[String] = None,
+    subresource: Option[String] = None,
+    queryString: Seq[(String, String)] = Nil,
+    parameters: Seq[(String, String)] = Nil)(implicit p: Parser[Result[S3Metadata, T]]) = {
+      import Writes._
+      request[Nothing, T](DELETE, bucketname, objectName, subresource, queryString, None, parameters)
+    }
+
+  def post[B, T](
+    bucketname: Option[String] = None,
+    objectName: Option[String] = None,
+    subresource: Option[String] = None,
+    queryString: Seq[(String, String)] = Nil,
+    body: B,
+    parameters: Seq[(String, String)] = Nil)(implicit w: Writeable[B], contentType: ContentTypeOf[B], p: Parser[Result[S3Metadata, T]]) =
+      request[B, T](POST, bucketname, objectName, subresource, queryString, Some(body), parameters)
+
+
+  def put[B, T](
+    bucketname: Option[String] = None,
+    objectName: Option[String] = None,
+    subresource: Option[String] = None,
+    queryString: Seq[(String, String)] = Nil,
+    body: B,
+    parameters: Seq[(String, String)] = Nil)(implicit w: Writeable[B], contentType: ContentTypeOf[B], p: Parser[Result[S3Metadata, T]]) =
+      request[B, T](PUT, bucketname, objectName, subresource, queryString, Some(body), parameters)
+
+
+  // TODO; refactor
+  // - contentType
+  private def request[B, T](
+    method: Method,
+    bucketname: Option[String],
+    objectName: Option[String],
+    subresource: Option[String],
+    queryString: Seq[(String, String)],
+    body: Option[B],
+    parameters: Seq[(String, String)])(implicit w: Writeable[B], contentType: ContentTypeOf[B], p: Parser[Result[S3Metadata, T]]): Future[Result[S3Metadata, T]] = {
 
     val uri = Seq(
         Some(bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com")),
-        objectName,
-        subresource.map("?" + _)).flatten.mkString("/")
-
-    val res = ressource(bucketname, uri)
+        objectName).flatten.mkString("/")
 
     // TODO: do not hardcode contentType
     val sign = S3Sign.sign(method.toString,
       bucketname,
       objectName,
       subresource,
-      contentType = contentType,
+      contentType = contentType.mimeType,
       headers = parameters,
       md5 = parameters.flatMap {
         case ("Content-MD5", v) => Seq(v) // XXX
@@ -100,8 +139,8 @@ private[models] object Http {
       }.headOption)
 
     val r = WS.url(uri)
-      .withHeaders(
-        (parameters ++ sign ++ contentType.map(Parameters.ContentType(_)).toSeq): _*)
+      .withQueryString((subresource.toSeq.map(_ -> "") ++ queryString): _*)
+      .withHeaders((parameters ++ sign): _*)
 
     (method match {
       case PUT => r.put(body.get)

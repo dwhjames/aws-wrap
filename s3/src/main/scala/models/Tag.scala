@@ -5,7 +5,7 @@ import java.util.Date
 import play.api.libs.ws._
 
 import scala.concurrent.Future
-import scala.xml.Elem
+import scala.xml._
 
 import aws.core._
 import aws.core.Types._
@@ -24,24 +24,25 @@ object Tag {
   import Http._
 
   def delete(bucketname: String) =
-    request[Unit](DELETE, Some(bucketname), subresource = Some("tagging"))
+    Http.delete[Unit](Some(bucketname), subresource = Some("tagging"))
 
   def get(bucketname: String) =
-    request[Seq[Tag]](GET, Some(bucketname), subresource = Some("tagging"))
+    Http.get[Seq[Tag]](Some(bucketname), subresource = Some("tagging"))
 
   def create(bucketname: String, tags: Tag*) = {
-    val body =
+    val b =
       <Tagging>
         <TagSet>
           {
-            for (t <- tags) yield <Tag>
-                                    <Key>{ t.name }</Key>
-                                    <Value>{ t.value }</Value>
-                                  </Tag>
+            for (t <- tags) yield
+            <Tag>
+              <Key>{ t.name }</Key>
+              <Value>{ t.value }</Value>
+            </Tag>
           }
         </TagSet>
       </Tagging>
-    val ps = Seq(Parameters.MD5(body.mkString))
-    request[Unit](PUT, Some(bucketname), body = Some(enumString(body.mkString)), subresource = Some("tagging"), parameters = ps)
+    val ps = Seq(Parameters.MD5(b.mkString))
+    put[Node, Unit](Some(bucketname), body = b, subresource = Some("tagging"), parameters = ps)
   }
 }

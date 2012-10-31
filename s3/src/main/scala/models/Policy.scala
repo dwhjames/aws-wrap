@@ -182,14 +182,14 @@ object Policy {
   }
 
   def create(bucketname: String, policy: Policy) = {
-    val body = Json.toJson(policy)
-    request[Unit](PUT, Some(bucketname), body = Some(enumString(body.toString)), subresource = Some("policy"))
+    val b = Json.toJson(policy)
+    put[JsValue, Unit](Some(bucketname), body = b, subresource = Some("policy"))
   }
 
   def get(bucketname: String) =
-    request[Policy](GET, Some(bucketname), subresource = Some("policy"))
+    Http.get[Policy](Some(bucketname), subresource = Some("policy"))
 
   def delete(bucketname: String) =
-    request[Unit](DELETE, Some(bucketname), subresource = Some("policy"))
+    Http.delete[Unit](Some(bucketname), subresource = Some("policy"))
 
 }

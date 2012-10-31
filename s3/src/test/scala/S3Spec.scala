@@ -165,6 +165,7 @@ object CORSSpec extends Specification {
       checkResult(res)
     }
 
+/*
     "get cors" in {
       val cors = AWS.key + "testBucketCorsGet"
       val cr = waitFor(Bucket.create(cors))
@@ -200,6 +201,7 @@ object CORSSpec extends Specification {
       del(cors)
       checkResult(res)
     }
+*/
   }
 }
 
@@ -245,6 +247,7 @@ object LifecycleSpec extends Specification {
 object S3ObjectSpec extends Specification {
 
   "S3 Object API" should {
+
     "get versions" in {
       val bucketName = AWS.key + "testBucketVersions"
       val cr = waitFor(Bucket.create(bucketName))
@@ -283,6 +286,32 @@ object S3ObjectSpec extends Specification {
       checkResult(resDel)
     }
 
+    "delete a specific version" in {
+      import play.api.libs.iteratee._
+      import aws.s3.S3._
+
+      val bucketName = AWS.key + "testBucketDelVersion"
+      val cr = waitFor(Bucket.create(bucketName))
+      println(s"create: $cr")
+
+      val vr = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED))
+      println(s"resp: $vr")
+
+      val f = new java.io.File("s3/src/test/resources/fry.gif")
+      if(!f.exists)
+        skipped(s"File not found: $f")
+
+      val resUp = waitFor(S3Object.put(bucketName, f))
+      var version = resUp.metadata.versionId
+      println(s"version: $version")
+
+      val resDel = waitFor(S3Object.delete(bucketName, f.getName, version))
+      del(bucketName)
+      checkResult(resDel)
+
+      resDel.metadata.versionId must_== resUp.metadata.versionId
+    }
+
     "batch delete objects" in {
       import play.api.libs.iteratee._
 
@@ -308,6 +337,7 @@ object S3ObjectSpec extends Specification {
       checkResult(resUp2)
       checkResult(resDel)
     }
+
   }
 }
 

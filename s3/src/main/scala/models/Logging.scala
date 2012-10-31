@@ -5,7 +5,7 @@ import java.util.Date
 import play.api.libs.ws._
 
 import scala.concurrent.Future
-import scala.xml.Elem
+import scala.xml._
 
 import aws.core._
 import aws.core.Types._
@@ -26,7 +26,7 @@ object Logging {
 
   // TODO: check that it really does works
   def enable(loggedBucket: String, targetBucket: String, grantees: Seq[Grantee] = Nil) = {
-    val body =
+    val b =
       <BucketLoggingStatus xmlns="http://doc.s3.amazonaws.com/2006-03-01">
         <LoggingEnabled>
           <TargetBucket>{ targetBucket.toLowerCase }</TargetBucket>
@@ -42,9 +42,9 @@ object Logging {
         </LoggingEnabled>
       </BucketLoggingStatus>
 
-    request[Unit](PUT, Some(loggedBucket), body = Some(enumString(body.toString)), subresource = Some("logging"))
+    put[Node, Unit](Some(loggedBucket), body = b, subresource = Some("logging"))
   }
 
   def get(bucketName: String) =
-    request[Seq[LoggingStatus]](GET, Some(bucketName), subresource = Some("logging"))
+    Http.get[Seq[LoggingStatus]](Some(bucketName), subresource = Some("logging"))
 }

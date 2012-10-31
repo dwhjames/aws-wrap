@@ -16,6 +16,16 @@ object S3 {
     val STANDARD, REDUCED_REDUNDANCY = Value
   }
 
+  object VersionStates extends Enumeration {
+    type VersionState = Value
+    val ENABLED, SUSPENDED = Value
+  }
+
+  object MFADeleteStates extends Enumeration {
+    type MFADeleteState = Value
+    val DISABLED, ENABLED = Value
+  }
+
   object Parameters {
     import aws.core.AWS._
 

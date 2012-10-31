@@ -5,7 +5,7 @@ import java.util.Date
 import play.api.libs.ws._
 
 import scala.concurrent.Future
-import scala.xml.Elem
+import scala.xml._
 
 import aws.core._
 import aws.core.Types._
@@ -106,28 +106,22 @@ object S3Object {
   }
 
   def content(bucketname: String) =
-    request[S3Object](GET, Some(bucketname))
+    get[S3Object](Some(bucketname))
 
   def getVersions(bucketname: String) =
-    request[Versions](GET, Some(bucketname), subresource = Some("versions"))
+    get[Versions](Some(bucketname), subresource = Some("versions"))
 
   // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
   // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
   def put(bucketname: String, body: File) =
-    upload[Unit](PUT, bucketname, body.getName, body)
+    Http.upload[Unit](PUT, bucketname, body.getName, body)
 
   // TODO: versionId support
-  def delete(bucketname: String, objectName: String, versionId: Option[String] = None) = {
-    if(versionId.isDefined)
-      ???
-    else
-      request[Unit](DELETE, Some(bucketname), Some(objectName))
-  }
+  def delete(bucketname: String, objectName: String, versionId: Option[String] = None) =
+    Http.delete[Unit](Some(bucketname), Some(objectName), queryString = versionId.toSeq.map("versionId" -> _))
 
-
-  //TODO: WSError: RequestTimeout - Your socket connection to the server was not read from or written to within the timeout period. Idle connections will be closed.
   def delete(bucketname: String, objects: (String, Option[String])*) = {
-    val body =
+    val b =
       <Delete>
         <Quiet>false</Quiet>
         {
@@ -139,13 +133,11 @@ object S3Object {
         }
       </Delete>
 
-    val ps = Seq(Parameters.MD5(body.mkString), Parameters.ContentLength(body.mkString.length))
+    val ps = Seq(Parameters.MD5(b.mkString), Parameters.ContentLength(b.mkString.length))
 
-    request[BatchDeletion](POST,
-      Some(bucketname),
-      body = Some(enumString(body.mkString)),
+    post[Node, BatchDeletion](Some(bucketname),
+      body = b,
       subresource = Some("delete"),
-      contentType = Some("text/plain; charset=utf-8"),
       parameters = ps)
   }
 
