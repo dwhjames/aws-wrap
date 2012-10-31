@@ -16,6 +16,10 @@ object SQSParsers {
     Success(QueuesList((r.xml \\ "QueueUrl").map(_.text)))
   }
 
+  implicit def createQueueResultParser = Parser[CreateQueueResult] { r: Response =>
+    Success(CreateQueueResult(r.xml \\ "QueueUrl" text))
+  }
+
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SQSMeta, T]] =
     Parser.xmlErrorParser[SQSMeta].or(Parser.resultParser(snsMetaParser, p))
 

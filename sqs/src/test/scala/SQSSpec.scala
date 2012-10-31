@@ -8,7 +8,7 @@ import aws.core._
 
 import org.specs2.mutable._
 
-object DynamoDBSpec extends Specification {
+object SQSSpec extends Specification {
 
   import scala.concurrent._
   import scala.concurrent.duration.Duration
@@ -30,6 +30,17 @@ object DynamoDBSpec extends Specification {
     "List queues" in {
       val r = Await.result(SQS.listQueues(), Duration(30, SECONDS))
       ensureSuccess(r)
+    }
+
+    "Create and delete queue" in {
+      Await.result(SQS.createQueue("test-create-queue"), Duration(30, SECONDS)) match {
+        case Result(_, r) =>
+          val url = r.queueURL
+          val r2 = Await.result(SQS.deleteQueue(url), Duration(30, SECONDS))
+          ensureSuccess(r2)
+        case AWSError(code, message) => failure(message)
+        case _ => failure
+      }
     }
 
   }
