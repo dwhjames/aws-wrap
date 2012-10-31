@@ -39,5 +39,4 @@ val resultF = SimpleDB.listDomains()
 resultF: scala.concurrent.Future[aws.core.Result[aws.simpledb.SimpleDBMeta,Seq[aws.simpledb.SDBDomain]]]
     = scala.concurrent.impl.Promise$DefaultPromise@5e9384fb
 
-p. Next: "Working with Results":working_with_results.html
 
