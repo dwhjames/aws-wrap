@@ -1,5 +1,6 @@
 <ul>
 {% for p in site.navigation %}
+  <!-- Compare {{ page.url }} with {{ p.url }} -->
   {% if page.url contains p.url %}
   <li>{{ p.title }}</li>
   {% else %}
