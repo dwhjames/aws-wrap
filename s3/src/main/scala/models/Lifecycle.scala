@@ -3,7 +3,7 @@ package aws.s3.models
 import java.util.Date
 
 import scala.concurrent.Future
-import scala.concurrent.util.Duration
+import scala.concurrent.duration.Duration
 import scala.xml._
 
 import aws.core._

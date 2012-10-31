@@ -165,7 +165,6 @@ object CORSSpec extends Specification {
       checkResult(res)
     }
 
-/*
     "get cors" in {
       val cors = AWS.key + "testBucketCorsGet"
       val cr = waitFor(Bucket.create(cors))
@@ -201,7 +200,7 @@ object CORSSpec extends Specification {
       del(cors)
       checkResult(res)
     }
-*/
+
   }
 }
 
