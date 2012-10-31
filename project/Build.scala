@@ -30,6 +30,8 @@ object ApplicationBuild extends Build {
 
     lazy val s3 = Project("s3", file("s3"), settings = commonSettings).dependsOn(core)
 
+    lazy val sqs = Project("sqs", file("sqs"), settings = commonSettings).dependsOn(core)
+
     lazy val sns = Project("sns", file("sns"), settings = commonSettings).dependsOn(core)
 
     lazy val dynamodb = Project("dynamodb", file("dynamodb"), settings = commonSettings).dependsOn(core)
@@ -37,7 +39,7 @@ object ApplicationBuild extends Build {
     lazy val simpledb = Project("simpledb", file("simpledb"), settings = commonSettings).dependsOn(core)
 
     lazy val root = Project("root", file("."), settings = Project.defaultSettings ++ Unidoc.settings).aggregate(
-        core, s3, simpledb, sns, dynamodb
+        core, s3, simpledb, sqs, sns, dynamodb
     )
 
 }
