@@ -13,7 +13,7 @@ case class V2[M <: Metadata](val version: String = "2009-04-15") {
   private val SIGVERSION = "2"
   private val SIGMETHOD = "HmacSHA1"
 
-  protected def request(resource: String, parameters: Seq[(String, String)])(implicit region: AWSRegion): Future[Response] = {
+  protected def request(resource: String, parameters: Seq[(String, String)]): Future[Response] = {
     WS.url(resource + "?" + signedUrl("GET", resource, parameters)).get()
   }
 
@@ -24,10 +24,10 @@ case class V2[M <: Metadata](val version: String = "2009-04-15") {
   protected def get[T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]] =
     get[T]("https://" + region.host + "/", parameters:_*)
 
-  protected def get[T](resource: String, parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]] =
+  protected def get[T](resource: String, parameters: (String, String)*)(implicit p: Parser[Result[M, T]]): Future[Result[M, T]] =
     request(resource, parameters).map(tryParse[T])
 
-  protected def signedUrl(method: String, url: String, params: Seq[(String, String)])(implicit region: AWSRegion): String = {
+  protected def signedUrl(method: String, url: String, params: Seq[(String, String)]): String = {
 
     import AWS.Parameters._
     import aws.core.SignerEncoder.encode
