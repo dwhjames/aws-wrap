@@ -8,7 +8,7 @@
     <style>
         @import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
     </style>
-    <link rel="stylesheet/less" href="{{ page.level }}/stylesheets/styles.less">
+    <link rel="stylesheet/less" href="{{ site.url }}/stylesheets/styles.less">
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
@@ -30,13 +30,13 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1><a href="/aws/index2.html">AWS</a></h1>
+        <h1><a href="{{ site.url }}/index2.html">AWS</a></h1>
         <p>Scala library to access Amazon Web Services</p>
 
         <p class="view"><a href="https://github.com/pellucidanalytics/aws">View the Project on GitHub <small>pellucidanalytics/aws</small></a></p>
 
         <ul class="hdr-buttons">
-          <li><a href="/aws/api">See the <strong>Scaladoc</strong></a></li>
+          <li><a href="{{ site.url }}/api">See the <strong>Scaladoc</strong></a></li>
           <li><a href="https://github.com/pellucidanalytics/aws">View On <strong>GitHub</strong></a></li>
           <li><a href="https://github.com/pellucidanalytics/aws/zipball/master">Download <strong>ZIP File</strong></a></li>
         </ul>
@@ -44,6 +44,7 @@
       </header>
       <section>
 {{ content }}
+
       </section>
 
       <footer>
@@ -52,6 +53,6 @@
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>

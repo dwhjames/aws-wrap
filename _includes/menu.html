@@ -1,9 +1,10 @@
 <ul>
-  <li><a href="{{ page.level }}/doc/getstarted.html">Getting started</a></li>
-  <li>Working with Results</li>
-  <li>SimpleDB</li>
-  <li>DynamoDB</li>
-  <li>S3</li>
-  <li>Simple Notification Service</li>
+{% for p in site.navigation %}
+  {% if page.url contains p.url %}
+  <li>{{ p.title }}</li>
+  {% else %}
+  <li><a href="{{ site.url }}/{{ p.url }}">{{ p.title }}</a></li>
+  {% endif %}
+{% endfor %}
 </ul>
 

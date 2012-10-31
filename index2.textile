@@ -1,7 +1,6 @@
 ---
 layout: default
 title: AWS by Pellucid
-level: .
 ---
 
 h3. Amazon Web Service Library for Scala.
