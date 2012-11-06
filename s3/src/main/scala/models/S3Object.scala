@@ -104,17 +104,39 @@ object S3Object {
     val STANDARD = Value
   }
 
+  /**
+  * Returns some or all (up to 1000) of the objects in a bucket.
+  * To use this implementation of the operation, you must have READ access to the bucket.
+  */
   def content(bucketname: String) =
     Http.get[S3Object](Some(bucketname))
 
+  /**
+  * List metadata about all of the versions of objects in a bucket
+  */
   def getVersions(bucketname: String) =
     Http.get[Versions](Some(bucketname), subresource = Some("versions"))
 
+  /**
+  * Adds an object to a bucket. You must have WRITE permissions on a bucket to add an object to it.
+  * @param bucketname Name of the target bucket
+  * @param body The File to upoad to this Bucket
+  */
+  // TODO: RRS
+  // TODO: ACL
   // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
   // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
   def put(bucketname: String, body: File) =
     Http.upload[Unit](PUT, bucketname, body.getName, body)
 
+  /**
+  * Removes the null version (if there is one) of an object and inserts a delete marker, which becomes the latest version of the object.
+  * If there isn't a null version, Amazon S3 does not remove any objects.
+  * @param bucketname Name of the target bucket
+  * @param objectName Name of the object to delete
+  * @param versionId specific object version to delete
+  * @param mfa Required to permanently delete a versioned object if versioning is configured with MFA Delete enabled.
+  */
   def delete(bucketname: String, objectName: String, versionId: Option[String] = None, mfa: Option[MFA] = None) = {
     Http.delete[Unit](Some(bucketname),
       Some(objectName),
@@ -122,6 +144,12 @@ object S3Object {
       queryString = versionId.toSeq.map("versionId" -> _))
   }
 
+  /**
+  * Delete multiple objects from a bucket using a single HTTP request
+  * @param bucketname Name of the target bucket
+  * @param objects Seq of objectName -> objectVersion
+  * @param mfa Required to permanently delete a versioned object if versioning is configured with MFA Delete enabled.
+  */
   def batchDelete(bucketname: String, objects: Seq[(String, Option[String])], mfa: Option[MFA] = None) = {
     val b =
       <Delete>
