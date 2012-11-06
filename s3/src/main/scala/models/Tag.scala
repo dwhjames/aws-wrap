@@ -23,12 +23,25 @@ case class Tag(name: String, value: String)
 object Tag {
   import Http._
 
+  /**
+  * Removes a tag set from the specified bucket.
+  * @param bucketname Name of the tagged bucket
+  */
   def delete(bucketname: String) =
     Http.delete[Unit](Some(bucketname), subresource = Some("tagging"))
 
+  /**
+  * Returns the tag set associated with the bucket.
+  * @param bucketname Name of the tagged bucket
+  */
   def get(bucketname: String) =
     Http.get[Seq[Tag]](Some(bucketname), subresource = Some("tagging"))
 
+  /**
+  * Adds a set of tags to an existing bucket.
+  * @param bucketname Name of the bucket to tag
+  * @param tags Tags to set on this Bucket
+  */
   def create(bucketname: String, tags: Tag*) = {
     val b =
       <Tagging>
