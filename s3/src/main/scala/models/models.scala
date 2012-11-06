@@ -41,7 +41,6 @@ private[models] object Http {
       val ct = new javax.activation.MimetypesFileTypeMap().getContentType(body.getName)
       val ps = parameters :+ ("Content-Type" -> ct)
 
-      // TODO: do not hardcode contentType
       val sign = S3Sign.sign(method.toString,
         Some(bucketname),
         Some(objectName),

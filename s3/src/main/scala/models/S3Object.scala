@@ -115,7 +115,6 @@ object S3Object {
   def put(bucketname: String, body: File) =
     Http.upload[Unit](PUT, bucketname, body.getName, body)
 
-  // TODO: versionId support
   def delete(bucketname: String, objectName: String, versionId: Option[String] = None, mfa: Option[MFA] = None) = {
     Http.delete[Unit](Some(bucketname),
       Some(objectName),

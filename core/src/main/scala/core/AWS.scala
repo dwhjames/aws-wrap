@@ -34,6 +34,7 @@ object AWS {
   }
 
   def httpDateFormat(date: Date) = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z").format(date)
+  def httpDateparse(date: String) = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z").parse(date)
 
   object Parameters {
     def TimeStamp(date: Date) = "Timestamp" -> isoDateFormat(date)
