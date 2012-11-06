@@ -114,7 +114,7 @@ object LoggingSpec extends Specification {
       val logged = AWS.key + "testBucketLogging"
       waitFor(Bucket.create(logged))
 
-      val res = waitFor(Logging.enable(logged, target))
+      val res = waitFor(Logging.enable(logged, target, Seq(Email("dustin.whitney@pellucid.com") -> Logging.LoggingPermisions.FULL_CONTROL)))
 
       del(logged)
       del(target)

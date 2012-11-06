@@ -22,22 +22,36 @@ import aws.s3.S3.Parameters.Permisions.Grantees._
 case class LoggingStatus(bucket: String, prefix: String, grants: Seq[(Grantee, String)])
 object Logging {
 
+  object LoggingPermisions extends Enumeration {
+     type LoggingPermision = Value
+     val FULL_CONTROL, READ, WRITE = Value
+   }
+
   import Http._
 
-  // TODO: check that it really does works
-  def enable(loggedBucket: String, targetBucket: String, grantees: Seq[Grantee] = Nil) = {
+  /**
+  * Set the logging parameters for a bucket and specify permissions for who can view and modify the logging parameters.
+  * To set the logging status of a bucket, you must be the bucket owner.
+  * '''The logging implementation a beta feature of S3.'''
+  * @param loggedBucket The name of the bucket you want to enable Logging on.
+  * @param targetBucket The name of the bucket where Logs will be stored.
+  * @param grantees Seq of Grantee allowed to access Logs
+  */
+  def enable(loggedBucket: String, targetBucket: String, grantees: Seq[(Email, LoggingPermisions.LoggingPermision)] = Nil) = {
     val b =
       <BucketLoggingStatus xmlns="http://doc.s3.amazonaws.com/2006-03-01">
         <LoggingEnabled>
           <TargetBucket>{ targetBucket.toLowerCase }</TargetBucket>
           <TargetPrefix>{ loggedBucket.toLowerCase }-access_log-/</TargetPrefix>
           <TargetGrants>
+            { for (g <- grantees) yield
             <Grant>
               <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="AmazonCustomerByEmail">
-                <EmailAddress>julien.tournay@pellucid.com</EmailAddress>
+                <EmailAddress>{ g._1.value }</EmailAddress>
               </Grantee>
-              <Permission>FULL_CONTROL</Permission>
+              <Permission>{ g._2.toString }</Permission>
             </Grant>
+          }
           </TargetGrants>
         </LoggingEnabled>
       </BucketLoggingStatus>
@@ -45,6 +59,10 @@ object Logging {
     put[Node, Unit](Some(loggedBucket), body = b, subresource = Some("logging"))
   }
 
+  /**
+  * return the logging status of a bucket and the permissions users have to view and modify that status. To use {{{get}}}, you must be the bucket owner.
+  * @param bucketName The name of the bucket.
+  */
   def get(bucketName: String) =
     Http.get[Seq[LoggingStatus]](Some(bucketName), subresource = Some("logging"))
 }
