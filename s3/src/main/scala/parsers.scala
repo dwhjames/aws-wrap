@@ -145,4 +145,13 @@ object S3Parsers {
     Success(BatchDeletion(successes, failures))
   }
 
+  implicit def notificationParser = Parser[Seq[NotificationConfiguration]] { r =>
+    Success(
+      (r.xml \ "TopicConfiguration").map{ t =>
+        NotificationConfiguration(
+          (t \ "Topic").text,
+          Events.withName((t \ "Event").text))
+      })
+  }
+
 }

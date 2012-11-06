@@ -37,4 +37,7 @@ object NotificationConfiguration {
 
     put[Node, Unit](Some(bucketname), body = b, subresource = Some("notification"))
   }
+
+  def get(bucketname: String) =
+    Http.get[Seq[NotificationConfiguration]](Some(bucketname), subresource = Some("notification"))
 }

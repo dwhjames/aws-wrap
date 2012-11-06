@@ -435,13 +435,24 @@ object PolicySpec extends Specification {
 
 object NotificationsSpec extends Specification {
   "S3 Notification API" should {
-    "create notification" in {
+
+    "create notification conf" in {
       skipped("Needs a topic to be created")
       val bucketName = AWS.key + "testBucketNotifCreate"
-      val cr = waitFor(Bucket.create(bucketName))\
+      val cr = waitFor(Bucket.create(bucketName))
       val res = waitFor(NotificationConfiguration.create(bucketName, NotificationConfiguration(s"arn:aws:sns:${region.subdomain}:123456789012:myTopic", Events.REDUCED_REDUNDANCY_LOST_OBJECT)))
 
-      //del(bucketName)
+      del(bucketName)
+      checkResult(res)
+    }
+
+    "get notification conf" in {
+      val bucketName = AWS.key + "testBucketNotifGet"
+      val cr = waitFor(Bucket.create(bucketName))
+
+      val res = waitFor(NotificationConfiguration.get(bucketName))
+
+      del(bucketName)
       checkResult(res)
     }
   }
