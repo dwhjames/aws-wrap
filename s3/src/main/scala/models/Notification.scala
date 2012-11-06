@@ -26,6 +26,14 @@ object NotificationConfiguration {
   import Permisions._
   import ACLs._
 
+  /**
+  * Enable notifications of specified events for a bucket. Currently, the s3:ReducedRedundancyLostObject event is the only event supported for notifications.
+  * If the bucket owner and Amazon SNS topic owner are the same, the bucket owner has permission to publish notifications to the topic by default.
+  * Otherwise, the owner of the topic must create a policy to enable the bucket owner to publish to the topic.
+  * After you call {{{create}}} to configure notifications on a bucket, Amazon S3 publishes a test notification to ensure that the topic exists and that the bucket owner has permission to publish to the specified topic.
+  * @param bucketname The name of the bucket you want to enable notifications on
+  * @param notification Notification configuration for this bucket
+  */
   def create(bucketname: String, notification: NotificationConfiguration): Future[EmptyResult[S3Metadata]] = {
     val b =
       <NotificationConfiguration>
@@ -38,6 +46,19 @@ object NotificationConfiguration {
     put[Node, Unit](Some(bucketname), body = b, subresource = Some("notification"))
   }
 
+  /**
+  * Disable notifications of specified events for a bucket.
+  * @param bucketname The name of the target bucket
+  */
+  def disable(bucketname: String) = {
+    val b = <NotificationConfiguration />
+    put[Node, Unit](Some(bucketname), body = b, subresource = Some("notification"))
+  }
+
+  /**
+  * return the notification configuration of a bucket.
+  * @param bucketname The name of the bucket you want to get notifications for
+  */
   def get(bucketname: String) =
     Http.get[Seq[NotificationConfiguration]](Some(bucketname), subresource = Some("notification"))
 }
