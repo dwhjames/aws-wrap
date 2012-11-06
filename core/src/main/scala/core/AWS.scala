@@ -33,6 +33,8 @@ object AWS {
     iso.format(date)
   }
 
+  def httpDateFormat(date: Date) = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z").format(date)
+
   object Parameters {
     def TimeStamp(date: Date) = "Timestamp" -> isoDateFormat(date)
     def Expires(seconds: Long) = "Expires" -> {

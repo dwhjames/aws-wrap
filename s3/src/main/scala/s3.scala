@@ -43,10 +43,7 @@ object S3 {
     def ContentLength(l: Long) = ("Content-Length" -> l.toString)
     def ContentType(s: MimeType) = ("Content-Type" -> s)
     def Expect(s: MimeType) = ("Expect" -> s)
-    def Expires(d: java.util.Date) = {
-      val format = new java.text.SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z")
-      ("Expires" -> format.format(d))
-    }
+    def Expires(d: java.util.Date) = ("Expires" -> httpDateFormat(d))
     def X_AMZ_META(name: String, value: String) = (s"x-amz-meta-$name" -> value)
     def X_AMZ_SERVER_SIDE_ENCRYPTION(s: String) = {
       if(s != "AES256")

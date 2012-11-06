@@ -126,7 +126,6 @@ private[models] object Http {
         Some(bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com")),
         objectName).flatten.mkString("/")
 
-    // TODO: do not hardcode contentType
     val sign = S3Sign.sign(method.toString,
       bucketname,
       objectName,

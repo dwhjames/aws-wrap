@@ -11,8 +11,6 @@ object S3Sign {
   val SIGVERSION = "2"
   val SIGMETHOD = "HmacSHA1"
 
-  def dateFormat(d: Date) = new java.text.SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z").format(d)
-
   def canonicalizedResource(bucketName: Option[String], resource: Option[String] = None, subresource: Option[String] = None) =
     "%s%s%s".format(bucketName.map("/" + _.toLowerCase).getOrElse(""), resource.map("/" + _).getOrElse("/"), subresource.map("?" + _).getOrElse(""))
 
@@ -34,7 +32,7 @@ object S3Sign {
     import AWS.Parameters._
     import aws.core.SignerEncoder.encode
 
-    val d = dateFormat(new Date)
+    val d = AWS.httpDateFormat(new Date)
 
     val s = toSign(
       method,
