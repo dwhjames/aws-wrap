@@ -11,7 +11,6 @@ import Policy.Conditions.Condition
 
 object JsonFormats {
 
-
   // This is necessary because AWS returns single element arrays, as single values
   // {"foo": ["bar"]} is serialized as {"foo": "bar"}
   implicit def awsSeqReads[T](implicit r: Reads[T]) = Reads[Seq[T]]{ (json: JsValue) => json match {

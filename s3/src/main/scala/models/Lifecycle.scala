@@ -29,6 +29,13 @@ object LifecycleConf {
   }
   import Statuses._
 
+  /**
+  * Sets lifecycle configuration for your bucket. It lifecycle configuration exists, it replaces it.
+  * To use this operation, you must be allowed to perform the s3:PutLifecycleConfiguration action. By default, the bucket owner has this permission and can grant this permission to others.
+  * There is usually some lag before a new or updated lifecycle configuration is fully propagated to all the Amazon S3 systems. You should expect some delay before lifecycle configuration fully taking effect.
+  * @param bucketname The name of the bucket you want to set LifecycleConf on.
+  * @param confs List of LifecycleConf to apply
+  */
   def create(bucketname: String, confs: LifecycleConf*): Future[EmptyResult[S3Metadata]] = {
     val b =
       <LifecycleConfiguration>
@@ -52,9 +59,18 @@ object LifecycleConf {
     put[Node, Unit](Some(bucketname), body = b, subresource = Some("lifecycle"), parameters = ps)
   }
 
+  /**
+  * Returns the lifecycle configuration information set on the bucket.
+  * To use this operation, you must have permission to perform the s3:GetLifecycleConfiguration action
+  * @param bucketname The name of the bucket.
+  */
   def get(bucketname: String): Future[Result[S3Metadata, Seq[LifecycleConf]]] =
     Http.get[Seq[LifecycleConf]](Some(bucketname), subresource = Some("lifecycle"))
 
+  /**
+  * Deletes the lifecycle configuration from the specified bucket.
+  * @param bucketname The name of the bucket.
+  */
   def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
     Http.delete[Unit](Some(bucketname), subresource = Some("lifecycle"))
 }
