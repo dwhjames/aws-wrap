@@ -98,7 +98,6 @@ object S3Object {
 
   import java.io.File
   import play.api.libs.iteratee._
-  import Http._
 
   object StorageClasses extends Enumeration {
     type StorageClass = Value
@@ -106,10 +105,10 @@ object S3Object {
   }
 
   def content(bucketname: String) =
-    get[S3Object](Some(bucketname))
+    Http.get[S3Object](Some(bucketname))
 
   def getVersions(bucketname: String) =
-    get[Versions](Some(bucketname), subresource = Some("versions"))
+    Http.get[Versions](Some(bucketname), subresource = Some("versions"))
 
   // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
   // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
@@ -117,10 +116,14 @@ object S3Object {
     Http.upload[Unit](PUT, bucketname, body.getName, body)
 
   // TODO: versionId support
-  def delete(bucketname: String, objectName: String, versionId: Option[String] = None) =
-    Http.delete[Unit](Some(bucketname), Some(objectName), queryString = versionId.toSeq.map("versionId" -> _))
+  def delete(bucketname: String, objectName: String, versionId: Option[String] = None, mfa: Option[MFA] = None) = {
+    Http.delete[Unit](Some(bucketname),
+      Some(objectName),
+      parameters = mfa.map{ m => Parameters.X_AMZ_MFA(m) }.toSeq,
+      queryString = versionId.toSeq.map("versionId" -> _))
+  }
 
-  def delete(bucketname: String, objects: (String, Option[String])*) = {
+  def batchDelete(bucketname: String, objects: Seq[(String, Option[String])], mfa: Option[MFA] = None) = {
     val b =
       <Delete>
         <Quiet>false</Quiet>
@@ -133,12 +136,14 @@ object S3Object {
         }
       </Delete>
 
-    val ps = Seq(Parameters.MD5(b.mkString), Parameters.ContentLength(b.mkString.length))
+    val ps = Seq(Parameters.MD5(b.mkString), Parameters.ContentLength(b.mkString.length)) ++
+      mfa.map(m => Parameters.X_AMZ_MFA(m)).toSeq
 
-    post[Node, BatchDeletion](Some(bucketname),
+    Http.post[Node, BatchDeletion](Some(bucketname),
       body = b,
       subresource = Some("delete"),
       parameters = ps)
   }
+
 
 }

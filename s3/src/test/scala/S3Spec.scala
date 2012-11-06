@@ -84,13 +84,14 @@ object BucketSpec extends Specification {
     }
 
     "Enable versionning and MFA" in {
+      skipped("Needs an MFA device")
       import play.api.libs.iteratee._
       import aws.s3.S3._
 
       val bucketName = AWS.key + "testBucketEnableMFA"
       val cr = waitFor(Bucket.create(bucketName))
 
-      val res = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED, Some(MFADeleteStates.ENABLED)))
+      val res = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED, Some(MFADeleteStates.ENABLED -> MFA(???, ???))))
 
       checkResult(res)
       del(bucketName)
@@ -334,7 +335,7 @@ object S3ObjectSpec extends Specification {
       val ids = for(v <- versions.body.versions;
         id <- v.id
       ) yield f.getName -> Some(id)
-      waitFor(S3Object.delete(bucketName, ids: _*))
+      waitFor(S3Object.batchDelete(bucketName, ids))
 
       del(bucketName)
       checkResult(resDel)
@@ -359,7 +360,7 @@ object S3ObjectSpec extends Specification {
       val resUp1 = waitFor(S3Object.put(bucketName, f))
       val resUp2 = waitFor(S3Object.put(bucketName, f2))
 
-      val resDel = waitFor(S3Object.delete(bucketName, f.getName -> None, f2.getName -> None))
+      val resDel = waitFor(S3Object.batchDelete(bucketName, Seq(f.getName -> None, f2.getName -> None)))
 
       val content = waitFor(S3Object.content(bucketName))
 
