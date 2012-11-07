@@ -83,7 +83,7 @@ object S3Parsers {
     f((node \ "VersionId").map(_.text).headOption,
       (node \ "Key").text,
       (node \ "IsLatest").map(n => JBool.parseBoolean(n.text)).headOption.get,
-      (node \ "LastModified").map(n => AWS.httpDateparse(n.text)).headOption.get,
+      (node \ "LastModified").map(n => new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(n.text)).headOption.get,
       (node \ "ETag").text,
       (node \ "Size").map(n => JLong.parseLong(n.text)).headOption,
       (node \ "StorageClass").map(n => StorageClasses.withName(n.text)).headOption,
