@@ -53,7 +53,7 @@ object CORSRule {
       </CORSConfiguration>
 
     val ps = Seq(Parameters.MD5(b.mkString),
-      Parameters.ContentLength(b.mkString.length))
+      AWS.Parameters.ContentLength(b.mkString.length))
 
     put[Node, Unit](Some(bucketName),
       body = b,

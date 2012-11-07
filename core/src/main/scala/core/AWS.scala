@@ -47,5 +47,15 @@ object AWS {
     def Version(v: String) = ("Version" -> v)
     def SignatureVersion(v: String) = ("SignatureVersion" -> v)
     def SignatureMethod(m: String) = ("SignatureMethod" -> m)
+
+    type MimeType = String
+
+    def CacheControl(s: String) = ("Cache-Control" -> s)
+    def ContentDisposition(s: String) = ("Content-Disposition" -> s)
+    def ContentEncoding(c: java.nio.charset.Charset) = ("Content-Encoding" -> c.name)
+    def ContentLength(l: Long) = ("Content-Length" -> l.toString)
+    def ContentType(s: MimeType) = ("Content-Type" -> s)
+    def Expect(s: MimeType) = ("Expect" -> s)
+    def Expires(d: java.util.Date) = ("Expires" -> httpDateFormat(d))
   }
 }

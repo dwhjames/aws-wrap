@@ -56,7 +56,7 @@ object Bucket {
         { for (m <- mfaDeleteState.toSeq) yield <MfaDelete>{ m._1 }</MfaDelete> }
       </VersioningConfiguration>
 
-    val ps = Seq(Parameters.ContentLength(b.mkString.length)) ++ mfaDeleteState.map(m => Parameters.X_AMZ_MFA(m._2)).toSeq
+    val ps = Seq(AWS.Parameters.ContentLength(b.mkString.length)) ++ mfaDeleteState.map(m => Parameters.X_AMZ_MFA(m._2)).toSeq
 
     put[Node, Unit](Some(bucketname),
       body = b,

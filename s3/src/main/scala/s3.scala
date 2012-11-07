@@ -35,15 +35,6 @@ object S3 {
 
     def MD5(content: String) = ("Content-MD5" -> aws.core.utils.Crypto.base64(java.security.MessageDigest.getInstance("MD5").digest(content.getBytes)))
 
-    type MimeType = String
-
-    def CacheControl(s: String) = ("Cache-Control" -> s)
-    def ContentDisposition(s: String) = ("Content-Disposition" -> s)
-    def ContentEncoding(c: java.nio.charset.Charset) = ("Content-Encoding" -> c.name)
-    def ContentLength(l: Long) = ("Content-Length" -> l.toString)
-    def ContentType(s: MimeType) = ("Content-Type" -> s)
-    def Expect(s: MimeType) = ("Expect" -> s)
-    def Expires(d: java.util.Date) = ("Expires" -> httpDateFormat(d))
     def X_AMZ_META(name: String, value: String) = (s"x-amz-meta-$name" -> value)
     def X_AMZ_SERVER_SIDE_ENCRYPTION(s: String) = {
       if(s != "AES256")
