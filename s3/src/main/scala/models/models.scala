@@ -45,6 +45,7 @@ private[models] object Http {
         Some(bucketname),
         Some(objectName),
         None,
+        Nil,
         contentType = Some(ct),
         headers = ps,
         md5 = parameters.flatMap {
@@ -125,10 +126,17 @@ private[models] object Http {
         Some(bucketname.map("https://" + _ + ".s3.amazonaws.com").getOrElse("https://s3.amazonaws.com")),
         objectName).flatten.mkString("/")
 
+    val fullResource = (subresource, queryString) match {
+      case (None, _) => None
+      case (Some(r), Nil) => Some(r)
+      case (Some(e), qs) => Some(e + "?" + queryString.map {p: (String, String) => p._1 + "=" + p._2}.mkString("&"))
+    }
+
     val sign = S3Sign.sign(method.toString,
       bucketname,
       objectName,
       subresource,
+      queryString,
       contentType = contentType.mimeType,
       headers = parameters,
       md5 = parameters.flatMap {

@@ -120,7 +120,7 @@ object S3Object {
   /**
   * Adds an object to a bucket. You must have WRITE permissions on a bucket to add an object to it.
   * @param bucketname Name of the target bucket
-  * @param body The File to upoad to this Bucket
+  * @param body The File to upload to this Bucket
   */
   // TODO: RRS
   // TODO: ACL
