@@ -44,7 +44,27 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A DynamoDB Query.
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>The name of the table containing the requested items.</p></dd><dt class="param">hashKeyValue</dt><dd class="cmt"><p>Attribute value of the hash component of the composite primary key.</p></dd><dt class="param">attributesToGet</dt><dd class="cmt"><p>Array of Attribute names. If Nil then all attributes will be returned.
+                       If some attributes are not found, they will not appear in the result.</p></dd><dt class="param">limit</dt><dd class="cmt"><p>The maximum number of items to return (not necessarily the number of matching items).
+             If Amazon DynamoDB processes the number of items up to the limit while querying the table,
+             it stops the query and returns the matching values up to that point,
+             and a <code>LastEvaluatedKey</code> to apply in a subsequent operation to continue the query.
+             Also, if the result set size exceeds 1MB before Amazon DynamoDB hits this limit,
+             it stops the query and returns the matching values, and a <code>LastEvaluatedKey</code> to apply
+             in a subsequent operation to continue the query.</p></dd><dt class="param">consistentRead</dt><dd class="cmt"><p>If set to <code>true</code>, then a consistent read is issued, otherwise eventually consistent is used.</p></dd><dt class="param">count</dt><dd class="cmt"><p>If set to true, Amazon DynamoDB returns a total number of items that match the query parameters,
+             instead of a list of the matching items and their attributes. You can apply the Limit parameter to
+             count-only queries.
+             Do not set Count to true while providing a list of AttributesToGet;
+             otherwise, Amazon DynamoDB returns a validation error.
+             For more information, see <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/QueryAndScan.html#Count" target="_blank">Count and ScannedCount</a>.</p></dd><dt class="param">rangeKeyCondition</dt><dd class="cmt"><p>The attribute values and comparison operators to use for the query.
+                         If <code>None</code>, Amazon DynamoDB returns all items with the specified hash key element value.</p></dd><dt class="param">scanIndexForward</dt><dd class="cmt"><p>Specifies ascending or descending traversal of the index.
+                        Amazon DynamoDB returns results reflecting the requested order determined by the range key,
+                        based on ASCII character code values. Defaults to <code>true</code> (ascending).</p></dd><dt class="param">exclusiveStartKey</dt><dd class="cmt"><p>Primary key of the item from which to continue an earlier query. An earlier query might provide
+                         this value as the LastEvaluatedKey if that query operation was interrupted before completing the query;
+                         either because of the result set size or the Limit parameter.
+                         The <code>LastEvaluatedKey</code> can be passed back in a new query request to continue the operation
+                         from that point.</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -84,7 +104,7 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="aws.dynamodb.Query#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="aws.dynamodb.Query#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(tableName:String,hashKeyValue:aws.dynamodb.DDBAttribute,attributesToGet:Seq[String],limit:Option[Long],consistentRead:Boolean,count:Boolean,rangeKeyCondition:Option[aws.dynamodb.KeyCondition],scanIndexForward:Boolean,exclusiveStartKey:Option[aws.dynamodb.PrimaryKey]):aws.dynamodb.Query"></a>
       <a id="&lt;init&gt;:Query"></a>
       <h4 class="signature">
@@ -96,7 +116,26 @@
         <span class="name">Query</span><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="hashKeyValue">hashKeyValue: <a href="DDBAttribute.html" class="extype" name="aws.dynamodb.DDBAttribute">DDBAttribute</a></span>, <span name="attributesToGet">attributesToGet: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">scala.None</span></span>, <span name="consistentRead">consistentRead: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="count">count: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="rangeKeyCondition">rangeKeyCondition: <span class="extype" name="scala.Option">Option</span>[<a href="KeyCondition.html" class="extype" name="aws.dynamodb.KeyCondition">KeyCondition</a>] = <span class="symbol">scala.None</span></span>, <span name="scanIndexForward">scanIndexForward: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="exclusiveStartKey">exclusiveStartKey: <span class="extype" name="scala.Option">Option</span>[<a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a>] = <span class="symbol">scala.None</span></span>)</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>The name of the table containing the requested items.</p></dd><dt class="param">hashKeyValue</dt><dd class="cmt"><p>Attribute value of the hash component of the composite primary key.</p></dd><dt class="param">attributesToGet</dt><dd class="cmt"><p>Array of Attribute names. If Nil then all attributes will be returned.
+                       If some attributes are not found, they will not appear in the result.</p></dd><dt class="param">limit</dt><dd class="cmt"><p>The maximum number of items to return (not necessarily the number of matching items).
+             If Amazon DynamoDB processes the number of items up to the limit while querying the table,
+             it stops the query and returns the matching values up to that point,
+             and a <code>LastEvaluatedKey</code> to apply in a subsequent operation to continue the query.
+             Also, if the result set size exceeds 1MB before Amazon DynamoDB hits this limit,
+             it stops the query and returns the matching values, and a <code>LastEvaluatedKey</code> to apply
+             in a subsequent operation to continue the query.</p></dd><dt class="param">consistentRead</dt><dd class="cmt"><p>If set to <code>true</code>, then a consistent read is issued, otherwise eventually consistent is used.</p></dd><dt class="param">count</dt><dd class="cmt"><p>If set to true, Amazon DynamoDB returns a total number of items that match the query parameters,
+             instead of a list of the matching items and their attributes. You can apply the Limit parameter to
+             count-only queries.
+             Do not set Count to true while providing a list of AttributesToGet;
+             otherwise, Amazon DynamoDB returns a validation error.
+             For more information, see <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/QueryAndScan.html#Count" target="_blank">Count and ScannedCount</a>.</p></dd><dt class="param">rangeKeyCondition</dt><dd class="cmt"><p>The attribute values and comparison operators to use for the query.
+                         If <code>None</code>, Amazon DynamoDB returns all items with the specified hash key element value.</p></dd><dt class="param">scanIndexForward</dt><dd class="cmt"><p>Specifies ascending or descending traversal of the index.
+                        Amazon DynamoDB returns results reflecting the requested order determined by the range key,
+                        based on ASCII character code values. Defaults to <code>true</code> (ascending).</p></dd><dt class="param">exclusiveStartKey</dt><dd class="cmt"><p>Primary key of the item from which to continue an earlier query. An earlier query might provide
+                         this value as the LastEvaluatedKey if that query operation was interrupted before completing the query;
+                         either because of the result set size or the Limit parameter.
+                         The <code>LastEvaluatedKey</code> can be passed back in a new query request to continue the operation
+                         from that point.</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -184,7 +223,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="aws.dynamodb.Query#attributesToGet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.dynamodb.Query#attributesToGet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="attributesToGet:Seq[String]"></a>
       <a id="attributesToGet:Seq[String]"></a>
       <h4 class="signature">
@@ -196,7 +235,8 @@
         <span class="name">attributesToGet</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Array of Attribute names.</p><div class="fullcomment"><div class="comment cmt"><p>Array of Attribute names. If Nil then all attributes will be returned.
+                       If some attributes are not found, they will not appear in the result.</p></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -225,8 +265,8 @@
         <span class="name">consistentRead</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      
-    </li><li name="aws.dynamodb.Query#count" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">If set to <code>true</code>, then a consistent read is issued, otherwise eventually consistent is used.</p>
+    </li><li name="aws.dynamodb.Query#count" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="count:Boolean"></a>
       <a id="count:Boolean"></a>
       <h4 class="signature">
@@ -238,7 +278,13 @@
         <span class="name">count</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">If set to true, Amazon DynamoDB returns a total number of items that match the query parameters,
+             instead of a list of the matching items and their attributes.</p><div class="fullcomment"><div class="comment cmt"><p>If set to true, Amazon DynamoDB returns a total number of items that match the query parameters,
+             instead of a list of the matching items and their attributes. You can apply the Limit parameter to
+             count-only queries.
+             Do not set Count to true while providing a list of AttributesToGet;
+             otherwise, Amazon DynamoDB returns a validation error.
+             For more information, see <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/QueryAndScan.html#Count" target="_blank">Count and ScannedCount</a>.</p></div></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -252,7 +298,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="aws.dynamodb.Query#exclusiveStartKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.dynamodb.Query#exclusiveStartKey" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="exclusiveStartKey:Option[aws.dynamodb.PrimaryKey]"></a>
       <a id="exclusiveStartKey:Option[PrimaryKey]"></a>
       <h4 class="signature">
@@ -264,7 +310,11 @@
         <span class="name">exclusiveStartKey</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Primary key of the item from which to continue an earlier query.</p><div class="fullcomment"><div class="comment cmt"><p>Primary key of the item from which to continue an earlier query. An earlier query might provide
+                         this value as the LastEvaluatedKey if that query operation was interrupted before completing the query;
+                         either because of the result set size or the Limit parameter.
+                         The <code>LastEvaluatedKey</code> can be passed back in a new query request to continue the operation
+                         from that point.</p></div></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -306,7 +356,7 @@
         <span class="name">hashKeyValue</span><span class="result">: <a href="DDBAttribute.html" class="extype" name="aws.dynamodb.DDBAttribute">DDBAttribute</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Attribute value of the hash component of the composite primary key.</p>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -320,7 +370,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="aws.dynamodb.Query#limit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.dynamodb.Query#limit" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="limit:Option[Long]"></a>
       <a id="limit:Option[Long]"></a>
       <h4 class="signature">
@@ -332,7 +382,13 @@
         <span class="name">limit</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The maximum number of items to return (not necessarily the number of matching items).</p><div class="fullcomment"><div class="comment cmt"><p>The maximum number of items to return (not necessarily the number of matching items).
+             If Amazon DynamoDB processes the number of items up to the limit while querying the table,
+             it stops the query and returns the matching values up to that point,
+             and a <code>LastEvaluatedKey</code> to apply in a subsequent operation to continue the query.
+             Also, if the result set size exceeds 1MB before Amazon DynamoDB hits this limit,
+             it stops the query and returns the matching values, and a <code>LastEvaluatedKey</code> to apply
+             in a subsequent operation to continue the query.</p></div></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -372,7 +428,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="aws.dynamodb.Query#rangeKeyCondition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.dynamodb.Query#rangeKeyCondition" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="rangeKeyCondition:Option[aws.dynamodb.KeyCondition]"></a>
       <a id="rangeKeyCondition:Option[KeyCondition]"></a>
       <h4 class="signature">
@@ -384,8 +440,9 @@
         <span class="name">rangeKeyCondition</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="KeyCondition.html" class="extype" name="aws.dynamodb.KeyCondition">KeyCondition</a>]</span>
       </span>
       </h4>
-      
-    </li><li name="aws.dynamodb.Query#scanIndexForward" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">The attribute values and comparison operators to use for the query.</p><div class="fullcomment"><div class="comment cmt"><p>The attribute values and comparison operators to use for the query.
+                         If <code>None</code>, Amazon DynamoDB returns all items with the specified hash key element value.</p></div></div>
+    </li><li name="aws.dynamodb.Query#scanIndexForward" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scanIndexForward:Boolean"></a>
       <a id="scanIndexForward:Boolean"></a>
       <h4 class="signature">
@@ -397,7 +454,9 @@
         <span class="name">scanIndexForward</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Specifies ascending or descending traversal of the index.</p><div class="fullcomment"><div class="comment cmt"><p>Specifies ascending or descending traversal of the index.
+                        Amazon DynamoDB returns results reflecting the requested order determined by the range key,
+                        based on ASCII character code values. Defaults to <code>true</code> (ascending).</p></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -423,7 +482,7 @@
         <span class="name">tableName</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The name of the table containing the requested items.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

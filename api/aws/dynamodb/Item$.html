@@ -184,7 +184,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="aws.dynamodb.Item#build" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.dynamodb.Item#build" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="build(attrs:(String,aws.dynamodb.Item.AttributeWrapper)*):aws.dynamodb.Item"></a>
       <a id="build((String,AttributeWrapper)*):Item"></a>
       <h4 class="signature">
@@ -196,7 +196,16 @@
         <span class="name">build</span><span class="params">(<span name="attrs">attrs: (<span class="extype" name="scala.Predef.String">String</span>, <a href="Item$$AttributeWrapper.html" class="extype" name="aws.dynamodb.Item.AttributeWrapper">AttributeWrapper</a>)*</span>)</span><span class="result">: <a href="Item.html" class="extype" name="aws.dynamodb.Item">Item</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Build a DynamoDB item, using any type where a <a href="AttributeWrite.html" class="extype" name="aws.dynamodb.AttributeWrite">AttributeWrite</a> is available.</p><div class="fullcomment"><div class="comment cmt"><p>Build a DynamoDB item, using any type where a <a href="AttributeWrite.html" class="extype" name="aws.dynamodb.AttributeWrite">AttributeWrite</a> is available.</p><p>Example:</p><pre><span class="kw">val</span> item = Item.build(
+  <span class="lit">"id"</span> -&gt; <span class="lit">"john@example.com"</span>,
+  <span class="lit">"name"</span> -&gt; <span class="lit">"John Martin"</span>,
+  <span class="lit">"age"</span> -&gt; <span class="num">25</span>,
+  <span class="lit">"groups"</span> -&gt; <span class="std">Set</span>(<span class="lit">"admin"</span>, <span class="lit">"developers"</span>, <span class="lit">"users"</span>)
+)
+item: aws.dynamodb.Item = Item(ArrayBuffer((id,DDBString(john@example.com)),
+      (name,DDBString(John Martin)),
+      (age,DDBNumber(<span class="num">25.0</span>)),
+      (groups,DDBStringSet(<span class="std">Set</span>(admin, developers, users)))))</pre></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>

@@ -184,7 +184,7 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="aws.s3.models.Bucket#create" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.s3.models.Bucket#create" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="create(bucketname:String,acls:Option[aws.s3.S3.Parameters.Permisions.ACLs.ACL],permissions:Seq[(String,String)])(implicitregion:aws.core.AWSRegion):scala.concurrent.Future[aws.core.Types.EmptyResult[aws.s3.models.S3Metadata]]"></a>
       <a id="create(String,Option[ACL],Seq[(String,String)])(AWSRegion):Future[EmptyResult[S3Metadata]]"></a>
       <h4 class="signature">
@@ -196,8 +196,12 @@
         <span class="name">create</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="acls">acls: <span class="extype" name="scala.Option">Option</span>[<a href="../S3$$Parameters$$Permisions$$ACLs$.html#ACL=String" class="extmbr" name="aws.s3.S3.Parameters.Permisions.ACLs.ACL">ACL</a>] = <span class="symbol">None</span></span>, <span name="permissions">permissions: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)] = <span class="symbol">Nil</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="../../core/AWSRegion.html" class="extype" name="aws.core.AWSRegion">AWSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Types$.html#EmptyResult[M&lt;:aws.core.Metadata]=aws.core.Result[M,Unit]" class="extmbr" name="aws.core.Types.EmptyResult">EmptyResult</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>]]</span>
       </span>
       </h4>
-      
-    </li><li name="aws.s3.models.Bucket#delete" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Create a bucket
+Anonymous requests are never allowed to create buckets.</p><div class="fullcomment"><div class="comment cmt"><p>Create a bucket
+Anonymous requests are never allowed to create buckets. By creating the bucket, you become the bucket owner.
+Not every string is an acceptable bucket name.</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>The name of the bucket you want to create.</p></dd><dt class="param">acls</dt><dd class="cmt"><p>predifined grants for this Bucket</p></dd><dt class="param">permissions</dt><dd class="cmt"><p>Explicit access permissions</p></dd><dt class="param">region</dt><dd class="cmt"><p>Physical location of the bucket
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>http://docs.amazonwebservices.com/AmazonS3/2006-03-01/dev/index.html?UsingBucket.html</p></span></dd></dl></div>
+    </li><li name="aws.s3.models.Bucket#delete" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="delete(bucketname:String):scala.concurrent.Future[aws.core.Types.EmptyResult[aws.s3.models.S3Metadata]]"></a>
       <a id="delete(String):Future[EmptyResult[S3Metadata]]"></a>
       <h4 class="signature">
@@ -209,7 +213,9 @@
         <span class="name">delete</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Types$.html#EmptyResult[M&lt;:aws.core.Metadata]=aws.core.Result[M,Unit]" class="extmbr" name="aws.core.Types.EmptyResult">EmptyResult</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Delete the bucket.</p><div class="fullcomment"><div class="comment cmt"><p>Delete the bucket.
+All objects (including all object versions and Delete Markers) in the bucket must be deleted before the bucket itself can be deleted.</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>The name of the bucket you want to delete.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -291,7 +297,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="aws.s3.models.Bucket#list" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.s3.models.Bucket#list" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="list():scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Seq[aws.s3.models.Bucket]]]"></a>
       <a id="list():Future[Result[S3Metadata,Seq[Bucket]]]"></a>
       <h4 class="signature">
@@ -303,7 +309,9 @@
         <span class="name">list</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="Bucket.html" class="extype" name="aws.s3.models.Bucket">Bucket</a>]]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Returns a list of all buckets owned by the authenticated sender of the request.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a list of all buckets owned by the authenticated sender of the request.
+Anonymous users cannot list buckets, and you cannot list buckets that you did not create.
+</p></div></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -343,6 +351,22 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="aws.s3.models.Bucket#setVersioningConfiguration" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setVersioningConfiguration(bucketname:String,versionState:aws.s3.S3.VersionStates.VersionState,mfaDeleteState:Option[(aws.s3.S3.MFADeleteStates.MFADeleteState,aws.s3.S3.MFA)]):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Unit]]"></a>
+      <a id="setVersioningConfiguration(String,VersionState,Option[(MFADeleteState,MFA)]):Future[Result[S3Metadata,Unit]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setVersioningConfiguration</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="versionState">versionState: <a href="../S3$$VersionStates$.html#VersionState=aws.s3.S3.VersionStates.Value" class="extmbr" name="aws.s3.S3.VersionStates.VersionState">VersionState</a></span>, <span name="mfaDeleteState">mfaDeleteState: <span class="extype" name="scala.Option">Option</span>[(<a href="../S3$$MFADeleteStates$.html#MFADeleteState=aws.s3.S3.MFADeleteStates.Value" class="extmbr" name="aws.s3.S3.MFADeleteStates.MFADeleteState">MFADeleteState</a>, <a href="../S3$$MFA.html" class="extype" name="aws.s3.S3.MFA">MFA</a>)] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Set the versioning state of an existing bucket
+To set the versioning state, you must be the bucket owner.</p><div class="fullcomment"><div class="comment cmt"><p>Set the versioning state of an existing bucket
+To set the versioning state, you must be the bucket owner.</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>The name of the bucket you want to set version on.</p></dd><dt class="param">versionState</dt><dd class="cmt"><p>Versioning state of the bucket</p></dd><dt class="param">mfaDeleteState</dt><dd class="cmt"><p>Specifies whether MFA Delete is enabled in the bucket versioning configuration. When enabled, the bucket owner must include the x-amz-mfa request header in requests to change the versioning state of a bucket and to permanently delete a versioned object.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

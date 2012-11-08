@@ -230,7 +230,7 @@ Use <a href="#describeTable(tableName:String)(implicitregion:aws.dynamodb.DDBReg
                  Allowed characters are a-z, A-Z, 0-9, '_' (underscore), '-' (dash), and '.' (dot).
                  Names can be between 3 and 255 characters long.</p></dd><dt class="param">keySchema</dt><dd class="cmt"><p>the primary key structure for the table. See <a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a> for more information.
 </p></dd></dl></div>
-    </li><li name="aws.dynamodb.DynamoDB#deleteItem" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.dynamodb.DynamoDB#deleteItem" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="deleteItem(tableName:String,key:aws.dynamodb.KeyValue,expected:Map[String,aws.dynamodb.Expected],returnValues:aws.dynamodb.ReturnValues)(implicitregion:aws.dynamodb.DDBRegion):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.ItemResponse]]"></a>
       <a id="deleteItem(String,KeyValue,Map[String,Expected],ReturnValues)(DDBRegion):Future[SimpleResult[ItemResponse]]"></a>
       <h4 class="signature">
@@ -242,7 +242,15 @@ Use <a href="#describeTable(tableName:String)(implicitregion:aws.dynamodb.DDBReg
         <span class="name">deleteItem</span><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <a href="KeyValue.html" class="extype" name="aws.dynamodb.KeyValue">KeyValue</a></span>, <span name="expected">expected: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="Expected.html" class="extype" name="aws.dynamodb.Expected">Expected</a>] = <span class="symbol">Map.empty</span></span>, <span name="returnValues">returnValues: <a href="ReturnValues.html" class="extype" name="aws.dynamodb.ReturnValues">ReturnValues</a> = <span class="symbol"><span class="name"><a href="../package.html">ReturnValues.NONE</a></span></span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="DDBRegion.html" class="extype" name="aws.dynamodb.DDBRegion">DDBRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Types$.html#SimpleResult[T]=aws.core.Result[aws.core.EmptyMeta.type,T]" class="extmbr" name="aws.core.Types.SimpleResult">SimpleResult</a>[<a href="ItemResponse.html" class="extype" name="aws.dynamodb.ItemResponse">ItemResponse</a>]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Deletes a single item in a table by primary key.</p><div class="fullcomment"><div class="comment cmt"><p>Deletes a single item in a table by primary key.
+You can perform a conditional delete operation that deletes the item if it exists,
+or if it has an expected attribute value.</p><p>Unless you specify conditions, the DeleteItem is an idempotent operation; running it multiple times on the same item or attribute does not result in an error response.
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"></dd><dt class="param">key</dt><dd class="cmt"><p>the primary key that defines the item. See <a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a> for more information.</p></dd><dt class="param">expected</dt><dd class="cmt"><p>Designates an attribute for a conditional delete. If empty, all the attributes for the item are deleted.
+                If not, it allows deleting items and attributes if specific conditions are met.
+                If the conditions are met, Amazon DynamoDB performs the delete. Otherwise, the item is not deleted.</p></dd><dt class="param">returnValues</dt><dd class="cmt"><p>Use this parameter if you want to get the attribute name-value pairs before they were deleted.
+If <a href="ReturnValues$$ALL_OLD$.html" class="extype" name="aws.dynamodb.ReturnValues.ALL_OLD">ReturnValues.ALL_OLD</a> is specified, the content of the old item is returned.
+If <a href="ReturnValues$$NONE$.html" class="extype" name="aws.dynamodb.ReturnValues.NONE">ReturnValues.NONE</a> is provided (the default value), nothing is returned.
+</p></dd></dl></div>
     </li><li name="aws.dynamodb.DynamoDB#deleteTable" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="deleteTable(tableName:String)(implicitregion:aws.dynamodb.DDBRegion):scala.concurrent.Future[aws.core.Types.EmptySimpleResult]"></a>
       <a id="deleteTable(String)(DDBRegion):Future[EmptySimpleResult]"></a>
@@ -336,7 +344,7 @@ If you use DescribeTable too early in the process of updating a table, the new v
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="aws.dynamodb.DynamoDB#getItem" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.dynamodb.DynamoDB#getItem" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getItem(tableName:String,key:aws.dynamodb.KeyValue,attributesToGet:Seq[String],consistentRead:Boolean)(implicitregion:aws.dynamodb.DDBRegion):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.ItemResponse]]"></a>
       <a id="getItem(String,KeyValue,Seq[String],Boolean)(DDBRegion):Future[SimpleResult[ItemResponse]]"></a>
       <h4 class="signature">
@@ -348,7 +356,11 @@ If you use DescribeTable too early in the process of updating a table, the new v
         <span class="name">getItem</span><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <a href="KeyValue.html" class="extype" name="aws.dynamodb.KeyValue">KeyValue</a></span>, <span name="attributesToGet">attributesToGet: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Nil</span></span>, <span name="consistentRead">consistentRead: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="DDBRegion.html" class="extype" name="aws.dynamodb.DDBRegion">DDBRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Types$.html#SimpleResult[T]=aws.core.Result[aws.core.EmptyMeta.type,T]" class="extmbr" name="aws.core.Types.SimpleResult">SimpleResult</a>[<a href="ItemResponse.html" class="extype" name="aws.dynamodb.ItemResponse">ItemResponse</a>]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The GetItem operation returns a set of Attributes for an item that matches the primary key.</p><div class="fullcomment"><div class="comment cmt"><p>The GetItem operation returns a set of Attributes for an item that matches the primary key.</p><p>The GetItem operation provides an eventually consistent read by default.
+If eventually consistent reads are not acceptable for your application, use ConsistentRead.
+Although this operation might take longer than a standard read, it always returns the last updated value.
+For more information, see <a href="http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/APISummary.html#DataReadConsistency" target="_blank">Data Read and Consistency Considerations</a>.
+</p></div></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -443,7 +455,7 @@ If you use DescribeTable too early in the process of updating a table, the new v
       </h4>
       <p class="shortcomment cmt">Creates a new item, or replaces an old item with a new item (including all the attributes).</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new item, or replaces an old item with a new item (including all the attributes).
 If an item already exists in the specified table with the same primary key, the new item completely replaces the existing item. You can perform a conditional put (insert a new item if one with the specified primary key doesn't exist), or replace an existing item if it has certain attribute values.
-</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"></dd><dt class="param">item</dt><dd class="cmt"><p>A map of the attributes for the item, and must include the primary key values that define the item.
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"></dd><dt class="param">item</dt><dd class="cmt"><p>The <a href="Item.html" class="extype" name="aws.dynamodb.Item">Item</a> to put. Must include the primary key values that define the item.
 Other attribute name-value pairs can be provided for the item. For more information about primary keys, see <a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a>.
 </p></dd></dl></div>
     </li><li name="aws.dynamodb.DynamoDB#query" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">

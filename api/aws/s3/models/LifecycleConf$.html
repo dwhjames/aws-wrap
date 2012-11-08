@@ -197,7 +197,7 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="aws.s3.models.LifecycleConf#create" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.s3.models.LifecycleConf#create" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="create(bucketname:String,confs:aws.s3.models.LifecycleConf*):scala.concurrent.Future[aws.core.Types.EmptyResult[aws.s3.models.S3Metadata]]"></a>
       <a id="create(String,LifecycleConf*):Future[EmptyResult[S3Metadata]]"></a>
       <h4 class="signature">
@@ -209,8 +209,11 @@
         <span class="name">create</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="confs">confs: <a href="LifecycleConf.html" class="extype" name="aws.s3.models.LifecycleConf">LifecycleConf</a>*</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Types$.html#EmptyResult[M&lt;:aws.core.Metadata]=aws.core.Result[M,Unit]" class="extmbr" name="aws.core.Types.EmptyResult">EmptyResult</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>]]</span>
       </span>
       </h4>
-      
-    </li><li name="aws.s3.models.LifecycleConf#delete" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Sets lifecycle configuration for your bucket.</p><div class="fullcomment"><div class="comment cmt"><p>Sets lifecycle configuration for your bucket. It lifecycle configuration exists, it replaces it.
+To use this operation, you must be allowed to perform the s3:PutLifecycleConfiguration action. By default, the bucket owner has this permission and can grant this permission to others.
+There is usually some lag before a new or updated lifecycle configuration is fully propagated to all the Amazon S3 systems. You should expect some delay before lifecycle configuration fully taking effect.</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>The name of the bucket you want to set LifecycleConf on.</p></dd><dt class="param">confs</dt><dd class="cmt"><p>List of LifecycleConf to apply
+</p></dd></dl></div>
+    </li><li name="aws.s3.models.LifecycleConf#delete" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="delete(bucketname:String):scala.concurrent.Future[aws.core.Types.EmptyResult[aws.s3.models.S3Metadata]]"></a>
       <a id="delete(String):Future[EmptyResult[S3Metadata]]"></a>
       <h4 class="signature">
@@ -222,7 +225,8 @@
         <span class="name">delete</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Types$.html#EmptyResult[M&lt;:aws.core.Metadata]=aws.core.Result[M,Unit]" class="extmbr" name="aws.core.Types.EmptyResult">EmptyResult</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Deletes the lifecycle configuration from the specified bucket.</p><div class="fullcomment"><div class="comment cmt"><p>Deletes the lifecycle configuration from the specified bucket.</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>The name of the bucket.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -265,7 +269,7 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="aws.s3.models.LifecycleConf#get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.s3.models.LifecycleConf#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get(bucketname:String):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Seq[aws.s3.models.LifecycleConf]]]"></a>
       <a id="get(String):Future[Result[S3Metadata,Seq[LifecycleConf]]]"></a>
       <h4 class="signature">
@@ -277,7 +281,9 @@
         <span class="name">get</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="LifecycleConf.html" class="extype" name="aws.s3.models.LifecycleConf">LifecycleConf</a>]]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Returns the lifecycle configuration information set on the bucket.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the lifecycle configuration information set on the bucket.
+To use this operation, you must have permission to perform the s3:GetLifecycleConfiguration action</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>The name of the bucket.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>

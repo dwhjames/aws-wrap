@@ -40,7 +40,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">DeleteMarker</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Long">Long</span></span>, <span name="storageClass">storageClass: <a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a> = <span class="symbol">S3Object.StorageClasses.STANDARD</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span><span class="result"> extends <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">DeleteMarker</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>, <span name="storageClass">storageClass: <span class="extype" name="scala.Option">Option</span>[<a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a>] = <span class="defval" name="scala.Some.apply[aws.s3.models.S3Object.StorageClasses.Value](S3Object.StorageClasses.STANDARD)">...</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span><span class="result"> extends <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -85,7 +85,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="aws.s3.models.DeleteMarker#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(id:Option[String],key:String,isLatest:Boolean,lastModified:java.util.Date,etag:String,size:Long,storageClass:aws.s3.models.S3Object.StorageClasses.StorageClass,owner:aws.s3.models.Owner):aws.s3.models.DeleteMarker"></a>
+      <a id="&lt;init&gt;(id:Option[String],key:String,isLatest:Boolean,lastModified:java.util.Date,etag:String,size:Option[Long],storageClass:Option[aws.s3.models.S3Object.StorageClasses.StorageClass],owner:aws.s3.models.Owner):aws.s3.models.DeleteMarker"></a>
       <a id="&lt;init&gt;:DeleteMarker"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -93,7 +93,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">DeleteMarker</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Long">Long</span></span>, <span name="storageClass">storageClass: <a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a> = <span class="symbol">S3Object.StorageClasses.STANDARD</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span>
+        <span class="name">DeleteMarker</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>, <span name="storageClass">storageClass: <span class="extype" name="scala.Option">Option</span>[<a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a>] = <span class="defval" name="scala.Some.apply[aws.s3.models.S3Object.StorageClasses.Value](S3Object.StorageClasses.STANDARD)">...</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span>
       </span>
       </h4>
       
@@ -373,28 +373,28 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="aws.s3.models.DeleteMarker">DeleteMarker</a> → <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a></dd></dl></div>
     </li><li name="aws.s3.models.DeleteMarker#size" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="size:Long"></a>
-      <a id="size:Long"></a>
+      <a id="size:Option[Long]"></a>
+      <a id="size:Option[Long]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">size</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
+        <span class="name">size</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="aws.s3.models.DeleteMarker">DeleteMarker</a> → <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a></dd></dl></div>
     </li><li name="aws.s3.models.DeleteMarker#storageClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="storageClass:aws.s3.models.S3Object.StorageClasses.StorageClass"></a>
-      <a id="storageClass:StorageClass"></a>
+      <a id="storageClass:Option[aws.s3.models.S3Object.StorageClasses.StorageClass]"></a>
+      <a id="storageClass:Option[StorageClass]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">storageClass</span><span class="result">: <a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a></span>
+        <span class="name">storageClass</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="aws.s3.models.DeleteMarker">DeleteMarker</a> → <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a></dd></dl></div>

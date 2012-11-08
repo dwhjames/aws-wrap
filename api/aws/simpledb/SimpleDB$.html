@@ -310,6 +310,19 @@ using the same domain name will not result in an error response.
               
         </dd></dl></div>
     </li><li name="aws.core.signature.V2#get" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="get[T](resource:String,parameters:(String,String)*)(implicitp:aws.core.parsers.Parser[aws.core.Result[M,T]]):scala.concurrent.Future[aws.core.Result[M,T]]"></a>
+      <a id="get[T](String,(String,String)*)(Parser[Result[SimpleDBMeta,T]]):Future[Result[SimpleDBMeta,T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="resource">resource: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="parameters">parameters: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="p">p: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SimpleDBMeta.html" class="extype" name="aws.simpledb.SimpleDBMeta">SimpleDBMeta</a>, <span class="extype" name="aws.core.signature.V2.get.T">T</span>]]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SimpleDBMeta.html" class="extype" name="aws.simpledb.SimpleDBMeta">SimpleDBMeta</a>, <span class="extype" name="aws.core.signature.V2.get.T">T</span>]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../core/signature/V2.html" class="extype" name="aws.core.signature.V2">V2</a></dd></dl></div>
+    </li><li name="aws.core.signature.V2#get" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get[T](parameters:(String,String)*)(implicitregion:aws.core.AWSRegion,implicitp:aws.core.parsers.Parser[aws.core.Result[M,T]]):scala.concurrent.Future[aws.core.Result[M,T]]"></a>
       <a id="get[T]((String,String)*)(AWSRegion,Parser[Result[SimpleDBMeta,T]]):Future[Result[SimpleDBMeta,T]]"></a>
       <h4 class="signature">
@@ -440,15 +453,15 @@ there are more than MaxNumberOfDomains domains. Calling ListDomains successive t
                 exists and has the specified value.
 </p></dd></dl></div>
     </li><li name="aws.core.signature.V2#request" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="request(parameters:Seq[(String,String)])(implicitregion:aws.core.AWSRegion):scala.concurrent.Future[play.api.libs.ws.Response]"></a>
-      <a id="request(Seq[(String,String)])(AWSRegion):Future[Response]"></a>
+      <a id="request(resource:String,parameters:Seq[(String,String)]):scala.concurrent.Future[play.api.libs.ws.Response]"></a>
+      <a id="request(String,Seq[(String,String)]):Future[Response]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">request</span><span class="params">(<span name="parameters">parameters: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="../core/AWSRegion.html" class="extype" name="aws.core.AWSRegion">AWSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="play.api.libs.ws.Response">Response</span>]</span>
+        <span class="name">request</span><span class="params">(<span name="resource">resource: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="parameters">parameters: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="play.api.libs.ws.Response">Response</span>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../core/signature/V2.html" class="extype" name="aws.core.signature.V2">V2</a></dd></dl></div>
@@ -467,15 +480,15 @@ there are more than MaxNumberOfDomains domains. Calling ListDomains successive t
       <p class="shortcomment cmt">Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
 </p>
     </li><li name="aws.core.signature.V2#signedUrl" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="signedUrl(method:String,params:Seq[(String,String)])(implicitregion:aws.core.AWSRegion):String"></a>
-      <a id="signedUrl(String,Seq[(String,String)])(AWSRegion):String"></a>
+      <a id="signedUrl(method:String,url:String,params:Seq[(String,String)]):String"></a>
+      <a id="signedUrl(String,String,Seq[(String,String)]):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">signedUrl</span><span class="params">(<span name="method">method: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="params">params: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="../core/AWSRegion.html" class="extype" name="aws.core.AWSRegion">AWSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">signedUrl</span><span class="params">(<span name="method">method: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="params">params: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../core/signature/V2.html" class="extype" name="aws.core.signature.V2">V2</a></dd></dl></div>

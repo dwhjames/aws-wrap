@@ -44,7 +44,16 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An item in DynamoDB.</p><p>Building an Item:</p><pre><span class="kw">val</span> item = Item.build(
+  <span class="lit">"id"</span> -&gt; <span class="lit">"john@example.com"</span>,
+  <span class="lit">"name"</span> -&gt; <span class="lit">"John Martin"</span>,
+  <span class="lit">"age"</span> -&gt; <span class="num">25</span>,
+  <span class="lit">"groups"</span> -&gt; <span class="std">Set</span>(<span class="lit">"admin"</span>, <span class="lit">"developers"</span>, <span class="lit">"users"</span>)
+)
+item: aws.dynamodb.Item = Item(ArrayBuffer((id,DDBString(john@example.com)),
+      (name,DDBString(John Martin)),
+      (age,DDBNumber(<span class="num">25.0</span>)),
+      (groups,DDBStringSet(<span class="std">Set</span>(admin, developers, users)))))</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

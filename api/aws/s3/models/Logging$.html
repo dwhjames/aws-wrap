@@ -155,6 +155,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="aws.s3.models.Logging.LoggingPermisions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LoggingPermisions"></a>
+      <a id="LoggingPermisions:LoggingPermisions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$LoggingPermisions$.html"><span class="name">LoggingPermisions</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -184,19 +197,22 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="aws.s3.models.Logging#enable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="enable(loggedBucket:String,targetBucket:String,grantees:Seq[aws.s3.S3.Parameters.Permisions.Grantees.Grantee]):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Unit]]"></a>
-      <a id="enable(String,String,Seq[Grantee]):Future[Result[S3Metadata,Unit]]"></a>
+    </li><li name="aws.s3.models.Logging#enable" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enable(loggedBucket:String,targetBucket:String,grantees:Seq[(aws.s3.S3.Parameters.Permisions.Grantees.Email,aws.s3.models.Logging.LoggingPermisions.LoggingPermision)]):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Unit]]"></a>
+      <a id="enable(String,String,Seq[(Email,LoggingPermision)]):Future[Result[S3Metadata,Unit]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">enable</span><span class="params">(<span name="loggedBucket">loggedBucket: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="targetBucket">targetBucket: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="grantees">grantees: <span class="extype" name="scala.Seq">Seq</span>[<a href="../S3$$Parameters$$Permisions$$Grantees$$Grantee.html" class="extype" name="aws.s3.S3.Parameters.Permisions.Grantees.Grantee">Grantee</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
+        <span class="name">enable</span><span class="params">(<span name="loggedBucket">loggedBucket: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="targetBucket">targetBucket: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="grantees">grantees: <span class="extype" name="scala.Seq">Seq</span>[(<a href="../S3$$Parameters$$Permisions$$Grantees$$Email.html" class="extype" name="aws.s3.S3.Parameters.Permisions.Grantees.Email">Email</a>, <a href="Logging$$LoggingPermisions$.html#LoggingPermision=aws.s3.models.Logging.LoggingPermisions.Value" class="extmbr" name="aws.s3.models.Logging.LoggingPermisions.LoggingPermision">LoggingPermision</a>)] = <span class="symbol">Nil</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Set the logging parameters for a bucket and specify permissions for who can view and modify the logging parameters.</p><div class="fullcomment"><div class="comment cmt"><p>Set the logging parameters for a bucket and specify permissions for who can view and modify the logging parameters.
+To set the logging status of a bucket, you must be the bucket owner.
+<b>The logging implementation a beta feature of S3.</b></p></div><dl class="paramcmts block"><dt class="param">loggedBucket</dt><dd class="cmt"><p>The name of the bucket you want to enable Logging on.</p></dd><dt class="param">targetBucket</dt><dd class="cmt"><p>The name of the bucket where Logs will be stored.</p></dd><dt class="param">grantees</dt><dd class="cmt"><p>Seq of Grantee allowed to access Logs
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -239,7 +255,7 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="aws.s3.models.Logging#get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.s3.models.Logging#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get(bucketName:String):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Seq[aws.s3.models.LoggingStatus]]]"></a>
       <a id="get(String):Future[Result[S3Metadata,Seq[LoggingStatus]]]"></a>
       <h4 class="signature">
@@ -251,7 +267,10 @@
         <span class="name">get</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="LoggingStatus.html" class="extype" name="aws.s3.models.LoggingStatus">LoggingStatus</a>]]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">return the logging status of a bucket and the permissions users have to view and modify that status.</p><div class="fullcomment"><div class="comment cmt"><p>return the logging status of a bucket and the permissions users have to view and modify that status. To use </p><pre>get</pre><p>, you must be the bucket owner.
+get
+}}}</p></div><dl class="paramcmts block"><dt class="param">bucketName</dt><dd class="cmt"><p>The name of the bucket.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>

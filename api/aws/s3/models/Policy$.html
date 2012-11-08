@@ -210,7 +210,7 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="aws.s3.models.Policy#create" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.s3.models.Policy#create" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="create(bucketname:String,policy:aws.s3.models.Policy):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Unit]]"></a>
       <a id="create(String,Policy):Future[Result[S3Metadata,Unit]]"></a>
       <h4 class="signature">
@@ -222,7 +222,21 @@
         <span class="name">create</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="policy">policy: <a href="Policy.html" class="extype" name="aws.s3.models.Policy">Policy</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Add to or replace a policy on a bucket.</p><div class="fullcomment"><div class="comment cmt"><p>Add to or replace a policy on a bucket. If the bucket already has a policy, the one in this request completely replaces it.
+To perform this operation, you must be the bucket owner or have PutPolicy permissions.</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>The name of the bucket you want to enable Policy on</p></dd><dt class="param">policy</dt><dd class="cmt"><p>policy configuration for this bucket</p><pre><span class="kw">val</span> policy = Policy(
+  id = <span class="std">Some</span>(<span class="lit">"aaaa-bbbb-cccc-dddd"</span>),
+  statements = <span class="std">Seq</span>(
+    Statement(
+      effect = Policy.Effects.ALLOW,
+      sid = <span class="std">Some</span>(<span class="lit">"1"</span>),
+      principal = <span class="std">Some</span>(<span class="lit">"AWS"</span> -&gt; <span class="std">Seq</span>(<span class="lit">"*"</span>)),
+      action = <span class="std">Seq</span>(<span class="lit">"s3:GetObject*"</span>),
+      conditions = <span class="std">Seq</span>(
+        Conditions.Strings.Equals(USER_AGENT -&gt; <span class="std">Seq</span>(<span class="lit">"foo"</span>)),
+        Conditions.Exists(KeyFor(REFERER) -&gt; <span class="std">Seq</span>(<span class="kw">true</span>))),
+      resource = <span class="std">Seq</span>(<span class="lit">"arn:aws:s3:::bucketName/foobar"</span>)))) <span class="cmt">//  Make sure the bucketname is in lower case</span>
+
+Policy.create(bucketName, policy)</pre></dd></dl></div>
     </li><li name="aws.s3.models.Policy#delete" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="delete(bucketname:String):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Unit]]"></a>
       <a id="delete(String):Future[Result[S3Metadata,Unit]]"></a>
@@ -278,7 +292,7 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="aws.s3.models.Policy#get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="aws.s3.models.Policy#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get(bucketname:String):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,aws.s3.models.Policy]]"></a>
       <a id="get(String):Future[Result[S3Metadata,Policy]]"></a>
       <h4 class="signature">
@@ -290,7 +304,8 @@
         <span class="name">get</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <a href="Policy.html" class="extype" name="aws.s3.models.Policy">Policy</a>]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Return the policy of a specified bucket.</p><div class="fullcomment"><div class="comment cmt"><p>Return the policy of a specified bucket. To use this operation, you must have GetPolicy permissions on the specified bucket, and you must be the bucket owner.</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>The name of the bucket you want to get Policy on
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>

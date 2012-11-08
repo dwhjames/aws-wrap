@@ -101,7 +101,7 @@
         <a href="CORSRule.html"><span class="name">CORSRule</span></a><span class="params">(<span name="origins">origins: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="methods">methods: <span class="extype" name="scala.Seq">Seq</span>[<a href="../S3$$HTTPMethods$.html#Method=aws.s3.S3.HTTPMethods.Value" class="extmbr" name="aws.s3.S3.HTTPMethods.Method">Method</a>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="headers">headers: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="maxAge">maxAge: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">scala.None</span></span>, <span name="exposeHeaders">exposeHeaders: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Cross-Origin Resource Sharing rule</p>
     </li><li name="aws.s3.models.Container" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ContainerextendsObject"></a>
       <a id="Container:Container"></a>
@@ -124,7 +124,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Content.html"><span class="name">Content</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Long">Long</span></span>, <span name="storageClass">storageClass: <a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a> = <span class="symbol">S3Object.StorageClasses.STANDARD</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span><span class="result"> extends <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Content.html"><span class="name">Content</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>, <span name="storageClass">storageClass: <span class="extype" name="scala.Option">Option</span>[<a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a>] = <span class="defval" name="scala.Some.apply[aws.s3.models.S3Object.StorageClasses.Value](S3Object.StorageClasses.STANDARD)">...</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span><span class="result"> extends <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -137,7 +137,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="DeleteMarker.html"><span class="name">DeleteMarker</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Long">Long</span></span>, <span name="storageClass">storageClass: <a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a> = <span class="symbol">S3Object.StorageClasses.STANDARD</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span><span class="result"> extends <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="DeleteMarker.html"><span class="name">DeleteMarker</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>, <span name="storageClass">storageClass: <span class="extype" name="scala.Option">Option</span>[<a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a>] = <span class="defval" name="scala.Some.apply[aws.s3.models.S3Object.StorageClasses.Value](S3Object.StorageClasses.STANDARD)">...</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span><span class="result"> extends <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -164,6 +164,19 @@
       </span>
       <span class="symbol">
         <a href="LoggingStatus.html"><span class="name">LoggingStatus</span></a><span class="params">(<span name="bucket">bucket: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="prefix">prefix: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="grants">grants: <span class="extype" name="scala.Seq">Seq</span>[(<a href="../S3$$Parameters$$Permisions$$Grantees$$Grantee.html" class="extype" name="aws.s3.S3.Parameters.Permisions.Grantees.Grantee">Grantee</a>, <span class="extype" name="scala.Predef.String">String</span>)]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.s3.models.NotificationConfiguration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NotificationConfigurationextendsProductwithSerializable"></a>
+      <a id="NotificationConfiguration:NotificationConfiguration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NotificationConfiguration.html"><span class="name">NotificationConfiguration</span></a><span class="params">(<span name="topic">topic: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="event">event: <a href="Events$.html#Event=aws.s3.models.Events.Value" class="extmbr" name="aws.s3.models.Events.Event">Event</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -254,7 +267,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Version.html"><span class="name">Version</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Long">Long</span></span>, <span name="storageClass">storageClass: <a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a> = <span class="symbol">S3Object.StorageClasses.STANDARD</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span><span class="result"> extends <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Version.html"><span class="name">Version</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isLatest">isLatest: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="lastModified">lastModified: <span class="extype" name="java.util.Date">Date</span></span>, <span name="etag">etag: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="size">size: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>, <span name="storageClass">storageClass: <span class="extype" name="scala.Option">Option</span>[<a href="S3Object$$StorageClasses$.html#StorageClass=aws.s3.models.S3Object.StorageClasses.Value" class="extmbr" name="aws.s3.models.S3Object.StorageClasses.StorageClass">StorageClass</a>] = <span class="defval" name="scala.Some.apply[aws.s3.models.S3Object.StorageClasses.Value](S3Object.StorageClasses.STANDARD)">...</span></span>, <span name="owner">owner: <a href="Owner.html" class="extype" name="aws.s3.models.Owner">Owner</a></span>)</span><span class="result"> extends <a href="Container.html" class="extype" name="aws.s3.models.Container">Container</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -317,6 +330,19 @@
       </span>
       </h4>
       
+    </li><li name="aws.s3.models.Events" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Events"></a>
+      <a id="Events:Events"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Events$.html"><span class="name">Events</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
+      </span>
+      </h4>
+      
     </li><li name="aws.s3.models.LifecycleConf" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LifecycleConf"></a>
       <a id="LifecycleConf:LifecycleConf"></a>
@@ -340,6 +366,19 @@
       </span>
       <span class="symbol">
         <a href="Logging$.html"><span class="name">Logging</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.s3.models.NotificationConfiguration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NotificationConfiguration"></a>
+      <a id="NotificationConfiguration:NotificationConfiguration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NotificationConfiguration$.html"><span class="name">NotificationConfiguration</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
