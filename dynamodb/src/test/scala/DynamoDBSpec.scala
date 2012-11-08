@@ -226,7 +226,7 @@ object DynamoDBSpec extends Specification {
 
       // Get items as a batch
       val batchGet = Map(
-        "batch-test" -> GetRequest(Seq(KeyValue("tedison")))
+        "batch-test" -> GetRequest(Seq(KeyValue("tedison")), consistentRead = true)
       )
       Await.result(DynamoDB.batchGetItem(batchGet), Duration(30, SECONDS)) match {
         case AWSError(code, message) => failure(message)

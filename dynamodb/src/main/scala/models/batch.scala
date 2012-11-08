@@ -13,7 +13,7 @@ case class DeleteRequest(key: KeyValue) extends WriteRequest
  */
 case class BatchWriteResponse(responses: Seq[(String, QueryResponse)], unprocessed: Seq[(String, Seq[WriteRequest])])
 
-case class GetRequest(keys: Seq[KeyValue], attributesToGet: Seq[String] = Nil)
+case class GetRequest(keys: Seq[KeyValue], attributesToGet: Seq[String] = Nil, consistentRead: Boolean = false)
 
 /**
  * Used for the response to [[DynamoDB.batchGetItem]]

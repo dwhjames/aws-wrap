@@ -199,7 +199,10 @@ object JsonFormats {
       case (err: JsError, _) => err
     }),
     Writes(request =>
-      Json.obj("Keys" -> Json.toJson(request.keys)) ++
+      Json.obj(
+        "Keys" -> Json.toJson(request.keys),
+        "ConsistentRead" -> Json.toJson(request.consistentRead)
+      ) ++
         (request.attributesToGet match {
           case Nil => Json.obj()
           case attr => Json.obj("AttributesToGet" -> Json.toJson(attr))
