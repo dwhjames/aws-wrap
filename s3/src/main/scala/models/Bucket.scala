@@ -8,6 +8,7 @@ import scala.xml._
 import aws.core._
 import aws.core.Types._
 
+import aws.s3.S3Region
 import aws.s3.S3._
 import aws.s3.S3.HTTPMethods._
 import aws.s3.S3Parsers._
@@ -31,7 +32,7 @@ object Bucket {
    * @param permissions Explicit access permissions
    * @param region Physical location of the bucket
    */
-  def create(bucketname: String, acls: Option[ACL] = None, permissions: Seq[Grant] = Nil)(implicit region: AWSRegion): Future[EmptyResult[S3Metadata]] = {
+  def create(bucketname: String, acls: Option[ACL] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]] = {
     val b =
       <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
         <LocationConstraint>{ region.subdomain }</LocationConstraint>
