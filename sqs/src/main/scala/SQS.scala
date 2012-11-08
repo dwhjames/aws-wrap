@@ -44,17 +44,17 @@ object SQS extends V2[SQSMeta](version = "2011-10-01") {
 
   def createQueue(name: String, attributes: QueueAttribute*)(implicit region: SQSRegion): Future[Result[SQSMeta, String]] = {
     val params = Seq(Action("CreateQueue"), QueueName(name)) ++ QueueAttributes(attributes)
-    get[String](params:_*)
+    get[String](params: _*)
   }
 
   def listQueues(queueNamePrefix: String = "")(implicit region: SQSRegion): Future[Result[SQSMeta, QueuesList]] = {
     val params = Seq(Action("ListQueues")) ++ QueueNamePrefix(queueNamePrefix)
-    get[QueuesList](params:_*)
+    get[QueuesList](params: _*)
   }
 
   def deleteQueue(queueURL: String): Future[EmptyResult[SQSMeta]] = {
     val params = Seq(Action("DeleteQueue"))
-    get[Unit](queueURL, params:_*)
+    get[Unit](queueURL, params: _*)
   }
 
   // GetQueueAttributes
@@ -63,14 +63,14 @@ object SQS extends V2[SQSMeta](version = "2011-10-01") {
 
   def sendMessage(queueURL: String, message: String, delaySeconds: Option[Long] = None): Future[Result[SQSMeta, SendMessageResult]] = {
     val params = Seq(Action("SendMessage"), Message(message)) ++ DelaySeconds(delaySeconds)
-    get[SendMessageResult](queueURL, params:_*)
+    get[SendMessageResult](queueURL, params: _*)
   }
 
   def receiveMessage(queueURL: String, maxNumber: Option[Long] = None, visibilityTimeout: Option[Long] = None): Future[Result[SQSMeta, SendMessageResult]] = {
     val params = Seq(Action("ReceiveMessage")) ++
       MaxNumberOfMessages(maxNumber) ++
       VisibilityTimeout(visibilityTimeout)
-    get[SendMessageResult](queueURL, params:_*)
+    get[SendMessageResult](queueURL, params: _*)
   }
 
   // ReceiveMessage
@@ -85,7 +85,7 @@ object SQS extends V2[SQSMeta](version = "2011-10-01") {
 
   def getQueueUrl(name: String, queueOwnerAWSAccountId: Option[String] = None)(implicit region: SQSRegion): Future[Result[SQSMeta, String]] = {
     val params = Seq(Action("GetQueueUrl"), QueueName(name)) ++ QueueOwnerAWSAccountId(queueOwnerAWSAccountId)
-    get[String](params:_*)
+    get[String](params: _*)
   }
 
   // SendMessageBatch

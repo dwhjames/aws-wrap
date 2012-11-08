@@ -210,7 +210,7 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    *
    * @param topicArn The ARN of the topic whose access control policy you wish to modify.
    * @param label The unique label of the statement you want to remove.
-
+   *
    */
   def removePermission(topicArn: String, label: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
     get[Unit](

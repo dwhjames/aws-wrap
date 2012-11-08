@@ -38,7 +38,7 @@ case class V2[M <: Metadata](val version: String = "2009-04-15") {
     identity)
 
   protected def get[T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]] =
-    get[T]("https://" + region.host + "/", parameters:_*)
+    get[T]("https://" + region.host + "/", parameters: _*)
 
   protected def get[T](resource: String, parameters: (String, String)*)(implicit p: Parser[Result[M, T]]): Future[Result[M, T]] =
     request(resource, parameters).map(tryParse[T])
@@ -67,7 +67,6 @@ case class V2[M <: Metadata](val version: String = "2009-04-15") {
   private def path(url: String) = "/" + url.split("/").drop(3).mkString("/")
 
   private def host(url: String) = url.split("/").drop(2).head
- 
 
 }
 
