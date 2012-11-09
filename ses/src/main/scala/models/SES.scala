@@ -110,9 +110,14 @@ object SES {
     request[EmailResult]("SendEmail", ps)
   }
 
-  def sendRaw(rawMessage: String)(implicit region: SESRegion) = {
+  def sendRaw(rawMessage: String)(implicit region: SESRegion) =
     request[EmailResult]("SendRawEmail", Seq(
       "RawMessage.Data" -> Crypto.base64(rawMessage.getBytes)
     ))
-  }
+
+  def verifyEmailIdentity(email: String)(implicit region: SESRegion) =
+    request[EmailResult]("VerifyEmailAddress", Seq(
+      "EmailAddress" -> email,
+      AWS.Parameters.TimeStamp(new Date)
+    ))
 }

@@ -66,5 +66,10 @@ object SESSpec extends Specification {
       val r = waitFor(SES.sendRaw(message))
       checkResult(r)
     }
+
+    "Verify email identity" in {
+      val r = waitFor(SES.verifyEmailIdentity(Simulators.SUCCESS))
+      checkResult(r)
+    }
   }
 }
