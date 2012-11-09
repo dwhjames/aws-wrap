@@ -18,4 +18,8 @@ object SESParsers {
   implicit def sesMetadataParser = Parser[SESMetadata] { r =>
     Success(SESMetadata((r.xml \\ "RequestId").text))
   }
+
+  implicit def verificationTokenParser = Parser[SES.VerificationToken] { r =>
+    Success((r.xml \\ "VerificationToken").text)
+  }
 }

@@ -71,5 +71,16 @@ object SESSpec extends Specification {
       val r = waitFor(SES.verifyEmailIdentity(Simulators.SUCCESS))
       checkResult(r)
     }
+    
+    "Verify domain identity" in {
+      val r = waitFor(SES.verifyDomainIdentity("zenexity.com"))
+      checkResult(r)
+    }
+
+    "set identity notification topic" in {
+      skipped("Needs a verified email address or domain, and a valid Topic")
+      val r = waitFor(SES.setIdentityNotificationTopic(???, ???, NotificationTypes.BOUNCE))
+      checkResult(r)
+    }
   }
 }

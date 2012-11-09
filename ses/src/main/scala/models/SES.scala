@@ -58,9 +58,17 @@ case class BCC(address: String) extends Destination {
   override val name = "Bcc"
 }
 
+object NotificationTypes extends Enumeration {
+  type NotificationType = Value
+  val BOUNCE = Value("Bounce")
+  val COMPLAINT = Value("Complaint")
+}
+
 case class Email(subject: String, body: String, contentType: ContentTypes.ContentType, source: String, destinations: Seq[Destination], replyTo: Seq[String] = Nil, returnPath: Option[String] = None)
 
 object SES {
+
+  type VerificationToken = String
 
   object Parameters {
     def Date(d: Date) = ("Date" -> AWS.httpDateFormat(d))
@@ -119,5 +127,19 @@ object SES {
     request[EmailResult]("VerifyEmailAddress", Seq(
       "EmailAddress" -> email,
       AWS.Parameters.TimeStamp(new Date)
+    ))
+
+  def verifyDomainIdentity(domain: String)(implicit region: SESRegion) =
+    request[VerificationToken]("VerifyDomainIdentity", Seq(
+      "Domain" -> domain,
+      AWS.Parameters.TimeStamp(new Date)
+    ))
+
+  def setIdentityNotificationTopic(identity: String, topic: String, notifType: NotificationTypes.NotificationType) =
+    request[Unit]("SetIdentityNotificationTopic", Seq(
+      "Identity" -> identity,
+      "SnsTopic" -> topic,
+      "NotificationType" -> notifType.toString,
+       AWS.Parameters.TimeStamp(new Date)
     ))
 }
