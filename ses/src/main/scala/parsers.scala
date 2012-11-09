@@ -1,6 +1,6 @@
 package aws.ses
 
-import java.lang.{ Long => JLong, Double => JDouble }
+import java.lang.{ Long => JLong, Double => JDouble, Boolean => JBool }
 
 import scala.xml.Node
 
@@ -76,6 +76,16 @@ object SESParsers {
         VerificationAttributes(
           status = VerificationStatuses.withName((va \ "value" \ "VerificationStatus").text),
           token = (va \ "value" \ "VerificationToken").headOption.map(_.text))
+    })
+  }
+
+  implicit def identityNotificationAttributesParser = Parser[Seq[(Identity, IdentityNotificationAttributes)]] { r =>
+    Success((r.xml \\ "NotificationAttributes" \ "entry").map { va =>
+      Identity((va \ "key").text) ->
+        IdentityNotificationAttributes(
+            forwardingEnabled = JBool.parseBoolean((va \ "value" \ "NotificationAttributes").text),
+            bounceTopic = (va \ "value" \ "BounceTopic").headOption.map(_.text),
+            complaintTopic = (va \ "value" \ "ComplaintTopic").headOption.map(_.text))
     })
   }
 

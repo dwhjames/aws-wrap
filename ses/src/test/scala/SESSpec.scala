@@ -128,9 +128,15 @@ object SESSpec extends Specification {
 
     "List verification statuses" in {
       val r = waitFor(SES.identityVerificationAttributes(Identity(Simulators.SUCCESS)))
-      println(r.body)
       checkResult(r)
     }
+
+
+    "List notification statuses" in {
+      val r = waitFor(SES.identityNotificationAttributes(Identity(Simulators.SUCCESS)))
+      checkResult(r)
+    }
+
 
   }
 }
