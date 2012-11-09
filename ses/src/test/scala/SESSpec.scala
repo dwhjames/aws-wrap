@@ -21,7 +21,6 @@ object TestUtils extends Specification { // Evil hack to access Failure
   }
 
   def waitFor[T](f: Future[T]) = Await.result(f, Duration(30, SECONDS))
-
 }
 
 object SESSpec extends Specification {
@@ -71,10 +70,44 @@ object SESSpec extends Specification {
       val r = waitFor(SES.verifyEmailIdentity(Simulators.SUCCESS))
       checkResult(r)
     }
-    
+
     "Verify domain identity" in {
       val r = waitFor(SES.verifyDomainIdentity("zenexity.com"))
       checkResult(r)
+    }
+
+    "Enable dkim" in {
+      skipped("Needs a verified Identity")
+      val r = waitFor(SES.setDKIMSigningStatus(???, Statuses.ENABLED))
+      checkResult(r)
+    }
+
+    "Disable dkim" in {
+      skipped("Needs a verified Identity")
+      val r = waitFor(SES.setDKIMSigningStatus(???, Statuses.DISABLED))
+      checkResult(r)
+    }
+
+    "Verify domain dkims" in {
+      val r = waitFor(SES.verifyDomainDkim("zenexity.com"))
+      checkResult(r)
+    }
+
+    "Enable Identity Feedback Forwarding" in {
+      val r = waitFor(SES.seIdentityFeedbackForwardingStatus(Simulators.SUCCESS, Statuses.ENABLED))
+      checkResult(r)
+    }
+
+    "Disable Identity Feedback Forwarding" in {
+      skipped("Feedback notification topic must be set first")
+      val r = waitFor(SES.seIdentityFeedbackForwardingStatus(Simulators.SUCCESS, Statuses.DISABLED))
+      checkResult(r)
+    }
+
+    "List Identities" in {
+      val r = waitFor(SES.listIdentities())
+      checkResult(r)
+      r.body.entities must not be empty
     }
 
     "set identity notification topic" in {

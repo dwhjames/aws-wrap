@@ -1,5 +1,7 @@
 package aws.ses
 
+import java.lang.{Long => JLong}
+
 import scala.xml.Node
 
 import play.api.libs.ws.Response
@@ -21,5 +23,29 @@ object SESParsers {
 
   implicit def verificationTokenParser = Parser[SES.VerificationToken] { r =>
     Success((r.xml \\ "VerificationToken").text)
+  }
+
+  implicit def dkimTokensParser = Parser[Seq[SES.DkimToken]] { r =>
+    Success((r.xml \\ "DkimTokens" \ "member").map(_.text))
+  }
+
+  implicit def paginatedParser[T](implicit p: Parser[Seq[T]]) = Parser[Paginated[T]] { r =>
+    p.map { ts: Seq[T]  =>
+      Paginated(
+        entities = ts,
+        maxItems = (r.xml \\ "MaxItems")
+          .headOption
+          .map{ m =>
+            println(m.text)
+            JLong.parseLong(m.text)
+            12
+          }
+          .getOrElse(ts.length),
+        nextToken = (r.xml \\ "NextToken").headOption.map(_.text))
+    }(r)
+  }
+
+  implicit def identitiesParser = Parser[Seq[Identity]] { r =>
+    Success((r.xml \\ "Identities" \ "member").map(i => Identity(i.text)))
   }
 }

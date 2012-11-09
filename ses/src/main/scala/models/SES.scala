@@ -64,11 +64,31 @@ object NotificationTypes extends Enumeration {
   val COMPLAINT = Value("Complaint")
 }
 
+object Statuses extends Enumeration {
+  type Status = Value
+  val ENABLED = Value("true")
+  val DISABLED = Value("false")
+}
+
 case class Email(subject: String, body: String, contentType: ContentTypes.ContentType, source: String, destinations: Seq[Destination], replyTo: Seq[String] = Nil, returnPath: Option[String] = None)
+
+sealed trait Identity { val value: String }
+object Identity {
+  def apply(value: String) = value match {
+    case s if s.contains("@") => EmailAddress(value)
+    case _ => Domain(value)
+  }
+  def unapply(i: Identity) = Some(i.value)
+}
+case class EmailAddress(value: String) extends Identity
+case class Domain(value: String) extends Identity
+
+case class Paginated[T](entities: Seq[T], maxItems: Int, nextToken: Option[String])
 
 object SES {
 
   type VerificationToken = String
+  type DkimToken = String
 
   object Parameters {
     def Date(d: Date) = ("Date" -> AWS.httpDateFormat(d))
@@ -135,6 +155,26 @@ object SES {
       AWS.Parameters.TimeStamp(new Date)
     ))
 
+  def setDKIMSigningStatus(identity: String, status: Statuses.Status) =
+    request[Unit]("SetIdentityDkimEnabled", Seq(
+      "DkimEnabled" -> status.toString,
+      "Identity" -> identity,
+      AWS.Parameters.TimeStamp(new Date)
+    ))
+
+  def verifyDomainDkim(domain: String)(implicit region: SESRegion) =
+    request[Seq[DkimToken]]("VerifyDomainDkim", Seq(
+      "Domain" -> domain,
+      AWS.Parameters.TimeStamp(new Date)
+    ))
+
+  def seIdentityFeedbackForwardingStatus(identity: String, status: Statuses.Status) =
+    request[Unit]("SetIdentityFeedbackForwardingEnabled", Seq(
+      "ForwardingEnabled" -> status.toString,
+      "Identity" -> identity,
+      AWS.Parameters.TimeStamp(new Date)
+    ))
+
   def setIdentityNotificationTopic(identity: String, topic: String, notifType: NotificationTypes.NotificationType) =
     request[Unit]("SetIdentityNotificationTopic", Seq(
       "Identity" -> identity,
@@ -142,4 +182,8 @@ object SES {
       "NotificationType" -> notifType.toString,
        AWS.Parameters.TimeStamp(new Date)
     ))
+
+  def listIdentities(nextToken: Option[String] = None) =
+    request[Paginated[Identity]]("ListIdentities",
+      Seq(AWS.Parameters.TimeStamp(new Date)) ++ nextToken.toSeq.map("NextToken" -> _))
 }
