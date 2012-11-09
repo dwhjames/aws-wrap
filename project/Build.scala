@@ -38,8 +38,10 @@ object ApplicationBuild extends Build {
 
     lazy val simpledb = Project("simpledb", file("simpledb"), settings = commonSettings).dependsOn(core)
 
+    lazy val ses = Project("ses", file("ses"), settings = commonSettings).dependsOn(core)
+
     lazy val root = Project("root", file("."), settings = Project.defaultSettings ++ Unidoc.settings).aggregate(
-        core, s3, simpledb, sqs, sns, dynamodb
+        core, s3, simpledb, sqs, sns, dynamodb, ses
     )
 
 }
