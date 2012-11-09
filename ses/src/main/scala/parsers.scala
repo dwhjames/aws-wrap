@@ -70,4 +70,13 @@ object SESParsers {
     ))
   }
 
+  implicit def verificationAttributeStatusesParser = Parser[Seq[(Identity, VerificationAttributes)]] { r =>
+    Success((r.xml \\ "VerificationAttributes" \ "entry").map { va =>
+      Identity((va \ "key").text) ->
+        VerificationAttributes(
+          status = VerificationStatuses.withName((va \ "value" \ "VerificationStatus").text),
+          token = (va \ "value" \ "VerificationToken").headOption.map(_.text))
+    })
+  }
+
 }

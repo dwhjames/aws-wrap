@@ -70,9 +70,18 @@ object Statuses extends Enumeration {
   val DISABLED = Value("false")
 }
 
+object VerificationStatuses extends Enumeration {
+  type VerificationStatus = Value
+  val PENDING = Value("Pending")
+  val SUCCESS = Value("Success")
+  val FAILED = Value("Failed")
+  val TEMPORARY_FAILURE = Value("TemporaryFailure")
+}
+
 case class SendDataPoint(bounces: Long, complaints: Long, deliveryAttempts: Long, rejects: Long, timeStamp: Date)
 case class SendQuota(max24HourSend: Double, maxSendRate: Double, sentLast24Hours: Double)
 case class Email(subject: String, body: String, contentType: ContentTypes.ContentType, source: String, destinations: Seq[Destination], replyTo: Seq[String] = Nil, returnPath: Option[String] = None)
+case class VerificationAttributes(status: VerificationStatuses.VerificationStatus, token: Option[SES.VerificationToken])
 
 // TODO:
 // DeleteIdentity
@@ -200,4 +209,11 @@ object SES {
 
   def sendQuota() =
     request[SendQuota]("GetSendQuota")
+
+  def identityVerificationAttributes(identities: Identity*) =
+    request[Seq[(Identity, VerificationAttributes)]]("GetIdentityVerificationAttributes",
+      identities.zipWithIndex.map { case (id, i) =>
+        s"Identities.member.${i+1}" -> id.value
+      }
+    )
 }
