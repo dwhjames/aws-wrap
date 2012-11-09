@@ -70,7 +70,21 @@ object Statuses extends Enumeration {
   val DISABLED = Value("false")
 }
 
+case class SendDataPoint(bounces: Long, complaints: Long, deliveryAttempts: Long, rejects: Long, timeStamp: Date)
+case class SendQuota(max24HourSend: Double, maxSendRate: Double, sentLast24Hours: Double)
 case class Email(subject: String, body: String, contentType: ContentTypes.ContentType, source: String, destinations: Seq[Destination], replyTo: Seq[String] = Nil, returnPath: Option[String] = None)
+
+// TODO:
+// DeleteIdentity
+// DeleteVerifiedEmailAddress
+// GetIdentityDkimAttributes
+// GetIdentityNotificationAttributes
+// GetIdentityVerificationAttributes
+
+// DEPRECATED:
+// VerifyEmailAddress
+// ListVerifiedEmailAddresses
+
 
 sealed trait Identity { val value: String }
 object Identity {
@@ -99,7 +113,7 @@ object SES {
   private def tryParse[T](resp: Response)(implicit p: Parser[Result[SESMetadata, T]]) =
     Parser.parse[Result[SESMetadata, T]](resp).fold(e => throw new RuntimeException(e), identity)
 
-  private def request[T](action: String, params: Seq[(String, String)])(implicit region: SESRegion, p: Parser[Result[SESMetadata, T]]) = {
+  private def request[T](action: String, params: Seq[(String, String)] = Nil)(implicit region: SESRegion, p: Parser[Result[SESMetadata, T]]) = {
     val date = Parameters.Date(new Date)
 
     val signature = Crypto.base64(Crypto.hmacSHA1(date._2.getBytes(), AWS.secret))
@@ -107,7 +121,7 @@ object SES {
       date,
       Parameters.X_AMZN_AUTHORIZATION(AWS.key, "HmacSHA1", signature))
 
-    val ps = (params :+ AWS.Parameters.Action(action))
+    val ps = (params :+ AWS.Parameters.Action(action) :+ AWS.Parameters.TimeStamp(new Date))
       .toMap.mapValues(Seq(_))
 
     WS.url(s"https://email.${region.subdomain}.amazonaws.com")
@@ -144,46 +158,46 @@ object SES {
     ))
 
   def verifyEmailIdentity(email: String)(implicit region: SESRegion) =
-    request[EmailResult]("VerifyEmailAddress", Seq(
-      "EmailAddress" -> email,
-      AWS.Parameters.TimeStamp(new Date)
+    request[EmailResult]("VerifyEmailIdentity", Seq(
+      "EmailAddress" -> email
     ))
 
   def verifyDomainIdentity(domain: String)(implicit region: SESRegion) =
     request[VerificationToken]("VerifyDomainIdentity", Seq(
-      "Domain" -> domain,
-      AWS.Parameters.TimeStamp(new Date)
+      "Domain" -> domain
     ))
 
   def setDKIMSigningStatus(identity: String, status: Statuses.Status) =
     request[Unit]("SetIdentityDkimEnabled", Seq(
       "DkimEnabled" -> status.toString,
-      "Identity" -> identity,
-      AWS.Parameters.TimeStamp(new Date)
+      "Identity" -> identity
     ))
 
   def verifyDomainDkim(domain: String)(implicit region: SESRegion) =
     request[Seq[DkimToken]]("VerifyDomainDkim", Seq(
-      "Domain" -> domain,
-      AWS.Parameters.TimeStamp(new Date)
+      "Domain" -> domain
     ))
 
   def seIdentityFeedbackForwardingStatus(identity: String, status: Statuses.Status) =
     request[Unit]("SetIdentityFeedbackForwardingEnabled", Seq(
       "ForwardingEnabled" -> status.toString,
-      "Identity" -> identity,
-      AWS.Parameters.TimeStamp(new Date)
+      "Identity" -> identity
     ))
 
   def setIdentityNotificationTopic(identity: String, topic: String, notifType: NotificationTypes.NotificationType) =
     request[Unit]("SetIdentityNotificationTopic", Seq(
       "Identity" -> identity,
       "SnsTopic" -> topic,
-      "NotificationType" -> notifType.toString,
-       AWS.Parameters.TimeStamp(new Date)
+      "NotificationType" -> notifType.toString
     ))
 
   def listIdentities(nextToken: Option[String] = None) =
     request[Paginated[Identity]]("ListIdentities",
-      Seq(AWS.Parameters.TimeStamp(new Date)) ++ nextToken.toSeq.map("NextToken" -> _))
+      nextToken.toSeq.map("NextToken" -> _))
+
+  def sendStatistics() =
+    request[Seq[SendDataPoint]]("GetSendStatistics")
+
+  def sendQuota() =
+    request[SendQuota]("GetSendQuota")
 }

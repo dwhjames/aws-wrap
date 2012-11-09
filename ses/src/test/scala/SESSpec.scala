@@ -110,10 +110,21 @@ object SESSpec extends Specification {
       r.body.entities must not be empty
     }
 
-    "set identity notification topic" in {
+    "Set identity notification topic" in {
       skipped("Needs a verified email address or domain, and a valid Topic")
       val r = waitFor(SES.setIdentityNotificationTopic(???, ???, NotificationTypes.BOUNCE))
       checkResult(r)
     }
+
+    "Have send statistics" in {
+      val r = waitFor(SES.sendStatistics())
+      checkResult(r)
+    }
+
+    "Give send quota" in {
+      val r = waitFor(SES.sendQuota())
+      checkResult(r)
+    }
+
   }
 }
