@@ -116,8 +116,6 @@ object SES {
   private def request[T](action: String, params: Seq[(String, String)] = Nil)(implicit region: SESRegion, p: Parser[Result[SESMetadata, T]]) = {
     val date = Parameters.Date(new Date)
 
-    println(region)
-
     val signature = Crypto.base64(Crypto.hmacSHA1(date._2.getBytes(), AWS.secret))
     val allHeaders = Seq(
       date,
@@ -180,7 +178,7 @@ object SES {
    * Verifies a domain
    * @param domain The domain to be verified.
    */
-  def verifyDomainIdentity(domain: String) =
+  def verifyDomainIdentity(domain: String)(implicit region: SESRegion) =
     request[VerificationToken]("VerifyDomainIdentity", Seq(
       "Domain" -> domain
     ))
@@ -190,7 +188,7 @@ object SES {
    * @param identity The identity for which DKIM signing should be enabled or disabled.
    * @param status The DKIM signing status
    */
-  def setDKIMSigningStatus(identity: String, status: Statuses.Status) =
+  def setDKIMSigningStatus(identity: String, status: Statuses.Status)(implicit region: SESRegion) =
     request[Unit]("SetIdentityDkimEnabled", Seq(
       "DkimEnabled" -> status.toString,
       "Identity" -> identity
@@ -200,7 +198,7 @@ object SES {
   * Returns a set of DKIM tokens for a domain.
   * @param domain The name of the domain to be verified for Easy DKIM signing.
   */
-  def verifyDomainDkim(domain: String) =
+  def verifyDomainDkim(domain: String)(implicit region: SESRegion) =
     request[Seq[DkimToken]]("VerifyDomainDkim", Seq(
       "Domain" -> domain
     ))
@@ -210,7 +208,7 @@ object SES {
   * @param identity The identity for which to set feedback notification forwarding.
   * @param status Sets whether Amazon SES will forward feedback notifications as email.
   */
-  def seIdentityFeedbackForwardingStatus(identity: String, status: Statuses.Status) =
+  def seIdentityFeedbackForwardingStatus(identity: String, status: Statuses.Status)(implicit region: SESRegion) =
     request[Unit]("SetIdentityFeedbackForwardingEnabled", Seq(
       "ForwardingEnabled" -> status.toString,
       "Identity" -> identity
@@ -222,7 +220,7 @@ object SES {
   * @param topic The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (Amazon SNS) topic.
   * @param notifType The type of feedback notifications that will be published to the specified topic.
   */
-  def setIdentityNotificationTopic(identity: String, topic: String, notifType: NotificationTypes.NotificationType) =
+  def setIdentityNotificationTopic(identity: String, topic: String, notifType: NotificationTypes.NotificationType)(implicit region: SESRegion) =
     request[Unit]("SetIdentityNotificationTopic", Seq(
       "Identity" -> identity,
       "SnsTopic" -> topic,
@@ -233,7 +231,7 @@ object SES {
   * Returns a list containing all of the identities for a specific AWS Account, regardless of verification status.
   * @param nextToken The token to use for pagination
   */
-  def listIdentities(nextToken: Option[String] = None) =
+  def listIdentities(nextToken: Option[String] = None)(implicit region: SESRegion) =
     request[Paginated[Identity]]("ListIdentities",
       nextToken.toSeq.map("NextToken" -> _))
 
@@ -241,20 +239,20 @@ object SES {
   * Returns the user's sending statistics.
   * @return A Seq of data points, each of which represents 15 minutes of activity.
   */
-  def sendStatistics() =
+  def sendStatistics()(implicit region: SESRegion) =
     request[Seq[SendDataPoint]]("GetSendStatistics")
 
   /**
   * Returns the user's current sending limits.
   */
-  def sendQuota() =
+  def sendQuota()(implicit region: SESRegion) =
     request[SendQuota]("GetSendQuota")
 
   /**
   * Given a list of identities, returns the verification status and (for domain identities) the verification token for each identity.
   * @param identity A Seq of identities
   */
-  def identityVerificationAttributes(identities: Identity*) =
+  def identityVerificationAttributes(identities: Identity*)(implicit region: SESRegion) =
     request[Seq[(Identity, VerificationAttributes)]]("GetIdentityVerificationAttributes",
       identities.zipWithIndex.map { case (id, i) =>
         s"Identities.member.${i+1}" -> id.value
@@ -265,7 +263,7 @@ object SES {
   * Given a list of verified identities, returns a structure describing identity notification attributes.
   * @param identity A Seq of identities
   */
-  def identityNotificationAttributes(identities: Identity*) =
+  def identityNotificationAttributes(identities: Identity*)(implicit region: SESRegion) =
     request[Seq[(Identity, IdentityNotificationAttributes)]]("GetIdentityNotificationAttributes",
       identities.zipWithIndex.map { case (id, i) =>
         s"Identities.member.${i+1}" -> id.value
@@ -276,7 +274,7 @@ object SES {
   * Returns the current status of Easy DKIM signing for an entity. For domain name identities, this action also returns the DKIM tokens that are required for Easy DKIM signing, and whether Amazon SES has successfully verified that these tokens have been published.
   * @param identity A Seq of verified identities
   */
-  def identityDkimAttributes(identities: Identity*) =
+  def identityDkimAttributes(identities: Identity*)(implicit region: SESRegion) =
     request[Seq[(Identity, IdentityDkimAttributes)]]("GetIdentityDkimAttributes",
       identities.zipWithIndex.map { case (id, i) =>
         s"Identities.member.${i+1}" -> id.value
@@ -287,6 +285,6 @@ object SES {
   * Deletes the specified identity (email address or domain) from the list of verified identities.
   * @param id The identity to be removed from the list of identities for the AWS Account.
   */
-  def deleteIdentity(id: Identity) =
+  def deleteIdentity(id: Identity)(implicit region: SESRegion) =
     request[Unit]("DeleteIdentity", Seq("Identity" -> id.value))
 }
