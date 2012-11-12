@@ -1,5 +1,7 @@
 package aws.simpledb
 
+import aws.simpledb._
+
 import scala.concurrent.Future
 import play.api.libs.ws._
 import play.api.libs.ws.WS._

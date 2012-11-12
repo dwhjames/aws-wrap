@@ -62,7 +62,7 @@ sealed trait Result[M <: Metadata, +T] {
    */
   def metadata: M
   /**
-   * Return the body if a success, throws an exception if an error
+   * Return the body if a success, throws an exception if an error. May be null if the response is empty.
    */
   def body: T
   def toEither: Either[AWSError[M], Result[M, T]]

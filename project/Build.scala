@@ -23,7 +23,9 @@ object ApplicationBuild extends Build {
         resolvers += "Caffeine Lab" at "http://caffeinelab.net/repo",
         resolvers ++= Seq("sonatype" at "http://oss.sonatype.org/content/repositories/releases"),
         libraryDependencies += "play" %% "play" % "2.1-20121029-UP",
-        libraryDependencies += "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2" % "test"
+        libraryDependencies += "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2" % "test",
+        libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2",
+        testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")
     )
 
     lazy val core = Project("core", file("core"), settings = commonSettings)
