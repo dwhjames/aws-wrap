@@ -30,12 +30,12 @@ object SESParsers {
   }
 
   implicit def paginatedParser[T](implicit p: Parser[Seq[T]]) = Parser[Paginated[T]] { r =>
-    p.map { ts: Seq[T]  =>
+    p.map { ts: Seq[T] =>
       Paginated(
         entities = ts,
         maxItems = (r.xml \\ "MaxItems")
           .headOption
-          .map{ m =>
+          .map { m =>
             println(m.text)
             JLong.parseLong(m.text)
             12
@@ -66,8 +66,7 @@ object SESParsers {
     Success(SendQuota(
       max24HourSend = JDouble.parseDouble((xml \\ "SentLast24Hours").text),
       maxSendRate = JDouble.parseDouble((xml \\ "Max24HourSend").text),
-      sentLast24Hours = JDouble.parseDouble((xml \\ "MaxSendRate").text)
-    ))
+      sentLast24Hours = JDouble.parseDouble((xml \\ "MaxSendRate").text)))
   }
 
   implicit def verificationAttributeStatusesParser = Parser[Seq[(Identity, VerificationAttributes)]] { r =>
@@ -83,9 +82,9 @@ object SESParsers {
     Success((r.xml \\ "NotificationAttributes" \ "entry").map { va =>
       Identity((va \ "key").text) ->
         IdentityNotificationAttributes(
-            forwardingEnabled = JBool.parseBoolean((va \ "value" \ "NotificationAttributes").text),
-            bounceTopic = (va \ "value" \ "BounceTopic").headOption.map(_.text),
-            complaintTopic = (va \ "value" \ "ComplaintTopic").headOption.map(_.text))
+          forwardingEnabled = JBool.parseBoolean((va \ "value" \ "NotificationAttributes").text),
+          bounceTopic = (va \ "value" \ "BounceTopic").headOption.map(_.text),
+          complaintTopic = (va \ "value" \ "ComplaintTopic").headOption.map(_.text))
     })
   }
 
