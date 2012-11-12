@@ -36,7 +36,6 @@ object SESParsers {
         maxItems = (r.xml \\ "MaxItems")
           .headOption
           .map { m =>
-            println(m.text)
             JLong.parseLong(m.text)
             12
           }
