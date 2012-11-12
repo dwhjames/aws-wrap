@@ -66,6 +66,47 @@ object SESSpec extends Specification {
       checkResult(r)
     }
 
+    "Send raw with Source" in {
+      val message =
+          s"""To: "Simulator" <${Simulators.SUCCESS}>
+          |Date: Fri, 17 Dec 2010 14:26:21 -0800
+          |Subject: Hello
+          |Message-ID: <61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>
+          |Accept-Language: en-US
+          |Content-Language: en-US
+          |Content-Type: text/plain; charset="utf-8"
+          |Content-Transfer-Encoding: quoted-printable
+          |MIME-Version: 1.0
+          |
+          |Hello, I hope you are having a good day.
+          |
+          |- Meh""".stripMargin
+
+      val r = waitFor(SES.sendRaw(message, Some("jto+ses@zenexity.com")))
+      checkResult(r)
+    }
+
+    "Send raw with Destinations" in {
+      val message =
+          s"""Date: Fri, 17 Dec 2010 14:26:21 -0800
+          |Subject: Hello
+          |Message-ID: <61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>
+          |Accept-Language: en-US
+          |Content-Language: en-US
+          |Content-Type: text/plain; charset="utf-8"
+          |Content-Transfer-Encoding: quoted-printable
+          |MIME-Version: 1.0
+          |
+          |Hello, I hope you are having a good day.
+          |
+          |- Meh""".stripMargin
+
+      val r = waitFor(SES.sendRaw(message,
+        Some("jto+ses@zenexity.com"),
+        To(Simulators.SUCCESS) :: BCC(Simulators.BOUNCE) :: Nil ))
+      checkResult(r)
+    }
+
     "Verify email identity" in {
       val r = waitFor(SES.verifyEmailIdentity(Simulators.SUCCESS))
       checkResult(r)

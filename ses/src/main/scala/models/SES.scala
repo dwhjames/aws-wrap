@@ -160,10 +160,15 @@ object SES {
   * Sends an email message, with header and content specified by the client. The SendRawEmail action is useful for sending multipart MIME emails. The raw text of the message must comply with Internet email standards; otherwise, the message cannot be sent.
   * @param rawMessage The raw text of the message.
   */
-  def sendRaw(rawMessage: String)(implicit region: SESRegion) =
+  def sendRaw(rawMessage: String, source: Option[String] = None, destinations: Seq[Destination] = Nil)(implicit region: SESRegion) =
     request[EmailResult]("SendRawEmail", Seq(
       "RawMessage.Data" -> Crypto.base64(rawMessage.getBytes)
-    ))
+      ) ++
+      source.toSeq.map("Source" -> _) ++
+      destinations.zipWithIndex.map { case (dest, i) =>
+        s"Destinations.member.${i+1}" -> dest.address
+      }
+    )
 
   /**
    * Verifies an email address. This action causes a confirmation email message to be sent to the specified address.
