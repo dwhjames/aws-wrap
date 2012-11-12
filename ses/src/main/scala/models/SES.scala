@@ -76,7 +76,6 @@ object VerificationStatuses extends Enumeration {
   val SUCCESS = Value("Success")
   val FAILED = Value("Failed")
   val TEMPORARY_FAILURE = Value("TemporaryFailure")
-  // ??? ONLY FOR DKIM ?
   val NOT_STARTED = Value("NotStarted")
 }
 
@@ -86,15 +85,6 @@ case class Email(subject: String, body: String, contentType: ContentTypes.Conten
 case class VerificationAttributes(status: VerificationStatuses.VerificationStatus, token: Option[SES.VerificationToken])
 case class IdentityNotificationAttributes(forwardingEnabled: Boolean, bounceTopic: Option[String], complaintTopic: Option[String])
 case class IdentityDkimAttributes(enabled: Boolean, status: VerificationStatuses.VerificationStatus, tokens: Seq[SES.DkimToken])
-
-// TODO:
-// DeleteIdentity
-// DeleteVerifiedEmailAddress
-// GetIdentityDkimAttributes
-
-// DEPRECATED:
-// VerifyEmailAddress
-// ListVerifiedEmailAddresses
 
 sealed trait Identity { val value: String }
 object Identity {
@@ -231,4 +221,7 @@ object SES {
         s"Identities.member.${i+1}" -> id.value
       }
     )
+
+  def deleteIdentity(id: Identity) =
+    request[Unit]("DeleteIdentity", Seq("Identity" -> id.value))
 }

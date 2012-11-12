@@ -141,6 +141,10 @@ object SESSpec extends Specification {
       checkResult(r)
     }
 
+    "Delete identity" in {
+      val r = waitFor(SES.deleteIdentity(Identity(Simulators.BOUNCE)))
+      checkResult(r)
+    }
 
   }
 }
