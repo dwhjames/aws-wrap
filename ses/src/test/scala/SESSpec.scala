@@ -13,7 +13,7 @@ object TestUtils extends Specification { // Evil hack to access Failure
   import scala.concurrent.duration.Duration
   import java.util.concurrent.TimeUnit._
 
-  implicit val region = SESRegion.US_EAST_1
+  implicit val region = SESRegion.US_WEST_1
 
   def checkResult[M <: Metadata, T](r: Result[M, T]) = r match {
     case AWSError(code, message) => failure(message)
