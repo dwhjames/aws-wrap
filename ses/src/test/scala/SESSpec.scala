@@ -131,9 +131,13 @@ object SESSpec extends Specification {
       checkResult(r)
     }
 
-
     "List notification statuses" in {
       val r = waitFor(SES.identityNotificationAttributes(Identity(Simulators.SUCCESS)))
+      checkResult(r)
+    }
+
+    "List dkimAttributes" in {
+      val r = waitFor(SES.identityDkimAttributes(Identity(Simulators.SUCCESS)))
       checkResult(r)
     }
 

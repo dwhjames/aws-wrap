@@ -89,4 +89,16 @@ object SESParsers {
     })
   }
 
+  implicit def identityDkimAttributesParser = Parser[Seq[(Identity, IdentityDkimAttributes)]] { r =>
+    Success((r.xml \\ "DkimAttributes" \ "entry").map { va =>
+      Identity((va \ "key").text) ->
+        (va \ "value").map { value =>
+          IdentityDkimAttributes(
+            enabled = JBool.parseBoolean((value \ "DkimEnabled").text),
+            status = VerificationStatuses.withName((value \ "DkimVerificationStatus").text),
+            tokens = (value \ "DkimTokens" \ "member").map(_.text))
+        }.head
+    })
+  }
+
 }

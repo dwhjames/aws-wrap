@@ -76,6 +76,8 @@ object VerificationStatuses extends Enumeration {
   val SUCCESS = Value("Success")
   val FAILED = Value("Failed")
   val TEMPORARY_FAILURE = Value("TemporaryFailure")
+  // ??? ONLY FOR DKIM ?
+  val NOT_STARTED = Value("NotStarted")
 }
 
 case class SendDataPoint(bounces: Long, complaints: Long, deliveryAttempts: Long, rejects: Long, timeStamp: Date)
@@ -83,12 +85,12 @@ case class SendQuota(max24HourSend: Double, maxSendRate: Double, sentLast24Hours
 case class Email(subject: String, body: String, contentType: ContentTypes.ContentType, source: String, destinations: Seq[Destination], replyTo: Seq[String] = Nil, returnPath: Option[String] = None)
 case class VerificationAttributes(status: VerificationStatuses.VerificationStatus, token: Option[SES.VerificationToken])
 case class IdentityNotificationAttributes(forwardingEnabled: Boolean, bounceTopic: Option[String], complaintTopic: Option[String])
+case class IdentityDkimAttributes(enabled: Boolean, status: VerificationStatuses.VerificationStatus, tokens: Seq[SES.DkimToken])
 
 // TODO:
 // DeleteIdentity
 // DeleteVerifiedEmailAddress
 // GetIdentityDkimAttributes
-// GetIdentityNotificationAttributes
 
 // DEPRECATED:
 // VerifyEmailAddress
@@ -218,6 +220,13 @@ object SES {
 
   def identityNotificationAttributes(identities: Identity*) =
     request[Seq[(Identity, IdentityNotificationAttributes)]]("GetIdentityNotificationAttributes",
+      identities.zipWithIndex.map { case (id, i) =>
+        s"Identities.member.${i+1}" -> id.value
+      }
+    )
+
+  def identityDkimAttributes(identities: Identity*) =
+    request[Seq[(Identity, IdentityDkimAttributes)]]("GetIdentityDkimAttributes",
       identities.zipWithIndex.map { case (id, i) =>
         s"Identities.member.${i+1}" -> id.value
       }
