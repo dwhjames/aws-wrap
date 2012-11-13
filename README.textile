@@ -1,6 +1,6 @@
 h2. Documentation for AWS library
 
-The documentation is written using Jekyll. Any change committed here is automatically published to http://pellucidanalytics.github    .com/aws/index2.html$
+The documentation is written using Jekyll. Any change committed here is automatically published to http://pellucidanalytics.github.com/aws/index2.html$
 
 See the "Jekyll documentation":https://github.com/mojombo/jekyll for more information.
 

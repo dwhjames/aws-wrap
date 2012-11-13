@@ -104,6 +104,9 @@ header {
   width:270px;
   float:left;
   position:fixed;
+  h1 img {
+    display: none;
+  }
 }
 
 header ul.hdr-buttons {
@@ -189,7 +192,7 @@ footer {
 }
 
 @media print, screen and (max-width: 960px) {
-  
+
   div.wrapper {
     width:auto;
     margin:0;
@@ -203,24 +206,30 @@ footer {
   
   header {
     padding-right:320px;
+    p.view {
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e5e5e5;
+    }
   }
-  
+
   section {
-    border:1px solid #e5e5e5;
-    border-width:1px 0;
     padding:20px 0;
     margin:0 0 20px;
   }
-  
+
   header a small {
     display:inline;
   }
-  
+
   header ul {
     position:absolute;
     right:50px;
     top:52px;
+    &.hdr-menu {
+      top:100px;
+    }
   }
+
 }
 
 @media print, screen and (max-width: 720px) {
@@ -243,12 +252,46 @@ footer {
 
 @media print, screen and (max-width: 480px) {
   body {
-    padding:15px;
+    padding: 0;
+    margin: 0;
   }
-  
+  section {
+      margin-top: 20px;
+  }
+  section, footer {
+    padding: 0 15px;
+  }
+
+  header h1 {
+    .gradient(#eee, #dddddd, #f8f8f8);
+    border-bottom: 1px solid #999;
+    padding: 5px;
+    margin-bottom: 0;
+    font-size: 18px;
+    img {
+      display: block;
+      float: right;
+      cursor: pointer;
+    }
+  }
+
+  header ul.hdr-buttons {
+    width: 100%;
+    border-radius: 0;
+    background: #EEE;
+    li {
+        width: 33% !important;
+    }
+  }
+
   header ul {
     display:none;
   }
+
+  #subtitle {
+    display: none;
+  }
+
 }
 
 @media print {

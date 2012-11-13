@@ -23,17 +23,25 @@
             window.prettyPrint && prettyPrint()
             $("select").change(function() {
                 document.location = $(this).val()
-            })
+            });
+            $("h1 img").click(function(){
+                $("header ul").slideToggle(function (){
+                    if (!$(this).is(":visible")) {
+                        $(this).removeAttr("style");
+                    }
+                });
+            });
         });
     </script>
   </head>
   <body>
     <div class="wrapper">
       <header>
-        <h1><a href="{{ site.url }}/index2.html">AWS</a></h1>
-        <p>Scala library to access Amazon Web Services</p>
+        <h1><a href="{{ site.url }}/index2.html">AWS</a>
+        <img src="{{ site.url }}/images/menu.png">
+        </h1>
+        <p id="subtitle">Scala library to access Amazon Web Services</p>
 
-        <p class="view"><a href="https://github.com/pellucidanalytics/aws">View the Project on GitHub <small>pellucidanalytics/aws</small></a></p>
 
         <ul class="hdr-buttons">
           <li><a href="{{ site.url }}/api">See the <strong>Scaladoc</strong></a></li>
