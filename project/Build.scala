@@ -6,6 +6,11 @@ import sbt.Keys._
 import scalariform.formatter.preferences._
 import com.typesafe.sbtscalariform.ScalariformPlugin._
 
+object AWS {
+    val scalaVersion = "2.10.0-RC1"
+    val version = "0.1-SNAPSHOT"
+}
+
 object ApplicationBuild extends Build {
 
     lazy val projectScalariformSettings = defaultScalariformSettings ++ Seq(
@@ -16,9 +21,9 @@ object ApplicationBuild extends Build {
 
     lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ projectScalariformSettings ++ Seq(
         organization := "aws",
-        scalaVersion := "2.10.0-RC1",
+        scalaVersion := AWS.scalaVersion,
         scalacOptions += "-feature",
-        version := "0.1-SNAPSHOT",
+        version := AWS.version,
         resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
         resolvers += "Caffeine Lab" at "http://caffeinelab.net/repo",
         resolvers ++= Seq("sonatype" at "http://oss.sonatype.org/content/repositories/releases"),
