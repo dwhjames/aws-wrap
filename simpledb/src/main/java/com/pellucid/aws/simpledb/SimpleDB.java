@@ -2,8 +2,6 @@ package com.pellucid.aws.simpledb;
 
 import scala.runtime.BoxedUnit;
 
-import com.pellucid.aws.AWSRegion;
-import com.pellucid.aws.V2Requester;
 import com.pellucid.aws.results.Result;
 import com.pellucid.aws.internal.JavaConversions;
 import com.pellucid.aws.internal.MetadataConvert;
@@ -31,7 +29,23 @@ public class SimpleDB {
      * @param domainName
      */
     public F.Promise<Result<SimpleDBMeta, Object>> createDomain(String domainName) {
-        Future<aws.core.Result<aws.simpledb.SimpleDBMeta, scala.runtime.BoxedUnit>> scalaResult = aws.simpledb.SimpleDB.createDomain(domainName, scalaRegion);
+        return convertEmptyResult(aws.simpledb.SimpleDB.createDomain(domainName, scalaRegion));
+    }
+
+    /**
+     * Deletes the given domain. Any items (and their attributes) in the domain are deleted as well.
+     * The DeleteDomain operation might take 10 or more seconds to complete.
+     *
+     * Running DeleteDomain on a domain that does not exist or running the function multiple times
+     * using the same domain name will not result in an error response.
+     *
+     * @param domainName
+     */
+    public F.Promise<Result<SimpleDBMeta, Object>> deleteDomain(String domainName) {
+        return convertEmptyResult(aws.simpledb.SimpleDB.deleteDomain(domainName, scalaRegion));
+    }
+
+    private static F.Promise<Result<SimpleDBMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.simpledb.SimpleDBMeta, BoxedUnit>> scalaResult) {
         return JavaConversions.toResultPromise(scalaResult, new MetadataConvert(), new F.Function<BoxedUnit, Object>() {
             @Override public Object apply(BoxedUnit unit) throws Throwable {
                 return null;
