@@ -24,13 +24,14 @@ object ApplicationBuild extends Build {
         scalaVersion := AWS.scalaVersion,
         scalacOptions += "-feature",
         version := AWS.version,
-        resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases",
-        resolvers += "Caffeine Lab" at "http://caffeinelab.net/repo",
+        resolvers ++= Seq("typesafe" at "http://repo.typesafe.com/typesafe/releases",
+          "Caffeine Lab" at "http://caffeinelab.net/repo"),
         resolvers ++= Seq("sonatype" at "http://oss.sonatype.org/content/repositories/releases"),
-        libraryDependencies += "play" %% "play" % "2.1-20121029-UP",
-        libraryDependencies += "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2" % "test",
-        libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2",
+        libraryDependencies ++= Seq("play" %% "play" % "2.1-20121029-UP",
+          "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2" % "test",
+          "com.novocode" % "junit-interface" % "0.10-M2" % "test"),
         testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")
+        //testListeners <<= (target, streams).map((t, s) => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath, s.log)))
     )
 
     lazy val core = Project("core", file("core"), settings = commonSettings)

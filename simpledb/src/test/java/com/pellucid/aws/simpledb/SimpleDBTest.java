@@ -1,14 +1,11 @@
 package com.pellucid.aws.simpledb;
 
-import org.junit.Test;
-
+import org.junit.*;
 import static org.junit.Assert.*;
 
-class SimpleDBTest {
-
+public class SimpleDBTest {
     @Test
-    public void testCreateDomain() {
-        assertTrue(false);
+    public void euh() {
+      Assert.assertEquals(30, 54);
     }
-
 }
