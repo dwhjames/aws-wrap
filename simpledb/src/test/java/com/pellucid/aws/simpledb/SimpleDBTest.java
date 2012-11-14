@@ -39,6 +39,12 @@ public class SimpleDBTest {
         assertTrue(resultc.toString(), resultc.isSuccess());
         Result<SimpleDBMeta, Object> result = sdb.putAttributes("java-attrs", "foobar", attrs).get();
         assertTrue(result.toString(), result.isSuccess());
+        Result<SimpleDBMeta, List<SDBAttribute>> resultGet = sdb.getAttributes("java-attrs", "foobar", true).get();
+        boolean found = false;
+        for (SDBAttribute attr: resultGet.body()) {
+            if ("firstName".equals(attr.name()) && "toto".equals(attr.value())) found = true;
+        }
+        assertTrue("Couldn't find the inserted attribute", found);
         Result<SimpleDBMeta, Object> result2 = sdb.deleteAttributes("java-attrs", "foobar", attrs).get();
         assertTrue(result.toString(), result2.isSuccess());
         Result<SimpleDBMeta, Object> resultd = sdb.deleteDomain("java-attrs").get();

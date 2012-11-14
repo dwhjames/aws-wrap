@@ -39,12 +39,24 @@ public class SDBAttribute {
         return new aws.simpledb.SDBAttribute(name, value, replace);
     }
 
+    static SDBAttribute fromScala(aws.simpledb.SDBAttribute scalaAttr) {
+        return new SDBAttribute(scalaAttr.name(), scalaAttr.value(), scalaAttr.replace());
+    }
+
     static Seq<aws.simpledb.SDBAttribute> listAsScalaSeq(List<SDBAttribute> attributes) {
         List<aws.simpledb.SDBAttribute> scalaJList = new ArrayList<aws.simpledb.SDBAttribute>();
         for (SDBAttribute attr: attributes) {
             scalaJList.add(attr.asScala());
         }
         return JavaConversions.asScalaBuffer(scalaJList).toList();
+    }
+
+    static List<SDBAttribute> listFromScalaSeq(Seq<aws.simpledb.SDBAttribute> scalaAttrs) {
+        List<SDBAttribute> result = new ArrayList<SDBAttribute>();
+        for (aws.simpledb.SDBAttribute attr: JavaConversions.asJavaList(scalaAttrs)) {
+            result.add(SDBAttribute.fromScala(attr));
+        }
+        return result;
     }
 
 }

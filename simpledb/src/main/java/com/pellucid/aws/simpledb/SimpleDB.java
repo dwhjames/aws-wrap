@@ -155,6 +155,52 @@ public class SimpleDB {
         return convertEmptyResult(aws.simpledb.SimpleDB.deleteAttributes(domainName, itemName, sAttributes, sExpected, scalaRegion));
     }
 
+    public F.Promise<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
+            String domainName,
+            String itemName) {
+        return this.getAttributes(domainName, itemName, null, false);
+    }
+
+    public F.Promise<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
+            String domainName,
+            String itemName,
+            boolean consistentRead) {
+        return this.getAttributes(domainName, itemName, null, consistentRead);
+    }
+
+    public F.Promise<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
+            String domainName,
+            String itemName,
+            String attributeName) {
+        return this.getAttributes(domainName, itemName, attributeName, false);
+    }
+
+    /**
+     * Returns all of the attributes associated with the item. Optionally, the attributes returned can be limited to one specified attribute name parameters.
+     * Amazon SimpleDB keeps multiple copies of each domain. When data is written or updated, all copies of the data are updated. However, it takes time for
+     * the update to propagate to all storage locations. The data will eventually be consistent, but an immediate read might not show the change. If eventually
+     * consistent reads are not acceptable for your application, use ConsistentRead. Although this operation might take longer than a standard read, it always
+     * returns the last updated value.
+     *
+     * @param domainName
+     * @param itemName
+     * @param attributeName
+     * @param consistentRead if true, Amazon will always return the last updated value. If false, the response will be faster but the data may not be the most recent.
+     */
+    public F.Promise<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
+            String domainName,
+            String itemName,
+            String attributeName,
+            boolean consistentRead) {
+        return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.getAttributes(domainName, itemName, Scala.Option(attributeName), consistentRead, scalaRegion),
+                new MetadataConvert(),
+                new F.Function<Seq<aws.simpledb.SDBAttribute>, List<SDBAttribute>>() {
+            @Override public List<SDBAttribute> apply(Seq<aws.simpledb.SDBAttribute> scalaAttrs) {
+                return SDBAttribute.listFromScalaSeq(scalaAttrs);
+            }
+        });
+    }
+
     private static List<String> domainSeqToStringList(Seq<aws.simpledb.SDBDomain> domains) {
         List<String> result = new ArrayList<String>();
         for (aws.simpledb.SDBDomain domain: JavaConversions.seqAsJavaList(domains)) {
