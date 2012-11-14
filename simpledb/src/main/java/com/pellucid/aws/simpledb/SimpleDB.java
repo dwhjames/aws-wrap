@@ -74,10 +74,85 @@ public class SimpleDB {
         return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.listDomains(maxNumberOfDomains, Scala.Option(nextToken), scalaRegion),
                 new MetadataConvert(),
                 new F.Function<Seq<aws.simpledb.SDBDomain>, List<String>>() {
-                    @Override public List<String> apply(Seq<aws.simpledb.SDBDomain> domains) {
-                        return domainSeqToStringList(domains);
-                    }
+            @Override public List<String> apply(Seq<aws.simpledb.SDBDomain> domains) {
+                return domainSeqToStringList(domains);
+            }
         });
+    }
+
+    public F.Promise<Result<SimpleDBMeta, Object>> putAttributes(
+            String domainName,
+            String itemName,
+            List<SDBAttribute> attributes) {
+        return this.putAttributes(domainName, itemName, attributes, new ArrayList<SDBExpected>());
+    }
+
+    /**
+     * Creates or replaces attributes in an item.
+     *
+     * Using PutAttributes to replace attribute values that do not exist will not result in an error response.
+     *
+     * When using eventually consistent reads, a GetAttributes or Select request (read) immediately after a DeleteAttributes or PutAttributes request (write) might not return the updated data. A consistent read always reflects all writes that received a successful response prior to the read. For more information, see Consistency.
+     *
+     * @param domainName
+     * @param itemName the item to update. May not be empty.
+     * @param attributes the attributes to create or update
+     * @param expected if defined, perform the expected conditional check on one attribute. If expected.value is None,
+     *                 will check that the attribute exists. If expected.value is defined, will check that the attribute
+     *                 exists and has the specified value.
+     */
+    public F.Promise<Result<SimpleDBMeta, Object>> putAttributes(
+            String domainName,
+            String itemName,
+            List<SDBAttribute> attributes,
+            List<SDBExpected> expected) {
+        Seq<aws.simpledb.SDBAttribute> sAttributes = SDBAttribute.listAsScalaSeq(attributes);
+        Seq<aws.simpledb.SDBExpected> sExpected = SDBExpected.listAsScalaSeq(expected);
+        return convertEmptyResult(aws.simpledb.SimpleDB.putAttributes(domainName, itemName, sAttributes, sExpected, scalaRegion));
+    }
+
+    public F.Promise<Result<SimpleDBMeta, Object>> deleteAttributes(
+            String domainName,
+            String itemName) {
+        return this.deleteAttributes(domainName, itemName, new ArrayList<SDBAttribute>());
+    }
+
+    public F.Promise<Result<SimpleDBMeta, Object>> deleteAttributes(
+            String domainName,
+            String itemName,
+            List<SDBAttribute> attributes) {
+        return this.deleteAttributes(domainName, itemName, attributes, new ArrayList<SDBExpected>());
+    }
+
+    /**
+     * Deletes one or more attributes associated with the item. If all attributes of an item are deleted, the item is deleted.
+     *
+     * If you specify DeleteAttributes without attributes or values, all the attributes for the item are deleted.
+     *
+     * Unless you specify conditions, the DeleteAttributes is an idempotent operation; running it multiple times on the same item or attribute
+     * does not result in an error response.
+     *
+     * Conditional deletes are useful for only deleting items and attributes if specific conditions are met. If the conditions are met, Amazon SimpleDB performs the delete. Otherwise, the data is not deleted.
+     *
+     * When using eventually consistent reads, a GetAttributes or Select request (read) immediately after a DeleteAttributes or PutAttributes request (write) might not return the updated data. A consistent read always reflects all writes that received a successful response prior to the read.
+     * For more information, see [[http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/ConsistencySummary.html Consistency]].
+     *
+     * @param domainName
+     * @param itemName the item to update. May not be empty.
+     * @param attributes the list of attributes to delete
+     * @param expected if defined, perform the expected conditional check on one attribute. If expected.value is None,
+     *                 will check that the attribute exists. If expected.value is defined, will check that the attribute
+     *                 exists and has the specified value.
+     *
+     */
+    public F.Promise<Result<SimpleDBMeta, Object>> deleteAttributes(
+            String domainName,
+            String itemName,
+            List<SDBAttribute> attributes,
+            List<SDBExpected> expected) {
+        Seq<aws.simpledb.SDBAttribute> sAttributes = SDBAttribute.listAsScalaSeq(attributes);
+        Seq<aws.simpledb.SDBExpected> sExpected = SDBExpected.listAsScalaSeq(expected);
+        return convertEmptyResult(aws.simpledb.SimpleDB.deleteAttributes(domainName, itemName, sAttributes, sExpected, scalaRegion));
     }
 
     private static List<String> domainSeqToStringList(Seq<aws.simpledb.SDBDomain> domains) {
