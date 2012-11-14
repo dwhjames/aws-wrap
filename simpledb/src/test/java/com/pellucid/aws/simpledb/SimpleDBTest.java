@@ -21,6 +21,16 @@ public class SimpleDBTest {
     }
 
     @Test
+    public void domainMetadata() {
+        Result<SimpleDBMeta, Object> result = sdb.createDomain("java-delete-domain").get();
+        assertTrue(result.toString(), result.isSuccess());
+        Result<SimpleDBMeta, SDBDomainMetadata> resultm = sdb.domainMetadata("java-delete-domain").get();
+        assertTrue(resultm.toString(), resultm.isSuccess());
+        Result<SimpleDBMeta, Object> result2 = sdb.deleteDomain("java-delete-domain").get();
+        assertTrue(result2.toString(), result2.isSuccess());
+    }
+
+    @Test
     public void listDomains() {
         Result<SimpleDBMeta, Object> result = sdb.createDomain("java-list-domain").get();
         assertTrue(result.toString(), result.isSuccess());
@@ -47,6 +57,29 @@ public class SimpleDBTest {
         assertTrue("Couldn't find the inserted attribute", found);
         Result<SimpleDBMeta, Object> result2 = sdb.deleteAttributes("java-attrs", "foobar", attrs).get();
         assertTrue(result.toString(), result2.isSuccess());
+        Result<SimpleDBMeta, Object> resultd = sdb.deleteDomain("java-attrs").get();
+        assertTrue(resultd.toString(), resultd.isSuccess());
+    }
+
+    @Test
+    public void select() {
+        List<SDBAttribute> attrs = new ArrayList<SDBAttribute>();
+        attrs.add(new SDBAttribute("firstName", "toto"));
+        attrs.add(new SDBAttribute("lastName", "tata"));
+        Result<SimpleDBMeta, Object> resultc = sdb.createDomain("java-select").get();
+        assertTrue(resultc.toString(), resultc.isSuccess());
+        Result<SimpleDBMeta, Object> result = sdb.putAttributes("java-select", "foobar", attrs).get();
+        assertTrue(result.toString(), result.isSuccess());
+
+        Result<SimpleDBMeta, List<SDBItem>> resultSelect = sdb.select("select * from `java-select`", true).get();
+        assertTrue(resultSelect.toString(), resultSelect.isSuccess());
+        assertTrue("Empty select response, should have at least 1 element", resultSelect.body().size() > 0);
+        boolean found = false;
+        for (SDBItem item: resultSelect.body()) {
+            if ("foobar".equals(item.name())) found = true;
+        }
+        assertTrue("Couldn't find the inserted item", found);
+
         Result<SimpleDBMeta, Object> resultd = sdb.deleteDomain("java-attrs").get();
         assertTrue(resultd.toString(), resultd.isSuccess());
     }

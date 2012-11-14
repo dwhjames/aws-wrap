@@ -201,6 +201,45 @@ public class SimpleDB {
         });
     }
 
+    /**
+     * Get detailed information about a domain
+     */
+    public F.Promise<Result<SimpleDBMeta, SDBDomainMetadata>> domainMetadata(String domainName) {
+        return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.domainMetadata(domainName, scalaRegion),
+                new MetadataConvert(),
+                new F.Function<aws.simpledb.SDBDomainMetadata, SDBDomainMetadata>() {
+            @Override public SDBDomainMetadata apply(aws.simpledb.SDBDomainMetadata metadata) {
+                return SDBDomainMetadata.fromScalaMetadata(metadata);
+            }
+        });
+
+    }
+
+    public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression) {
+        return this.select(expression, null, false);
+    }
+
+    public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, String nextToken) {
+        return this.select(expression, nextToken, false);
+    }
+
+    public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, boolean consistentRead) {
+        return this.select(expression, null, consistentRead);
+    }
+
+    /**
+     * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
+     */
+    public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, String nextToken, boolean consistentRead) {
+        return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.select(expression, Scala.Option(nextToken), consistentRead, scalaRegion),
+                new MetadataConvert(),
+                new F.Function<Seq<aws.simpledb.SDBItem>, List<SDBItem>>() {
+            @Override public List<SDBItem> apply(Seq<aws.simpledb.SDBItem> items) {
+                return SDBItem.listFromScalaSeq(items);
+            }
+        });
+    }
+
     private static List<String> domainSeqToStringList(Seq<aws.simpledb.SDBDomain> domains) {
         List<String> result = new ArrayList<String>();
         for (aws.simpledb.SDBDomain domain: JavaConversions.seqAsJavaList(domains)) {

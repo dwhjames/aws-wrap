@@ -12,11 +12,11 @@ public class SDBAttribute {
     private final String name;
     private final String value;
     private final boolean replace;
-    
+
     public SDBAttribute(String name, String value) {
         this(name, value, false);
     }
-    
+
     public SDBAttribute(String name, String value, boolean replace) {
         this.name = name;
         this.value = value;
@@ -30,7 +30,7 @@ public class SDBAttribute {
     public String value() {
         return this.value;
     }
-    
+
     public boolean replace() {
         return this.replace;
     }
