@@ -228,6 +228,26 @@ public class SimpleDB {
     }
 
     /**
+     * Put attributes for more than one item
+     */
+    public F.Promise<Result<SimpleDBMeta, Object>> batchPutAttributes(String domainName, List<SDBItem> items) {
+        return convertEmptyResult(aws.simpledb.SimpleDB.batchPutAttributes(
+                domainName,
+                SDBItem.listAsScalaSeq(items),
+                scalaRegion));
+    }
+
+    /**
+     * Delete attributes for more than one item
+     */
+    public F.Promise<Result<SimpleDBMeta, Object>> batchDeleteAttributes(String domainName, List<SDBItem> items) {
+        return convertEmptyResult(aws.simpledb.SimpleDB.batchDeleteAttributes(
+                domainName,
+                SDBItem.listAsScalaSeq(items),
+                scalaRegion));
+    }
+
+    /**
      * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
      */
     public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, String nextToken, boolean consistentRead) {

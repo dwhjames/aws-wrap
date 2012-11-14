@@ -37,4 +37,12 @@ public class SDBItem {
         return result;
     }
 
+    static Seq<aws.simpledb.SDBItem> listAsScalaSeq(List<SDBItem> items) {
+        List<aws.simpledb.SDBItem> scalaItems = new ArrayList<aws.simpledb.SDBItem>();
+        for (SDBItem item: items) {
+            scalaItems.add(new aws.simpledb.SDBItem(item.name(), SDBAttribute.listAsScalaSeq(item.attributes())));
+        }
+        return JavaConversions.asScalaBuffer(scalaItems).toList();
+    }
+
 }
