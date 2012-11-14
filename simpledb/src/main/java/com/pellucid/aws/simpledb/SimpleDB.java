@@ -1,13 +1,18 @@
 package com.pellucid.aws.simpledb;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import play.libs.F;
+import play.libs.Scala;
+import scala.collection.JavaConversions;
+import scala.collection.Seq;
+import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
 
-import com.pellucid.aws.results.Result;
-import com.pellucid.aws.internal.JavaConversions;
+import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.internal.MetadataConvert;
-
-import scala.concurrent.Future;
-import play.libs.F;
+import com.pellucid.aws.results.Result;
 
 public class SimpleDB {
 
@@ -45,8 +50,46 @@ public class SimpleDB {
         return convertEmptyResult(aws.simpledb.SimpleDB.deleteDomain(domainName, scalaRegion));
     }
 
+    public F.Promise<Result<SimpleDBMeta, List<String>>> listDomains() {
+        return listDomains(100, null);
+    }
+
+    public F.Promise<Result<SimpleDBMeta, List<String>>> listDomains(Integer maxNumberOfDomains) {
+        return listDomains(maxNumberOfDomains, null);
+    }
+
+    public F.Promise<Result<SimpleDBMeta, List<String>>> listDomains(String nextToken) {
+        return listDomains(100, nextToken);
+    }
+
+    /**
+     * Lists all domains associated with the Access Key ID.
+     * It returns domain names up to the limit set by MaxNumberOfDomains. A NextToken is returned if
+     * there are more than MaxNumberOfDomains domains. Calling ListDomains successive times with the NextToken returns up to MaxNumberOfDomains more domain names each time.
+     *
+     * @param maxNumberOfDomains limit the response to a size
+     * @param nextToken: optionally provide this value you got from a previous request to get the next page
+     */
+    public F.Promise<Result<SimpleDBMeta, List<String>>> listDomains(Integer maxNumberOfDomains, String nextToken) {
+        return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.listDomains(maxNumberOfDomains, Scala.Option(nextToken), scalaRegion),
+                new MetadataConvert(),
+                new F.Function<Seq<aws.simpledb.SDBDomain>, List<String>>() {
+                    @Override public List<String> apply(Seq<aws.simpledb.SDBDomain> domains) {
+                        return domainSeqToStringList(domains);
+                    }
+        });
+    }
+
+    private static List<String> domainSeqToStringList(Seq<aws.simpledb.SDBDomain> domains) {
+        List<String> result = new ArrayList<String>();
+        for (aws.simpledb.SDBDomain domain: JavaConversions.seqAsJavaList(domains)) {
+            result.add(domain.name());
+        }
+        return result;
+    }
+
     private static F.Promise<Result<SimpleDBMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.simpledb.SimpleDBMeta, BoxedUnit>> scalaResult) {
-        return JavaConversions.toResultPromise(scalaResult, new MetadataConvert(), new F.Function<BoxedUnit, Object>() {
+        return AWSJavaConversions.toResultPromise(scalaResult, new MetadataConvert(), new F.Function<BoxedUnit, Object>() {
             @Override public Object apply(BoxedUnit unit) throws Throwable {
                 return null;
             }

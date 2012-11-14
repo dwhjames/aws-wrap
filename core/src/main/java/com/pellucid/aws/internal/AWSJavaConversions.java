@@ -8,7 +8,7 @@ import com.pellucid.aws.results.SuccessResult;
 import com.pellucid.aws.results.AWSError;
 
 
-public class JavaConversions {
+public class AWSJavaConversions {
 
     public static <MS extends aws.core.Metadata, TS, MJ, TJ> Result<MJ, TJ> toJavaResult(aws.core.Result<MS, TS> scalaResult,
             final F.Function<MS, MJ> metadataConvert,

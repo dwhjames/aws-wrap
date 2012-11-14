@@ -25,4 +25,12 @@ public class SuccessResult<M, T> implements Result<M, T> {
         return this.body;
     }
 
+    @Override
+    public String toString() {
+        if (this.body == null) {
+            return "SuccessResult: empty";
+        }
+        return "SuccessResult: " + this.body.toString();
+    }
+
 }

@@ -35,4 +35,9 @@ public class AWSError<M> implements Result<M, Object> {
         throw new RuntimeException("Error: " + mCode + " - " + mMessage);
     }
 
+    @Override
+    public String toString() {
+        return "AWSError: " + mCode + " - " + mMessage;
+    }
+
 }
