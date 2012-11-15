@@ -81,7 +81,8 @@ object VerificationStatuses extends Enumeration {
 
 case class SendDataPoint(bounces: Long, complaints: Long, deliveryAttempts: Long, rejects: Long, timeStamp: Date)
 case class SendQuota(max24HourSend: Double, maxSendRate: Double, sentLast24Hours: Double)
-case class Email(subject: String, body: String, contentType: ContentTypes.ContentType, source: String, destinations: Seq[Destination], replyTo: Seq[String] = Nil, returnPath: Option[String] = None)
+case class Body(text: Option[String] = None, html: Option[String] = None)
+case class Email(subject: String, body: Body, source: String, destinations: Seq[Destination], replyTo: Seq[String] = Nil, returnPath: Option[String] = None)
 case class VerificationAttributes(status: VerificationStatuses.VerificationStatus, token: Option[SES.VerificationToken])
 case class IdentityNotificationAttributes(forwardingEnabled: Boolean, bounceTopic: Option[String], complaintTopic: Option[String])
 case class IdentityDkimAttributes(enabled: Boolean, status: VerificationStatuses.VerificationStatus, tokens: Seq[SES.DkimToken])
@@ -140,9 +141,10 @@ object SES {
   def send(email: Email)(implicit region: SESRegion) = {
     val ps = Seq(
       "Source" -> email.source,
-      "Message.Subject.Data" -> email.subject,
-      "Message.Body.Text.Data" -> email.body
+      "Message.Subject.Data" -> email.subject
     ) ++
+    email.body.text.toSeq.map("Message.Body.Text.Data" -> _) ++
+    email.body.html.toSeq.map("Message.Body.Html.Data" -> _) ++
     email.destinations.groupBy(_.name).flatMap{ case (_, ds) =>
       ds.zipWithIndex.map { case (d, i) =>
         s"Destination.${d.name}Addresses.member.${i+1}" -> d.address

@@ -30,11 +30,36 @@ object SESSpec extends Specification {
   "SimpleDB API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    "Send Emails" in {
+    "Send Text Emails" in {
       val mail = Email(
         subject = "Hello",
-        body = "Hello World",
-        contentType = ContentTypes.PLAIN_TEXT,
+        body = Body(Some("Hello World")),
+        source = "jto+ses@zenexity.com",
+        replyTo = "jto+ses@zenexity.com" :: Simulators.SUCCESS :: Nil,
+        destinations = To(Simulators.SUCCESS) :: BCC(Simulators.SUCCESS) :: Nil
+      )
+
+      val r = waitFor(SES.send(mail))
+      checkResult(r)
+    }
+
+    "Send Html Emails" in {
+      val mail = Email(
+        subject = "Hello",
+        body = Body(html = Some("<body>Hello World</body>")),
+        source = "jto+ses@zenexity.com",
+        replyTo = "jto+ses@zenexity.com" :: Simulators.SUCCESS :: Nil,
+        destinations = To(Simulators.SUCCESS) :: BCC(Simulators.SUCCESS) :: Nil
+      )
+
+      val r = waitFor(SES.send(mail))
+      checkResult(r)
+    }
+
+    "Send Txt + Html Emails" in {
+      val mail = Email(
+        subject = "Hello",
+        body = Body(Some("Hello World"), Some("<body>Hello World</body>")),
         source = "jto+ses@zenexity.com",
         replyTo = "jto+ses@zenexity.com" :: Simulators.SUCCESS :: Nil,
         destinations = To(Simulators.SUCCESS) :: BCC(Simulators.SUCCESS) :: Nil
