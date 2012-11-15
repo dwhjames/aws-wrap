@@ -15,4 +15,5 @@ navigation:
   url: doc/s3.html
 - title: Simple Notification Service (SNS)
   url: doc/sns.html
-
+- title: SES
+  url: doc/SES.html
