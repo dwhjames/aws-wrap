@@ -10,7 +10,7 @@ bq. Amazon Simple Email Service (Amazon SES) is a highly scalable and cost-effec
 
 h2. Setup
 
-You need to have an AWS account (see "Get Started":/doc/getstarted.html).
+You need to have an AWS account (see "Get Started":{{site:url}}/doc/getstarted.html).
 Before you can send email via Amazon SES, you need to verify that you own the domain or address from which you’ll be sending email. To start the verification process, visit the "AWS Management Console":https://console.aws.amazon.com/ses/home.
 
 h2. Managing Identities
