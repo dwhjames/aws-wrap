@@ -135,13 +135,13 @@ object SESSpec extends Specification {
     }
 
     "Enable Identity Feedback Forwarding" in {
-      val r = waitFor(SES.seIdentityFeedbackForwardingStatus(Simulators.SUCCESS, Statuses.ENABLED))
+      val r = waitFor(SES.setIdentityFeedbackForwardingStatus(Simulators.SUCCESS, Statuses.ENABLED))
       checkResult(r)
     }
 
     "Disable Identity Feedback Forwarding" in {
       skipped("Feedback notification topic must be set first")
-      val r = waitFor(SES.seIdentityFeedbackForwardingStatus(Simulators.SUCCESS, Statuses.DISABLED))
+      val r = waitFor(SES.setIdentityFeedbackForwardingStatus(Simulators.SUCCESS, Statuses.DISABLED))
       checkResult(r)
     }
 

@@ -213,7 +213,7 @@ object SES {
   * @param identity The identity for which to set feedback notification forwarding.
   * @param status Sets whether Amazon SES will forward feedback notifications as email.
   */
-  def seIdentityFeedbackForwardingStatus(identity: String, status: Statuses.Status)(implicit region: SESRegion) =
+  def setIdentityFeedbackForwardingStatus(identity: String, status: Statuses.Status)(implicit region: SESRegion) =
     request[Unit]("SetIdentityFeedbackForwardingEnabled", Seq(
       "ForwardingEnabled" -> status.toString,
       "Identity" -> identity
