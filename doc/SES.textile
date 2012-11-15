@@ -69,8 +69,7 @@ Pass an @Email@ to @SES.send@ to send an email.
 
 bc. val mail = Email(
   subject = "Hello",
-  body = "Hello World",
-  contentType = ContentTypes.PLAIN_TEXT,
+  body = Body(html = Some("<body>Hello World</body>")),
   source = "foo@bar.com",
   replyTo = "foo@bar.com" :: Nil,
   destinations = To(Simulators.SUCCESS) :: BCC(Simulators.SUCCESS) :: Nil
