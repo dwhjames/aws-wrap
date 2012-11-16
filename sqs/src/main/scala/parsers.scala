@@ -16,10 +16,14 @@
 
 package aws.sqs
 
+import scala.xml.Node
+
 import play.api.libs.json._
 import play.api.libs.ws.Response
 import aws.core._
 import aws.core.parsers._
+
+import aws.sqs.SQS.Queue
 
 object SQSParsers {
   import language.postfixOps
@@ -28,16 +32,32 @@ object SQSParsers {
     Success(SQSMeta(r.xml \\ "RequestId" text))
   }
 
-  implicit def queuesListParser = Parser[QueuesList] { r: Response =>
-    Success(QueuesList((r.xml \\ "QueueUrl").map(_.text)))
+  implicit def queuesListParser = Parser[Seq[Queue]] { r: Response =>
+    Success((r.xml \\ "QueueUrl").map(_.text).map(Queue(_)))
   }
 
-  implicit def queueUrlParser = Parser[String] { r: Response =>
-    Success(r.xml \\ "QueueUrl" text)
+  implicit def queueUrlParser = Parser[Queue] { r: Response =>
+    Success(Queue(r.xml \\ "QueueUrl" text))
   }
 
   implicit def sendMessageParser = Parser[SendMessageResult] { r: Response =>
     Success(SendMessageResult(r.xml \\ "MessageId" text, r.xml \\ "MD5OfMessageBody" text))
+  }
+
+  implicit def batchSendMessageBatchParser = Parser[Seq[MessageResponse]] { r: Response =>
+    Success(r.xml \\ "SendMessageBatchResultEntry" map { n: Node =>
+      MessageResponse(n \\ "Id" text, n \\ "MessageId" text, n \\ "MD5OfMessageBody" text)
+    })
+  }
+
+  implicit def batchMessageIdParser = Parser[Seq[String]] { r: Response =>
+    Success(r.xml \\ "Id" map(_.text))
+  }
+
+  implicit def attributeListParser = Parser[Seq[QueueAttribute]] { r: Response =>
+    Success(r.xml \\ "Attribute" map { n: Node => 
+      QueueAttribute(n \\ "Name" text, n \\ "Value" text)
+    })
   }
 
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[SQSMeta, T]] =

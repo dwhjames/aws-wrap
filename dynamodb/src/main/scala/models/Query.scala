@@ -16,6 +16,8 @@
 
 package aws.dynamodb
 
+import aws.dynamodb.models._
+
 sealed trait KeyCondition
 
 object KeyCondition {

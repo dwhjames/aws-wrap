@@ -11,6 +11,7 @@ import com.pellucid.aws.results.SimpleError;
 import com.pellucid.aws.results.AWSError;
 
 
+@SuppressWarnings("unchecked")
 public class AWSJavaConversions {
 
     public static <MS extends aws.core.Metadata, TS, MJ, TJ> Result<MJ, TJ> toJavaResult(aws.core.Result<MS, TS> scalaResult,

@@ -10,6 +10,8 @@ import play.libs.Scala;
 import scala.collection.JavaConversions;
 import scala.collection.Seq;
 
+import com.pellucid.aws.dynamodb.models.*;
+
 public class DynamoDB {
 
     private final aws.dynamodb.DDBRegion scalaRegion;
@@ -61,11 +63,12 @@ public class DynamoDB {
      * @param keySchema the primary key structure for the table. See [[PrimaryKey]] for more information.
      */
 /*    public F.Promise<SimpleResult<TableDescription>> createTable(String tableName, PrimaryKey keySchema, ProvisionedThroughput provisionedThroughput) {
-      val body = Json.obj(
-        "TableName" -> tableName,
-        "KeySchema" -> keySchema,
-        "ProvisionedThroughput" -> provisionedThroughput)
-      post[TableDescription]("CreateTable", body)
+        return AWSJavaConversions.toSimpleResultPromise(aws.dynamodb.DynamoDB.createTable(tableName, keySchema.toScala(), provisionedThroughput.toScala(), scalaRegion),
+                new F.Function<Seq<String>, List<String>>() {
+            @Override public List<String> apply(Seq<String> tableNames) {
+                return JavaConversions.seqAsJavaList(tableNames);
+            }
+        });
     }*/
 
     private static aws.dynamodb.DDBRegion scalaRegion(DDBRegion region) {

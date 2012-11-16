@@ -24,6 +24,8 @@ import play.api.libs.json.Writes._
 
 import aws.core.utils.Crypto
 
+import aws.dynamodb.models._
+
 object JsonFormats {
 
   // JSON Formatters
