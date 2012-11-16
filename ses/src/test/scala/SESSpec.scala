@@ -16,7 +16,7 @@ object TestUtils extends Specification { // Evil hack to access Failure
   implicit val region = SESRegion.US_EAST_1
 
   def checkResult[M <: Metadata, T](r: Result[M, T]) = r match {
-    case AWSError(code, message) => failure(message)
+    case AWSError(_, _, message) => failure(message)
     case Result(_, _) => success
   }
 

@@ -82,7 +82,7 @@ object Result {
     override def foreach(f: (T => Unit)) = f(b)
   }
   def unapply[M <: Metadata, T](r: Result[M, T]): Option[(M, T)] = r match {
-    case AWSError(_, _) => None
+    case AWSError(_, _, _) => None
     case _ => Some(r.metadata -> r.body)
   }
 
@@ -103,6 +103,6 @@ class AWSError[M <: Metadata](val metadata: M, val code: String, val message: St
 
 object AWSError {
   def apply[M <: Metadata](metadata: M = EmptyMeta, code: String, message: String) = new AWSError(metadata, code, message)
-  def unapply[M <: Metadata](e: AWSError[M]): Option[(String, String)] = Some((e.code, e.message))
+  def unapply[M <: Metadata](e: AWSError[M]): Option[(M, String, String)] = Some((e.metadata, e.code, e.message))
 }
 // TODO: AWS sometimes returns a 200 when there is an error (example: NoSuchDomain error for DomainMetadata)

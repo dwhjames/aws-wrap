@@ -24,6 +24,7 @@ import aws.core._
 import aws.core.parsers._
 
 import aws.sqs.SQS.Queue
+import aws.sqs.MessageAttributes.MessageAttribute
 
 object SQSParsers {
   import language.postfixOps
@@ -42,6 +43,19 @@ object SQSParsers {
 
   implicit def sendMessageParser = Parser[SendMessageResult] { r: Response =>
     Success(SendMessageResult(r.xml \\ "MessageId" text, r.xml \\ "MD5OfMessageBody" text))
+  }
+
+  implicit def messageReceiveParser = Parser[Seq[MessageReceive]] { r: Response =>
+    Success(r.xml \\ "Message" map { n: Node =>
+      MessageReceive(
+        n \\ "MessageId" text,
+        n \\ "MD5OfBody" text,
+        n \\ "ReceiptHandle" text,
+        (n \\ "Attribute" map { attrNode: Node =>
+          MessageAttributes.withName(attrNode \\ "Name" text) -> (attrNode \\ "Value" text)
+        }).toMap
+      )
+    })
   }
 
   implicit def batchSendMessageBatchParser = Parser[Seq[MessageResponse]] { r: Response =>

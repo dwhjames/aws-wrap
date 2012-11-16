@@ -21,7 +21,7 @@ object SimpleDBSpec extends Specification {
     import scala.concurrent.ExecutionContext.Implicits.global
 
     def checkResult[T](r: Result[SimpleDBMeta, T]) = r match {
-      case AWSError(code, message) => failure(message)
+      case AWSError(_, _, message) => failure(message)
       case Result(SimpleDBMeta(requestId, _), _) => requestId must not be empty
     }
 
@@ -50,7 +50,7 @@ object SimpleDBSpec extends Specification {
         .flatMap(_ => Await.result(SimpleDB.putAttributes("test-put-attributes", "theItem", Seq(toto)), Duration(30, SECONDS)))
         .flatMap(_ => Await.result(SimpleDB.getAttributes("test-put-attributes", "theItem", None, true), Duration(30, SECONDS)))
       r match {
-        case AWSError(code, message) => failure(message)
+        case AWSError(_, _, message) => failure(message)
         case Result(_, body) if body.contains(toto) => success
         case Result(_, body) => failure("Could not find inserted attribute in " + body)
       }
@@ -74,7 +74,7 @@ object SimpleDBSpec extends Specification {
         .flatMap(_ => Await.result(SimpleDB.putAttributes("test-select-attributes", "theItem", Seq(toto)), Duration(30, SECONDS)))
         .flatMap(_ => Await.result(SimpleDB.select("select * from `test-select-attributes`", None, true), Duration(30, SECONDS)))
       r match {
-        case AWSError(code, message) => failure(message)
+        case AWSError(_, _, message) => failure(message)
         case Result(_, body) if body.exists(item => item.name == "theItem" && item.attributes.contains(toto)) => success
         case Result(_, body) => failure("Could not find inserted attribute in " + body)
       }
@@ -90,7 +90,7 @@ object SimpleDBSpec extends Specification {
         .flatMap(_ => Await.result(SimpleDB.batchPutAttributes("test-batch", Seq(foobar)), Duration(30, SECONDS)))
         .flatMap(_ => Await.result(SimpleDB.select("select * from `test-batch`", None, true), Duration(30, SECONDS)))
       r match {
-        case AWSError(code, message) =>
+        case AWSError(_, _, message) =>
           failure(message)
         case Result(_, body) if body.exists(item => item.name == "foobar" && item.attributes.contains(color)) =>
           success
@@ -102,7 +102,7 @@ object SimpleDBSpec extends Specification {
       val r2 = Await.result(SimpleDB.batchDeleteAttributes("test-batch", Seq(foobar)), Duration(30, SECONDS))
         .flatMap(_ => Await.result(SimpleDB.select("select * from `test-batch`", None, true), Duration(30, SECONDS)))
       r2 match {
-        case AWSError(code, message) =>
+        case AWSError(_, _, message) =>
           failure(message)
         case Result(_, body) if body.exists(item => item.name == "foobar" && item.attributes.contains(color)) =>
           failure("Batch deletion failed: " + body)

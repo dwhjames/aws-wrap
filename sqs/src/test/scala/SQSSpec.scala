@@ -21,7 +21,7 @@ object SQSSpec extends Specification {
 
   def ensureSuccess[T](r: Result[SQSMeta, T]) = r match {
     case Result(_, _) => success
-    case AWSError(code, message) => failure(message)
+    case AWSError(_, _, message) => failure(message)
   }
 
   "SQS API" should {
@@ -37,7 +37,7 @@ object SQSSpec extends Specification {
         case Result(_, queue) =>
           val r2 = Await.result(SQS.deleteQueue(queue.url), Duration(30, SECONDS))
           ensureSuccess(r2)
-        case AWSError(code, message) => failure(message)
+        case AWSError(_, _, message) => failure(message)
         case _ => failure
       }
     }

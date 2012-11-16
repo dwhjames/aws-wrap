@@ -16,11 +16,15 @@
 
 package aws.sqs
 
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
+
+import play.api.libs.iteratee.Iteratee
 
 import aws.core._
 import aws.core.Types._
 import aws.core.signature.V2
+
+import MessageAttributes.MessageAttribute
 
 case class SQSMeta(requestId: String) extends Metadata
 
@@ -37,7 +41,7 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
     val GetQueueAttributes = Value("GetQueueAttributes ")
     val GetQueueUrl = Value("GetQueueUrl")
   }
-  import ActionNames._
+  import ActionNames.ActionName
 
   object Parameters {
     def AccountIds(accountIds: Seq[String]): Seq[(String, String)] = (for ((accountId, i) <- accountIds.zipWithIndex) yield {
@@ -71,6 +75,15 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
     def DelaySeconds(delay: Option[Long]) = delay.toSeq.map("DelaySeconds" -> _.toString)
     def MaxNumberOfMessages(n: Option[Long]) = n.toSeq.map("MaxNumberOfMessages" -> _.toString)
     def Message(message: String) = ("Message" -> message)
+    def MessageAttributesP(messages: Seq[MessageAttribute]) = messages.size match {
+      case 0 => Nil
+      case 1 => Seq("AttributeName" -> messages(0).toString)
+      case _ => (for ((message, i) <- messages.zipWithIndex) yield {
+        Seq(
+          "AttributeName.%d".format(i + 1) -> message.toString
+        )
+      }).flatten
+    }
     def QueueAttributes(attrs: Seq[QueueAttribute]): Seq[(String, String)] = (for ((attribute, i) <- attrs.zipWithIndex) yield {
       Seq(
         "Attribute.%d.Name".format(i + 1) -> attribute.name,
@@ -116,14 +129,27 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
       SQS.get[SendMessageResult](this.url, params: _*)
     }
 
-    // TODO: Add support for long polling
-    def receiveMessage(maxNumber: Option[Long] = None, visibilityTimeout: Option[Long] = None): Future[Result[SQSMeta, SendMessageResult]] = {
+    def receiveMessage(maxNumber: Option[Long] = None,
+                       attributes: Seq[MessageAttribute],
+                       visibilityTimeout: Option[Long] = None,
+                       waitTimeSeconds: Option[Long] = None): Future[Result[SQSMeta, Seq[MessageReceive]]] = {
       val params = Seq(Action("ReceiveMessage")) ++
+        MessageAttributesP(attributes) ++
         MaxNumberOfMessages(maxNumber) ++
-        VisibilityTimeout(visibilityTimeout)
-      get[SendMessageResult](this.url, params: _*)
+        VisibilityTimeout(visibilityTimeout) ++
+        waitTimeSeconds.toSeq.map("WaitTimeSeconds" -> _.toString)
+      get[Seq[MessageReceive]](this.url, params: _*)
     }
+/*
+    def messageStream[A](consumer: EmptyResult[SQSMeta] => Iteratee[Seq[MessageReceive], A],
+                         maxNumber: Option[Long] = None,
+                         attributes: Seq[MessageAttribute],
+                         visibilityTimeout: Option[Long] = None)(implicit executor: ExecutionContext): Future[Iteratee[Seq[MessageReceive], A]] = {
+      receiveMessage(maxNumber, attributes, visibilityTimeout, Some(20L)) map { r =>
 
+      }
+    }
+*/
     def getAttributes(attributes: Seq[String]): Future[Result[SQSMeta, Seq[QueueAttribute]]] = {
       val params = Seq(Action("GetQueueAttribute")) ++
         QueueAttributeNames(attributes)
