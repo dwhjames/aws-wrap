@@ -48,6 +48,8 @@ object ApplicationBuild extends Build {
 
     lazy val ses = Project("ses", file("ses"), settings = commonSettings).dependsOn(core)
 
+    lazy val cloudsearxh = Project("cloud-search", file("cloudsearch"), settings = commonSettings).dependsOn(core)
+
     lazy val root = Project("root", file("."), settings = Project.defaultSettings ++ Unidoc.settings).aggregate(
         core, s3, simpledb, sqs, sns, dynamodb, ses
     )
