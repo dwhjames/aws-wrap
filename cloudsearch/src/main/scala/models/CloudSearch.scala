@@ -40,7 +40,7 @@ object CloudSearch {
   private def tryParse[T](resp: Response)(implicit p: Parser[Result[CloudSearchMetadata, T]]) =
     Parser.parse[Result[CloudSearchMetadata, T]](resp).fold(e => throw new RuntimeException(e), identity)
 
-  private def request[T](domain: (String, String), params: Seq[(String, String)] = Nil)(implicit region: CloudSearchRegion/*, p: Parser[Result[CloudSearchMetadata, T]]*/) = {
+  private def request[T](domain: (String, String), params: Seq[(String, String)] = Nil)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
     val allHeaders = Nil
     val version = "2011-02-01"
@@ -49,57 +49,73 @@ object CloudSearch {
       .withHeaders(allHeaders: _*)
       .withQueryString(params: _*)
       .get()
-      //.map(tryParse[T])
+      .map(tryParse[T])
   }
 
-  // TODO
-  sealed trait MatchExpression {
-    def and(ex: MatchExpression) = And(this, ex)
-    def or(ex: MatchExpression) = Or(this, ex)
-    val | = or _
-    val & = or _
-  }
-  case class Field(name: String, value: String) extends MatchExpression {
-    // TODO: open-ended range
-    def this(name: String, range: Range) = this(name, s"${range.start}..${range.end}")
-    override def toString = s"(field $name '$value')"
-  }
-  object Field {
-    def apply(name: String, range: Range) = new Field(name, range)
-  }
-  case class Filter(name: String, value: String) extends MatchExpression {
-    def this(name: String, range: Range) = this(name, s"${range.start}..${range.end}")
-    override def toString = s"(filter $name '$value')"
-  }
-  object Filter {
-    def apply(name: String, range: Range) = new Filter(name, range)
-  }
-  case class Not(ex: MatchExpression) extends MatchExpression {
-    override def toString = s"(not ${ex})"
-  }
-  case class And(ms: MatchExpression*) extends MatchExpression {
-    override def toString = {
-      val es = ms.map(_.toString).mkString(" ")
-      s"(and ${es})"
+  // TODO: open range
+  object MatchExpressions {
+    sealed trait MatchExpression {
+      def and(ex: MatchExpression) = And(this, ex)
+      def or(ex: MatchExpression) = Or(this, ex)
     }
-  }
-  case class Or(ms: MatchExpression*) extends MatchExpression {
-    override def toString = {
-      val es = ms.map(_.toString).mkString(" ")
-      s"(or ${es})"
+
+    class Field private(name: String, value: String) extends MatchExpression {
+      override def toString = s"(field $name $value)"
+    }
+    object Field {
+      def apply(name: String, value: Number) = new Field(name, s"$value")
+      def apply(name: String, range: Range) = new Field(name, s"${range.start}..${range.end}")
+      def apply(name: String, value: String) = new Field(name, s"'$value'")
+    }
+
+    class Filter private(name: String, value: String) extends MatchExpression {
+      override def toString = s"(filter $name $value)"
+    }
+    object Filter {
+      def apply(name: String, value: Number) = new Filter(name, s"$value")
+      def apply(name: String, range: Range) = new Filter(name, s"${range.start}..${range.end}")
+      def apply(name: String, value: String) = new Filter(name, s"'$value'")
+    }
+
+    class Not(ex: MatchExpression) extends MatchExpression {
+      override def toString = s"(not ${ex})"
+    }
+    object Not {
+      def apply(ex: MatchExpression) = new Not(ex)
+    }
+
+    class And(ms: Seq[MatchExpression]) extends MatchExpression {
+      override def toString = {
+        val es = ms.map(_.toString).mkString(" ")
+        s"(and ${es})"
+      }
+    }
+    object And {
+      def apply(ms: MatchExpression*) = new And(ms)
+    }
+
+    class Or(ms: Seq[MatchExpression]) extends MatchExpression {
+      override def toString = {
+        val es = ms.map(_.toString).mkString(" ")
+        s"(or ${es})"
+      }
+    }
+    object Or {
+      def apply(ms: MatchExpression*) = new Or(ms)
     }
   }
 
-  def search(
+  def search[T](
     domain: (String, String),
     query: Option[String] = None,
-    matchExpression: Option[MatchExpression] = None,
-    returnFields: Seq[String] = Nil) = {
+    matchExpression: Option[MatchExpressions.MatchExpression] = None,
+    returnFields: Seq[String] = Nil)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
     val params =
       query.toSeq.map("q" -> _) ++
-      returnFields.reduceLeftOption(_ + "," + _).map("return-fields" -> _).toSeq
-    request(domain, params)
+      returnFields.reduceLeftOption(_ + "," + _).map("return-fields" -> _).toSeq ++
+      matchExpression.map("bq" -> _.toString).toSeq
+    request[T](domain, params)
   }
 
 }

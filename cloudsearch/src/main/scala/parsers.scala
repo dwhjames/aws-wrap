@@ -6,19 +6,21 @@ import scala.concurrent.duration.Duration
 import java.util.concurrent.TimeUnit._
 
 import play.api.libs.ws.Response
+import play.api.libs.json.util._
+import play.api.libs.json._
+
 import aws.core._
 import aws.core.parsers._
 
 object CloudSearchParsers {
 
   implicit def cloudSearchMetadataParser = Parser[CloudSearchMetadata] { r =>
-    val i = (r.json \ "hits" \ "info")
-    val meta = CloudSearchMetadata(
-      (i \ "rid").as[String],
-      Duration((i \ "time-ms").as[Long], MILLISECONDS),
-      Duration((i \ "cpu-time-ms").as[Long], MILLISECONDS))
-
-    Success(meta)
+    val read = (r.json \ "info").validate((
+      (__ \ "rid").read[String] and
+      (__ \ "time-ms").read[Long].map(Duration(_, MILLISECONDS)) and
+      (__ \ "cpu-time-ms").read[Long].map(Duration(_, MILLISECONDS))
+    )(CloudSearchMetadata))
+    Success(read.get)
   }
 
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[CloudSearchMetadata, T]] =
