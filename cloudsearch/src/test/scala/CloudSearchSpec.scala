@@ -33,7 +33,7 @@ object CloudSearchSpec extends Specification {
   import aws.core.parsers._
   import play.api.libs.json._
 
-  case class Movie(id: String, title: Seq[String])
+  case class Movie(id: String, titles: Seq[String])
   implicit val moviesParser = Parser[Seq[Movie]] { r =>
     import play.api.libs.json.util._
     val reader = ((__ \ "id").read[String] and
@@ -73,6 +73,50 @@ object CloudSearchSpec extends Specification {
         matchExpression = Some(ex),
         returnFields = Seq("title")))
       checkResult(r)
+    }
+
+    "Search using MatchExpression (Field and Not)" in {
+      import CloudSearch.MatchExpressions._
+      val ex = Field("title", "star wars") and Not(Filter("year", 2000 to 2012))
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        domain = domain,
+        matchExpression = Some(ex),
+        returnFields = Seq("title", "year")))
+      checkResult(r)
+    }
+
+    "Search using MatchExpression (star wars OR star strek)" in {
+      import CloudSearch.MatchExpressions._
+      val ex = Field("title", "star wars") or Field("title", "star strek")
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        domain = domain,
+        matchExpression = Some(ex),
+        returnFields = Seq("title", "year")))
+      checkResult(r)
+    }
+
+    "Search using MatchExpression (Complex query)" in {
+      import CloudSearch.MatchExpressions._
+      val ex = (Field("title", "Star Wars") or Field("title", "Star Trek")) and
+        Filter("year", 1980 to 1990) and
+        Not(Field("director", "Carpenter")) and
+        Not(Field("title", "Spock"))
+
+      val expected =   Seq("Star Trek IV: The Voyage Home",
+        "Star Trek V: The Final Frontier",
+        "Star Trek: The Wrath of Khan",
+        "Star Wars: Episode V - The Empire Strikes Back",
+        "Star Wars: Episode VI - Return of the Jedi")
+
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        domain = domain,
+        matchExpression = Some(ex),
+        returnFields = Seq("title", "year")))
+      checkResult(r)
+
+      val res = r.body.map(_.titles).flatten
+      res must haveSize(expected.size)
+      res must containAllOf(expected)
     }
   }
 }
