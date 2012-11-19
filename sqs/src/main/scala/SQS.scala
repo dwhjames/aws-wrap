@@ -16,9 +16,9 @@
 
 package aws.sqs
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ Future, ExecutionContext }
 
-import play.api.libs.iteratee.{Iteratee, Input, Step, Done, Error => IterateeError}
+import play.api.libs.iteratee.{ Iteratee, Input, Step, Done, Error => IterateeError }
 
 import aws.core._
 import aws.core.Types._
@@ -31,6 +31,7 @@ case class SQSMeta(requestId: String) extends Metadata
 object SQS extends V2[SQSMeta](version = "2012-11-05") {
 
   import SQSParsers._
+  import QueueAttributes.QueueAttribute
 
   object ActionNames extends Enumeration {
     type ActionName = Value
@@ -45,32 +46,27 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
 
   object Parameters {
     def AccountIds(accountIds: Seq[String]): Seq[(String, String)] = (for ((accountId, i) <- accountIds.zipWithIndex) yield {
-        "AWSAccountId.%d".format(i + 1) -> accountId
+      "AWSAccountId.%d".format(i + 1) -> accountId
     }).toSeq
     def AWSActionNames(actionNames: Seq[ActionName]): Seq[(String, String)] = (for ((action, i) <- actionNames.zipWithIndex) yield {
-        "ActionName.%d".format(i + 1) -> action.toString
+      "ActionName.%d".format(i + 1) -> action.toString
     }).toSeq
     def BatchDeleteEntry(messages: Seq[MessageDelete]) = (for ((message, i) <- messages.zipWithIndex) yield {
       Seq(
         "DeleteMessageBatchRequestEntry.%d.Id".format(i + 1) -> message.id,
-        "DeleteMessageBatchRequestEntry.%d.ReceiptHandle".format(i + 1) -> message.receiptHandle
-      )
+        "DeleteMessageBatchRequestEntry.%d.ReceiptHandle".format(i + 1) -> message.receiptHandle)
     }).flatten
     def BatchMessageVisibility(messages: Seq[MessageVisibility]) = (for ((message, i) <- messages.zipWithIndex) yield {
       Seq(
         "ChangeMessageVisibilityBatchRequestEntry.%d.Id".format(i + 1) -> message.id,
-        "ChangeMessageVisibilityBatchRequestEntry.%d.ReceiptHandle".format(i + 1) -> message.receiptHandle
-      ) ++ message.visibilityTimeout.toSeq.map(
-        "ChangeMessageVisibilityBatchRequestEntry.%d.VisibilityTimeout".format(i + 1) -> _.toString
-      )
+        "ChangeMessageVisibilityBatchRequestEntry.%d.ReceiptHandle".format(i + 1) -> message.receiptHandle) ++ message.visibilityTimeout.toSeq.map(
+          "ChangeMessageVisibilityBatchRequestEntry.%d.VisibilityTimeout".format(i + 1) -> _.toString)
     }).flatten
     def BatchSendEntry(messages: Seq[MessageSend]) = (for ((message, i) <- messages.zipWithIndex) yield {
       Seq(
         "SendMessageBatchRequestEntry.%d.Id".format(i + 1) -> message.id,
-        "SendMessageBatchRequestEntry.%d.MessageBody".format(i + 1) -> message.body
-      ) ++ message.delaySeconds.toSeq.map(
-        "SendMessageBatchRequestEntry.%d.DelaySeconds".format(i + 1) -> _.toString
-      )
+        "SendMessageBatchRequestEntry.%d.MessageBody".format(i + 1) -> message.body) ++ message.delaySeconds.toSeq.map(
+          "SendMessageBatchRequestEntry.%d.DelaySeconds".format(i + 1) -> _.toString)
     }).flatten
     def DelaySeconds(delay: Option[Long]) = delay.toSeq.map("DelaySeconds" -> _.toString)
     def MaxNumberOfMessages(n: Option[Long]) = n.toSeq.map("MaxNumberOfMessages" -> _.toString)
@@ -80,21 +76,19 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
       case 1 => Seq("AttributeName" -> messages(0).toString)
       case _ => (for ((message, i) <- messages.zipWithIndex) yield {
         Seq(
-          "AttributeName.%d".format(i + 1) -> message.toString
-        )
+          "AttributeName.%d".format(i + 1) -> message.toString)
       }).flatten
     }
-    def QueueAttributes(attrs: Seq[QueueAttribute]): Seq[(String, String)] = (for ((attribute, i) <- attrs.zipWithIndex) yield {
+    def QueueAttributes(attrs: Seq[QueueAttributeValue]): Seq[(String, String)] = (for ((attribute, i) <- attrs.zipWithIndex) yield {
       Seq(
-        "Attribute.%d.Name".format(i + 1) -> attribute.name,
-        "Attribute.%d.Value".format(i + 1) -> attribute.value
-      )
+        "Attribute.%d.Name".format(i + 1) -> attribute.attribute.toString,
+        "Attribute.%d.Value".format(i + 1) -> attribute.value)
     }).flatten
-    def QueueAttributeNames(names: Seq[String]): Seq[(String, String)] = names.size match {
+    def QueueAttributeNames(names: Seq[QueueAttribute]): Seq[(String, String)] = names.size match {
       case 0 => Nil
-      case 1 => Seq("Attribute" -> names(0))
+      case 1 => Seq("Attribute" -> names(0).toString)
       case _ => (for ((attribute, i) <- names.zipWithIndex) yield {
-        "Attribute.%d".format(i + 1) -> attribute
+        "Attribute.%d".format(i + 1) -> attribute.toString
       })
     }
     def QueueName(name: String) = ("QueueName" -> name)
@@ -106,7 +100,7 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
   import AWS.Parameters._
   import Parameters._
 
-  def createQueue(name: String, attributes: QueueAttribute*)(implicit region: SQSRegion): Future[Result[SQSMeta, Queue]] = {
+  def createQueue(name: String, attributes: CreateAttributeValue*)(implicit region: SQSRegion): Future[Result[SQSMeta, Queue]] = {
     val params = Seq(Action("CreateQueue"), QueueName(name)) ++ QueueAttributes(attributes)
     get[Queue](params: _*)
   }
@@ -149,27 +143,29 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
                          maxNumber: Option[Long] = None,
                          attributes: Seq[MessageAttribute],
                          visibilityTimeout: Option[Long] = None)(implicit executor: ExecutionContext): Future[Iteratee[Seq[MessageReceive], A]] = {
-      receiveMessage(maxNumber, attributes, visibilityTimeout, Some(20L)) map { _ match {
-        case AWSError(meta, code, message) => IterateeError(message, Input.Empty)
-        case Result(meta, sqsMessages) => consumer.pureFlatFold {
-          case Step.Done(a, e) => Done(a, e)
-          case Step.Cont(k) => {
-            val it = k(Input.El(sqsMessages))
-            messageStream(it, maxNumber, attributes, visibilityTimeout)
-            it
+      receiveMessage(maxNumber, attributes, visibilityTimeout, Some(20L)) map {
+        _ match {
+          case AWSError(meta, code, message) => IterateeError(message, Input.Empty)
+          case Result(meta, sqsMessages) => consumer.pureFlatFold {
+            case Step.Done(a, e) => Done(a, e)
+            case Step.Cont(k) => {
+              val it = k(Input.El(sqsMessages))
+              messageStream(it, maxNumber, attributes, visibilityTimeout)
+              it
+            }
+            case Step.Error(e, input) => IterateeError(e, input)
           }
-          case Step.Error(e, input) => IterateeError(e, input)
         }
-      }}
+      }
     }
 
-    def getAttributes(attributes: Seq[String]): Future[Result[SQSMeta, Seq[QueueAttribute]]] = {
+    def getAttributes(attributes: QueueAttribute*): Future[Result[SQSMeta, Seq[QueueAttributeValue]]] = {
       val params = Seq(Action("GetQueueAttributes")) ++
         QueueAttributeNames(attributes)
-      SQS.get[Seq[QueueAttribute]](this.url, params: _*)
+      SQS.get[Seq[QueueAttributeValue]](this.url, params: _*)
     }
 
-    def setAttributes(attributes: Seq[QueueAttribute]): Future[EmptyResult[SQSMeta]] = {
+    def setAttributes(attributes: Seq[QueueAttributeValue]): Future[EmptyResult[SQSMeta]] = {
       val params = Seq(Action("SetQueueAttributes")) ++
         QueueAttributes(attributes)
       SQS.get[Unit](this.url, params: _*)
@@ -190,12 +186,12 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
       SQS.get[Unit](this.url, Action("DeleteMessage"), "ReceiptHandle" -> receiptHandle)
     }
 
-    def sendMessageBatch(messages: Seq[MessageSend]): Future[Result[SQSMeta, Seq[MessageResponse]]] = {
+    def sendMessageBatch(messages: MessageSend*): Future[Result[SQSMeta, Seq[MessageResponse]]] = {
       val params = Seq(Action("SendMessageBatch")) ++ BatchSendEntry(messages)
       SQS.get[Seq[MessageResponse]](this.url, params: _*)
     }
 
-    def deleteMessageBatch(messages: Seq[MessageDelete]): Future[Result[SQSMeta, Seq[String]]] = {
+    def deleteMessageBatch(messages: MessageDelete*): Future[Result[SQSMeta, Seq[String]]] = {
       val params = Seq(Action("DeleteMessageBatch")) ++ BatchDeleteEntry(messages)
       SQS.get[Seq[String]](this.url, params: _*)
     }
@@ -204,11 +200,10 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
       SQS.get[Unit](this.url,
         Action("ChangeMessageVisibility"),
         "ReceiptHandle" -> receiptHandle,
-        "VisibilityTimeout" -> visibilityTimeout.toString
-      )
+        "VisibilityTimeout" -> visibilityTimeout.toString)
     }
 
-    def changeMessageVisibilityBatch(messages: Seq[MessageVisibility]): Future[Result[SQSMeta, Seq[String]]] = {
+    def changeMessageVisibilityBatch(messages: MessageVisibility*): Future[Result[SQSMeta, Seq[String]]] = {
       val params = Seq(Action("ChangeMessageVisibilityBatch")) ++ BatchMessageVisibility(messages)
       SQS.get[Seq[String]](this.url, params: _*)
     }

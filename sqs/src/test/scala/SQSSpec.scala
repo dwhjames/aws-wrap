@@ -66,8 +66,7 @@ object SQSSpec extends Specification {
     }
 
     "Set and get attributes" in {
-      import QueueAttribute._
-      Await.result(SQS.createQueue("test-attributes"), Duration(30, SECONDS)) match {
+      Await.result(SQS.createQueue("test-attributes", MaximumMessageSize(20 * 1024)), Duration(30, SECONDS)) match {
         case Result(_, queue) =>
           val r = Await.result(queue.setAttributes(Seq(MaximumMessageSize(10 * 1024))), Duration(30, SECONDS))
           ensureSuccess(r)

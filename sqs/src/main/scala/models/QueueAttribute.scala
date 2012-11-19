@@ -16,65 +16,97 @@
 
 package aws.sqs
 
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{ Json, JsValue }
 
-sealed trait QueueAttribute {
-  def name: String
+object QueueAttributes extends Enumeration {
+  type QueueAttribute = Value
+  val All = Value("All")
+  val ApproximateNumberOfMessages = Value("ApproximateNumberOfMessages")
+  val ApproximateNumberOfMessagesDelayed = Value("ApproximateNumberOfMessagesDelayed")
+  val ApproximateNumberOfMessagesNotVisible = Value("ApproximateNumberOfMessagesNotVisible")
+  val CreatedTimestamp = Value("CreatedTimestamp")
+  val DelaySeconds = Value("DelaySeconds")
+  val LastModifiedTimestamp = Value("LastModifiedTimestamp")
+  val MaximumMessageSize = Value("MaximumMessageSize")
+  val MessageRetentionPeriod = Value("MessageRetentionPeriod")
+  val OldestMessageAge = Value("OldestMessageAge")
+  val Policy = Value("Policy")
+  val QueueArn = Value("QueueArn")
+  val ReceiveMessageWaitTimeSeconds = Value("ReceiveMessageWaitTimeSeconds")
+  val VisibilityTimeout = Value("VisibilityTimeout")
+}
+import QueueAttributes._
+
+trait QueueAttributeValue {
+  def attribute: QueueAttribute
   def value: String
 }
 
-// TODO: Separate trait for attributes usable in createQueue
+/**
+ * A queue attribute that can be used in SQS.createQueue
+ */
+trait CreateAttributeValue extends QueueAttributeValue
 
-object QueueAttribute {
+case class ApproximateNumberOfMessages(count: Long) extends QueueAttributeValue {
+  override def attribute = QueueAttributes.ApproximateNumberOfMessages
+  override def value = count.toString
+}
 
-  case class ApproximateNumberOfMessages(count: Long) extends QueueAttribute {
-    override def name = "ApproximateNumberOfMessages"
-    override def value = count.toString
-  }
+case class ApproximateNumberOfMessagesDelayed(count: Long) extends QueueAttributeValue {
+  override def attribute = QueueAttributes.ApproximateNumberOfMessagesDelayed
+  override def value = count.toString
+}
 
-  case class ApproximateNumberOfMessagesDelayed(count: Long) extends QueueAttribute {
-    override def name = "ApproximateNumberOfMessagesDelayed"
-    override def value = count.toString
-  }
+case class ApproximateNumberOfMessagesNotVisible(count: Long) extends QueueAttributeValue {
+  override def attribute = QueueAttributes.ApproximateNumberOfMessagesNotVisible
+  override def value = count.toString
+}
 
-  case class ApproximateNumberOfMessagesNotVisible(count: Long) extends QueueAttribute {
-    override def name = "ApproximateNumberOfMessagesNotVisible"
-    override def value = count.toString
-  }
+case class CreatedTimestamp(timestamp: Long) extends QueueAttributeValue {
+  override def attribute = QueueAttributes.CreatedTimestamp
+  override def value = timestamp.toString
+}
 
-  // CreatedTimestamp
-  
-  case class DelaySeconds(seconds: Long) extends QueueAttribute {
-    override def name = "DelaySeconds"
-    override def value = seconds.toString
-  }
+// CreatedTimestamp
 
-  // LastModifiedTimestamp
+case class DelaySeconds(seconds: Long) extends QueueAttributeValue with CreateAttributeValue {
+  override def attribute = QueueAttributes.DelaySeconds
+  override def value = seconds.toString
+}
 
-  case class MaximumMessageSize(size: Long) extends QueueAttribute {
-    override def name = "MaximumMessageSize"
-    override def value = size.toString
-  }
+// LastModifiedTimestamp
 
-  case class MessageRetentionPeriod(period: Long) extends QueueAttribute {
-    override def name = "MessageRetentionPeriod"
-    override def value = period.toString
-  }
+case class MaximumMessageSize(size: Long) extends QueueAttributeValue with CreateAttributeValue {
+  override def attribute = QueueAttributes.MaximumMessageSize
+  override def value = size.toString
+}
 
-  case class Policy(policy: JsValue) extends QueueAttribute {
-    override def name = "Policy"
-    override def value = policy.toString
-  }
+case class MessageRetentionPeriod(period: Long) extends QueueAttributeValue with CreateAttributeValue {
+  override def attribute = QueueAttributes.MessageRetentionPeriod
+  override def value = period.toString
+}
 
-  // QueueArn
+case class Policy(policy: JsValue) extends QueueAttributeValue with CreateAttributeValue {
+  override def attribute = QueueAttributes.Policy
+  override def value = policy.toString
+}
 
-  // ReceiveMessageWaitTimeSeconds
+case class QueueArn(arn: String) extends QueueAttributeValue {
+  override def attribute = QueueAttributes.QueueArn
+  override def value = arn
+}
 
-  case class VisibilityTimeout(timeout: Long) extends QueueAttribute {
-    override def name = "VisibilityTimeout"
-    override def value = timeout.toString
-  }
+case class ReceiveMessageWaitTimeSeconds(waitTime: Long) extends QueueAttributeValue with CreateAttributeValue {
+  override def attribute = QueueAttributes.ReceiveMessageWaitTimeSeconds
+  override def value = waitTime.toString
+}
 
+case class VisibilityTimeout(timeout: Long) extends QueueAttributeValue with CreateAttributeValue {
+  override def attribute = QueueAttributes.VisibilityTimeout
+  override def value = timeout.toString
+}
+
+object QueueAttributeValue {
   def apply(name: String, value: String) = name match {
     case "ApproximateNumberOfMessages" => ApproximateNumberOfMessages(value.toLong)
     case "ApproximateNumberOfMessagesDelayed" => ApproximateNumberOfMessagesDelayed(value.toLong)

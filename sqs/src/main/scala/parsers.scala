@@ -53,8 +53,7 @@ object SQSParsers {
         n \\ "ReceiptHandle" text,
         (n \\ "Attribute" map { attrNode: Node =>
           MessageAttributes.withName(attrNode \\ "Name" text) -> (attrNode \\ "Value" text)
-        }).toMap
-      )
+        }).toMap)
     })
   }
 
@@ -65,12 +64,12 @@ object SQSParsers {
   }
 
   implicit def batchMessageIdParser = Parser[Seq[String]] { r: Response =>
-    Success(r.xml \\ "Id" map(_.text))
+    Success(r.xml \\ "Id" map (_.text))
   }
 
-  implicit def attributeListParser = Parser[Seq[QueueAttribute]] { r: Response =>
-    Success(r.xml \\ "Attribute" map { n: Node => 
-      QueueAttribute(n \\ "Name" text, n \\ "Value" text)
+  implicit def attributeListParser = Parser[Seq[QueueAttributeValue]] { r: Response =>
+    Success(r.xml \\ "Attribute" map { n: Node =>
+      QueueAttributeValue(n \\ "Name" text, n \\ "Value" text)
     })
   }
 

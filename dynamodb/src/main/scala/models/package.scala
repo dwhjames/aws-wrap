@@ -54,7 +54,6 @@ object Update {
   }
 }
 
-
 sealed trait KeyValue {
   def hashKeyElement: DDBAttribute
 }

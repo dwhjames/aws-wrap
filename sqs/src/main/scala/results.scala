@@ -24,6 +24,5 @@ case class MessageReceive(
   messageId: String,
   md5OfBody: String,
   receiptHandle: String,
-  attributes: Map[MessageAttribute, String]
-)
+  attributes: Map[MessageAttribute, String])
 
