@@ -9,6 +9,7 @@ import com.typesafe.sbtscalariform.ScalariformPlugin._
 object AWS {
     val scalaVersion = "2.10.0-RC1"
     val version = "0.1-SNAPSHOT"
+    val playVersion = "2.1-20121029-UP"
 }
 
 object ApplicationBuild extends Build {
@@ -27,7 +28,7 @@ object ApplicationBuild extends Build {
         resolvers ++= Seq("typesafe" at "http://repo.typesafe.com/typesafe/releases",
           "Caffeine Lab" at "http://caffeinelab.net/repo"),
         resolvers ++= Seq("sonatype" at "http://oss.sonatype.org/content/repositories/releases"),
-        libraryDependencies ++= Seq("play" %% "play" % "2.1-20121029-UP",
+        libraryDependencies ++= Seq("play" %% "play" % AWS.playVersion,
           "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2" % "test",
           "com.novocode" % "junit-interface" % "0.10-M2" % "test"),
         testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")

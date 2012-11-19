@@ -18,7 +18,7 @@ package aws.sqs
 
 import scala.concurrent.{Future, ExecutionContext}
 
-import play.api.libs.iteratee.Iteratee
+import play.api.libs.iteratee.{Iteratee, Input, Step, Done, Error => IterateeError}
 
 import aws.core._
 import aws.core.Types._
@@ -90,9 +90,13 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
         "Attribute.%d.Value".format(i + 1) -> attribute.value
       )
     }).flatten
-    def QueueAttributeNames(names: Seq[String]): Seq[(String, String)] = (for ((attribute, i) <- names.zipWithIndex) yield {
+    def QueueAttributeNames(names: Seq[String]): Seq[(String, String)] = names.size match {
+      case 0 => Nil
+      case 1 => Seq("Attribute" -> names(0))
+      case _ => (for ((attribute, i) <- names.zipWithIndex) yield {
         "Attribute.%d".format(i + 1) -> attribute
-    })
+      })
+    }
     def QueueName(name: String) = ("QueueName" -> name)
     def QueueNamePrefix(prefix: String) = Option(prefix).filterNot(_ == "").toSeq.map("QueueNamePrefix" -> _)
     def QueueOwnerAWSAccountId(accountId: Option[String]) = accountId.toSeq.map("QueueOwnerAWSAccountId" -> _)
@@ -140,18 +144,27 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
         waitTimeSeconds.toSeq.map("WaitTimeSeconds" -> _.toString)
       get[Seq[MessageReceive]](this.url, params: _*)
     }
-/*
-    def messageStream[A](consumer: EmptyResult[SQSMeta] => Iteratee[Seq[MessageReceive], A],
+
+    def messageStream[A](consumer: Iteratee[Seq[MessageReceive], A],
                          maxNumber: Option[Long] = None,
                          attributes: Seq[MessageAttribute],
                          visibilityTimeout: Option[Long] = None)(implicit executor: ExecutionContext): Future[Iteratee[Seq[MessageReceive], A]] = {
-      receiveMessage(maxNumber, attributes, visibilityTimeout, Some(20L)) map { r =>
-
-      }
+      receiveMessage(maxNumber, attributes, visibilityTimeout, Some(20L)) map { _ match {
+        case AWSError(meta, code, message) => IterateeError(message, Input.Empty)
+        case Result(meta, sqsMessages) => consumer.pureFlatFold {
+          case Step.Done(a, e) => Done(a, e)
+          case Step.Cont(k) => {
+            val it = k(Input.El(sqsMessages))
+            messageStream(it, maxNumber, attributes, visibilityTimeout)
+            it
+          }
+          case Step.Error(e, input) => IterateeError(e, input)
+        }
+      }}
     }
-*/
+
     def getAttributes(attributes: Seq[String]): Future[Result[SQSMeta, Seq[QueueAttribute]]] = {
-      val params = Seq(Action("GetQueueAttribute")) ++
+      val params = Seq(Action("GetQueueAttributes")) ++
         QueueAttributeNames(attributes)
       SQS.get[Seq[QueueAttribute]](this.url, params: _*)
     }
