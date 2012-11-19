@@ -30,8 +30,8 @@ object Application extends Controller {
     Async {
       Recipe.all().map {
         case Result(_, recipes) => Ok(views.html.index(recipes, success, error))
-        case AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _) => Redirect(routes.Application.notready())
-        case err@AWSError(_, _) => InternalServerError(views.html.error(err))
+        case AWSError(_, DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _) => Redirect(routes.Application.notready())
+        case err@AWSError(_, _, _) => InternalServerError(views.html.error(err))
       }
     }
   }
@@ -44,7 +44,7 @@ object Application extends Controller {
     Async {
       Recipe.initialize().map {
         case Result(_, table) => Redirect(routes.Application.index())
-        case err@AWSError(_, _) => InternalServerError(views.html.error(err))
+        case err@AWSError(_, _, _) => InternalServerError(views.html.error(err))
       }
     }
   }
@@ -53,8 +53,8 @@ object Application extends Controller {
     Async {
       Recipe.byId(id).map {
         case Result(_, recipe: Recipe) => Ok(views.html.show(recipe))
-        case AWSError(DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _) => NotFound("Recipe not found")
-        case err@AWSError(_, _) => InternalServerError(views.html.error(err))
+        case AWSError(_, DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, _) => NotFound("Recipe not found")
+        case err@AWSError(_, _, _) => InternalServerError(views.html.error(err))
       }
     }
   }
@@ -63,7 +63,7 @@ object Application extends Controller {
     Async {
       Recipe.delete(id).map {
         case Result(_, _) => Redirect(routes.Application.index).flashing("success" -> "Item successfully deleted")
-        case AWSError(code, message) => Redirect(routes.Application.index).flashing("error" -> ("Error deleting: " + message))
+        case AWSError(_, code, message) => Redirect(routes.Application.index).flashing("error" -> ("Error deleting: " + message))
       }
     }
   }
@@ -79,7 +79,7 @@ object Application extends Controller {
         Async {
           Recipe.insert(recipe).map {
             case Result(_, _) => Redirect(routes.Application.index()).flashing("success" -> "Recipe created")
-            case err@AWSError(_, _) => InternalServerError(views.html.error(err))
+            case err@AWSError(_, _, _) => InternalServerError(views.html.error(err))
           }
         }
       }

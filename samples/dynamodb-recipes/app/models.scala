@@ -5,11 +5,12 @@ import scala.concurrent.Future
 import aws.core._
 import aws.core.Types._
 import aws.dynamodb._
+import aws.dynamodb.models._
 import aws.dynamodb.DDBAttribute._
 
 import aws.dynamodb.DDBRegion.DEFAULT
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits._
 
 case class Recipe(
   id: String,

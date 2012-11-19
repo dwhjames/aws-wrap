@@ -37,6 +37,10 @@ object SQSSpec extends Specification {
     "Create and delete queue" in {
       Await.result(SQS.createQueue("test-create-queue"), Duration(30, SECONDS)) match {
         case Result(_, queue) =>
+          Await.result(SQS.getQueue("test-create-queue"), Duration(30, SECONDS)) match {
+            case AWSError(_, _, message) => failure(message)
+            case Result(_, q2) => q2.url must be equalTo(queue.url)
+          }
           val r2 = Await.result(SQS.deleteQueue(queue.url), Duration(30, SECONDS))
           ensureSuccess(r2)
         case AWSError(_, _, message) => failure(message)
