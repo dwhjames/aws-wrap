@@ -1,7 +1,7 @@
 package com.pellucid.aws.dynamodb.models;
 
 public enum TableStatus {
-    CREATING, 
+    CREATING,
     ACTIVE,
     DELETING,
     UPDATING

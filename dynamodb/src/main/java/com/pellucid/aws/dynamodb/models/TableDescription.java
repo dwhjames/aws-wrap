@@ -2,6 +2,8 @@ package com.pellucid.aws.dynamodb.models;
 
 import java.util.Date;
 
+import play.libs.Scala;
+
 public class TableDescription {
     private String name;
     private TableStatus status;
@@ -49,4 +51,24 @@ public class TableDescription {
         return this.size;
     }
 
+    public aws.dynamodb.models.TableDescription toScala() {
+        return new aws.dynamodb.models.TableDescription(
+                name,
+                aws.dynamodb.Status$.MODULE$.apply(status.toString()),
+                creationDateTime,
+                keySchema.toScala(),
+                provisionedThroughput.toScala(),
+                Scala.Option((Object)size));
+    }
+
+    public static TableDescription fromScala(aws.dynamodb.models.TableDescription tableDesc) {
+        return new TableDescription(
+            tableDesc.name(),
+            TableStatus.valueOf(tableDesc.status().toString()),
+            tableDesc.creationDateTime(),
+            PrimaryKey.fromScala(tableDesc.keySchema()),
+            ProvisionedThroughput.fromScala(tableDesc.provisionedThroughput()),
+            (Long)tableDesc.size().getOrElse(null)
+        );
+    }
 }

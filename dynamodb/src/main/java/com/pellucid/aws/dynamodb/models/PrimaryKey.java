@@ -20,10 +20,15 @@ public class PrimaryKey {
     public KeySchemaElement rangeKeyElement() {
         return this.rangeKeyElement;
     }
-    /*
-    public KeySchema fromScala(aws.dynamodb.KeySchema scalaSchema) {
-        return new KeySchema()
-    }*/
+
+    public static PrimaryKey fromScala(aws.dynamodb.models.PrimaryKey scalaSchema) {
+        KeySchemaElement rangeKey = null;
+        if (scalaSchema instanceof aws.dynamodb.models.CompositeKey) {
+            aws.dynamodb.models.CompositeKey key = (aws.dynamodb.models.CompositeKey)scalaSchema;
+            rangeKey = KeySchemaElement.fromScala(key.rangeKey());
+        }
+        return new PrimaryKey(KeySchemaElement.fromScala(scalaSchema.hashKey()), rangeKey);
+    }
 
     public aws.dynamodb.models.PrimaryKey toScala() {
         if (rangeKeyElement == null) {

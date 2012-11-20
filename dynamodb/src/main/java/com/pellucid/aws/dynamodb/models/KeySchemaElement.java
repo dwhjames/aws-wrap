@@ -30,4 +30,12 @@ public class KeySchemaElement {
         }
         return null; // Never happens
     }
+
+    public static KeySchemaElement fromScala(aws.dynamodb.models.KeySchemaElement scalaKSE) {
+        if ("S".equals(scalaKSE.typeCode())) return new KeySchemaElement(scalaKSE.attribute(), AttributeType.StringType);
+        if ("N".equals(scalaKSE.typeCode())) return new KeySchemaElement(scalaKSE.attribute(), AttributeType.NumberType);
+        if ("B".equals(scalaKSE.typeCode())) return new KeySchemaElement(scalaKSE.attribute(), AttributeType.BinaryType);
+        return null; // Never happens
+    }
+
 }

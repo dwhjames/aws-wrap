@@ -141,19 +141,20 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
 
     def messageEnumerator(attributes: Seq[MessageAttribute] = Seq(MessageAttributes.All),
                           visibilityTimeout: Option[Long] = None)(implicit executor: ExecutionContext): Enumerator[MessageReceive] = generateM {
-      receiveMessage(attributes, Some(1), visibilityTimeout, Some(20)).map { _ match {
-        case AWSError(_, code, message) => None
-        case Result(_, msgs) => msgs.headOption
-      }}
+      receiveMessage(attributes, Some(1), visibilityTimeout, Some(20)).map {
+        _ match {
+          case AWSError(_, code, message) => None
+          case Result(_, msgs) => msgs.headOption
+        }
+      }
     }
 
-    def generateM[E](e: => Future[Option[E]])(implicit executor: ExecutionContext): Enumerator[E] = Enumerator.checkContinue0( new Enumerator.TreatCont0[E] {
-      def apply[A](loop: Iteratee[E,A] => Future[Iteratee[E,A]], k: Input[E] => Iteratee[E,A]) = e.flatMap {
+    def generateM[E](e: => Future[Option[E]])(implicit executor: ExecutionContext): Enumerator[E] = Enumerator.checkContinue0(new Enumerator.TreatCont0[E] {
+      def apply[A](loop: Iteratee[E, A] => Future[Iteratee[E, A]], k: Input[E] => Iteratee[E, A]) = e.flatMap {
         case Some(e) => loop(k(Input.El(e)))
         case None => loop(k(Input.Empty))
       }
     })
-
 
     def getAttributes(attributes: QueueAttribute*): Future[Result[SQSMeta, Seq[QueueAttributeValue]]] = {
       val params = Seq(Action("GetQueueAttributes")) ++

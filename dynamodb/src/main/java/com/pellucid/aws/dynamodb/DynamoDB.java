@@ -7,6 +7,7 @@ import com.pellucid.aws.results.SimpleResult;
 
 import play.libs.F;
 import play.libs.Scala;
+
 import scala.collection.JavaConversions;
 import scala.collection.Seq;
 
@@ -41,7 +42,7 @@ public class DynamoDB {
      * @param exclusiveStartTableName The name of the table that starts the list. If you already ran a ListTables operation and received an LastEvaluatedTableName value in the response, use that value here to continue the list.
      */
     public F.Promise<SimpleResult<List<String>>> listTables(Integer limit, String exclusiveStartTableName) {
-        return AWSJavaConversions.toSimpleResultPromise(aws.dynamodb.DynamoDB.listTables(Scala.Option((Object)limit), Scala.Option(exclusiveStartTableName), scalaRegion),
+        return AWSJavaConversions.toSimpleResultPromise(aws.dynamodb.DynamoDB.listTables(Scala.Option((Object)limit), Scala.Option(exclusiveStartTableName), scalaRegion, aws.core.AWS.defaultExecutionContext()),
                 new F.Function<Seq<String>, List<String>>() {
             @Override public List<String> apply(Seq<String> tableNames) {
                 return JavaConversions.seqAsJavaList(tableNames);
@@ -62,14 +63,16 @@ public class DynamoDB {
      *                  Names can be between 3 and 255 characters long.
      * @param keySchema the primary key structure for the table. See [[PrimaryKey]] for more information.
      */
-/*    public F.Promise<SimpleResult<TableDescription>> createTable(String tableName, PrimaryKey keySchema, ProvisionedThroughput provisionedThroughput) {
-        return AWSJavaConversions.toSimpleResultPromise(aws.dynamodb.DynamoDB.createTable(tableName, keySchema.toScala(), provisionedThroughput.toScala(), scalaRegion),
-                new F.Function<Seq<String>, List<String>>() {
-            @Override public List<String> apply(Seq<String> tableNames) {
-                return JavaConversions.seqAsJavaList(tableNames);
+    public F.Promise<SimpleResult<TableDescription>> createTable(String tableName,
+                                                                 PrimaryKey keySchema,
+                                                                 ProvisionedThroughput provisionedThroughput) {
+        return AWSJavaConversions.toSimpleResultPromise(aws.dynamodb.DynamoDB.createTable(tableName, keySchema.toScala(), provisionedThroughput.toScala(), scalaRegion, aws.core.AWS.defaultExecutionContext()),
+                new F.Function<aws.dynamodb.models.TableDescription, TableDescription>() {
+            @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
+                return TableDescription.fromScala(tableDesc);
             }
         });
-    }*/
+    }
 
     private static aws.dynamodb.DDBRegion scalaRegion(DDBRegion region) {
         switch (region) {

@@ -49,6 +49,8 @@ object AWS {
     iso.format(date)
   }
 
+  val defaultExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
   def httpDateFormat(date: Date) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(date)
   def httpDateparse(date: String) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").parse(date)
 
