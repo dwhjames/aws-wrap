@@ -149,7 +149,22 @@ object CloudSearchSpec extends Specification {
         returnFields = Seq("title, genre"),
         facets = Seq("genre")))
       checkResult(r)
-      val res = r.body
+    }
+
+    "Search, with facets constraints" in {
+      val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
+        domain = domain,
+        query = Some("star wars"),
+        returnFields = Seq("title, genre"),
+        facets = Seq("genre"),
+        facetConstraints = Seq(FacetConstraint("genre", "Action"))))
+      checkResult(r)
+      val fs = r.body._2
+      fs must haveSize(1)
+      fs match {
+        case Facet("genre", ("Action", _) :: Nil) :: Nil => success
+        case _ => failure
+      }
     }
   }
 }
