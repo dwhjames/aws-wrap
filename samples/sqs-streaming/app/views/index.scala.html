@@ -1,0 +1,20 @@
+@()
+
+@main("Comet SQS") {
+
+    <h1>Comet SQS</h1>
+
+    <div id="messages"></div>
+
+    <p>SQS messages are push through a live connection</p>
+
+    <script type="text/javascript" charset="utf-8">
+        // Called for each Comet message
+        var sqsMessageReceive = function(msg) {
+            $('#messages').append("<div>" + msg + "</div>");
+        }
+    </script>
+
+    <iframe id="comet" src="@routes.Application.messageStream.unique"></iframe>
+
+}

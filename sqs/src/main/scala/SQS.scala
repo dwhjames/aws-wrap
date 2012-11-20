@@ -18,7 +18,7 @@ package aws.sqs
 
 import scala.concurrent.{ Future, ExecutionContext }
 
-import play.api.libs.iteratee.{ Iteratee, Input, Step, Done, Error => IterateeError }
+import play.api.libs.iteratee.{ Iteratee, Input, Step, Done, Error => IterateeError, Enumerator }
 
 import aws.core._
 import aws.core.Types._
@@ -127,8 +127,8 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
       SQS.get[SendMessageResult](this.url, params: _*)
     }
 
-    def receiveMessage(maxNumber: Option[Long] = None,
-                       attributes: Seq[MessageAttribute],
+    def receiveMessage(attributes: Seq[MessageAttribute] = Seq(MessageAttributes.All),
+                       maxNumber: Option[Long] = None,
                        visibilityTimeout: Option[Long] = None,
                        waitTimeSeconds: Option[Long] = None): Future[Result[SQSMeta, Seq[MessageReceive]]] = {
       val params = Seq(Action("ReceiveMessage")) ++
@@ -139,25 +139,21 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
       get[Seq[MessageReceive]](this.url, params: _*)
     }
 
-    def messageStream[A](consumer: Iteratee[Seq[MessageReceive], A],
-                         maxNumber: Option[Long] = None,
-                         attributes: Seq[MessageAttribute],
-                         visibilityTimeout: Option[Long] = None)(implicit executor: ExecutionContext): Future[Iteratee[Seq[MessageReceive], A]] = {
-      receiveMessage(maxNumber, attributes, visibilityTimeout, Some(20L)) map {
-        _ match {
-          case AWSError(meta, code, message) => IterateeError(message, Input.Empty)
-          case Result(meta, sqsMessages) => consumer.pureFlatFold {
-            case Step.Done(a, e) => Done(a, e)
-            case Step.Cont(k) => {
-              val it = k(Input.El(sqsMessages))
-              messageStream(it, maxNumber, attributes, visibilityTimeout)
-              it
-            }
-            case Step.Error(e, input) => IterateeError(e, input)
-          }
-        }
-      }
+    def messageEnumerator(attributes: Seq[MessageAttribute] = Seq(MessageAttributes.All),
+                          visibilityTimeout: Option[Long] = None)(implicit executor: ExecutionContext): Enumerator[MessageReceive] = generateM {
+      receiveMessage(attributes, Some(1), visibilityTimeout, Some(20)).map { _ match {
+        case AWSError(_, code, message) => None
+        case Result(_, msgs) => msgs.headOption
+      }}
     }
+
+    def generateM[E](e: => Future[Option[E]])(implicit executor: ExecutionContext): Enumerator[E] = Enumerator.checkContinue0( new Enumerator.TreatCont0[E] {
+      def apply[A](loop: Iteratee[E,A] => Future[Iteratee[E,A]], k: Input[E] => Iteratee[E,A]) = e.flatMap {
+        case Some(e) => loop(k(Input.El(e)))
+        case None => loop(k(Input.Empty))
+      }
+    })
+
 
     def getAttributes(attributes: QueueAttribute*): Future[Result[SQSMeta, Seq[QueueAttributeValue]]] = {
       val params = Seq(Action("GetQueueAttributes")) ++

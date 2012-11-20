@@ -10,7 +10,7 @@ import aws.dynamodb.DDBAttribute._
 
 import aws.dynamodb.DDBRegion.DEFAULT
 
-import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 case class Recipe(
   id: String,

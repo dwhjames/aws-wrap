@@ -49,6 +49,7 @@ object SQSParsers {
     Success(r.xml \\ "Message" map { n: Node =>
       MessageReceive(
         n \\ "MessageId" text,
+        n \\ "Body" text,
         n \\ "MD5OfBody" text,
         n \\ "ReceiptHandle" text,
         (n \\ "Attribute" map { attrNode: Node =>

@@ -16,8 +16,7 @@
 
 package aws.dynamodb
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ Future, ExecutionContext }
 
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
@@ -58,7 +57,7 @@ object DynamoDB {
   }
 
   private def post[T](operation: String,
-                      body: JsValue)(implicit p: Parser[T], region: DDBRegion): Future[SimpleResult[T]] = {
+                      body: JsValue)(implicit p: Parser[T], region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[T]] = {
     request(operation, body).map(r => tryParse[T](r))
   }
 
@@ -71,7 +70,7 @@ object DynamoDB {
    * @param exclusiveStartTableName The name of the table that starts the list. If you already ran a ListTables operation and received an LastEvaluatedTableName value in the response, use that value here to continue the list.
    */
   def listTables(limit: Option[Int] = None,
-                 exclusiveStartTableName: Option[String] = None)(implicit region: DDBRegion): Future[SimpleResult[Seq[String]]] = {
+                 exclusiveStartTableName: Option[String] = None)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[Seq[String]]] = {
     val data = (
       limit.map("Limit" -> Json.toJson(_))
       ++ exclusiveStartTableName.map("ExclusiveStartTableName" -> Json.toJson(_))).toMap
@@ -93,7 +92,7 @@ object DynamoDB {
    */
   def createTable(tableName: String,
                   keySchema: PrimaryKey,
-                  provisionedThroughput: ProvisionedThroughput)(implicit region: DDBRegion): Future[SimpleResult[TableDescription]] = {
+                  provisionedThroughput: ProvisionedThroughput)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj(
       "TableName" -> tableName,
       "KeySchema" -> keySchema,
@@ -116,7 +115,7 @@ object DynamoDB {
    * @param tableName
    */
   def updateTable(tableName: String,
-                  provisionedThroughput: ProvisionedThroughput)(implicit region: DDBRegion): Future[SimpleResult[TableDescription]] = {
+                  provisionedThroughput: ProvisionedThroughput)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj(
       "TableName" -> tableName,
       "ProvisionedThroughput" -> provisionedThroughput)
@@ -139,7 +138,7 @@ object DynamoDB {
    *
    * @param tableName
    */
-  def deleteTable(tableName: String)(implicit region: DDBRegion): Future[EmptySimpleResult] = {
+  def deleteTable(tableName: String)(implicit region: DDBRegion, executor: ExecutionContext): Future[EmptySimpleResult] = {
     val body = Json.obj("TableName" -> tableName)
     post[Unit]("DeleteTable", body)
   }
@@ -154,7 +153,7 @@ object DynamoDB {
    *
    * @param tableName
    */
-  def describeTable(tableName: String)(implicit region: DDBRegion): Future[SimpleResult[TableDescription]] = {
+  def describeTable(tableName: String)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[TableDescription]] = {
     val body = Json.obj("TableName" -> JsString(tableName))
     post[TableDescription]("DescribeTable", body)
   }
@@ -170,7 +169,7 @@ object DynamoDB {
   def putItem(tableName: String,
               item: Item,
               expected: Map[String, Expected] = Map.empty,
-              returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion): Future[SimpleResult[ItemResponse]] = {
+              returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Item" -> Json.toJson(item),
@@ -198,7 +197,7 @@ object DynamoDB {
   def deleteItem(tableName: String,
                  key: KeyValue,
                  expected: Map[String, Expected] = Map.empty,
-                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion): Future[SimpleResult[ItemResponse]] = {
+                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),
@@ -218,7 +217,7 @@ object DynamoDB {
   def getItem(tableName: String,
               key: KeyValue,
               attributesToGet: Seq[String] = Nil,
-              consistentRead: Boolean = false)(implicit region: DDBRegion): Future[SimpleResult[ItemResponse]] = {
+              consistentRead: Boolean = false)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),
@@ -233,7 +232,7 @@ object DynamoDB {
                  key: KeyValue,
                  attributeUpdates: Map[String, Update],
                  expected: Map[String, Expected] = Map.empty,
-                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion): Future[SimpleResult[ItemResponse]] = {
+                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),
@@ -243,7 +242,7 @@ object DynamoDB {
     post[ItemResponse]("UpdateItem", body)
   }
 
-  def query(query: Query)(implicit region: DDBRegion): Future[SimpleResult[QueryResponse]] = {
+  def query(query: Query)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[QueryResponse]] = {
     post[QueryResponse]("Query", Json.toJson(query))
   }
 
@@ -252,7 +251,7 @@ object DynamoDB {
            limit: Option[Long] = None,
            count: Boolean = false,
            scanFilter: Option[KeyCondition] = None,
-           exclusiveStartKey: Option[PrimaryKey] = None)(implicit region: DDBRegion): Future[SimpleResult[QueryResponse]] = {
+           exclusiveStartKey: Option[PrimaryKey] = None)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[QueryResponse]] = {
     val data = Seq(
       "TableName" -> JsString(tableName),
       "Count" -> JsBoolean(count)) ++
@@ -264,12 +263,12 @@ object DynamoDB {
     post[QueryResponse]("Scan", Json.toJson(data.toMap))
   }
 
-  def batchWriteItem(requestItems: Map[String, Seq[WriteRequest]])(implicit region: DDBRegion): Future[SimpleResult[BatchWriteResponse]] = {
+  def batchWriteItem(requestItems: Map[String, Seq[WriteRequest]])(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[BatchWriteResponse]] = {
     post[BatchWriteResponse]("BatchWriteItem", Json.obj(
       "RequestItems" -> Json.toJson(requestItems)))
   }
 
-  def batchGetItem(requestItems: Map[String, GetRequest])(implicit region: DDBRegion): Future[SimpleResult[BatchGetResponse]] = {
+  def batchGetItem(requestItems: Map[String, GetRequest])(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[BatchGetResponse]] = {
     post[BatchGetResponse]("BatchGetItem", Json.obj(
       "RequestItems" -> Json.toJson(requestItems)))
   }

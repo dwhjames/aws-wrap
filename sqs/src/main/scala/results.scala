@@ -22,6 +22,7 @@ case class SendMessageResult(messageId: String, md5: String)
 
 case class MessageReceive(
   messageId: String,
+  body: String,
   md5OfBody: String,
   receiptHandle: String,
   attributes: Map[MessageAttribute, String])
