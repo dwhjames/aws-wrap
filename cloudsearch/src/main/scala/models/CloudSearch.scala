@@ -30,8 +30,11 @@ import aws.core.parsers._
 import aws.core.utils._
 
 case class CloudSearchMetadata(requestId: String, time: Duration, cpuTime: Duration) extends Metadata
+case class Facet(name: String, constraints: Seq[(String, Int)])
 
 object CloudSearch {
+
+  type WithFacets[T] = (T, Seq[Facet])
 
   object Parameters {
 
@@ -109,12 +112,19 @@ object CloudSearch {
     domain: (String, String),
     query: Option[String] = None,
     matchExpression: Option[MatchExpressions.MatchExpression] = None,
-    returnFields: Seq[String] = Nil)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
+    returnFields: Seq[String] = Nil,
+    facets: Seq[String] = Nil,
+    size: Option[Int] = None,
+    start: Option[Int] = None)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
     val params =
       query.toSeq.map("q" -> _) ++
       returnFields.reduceLeftOption(_ + "," + _).map("return-fields" -> _).toSeq ++
-      matchExpression.map("bq" -> _.toString).toSeq
+      matchExpression.map("bq" -> _.toString).toSeq ++
+      facets.reduceLeftOption(_ + "," + _).map("facet" -> _).toSeq ++
+      size.map("size" -> _.toString).toSeq ++
+      start.map("start" -> _.toString).toSeq
+
     request[T](domain, params)
   }
 

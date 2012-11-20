@@ -118,5 +118,38 @@ object CloudSearchSpec extends Specification {
       res must haveSize(expected.size)
       res must containAllOf(expected)
     }
+
+    "Search, 2 results" in {
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        domain = domain,
+        query = Some("star wars"),
+        returnFields = Seq("title"),
+        size = Some(2)))
+      checkResult(r)
+
+      val res = r.body
+      res must haveSize(2)
+    }
+
+    "Search, ignore 2 first results" in {
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        domain = domain,
+        query = Some("star wars"),
+        returnFields = Seq("title"),
+        start = Some(3)))
+      checkResult(r)
+
+      val res = r.body
+    }
+
+    "Search, with facets" in {
+      val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
+        domain = domain,
+        query = Some("star wars"),
+        returnFields = Seq("title, genre"),
+        facets = Seq("genre")))
+      checkResult(r)
+      val res = r.body
+    }
   }
 }

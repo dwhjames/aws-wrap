@@ -23,6 +23,33 @@ object CloudSearchParsers {
     Success(read.get)
   }
 
+  //XXX: refactor
+  implicit def facetsParser = Parser[Seq[Facet]] { r =>
+    val facets = (r.json \ "facets").validate[JsObject]
+    val jsresult = facets.flatMap { f =>
+      val results = f.fields.map { case (k, co) =>
+        val constraints = co \ "constraints"
+        constraints.validate[Seq[(String, Int)]](Reads.seq(
+          ((__ \ "value").read[String] and (__ \ "count").read[Int]).tupled
+        )).map(Facet(k, _))
+      }
+
+      results.foldLeft(JsSuccess(Nil): JsResult[Seq[Facet]]){
+        case (JsSuccess(seq, _), n) =>
+          n match {
+            case JsSuccess(e, _) => JsSuccess(seq :+ e)
+            case err: JsError => err
+          }
+        case (e: JsError, _) => e
+      }
+    }
+
+    Success(jsresult.get)
+  }
+
+  implicit def entityWithFacetsParser[T](implicit ep: Parser[T], fsp: Parser[Seq[Facet]]): Parser[(T, Seq[Facet])] =
+    ep and fsp
+
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[CloudSearchMetadata, T]] =
     Parser.xmlErrorParser[CloudSearchMetadata].or(Parser.resultParser(cloudSearchMetadataParser, p))
 }
