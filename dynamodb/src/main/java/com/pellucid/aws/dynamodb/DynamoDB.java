@@ -64,14 +64,42 @@ public class DynamoDB {
      * @param keySchema the primary key structure for the table. See [[PrimaryKey]] for more information.
      */
     public F.Promise<SimpleResult<TableDescription>> createTable(String tableName,
-                                                                 PrimaryKey keySchema,
-                                                                 ProvisionedThroughput provisionedThroughput) {
+            PrimaryKey keySchema,
+            ProvisionedThroughput provisionedThroughput) {
         return AWSJavaConversions.toSimpleResultPromise(aws.dynamodb.DynamoDB.createTable(tableName, keySchema.toScala(), provisionedThroughput.toScala(), scalaRegion, aws.core.AWS.defaultExecutionContext()),
                 new F.Function<aws.dynamodb.models.TableDescription, TableDescription>() {
             @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
                 return TableDescription.fromScala(tableDesc);
             }
         });
+    }
+
+    /**
+     * Updates the provisioned throughput for the given table. Setting the throughput for a table
+     * helps you manage performance and is part of the provisioned throughput feature of Amazon DynamoDB.
+     * For more information, see [[http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/WorkingWithDDTables.html#ProvisionedThroughput Specifying Read and Write Requirements (Provisioned Throughput)]].
+     *
+     * The provisioned throughput values can be upgraded or downgraded based on the maximums and minimums listed in Limits in Amazon DynamoDB.
+     *
+     * The table must be in the [[Status.ACTIVE ACTIVE]] state for this operation to succeed.
+     * UpdateTable is an asynchronous operation; while executing the operation, the table is in the [[Status.UPDATING UPDATING]] state.
+     * While the table is in the [[Status.UPDATING UPDATING]] state, the table still has the provisioned throughput from before the call.
+     * The new provisioned throughput setting is in effect only when the table returns to the [[Status.ACTIVE ACTIVE]] state after the UpdateTable operation.
+     *
+     * @param tableName
+     */
+    public F.Promise<SimpleResult<TableDescription>> updateTable(String tableName,
+            ProvisionedThroughput provisionedThroughput) {
+        return AWSJavaConversions.toSimpleResultPromise(
+                aws.dynamodb.DynamoDB.updateTable(tableName,
+                        provisionedThroughput.toScala(),
+                        scalaRegion,
+                        aws.core.AWS.defaultExecutionContext()),
+                        new F.Function<aws.dynamodb.models.TableDescription, TableDescription>() {
+                    @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
+                        return TableDescription.fromScala(tableDesc);
+                    }
+                });
     }
 
     private static aws.dynamodb.DDBRegion scalaRegion(DDBRegion region) {
