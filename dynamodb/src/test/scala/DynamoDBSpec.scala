@@ -15,6 +15,8 @@ object DynamoDBSpec extends Specification {
   import scala.concurrent._
   import scala.concurrent.duration.Duration
   import java.util.concurrent.TimeUnit._
+  import scala.concurrent.ExecutionContext.Implicits.global
+
 
   import aws.core._
   import aws.core.Types._
@@ -39,7 +41,6 @@ object DynamoDBSpec extends Specification {
   val provisioned = ProvisionedThroughput(10L, 10L)
 
   "DynamoDB API" should {
-    import scala.concurrent.ExecutionContext.Implicits.global
 
     "List tables" in {
       val r = Await.result(DynamoDB.listTables(), Duration(30, SECONDS))

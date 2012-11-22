@@ -1,11 +1,12 @@
 package com.pellucid.aws.dynamodb;
 
 import java.util.List;
+import scala.concurrent.Future;
 
+import akka.dispatch.Mapper;
 import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.results.SimpleResult;
 
-import play.libs.F;
 import play.libs.Scala;
 
 import scala.collection.JavaConversions;
@@ -21,15 +22,15 @@ public class DynamoDB {
         this.scalaRegion = DynamoDB.scalaRegion(region);
     }
 
-    public F.Promise<SimpleResult<List<String>>> listTables() {
+    public Future<SimpleResult<List<String>>> listTables() {
         return this.listTables(null, null);
     }
 
-    public F.Promise<SimpleResult<List<String>>> listTables(String exclusiveStartTableName) {
+    public Future<SimpleResult<List<String>>> listTables(String exclusiveStartTableName) {
         return this.listTables(null, exclusiveStartTableName);
     }
 
-    public F.Promise<SimpleResult<List<String>>> listTables(Integer limit) {
+    public Future<SimpleResult<List<String>>> listTables(Integer limit) {
         return this.listTables(limit, null);
     }
 
@@ -41,9 +42,9 @@ public class DynamoDB {
      * @param limit A number of maximum table names to return
      * @param exclusiveStartTableName The name of the table that starts the list. If you already ran a ListTables operation and received an LastEvaluatedTableName value in the response, use that value here to continue the list.
      */
-    public F.Promise<SimpleResult<List<String>>> listTables(Integer limit, String exclusiveStartTableName) {
-        return AWSJavaConversions.toSimpleResultPromise(aws.dynamodb.DynamoDB.listTables(Scala.Option((Object)limit), Scala.Option(exclusiveStartTableName), scalaRegion, aws.core.AWS.defaultExecutionContext()),
-                new F.Function<Seq<String>, List<String>>() {
+    public Future<SimpleResult<List<String>>> listTables(Integer limit, String exclusiveStartTableName) {
+        return AWSJavaConversions.toJavaSimpleResult(aws.dynamodb.DynamoDB.listTables(Scala.Option((Object)limit), Scala.Option(exclusiveStartTableName), scalaRegion, aws.core.AWS.defaultExecutionContext()),
+                new Mapper<Seq<String>, List<String>>() {
             @Override public List<String> apply(Seq<String> tableNames) {
                 return JavaConversions.seqAsJavaList(tableNames);
             }
@@ -63,11 +64,11 @@ public class DynamoDB {
      *                  Names can be between 3 and 255 characters long.
      * @param keySchema the primary key structure for the table. See [[PrimaryKey]] for more information.
      */
-    public F.Promise<SimpleResult<TableDescription>> createTable(String tableName,
+    public Future<SimpleResult<TableDescription>> createTable(String tableName,
             PrimaryKey keySchema,
             ProvisionedThroughput provisionedThroughput) {
-        return AWSJavaConversions.toSimpleResultPromise(aws.dynamodb.DynamoDB.createTable(tableName, keySchema.toScala(), provisionedThroughput.toScala(), scalaRegion, aws.core.AWS.defaultExecutionContext()),
-                new F.Function<aws.dynamodb.models.TableDescription, TableDescription>() {
+        return AWSJavaConversions.toJavaSimpleResult(aws.dynamodb.DynamoDB.createTable(tableName, keySchema.toScala(), provisionedThroughput.toScala(), scalaRegion, aws.core.AWS.defaultExecutionContext()),
+                new Mapper<aws.dynamodb.models.TableDescription, TableDescription>() {
             @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
                 return TableDescription.fromScala(tableDesc);
             }
@@ -88,14 +89,14 @@ public class DynamoDB {
      *
      * @param tableName
      */
-    public F.Promise<SimpleResult<TableDescription>> updateTable(String tableName,
+    public Future<SimpleResult<TableDescription>> updateTable(String tableName,
             ProvisionedThroughput provisionedThroughput) {
-        return AWSJavaConversions.toSimpleResultPromise(
+        return AWSJavaConversions.toJavaSimpleResult(
                 aws.dynamodb.DynamoDB.updateTable(tableName,
                         provisionedThroughput.toScala(),
                         scalaRegion,
                         aws.core.AWS.defaultExecutionContext()),
-                        new F.Function<aws.dynamodb.models.TableDescription, TableDescription>() {
+                        new Mapper<aws.dynamodb.models.TableDescription, TableDescription>() {
                     @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
                         return TableDescription.fromScala(tableDesc);
                     }

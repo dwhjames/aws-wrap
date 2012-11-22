@@ -3,6 +3,8 @@ package com.pellucid.aws.simpledb;
 import java.util.List;
 import java.util.ArrayList;
 
+import akka.dispatch.Mapper;
+
 import play.libs.F;
 import play.libs.Scala;
 import scala.collection.JavaConversions;
@@ -50,15 +52,15 @@ public class SimpleDB {
         return convertEmptyResult(aws.simpledb.SimpleDB.deleteDomain(domainName, scalaRegion));
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<String>>> listDomains() {
+    public Future<Result<SimpleDBMeta, List<String>>> listDomains() {
         return listDomains(100, null);
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<String>>> listDomains(Integer maxNumberOfDomains) {
+    public Future<Result<SimpleDBMeta, List<String>>> listDomains(Integer maxNumberOfDomains) {
         return listDomains(maxNumberOfDomains, null);
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<String>>> listDomains(String nextToken) {
+    public Future<Result<SimpleDBMeta, List<String>>> listDomains(String nextToken) {
         return listDomains(100, nextToken);
     }
 
@@ -70,10 +72,10 @@ public class SimpleDB {
      * @param maxNumberOfDomains limit the response to a size
      * @param nextToken: optionally provide this value you got from a previous request to get the next page
      */
-    public F.Promise<Result<SimpleDBMeta, List<String>>> listDomains(Integer maxNumberOfDomains, String nextToken) {
-        return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.listDomains(maxNumberOfDomains, Scala.Option(nextToken), scalaRegion),
+    public Future<Result<SimpleDBMeta, List<String>>> listDomains(Integer maxNumberOfDomains, String nextToken) {
+        return AWSJavaConversions.toJavaResultFuture(aws.simpledb.SimpleDB.listDomains(maxNumberOfDomains, Scala.Option(nextToken), scalaRegion),
                 new MetadataConvert(),
-                new F.Function<Seq<aws.simpledb.SDBDomain>, List<String>>() {
+                new Mapper<Seq<aws.simpledb.SDBDomain>, List<String>>() {
             @Override public List<String> apply(Seq<aws.simpledb.SDBDomain> domains) {
                 return domainSeqToStringList(domains);
             }
@@ -194,7 +196,7 @@ public class SimpleDB {
             boolean consistentRead) {
         return AWSJavaConversions.toJavaResultFuture(aws.simpledb.SimpleDB.getAttributes(domainName, itemName, Scala.Option(attributeName), consistentRead, scalaRegion),
                 new MetadataConvert(),
-                new F.Function<Seq<aws.simpledb.SDBAttribute>, List<SDBAttribute>>() {
+                new Mapper<Seq<aws.simpledb.SDBAttribute>, List<SDBAttribute>>() {
             @Override public List<SDBAttribute> apply(Seq<aws.simpledb.SDBAttribute> scalaAttrs) {
                 return SDBAttribute.listFromScalaSeq(scalaAttrs);
             }
@@ -207,7 +209,7 @@ public class SimpleDB {
     public Future<Result<SimpleDBMeta, SDBDomainMetadata>> domainMetadata(String domainName) {
         return AWSJavaConversions.toJavaResultFuture(aws.simpledb.SimpleDB.domainMetadata(domainName, scalaRegion),
                 new MetadataConvert(),
-                new F.Function<aws.simpledb.SDBDomainMetadata, SDBDomainMetadata>() {
+                new Mapper<aws.simpledb.SDBDomainMetadata, SDBDomainMetadata>() {
             @Override public SDBDomainMetadata apply(aws.simpledb.SDBDomainMetadata metadata) {
                 return SDBDomainMetadata.fromScalaMetadata(metadata);
             }
@@ -253,7 +255,7 @@ public class SimpleDB {
     public Future<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, String nextToken, boolean consistentRead) {
         return AWSJavaConversions.toJavaResultFuture(aws.simpledb.SimpleDB.select(expression, Scala.Option(nextToken), consistentRead, scalaRegion),
                 new MetadataConvert(),
-                new F.Function<Seq<aws.simpledb.SDBItem>, List<SDBItem>>() {
+                new Mapper<Seq<aws.simpledb.SDBItem>, List<SDBItem>>() {
             @Override public List<SDBItem> apply(Seq<aws.simpledb.SDBItem> items) {
                 return SDBItem.listFromScalaSeq(items);
             }
@@ -269,8 +271,8 @@ public class SimpleDB {
     }
 
     private static Future<Result<SimpleDBMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.simpledb.SimpleDBMeta, BoxedUnit>> scalaResult) {
-        return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new F.Function<BoxedUnit, Object>() {
-            @Override public Object apply(BoxedUnit unit) throws Throwable {
+        return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new Mapper<BoxedUnit, Object>() {
+            @Override public Object apply(BoxedUnit unit) {
                 return null;
             }
         });
