@@ -25,7 +25,8 @@ object ApplicationBuild extends Build {
         scalaVersion := AWS.scalaVersion,
         scalacOptions += "-feature",
         version := AWS.version,
-        compileOrder := CompileOrder.ScalaThenJava,
+        compileOrder in Compile := CompileOrder.ScalaThenJava,
+        compileOrder in Test := CompileOrder.Mixed,
         resolvers ++= Seq("typesafe" at "http://repo.typesafe.com/typesafe/releases",
           "Caffeine Lab" at "http://caffeinelab.net/repo"),
         resolvers ++= Seq("sonatype" at "http://oss.sonatype.org/content/repositories/releases"),
@@ -50,7 +51,7 @@ object ApplicationBuild extends Build {
 
     lazy val ses = Project("ses", file("ses"), settings = commonSettings).dependsOn(core)
 
-    lazy val cloudsearxh = Project("cloud-search", file("cloudsearch"), settings = commonSettings).dependsOn(core)
+    lazy val cloudsearch = Project("cloud-search", file("cloudsearch"), settings = commonSettings).dependsOn(core)
 
     lazy val root = Project("root", file("."), settings = Project.defaultSettings ++ Unidoc.settings).aggregate(
         core, s3, simpledb, sqs, sns, dynamodb, ses

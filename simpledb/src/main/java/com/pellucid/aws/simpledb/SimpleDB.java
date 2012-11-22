@@ -33,7 +33,7 @@ public class SimpleDB {
      *
      * @param domainName
      */
-    public F.Promise<Result<SimpleDBMeta, Object>> createDomain(String domainName) {
+    public Future<Result<SimpleDBMeta, Object>> createDomain(String domainName) {
         return convertEmptyResult(aws.simpledb.SimpleDB.createDomain(domainName, scalaRegion));
     }
 
@@ -46,7 +46,7 @@ public class SimpleDB {
      *
      * @param domainName
      */
-    public F.Promise<Result<SimpleDBMeta, Object>> deleteDomain(String domainName) {
+    public Future<Result<SimpleDBMeta, Object>> deleteDomain(String domainName) {
         return convertEmptyResult(aws.simpledb.SimpleDB.deleteDomain(domainName, scalaRegion));
     }
 
@@ -80,7 +80,7 @@ public class SimpleDB {
         });
     }
 
-    public F.Promise<Result<SimpleDBMeta, Object>> putAttributes(
+    public Future<Result<SimpleDBMeta, Object>> putAttributes(
             String domainName,
             String itemName,
             List<SDBAttribute> attributes) {
@@ -101,7 +101,7 @@ public class SimpleDB {
      *                 will check that the attribute exists. If expected.value is defined, will check that the attribute
      *                 exists and has the specified value.
      */
-    public F.Promise<Result<SimpleDBMeta, Object>> putAttributes(
+    public Future<Result<SimpleDBMeta, Object>> putAttributes(
             String domainName,
             String itemName,
             List<SDBAttribute> attributes,
@@ -111,13 +111,13 @@ public class SimpleDB {
         return convertEmptyResult(aws.simpledb.SimpleDB.putAttributes(domainName, itemName, sAttributes, sExpected, scalaRegion));
     }
 
-    public F.Promise<Result<SimpleDBMeta, Object>> deleteAttributes(
+    public Future<Result<SimpleDBMeta, Object>> deleteAttributes(
             String domainName,
             String itemName) {
         return this.deleteAttributes(domainName, itemName, new ArrayList<SDBAttribute>());
     }
 
-    public F.Promise<Result<SimpleDBMeta, Object>> deleteAttributes(
+    public Future<Result<SimpleDBMeta, Object>> deleteAttributes(
             String domainName,
             String itemName,
             List<SDBAttribute> attributes) {
@@ -145,7 +145,7 @@ public class SimpleDB {
      *                 exists and has the specified value.
      *
      */
-    public F.Promise<Result<SimpleDBMeta, Object>> deleteAttributes(
+    public Future<Result<SimpleDBMeta, Object>> deleteAttributes(
             String domainName,
             String itemName,
             List<SDBAttribute> attributes,
@@ -155,20 +155,20 @@ public class SimpleDB {
         return convertEmptyResult(aws.simpledb.SimpleDB.deleteAttributes(domainName, itemName, sAttributes, sExpected, scalaRegion));
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
+    public Future<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
             String domainName,
             String itemName) {
         return this.getAttributes(domainName, itemName, null, false);
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
+    public Future<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
             String domainName,
             String itemName,
             boolean consistentRead) {
         return this.getAttributes(domainName, itemName, null, consistentRead);
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
+    public Future<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
             String domainName,
             String itemName,
             String attributeName) {
@@ -187,12 +187,12 @@ public class SimpleDB {
      * @param attributeName
      * @param consistentRead if true, Amazon will always return the last updated value. If false, the response will be faster but the data may not be the most recent.
      */
-    public F.Promise<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
+    public Future<Result<SimpleDBMeta, List<SDBAttribute>>> getAttributes(
             String domainName,
             String itemName,
             String attributeName,
             boolean consistentRead) {
-        return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.getAttributes(domainName, itemName, Scala.Option(attributeName), consistentRead, scalaRegion),
+        return AWSJavaConversions.toJavaResultFuture(aws.simpledb.SimpleDB.getAttributes(domainName, itemName, Scala.Option(attributeName), consistentRead, scalaRegion),
                 new MetadataConvert(),
                 new F.Function<Seq<aws.simpledb.SDBAttribute>, List<SDBAttribute>>() {
             @Override public List<SDBAttribute> apply(Seq<aws.simpledb.SDBAttribute> scalaAttrs) {
@@ -204,8 +204,8 @@ public class SimpleDB {
     /**
      * Get detailed information about a domain
      */
-    public F.Promise<Result<SimpleDBMeta, SDBDomainMetadata>> domainMetadata(String domainName) {
-        return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.domainMetadata(domainName, scalaRegion),
+    public Future<Result<SimpleDBMeta, SDBDomainMetadata>> domainMetadata(String domainName) {
+        return AWSJavaConversions.toJavaResultFuture(aws.simpledb.SimpleDB.domainMetadata(domainName, scalaRegion),
                 new MetadataConvert(),
                 new F.Function<aws.simpledb.SDBDomainMetadata, SDBDomainMetadata>() {
             @Override public SDBDomainMetadata apply(aws.simpledb.SDBDomainMetadata metadata) {
@@ -215,22 +215,22 @@ public class SimpleDB {
 
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression) {
+    public Future<Result<SimpleDBMeta, List<SDBItem>>> select(String expression) {
         return this.select(expression, null, false);
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, String nextToken) {
+    public Future<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, String nextToken) {
         return this.select(expression, nextToken, false);
     }
 
-    public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, boolean consistentRead) {
+    public Future<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, boolean consistentRead) {
         return this.select(expression, null, consistentRead);
     }
 
     /**
      * Put attributes for more than one item
      */
-    public F.Promise<Result<SimpleDBMeta, Object>> batchPutAttributes(String domainName, List<SDBItem> items) {
+    public Future<Result<SimpleDBMeta, Object>> batchPutAttributes(String domainName, List<SDBItem> items) {
         return convertEmptyResult(aws.simpledb.SimpleDB.batchPutAttributes(
                 domainName,
                 SDBItem.listAsScalaSeq(items),
@@ -240,7 +240,7 @@ public class SimpleDB {
     /**
      * Delete attributes for more than one item
      */
-    public F.Promise<Result<SimpleDBMeta, Object>> batchDeleteAttributes(String domainName, List<SDBItem> items) {
+    public Future<Result<SimpleDBMeta, Object>> batchDeleteAttributes(String domainName, List<SDBItem> items) {
         return convertEmptyResult(aws.simpledb.SimpleDB.batchDeleteAttributes(
                 domainName,
                 SDBItem.listAsScalaSeq(items),
@@ -250,8 +250,8 @@ public class SimpleDB {
     /**
      * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
      */
-    public F.Promise<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, String nextToken, boolean consistentRead) {
-        return AWSJavaConversions.toResultPromise(aws.simpledb.SimpleDB.select(expression, Scala.Option(nextToken), consistentRead, scalaRegion),
+    public Future<Result<SimpleDBMeta, List<SDBItem>>> select(String expression, String nextToken, boolean consistentRead) {
+        return AWSJavaConversions.toJavaResultFuture(aws.simpledb.SimpleDB.select(expression, Scala.Option(nextToken), consistentRead, scalaRegion),
                 new MetadataConvert(),
                 new F.Function<Seq<aws.simpledb.SDBItem>, List<SDBItem>>() {
             @Override public List<SDBItem> apply(Seq<aws.simpledb.SDBItem> items) {
@@ -268,8 +268,8 @@ public class SimpleDB {
         return result;
     }
 
-    private static F.Promise<Result<SimpleDBMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.simpledb.SimpleDBMeta, BoxedUnit>> scalaResult) {
-        return AWSJavaConversions.toResultPromise(scalaResult, new MetadataConvert(), new F.Function<BoxedUnit, Object>() {
+    private static Future<Result<SimpleDBMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.simpledb.SimpleDBMeta, BoxedUnit>> scalaResult) {
+        return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new F.Function<BoxedUnit, Object>() {
             @Override public Object apply(BoxedUnit unit) throws Throwable {
                 return null;
             }

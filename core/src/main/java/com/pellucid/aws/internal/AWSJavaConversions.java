@@ -1,6 +1,8 @@
 package com.pellucid.aws.internal;
 
 import scala.concurrent.Future;
+import akka.dispatch.*;
+import scala.concurrent.ExecutionContext;
 import play.libs.F;
 
 import com.pellucid.aws.results.Result;
@@ -27,6 +29,17 @@ public class AWSJavaConversions {
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
+    }
+
+    public static <MS extends aws.core.Metadata, TS, MJ, TJ> Future<Result<MJ, TJ>> toJavaResultFuture(
+            Future<aws.core.Result<MS, TS>> scalaResult,
+            final F.Function<MS, MJ> metadataConvert,
+            final F.Function<TS, TJ> bodyConvert) {
+        return scalaResult.map(new Mapper<aws.core.Result<MS, TS>, Result<MJ, TJ>>(){
+            @Override public Result<MJ, TJ> apply(aws.core.Result<MS, TS> scalaResult) {
+                return toJavaResult(scalaResult, metadataConvert, bodyConvert);
+            }
+        }, aws.core.AWS.defaultExecutionContext());
     }
 
     public static <MS extends aws.core.Metadata, TS, TJ> SimpleResult<TJ> toJavaSimpleResult(aws.core.Result<MS, TS> scalaResult,
