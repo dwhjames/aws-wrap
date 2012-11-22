@@ -35,7 +35,9 @@ object ApplicationBuild extends Build {
         //testListeners <<= (target, streams).map((t, s) => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath, s.log)))
     )
 
-    lazy val core = Project("core", file("core"), settings = commonSettings)
+    lazy val core = Project("core", file("core"), settings = commonSettings ++ Seq(
+        compileOrder := CompileOrder.Mixed
+    ))
 
     lazy val s3 = Project("s3", file("s3"), settings = commonSettings).dependsOn(core)
 
@@ -43,9 +45,13 @@ object ApplicationBuild extends Build {
 
     lazy val sns = Project("sns", file("sns"), settings = commonSettings).dependsOn(core)
 
-    lazy val dynamodb = Project("dynamodb", file("dynamodb"), settings = commonSettings).dependsOn(core)
+    lazy val dynamodb = Project("dynamodb", file("dynamodb"), settings = commonSettings ++ Seq(
+        compileOrder := CompileOrder.ScalaThenJava
+    )).dependsOn(core)
 
-    lazy val simpledb = Project("simpledb", file("simpledb"), settings = commonSettings).dependsOn(core)
+    lazy val simpledb = Project("simpledb", file("simpledb"), settings = commonSettings ++ Seq(
+        compileOrder := CompileOrder.ScalaThenJava
+    )).dependsOn(core)
 
     lazy val ses = Project("ses", file("ses"), settings = commonSettings).dependsOn(core)
 
