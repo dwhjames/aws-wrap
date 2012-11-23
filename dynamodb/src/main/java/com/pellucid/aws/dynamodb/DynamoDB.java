@@ -2,6 +2,7 @@ package com.pellucid.aws.dynamodb;
 
 import java.util.List;
 import scala.concurrent.Future;
+import scala.runtime.BoxedUnit;
 
 import akka.dispatch.Mapper;
 import com.pellucid.aws.internal.AWSJavaConversions;
@@ -101,6 +102,54 @@ public class DynamoDB {
                         return TableDescription.fromScala(tableDesc);
                     }
                 });
+    }
+
+    /**
+     * The DeleteTable operation deletes a table and all of its items.
+     * After a DeleteTable request, the specified table is in the [[Status.DELETING DELETING]] state until Amazon DynamoDB completes
+     * the deletion.
+     *
+     *  - If the table is in the [[Status.ACTIVE ACTIVE]] state, you can delete it.
+     *  - If a table is in [[Status.CREATING CREATING]] or [[Status.UPDATING UPDATING]] states,
+     * then Amazon DynamoDB returns a ResourceInUseException error.
+     *  - If the specified table does not exist, Amazon DynamoDB returns a ResourceNotFoundException.
+     *  - If table is already in the [[Status.DELETING DELETING]] state, no error is returned.
+     *
+     * Amazon DynamoDB might continue to accept data plane operation requests, such as [[getItem]] and [[putItem]],
+     * on a table in the DELETING state until the table deletion is complete.
+     *
+     * @param tableName
+     */
+    public Future<SimpleResult<Object>> deleteTable(String tableName) {
+        return AWSJavaConversions.toJavaSimpleResult(
+            aws.dynamodb.DynamoDB.deleteTable(tableName, scalaRegion, aws.core.AWS.defaultExecutionContext()),
+            new Mapper<BoxedUnit, Object>() {
+                @Override public Object apply(BoxedUnit unit) {
+                    return null;
+                }
+            }
+        );
+    }
+
+    /**
+     * Returns information about the table, including the current status of the table,
+     * the primary key schema and when the table was created.
+     *
+     * DescribeTable results are eventually consistent.
+     * If you use DescribeTable too early in the process of creating a table, Amazon DynamoDB returns a ResourceNotFoundException.
+     * If you use DescribeTable too early in the process of updating a table, the new values might not be immediately available.
+     *
+     * @param tableName
+     */
+    public Future<SimpleResult<TableDescription>> describeTable(String tableName) {
+        return AWSJavaConversions.toJavaSimpleResult(
+            aws.dynamodb.DynamoDB.describeTable(tableName, scalaRegion, aws.core.AWS.defaultExecutionContext()),
+            new Mapper<aws.dynamodb.models.TableDescription, TableDescription>() {
+                @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
+                    return TableDescription.fromScala(tableDesc);
+                }
+            }
+        );
     }
 
     private static aws.dynamodb.DDBRegion scalaRegion(DDBRegion region) {
