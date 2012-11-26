@@ -166,5 +166,26 @@ object CloudSearchSpec extends Specification {
         case _ => failure
       }
     }
+
+    "Search using open intervals in MatchExpression " in {
+       import CloudSearch.MatchExpressions._
+        val ex = Field("title", "star wars") and Not(Filter("year", to = Some(2000)))
+        val r = waitFor(CloudSearch.search[Seq[Movie]](
+          domain = domain,
+          matchExpression = Some(ex),
+          returnFields = Seq("title", "year")))
+        checkResult(r)
+    }
+
+    "Sort facets by year (descending ordering)" in {
+      val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
+        domain = domain,
+        query = Some("star wars"),
+        returnFields = Seq("title, genre"),
+        facets = Seq("genre"),
+        facetSort = Seq(Sort.COUNT("genre"))))
+      checkResult(r)
+    }
+
   }
 }

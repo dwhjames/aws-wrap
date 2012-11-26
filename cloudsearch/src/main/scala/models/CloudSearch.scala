@@ -32,13 +32,6 @@ import aws.core.utils._
 case class CloudSearchMetadata(requestId: String, time: Duration, cpuTime: Duration) extends Metadata
 case class Facet(name: String, constraints: Seq[(String, Int)])
 
-case class FacetsParams(
-  facets: Seq[String],
-  constraints: Seq[String],
-  sort: Option[CloudSearch.Sorts.Sort],
-  max: Option[Int]
-)
-
 class FacetConstraint private(val field: String, val value: String)
 object FacetConstraint {
   def apply(field: String, value: Number) = new FacetConstraint(field, s"$value")
@@ -49,6 +42,18 @@ object FacetConstraint {
     new FacetConstraint(field, s"$vs")
   }
 }
+
+
+case class Sort private(field: String, value: String){
+  def unary_- = Sort(this.field, s"-${this.value}")
+}
+object Sort {
+  def ALPHA(field: String) = Sort(field, "Alpha")
+  def COUNT(field: String) = Sort(field, "Count")
+  def MAX(field: String) = Sort(field, s"Max($field)")
+  def SUM(field: String) = Sort(field, s"Sum($field)")
+}
+
 
 object CloudSearch {
 
@@ -86,6 +91,7 @@ object CloudSearch {
     object Field {
       def apply(name: String, value: Number) = new Field(name, s"$value")
       def apply(name: String, range: Range) = new Field(name, s"${range.start}..${range.end}")
+      def apply(name: String, from: Option[Int] = None, to: Option[Int] = None) = new Field(name, s"""${from.getOrElse("")}..${to.getOrElse("")}""")
       def apply(name: String, value: String) = new Field(name, s"'$value'")
     }
 
@@ -95,6 +101,7 @@ object CloudSearch {
     object Filter {
       def apply(name: String, value: Number) = new Filter(name, s"$value")
       def apply(name: String, range: Range) = new Filter(name, s"${range.start}..${range.end}")
+      def apply(name: String, from: Option[Int] = None, to: Option[Int] = None) = new Filter(name, s"""${from.getOrElse("")}..${to.getOrElse("")}""")
       def apply(name: String, value: String) = new Filter(name, s"'$value'")
     }
 
@@ -126,14 +133,6 @@ object CloudSearch {
     }
   }
 
-  object Sorts extends Enumeration {
-    type Sort = Value
-    val ALPHA = Value("Alpha")
-    val COUNT = Value("Count")
-    val MAX = Value("Max")
-    val SUM = Value("Sum")
-  }
-
   def search[T](
     domain: (String, String),
     query: Option[String] = None,
@@ -141,6 +140,7 @@ object CloudSearch {
     returnFields: Seq[String] = Nil,
     facets: Seq[String] = Nil,
     facetConstraints: Seq[FacetConstraint] = Nil,
+    facetSort: Seq[Sort] = Nil,
     size: Option[Int] = None,
     start: Option[Int] = None)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
@@ -151,7 +151,8 @@ object CloudSearch {
       facets.reduceLeftOption(_ + "," + _).map("facet" -> _).toSeq ++
       size.map("size" -> _.toString).toSeq ++
       start.map("start" -> _.toString).toSeq ++
-      facetConstraints.map(c => s"facet-${c.field}-constraints" -> c.value)
+      facetConstraints.map(c => s"facet-${c.field}-constraints" -> c.value) ++
+      facetSort.map(f => s"facet-${f.field}-sort" -> f.value)
 
     request[T](domain, params)
   }
