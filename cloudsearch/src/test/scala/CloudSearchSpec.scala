@@ -177,13 +177,13 @@ object CloudSearchSpec extends Specification {
         checkResult(r)
     }
 
-    "Sort facets by year (descending ordering)" in {
+    "Sort facets by COUNT(genre) (descending ordering)" in {
       val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
         domain = domain,
         query = Some("star wars"),
         returnFields = Seq("title, genre"),
         facets = Seq("genre"),
-        facetSort = Seq(Sort.COUNT("genre"))))
+        facetSort = Seq(-Sort.Max("genre"))))
       checkResult(r)
     }
 

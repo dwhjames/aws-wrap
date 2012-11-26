@@ -37,6 +37,7 @@ object FacetConstraint {
   def apply(field: String, value: Number) = new FacetConstraint(field, s"$value")
   def apply(field: String, value: String) = new FacetConstraint(field, s"'$value'")
   def apply(field: String, range: Range) = new FacetConstraint(field, s"${range.start}..${range.end}")
+  def apply(field: String, from: Option[Int] = None, to: Option[Int] = None) = new FacetConstraint(field, s"""${from.getOrElse("")}..${to.getOrElse("")}""")
   def apply(field: String, values: Seq[String]) = {
     val vs = values.map(v => s"'$v'").mkString(",")
     new FacetConstraint(field, s"$vs")
@@ -44,14 +45,35 @@ object FacetConstraint {
 }
 
 
-case class Sort private(field: String, value: String){
-  def unary_- = Sort(this.field, s"-${this.value}")
+// TODO: would be nice to check for double '-' calls
+sealed trait Sort {
+  val field: String
+  def value: String
 }
+
 object Sort {
-  def ALPHA(field: String) = Sort(field, "Alpha")
-  def COUNT(field: String) = Sort(field, "Count")
-  def MAX(field: String) = Sort(field, s"Max($field)")
-  def SUM(field: String) = Sort(field, s"Sum($field)")
+  object Orderings extends Enumeration {
+    type Ordering = Value
+    val ASC = Value("")
+    val DESC = Value("-")
+  }
+
+  case class Alpha(field: String) extends Sort {
+    override val value = "Alpha"
+  }
+  case class Count(field: String) extends Sort {
+    override val value = "Count"
+  }
+  case class Max(field: String, ordering: Option[Orderings.Ordering] = None) extends Sort {
+    override def value = {
+      val order = ordering.map(_.toString).getOrElse("")
+      s"${order}Max($field)"
+    }
+    def unary_- = this.copy(ordering = Some(Orderings.DESC))
+  }
+  case class Sum(field: String) extends Sort {
+    override def value = s"Sum($field)"
+  }
 }
 
 
