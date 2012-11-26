@@ -51,13 +51,13 @@ sealed trait Sort {
   def value: String
 }
 
-object Sort {
-  object Orderings extends Enumeration {
-    type Ordering = Value
-    val ASC = Value("")
-    val DESC = Value("-")
-  }
+object Orderings extends Enumeration {
+  type Ordering = Value
+  val ASC = Value("")
+  val DESC = Value("-")
+}
 
+object Sort {
   case class Alpha(field: String) extends Sort {
     override val value = "Alpha"
   }
@@ -73,6 +73,24 @@ object Sort {
   }
   case class Sum(field: String) extends Sort {
     override def value = s"Sum($field)"
+  }
+}
+
+sealed trait Rank {
+  val name: String
+  val ordering: Option[Orderings.Ordering]
+  override def toString = {
+    val order = ordering.map(_.toString).getOrElse("")
+    s"${order}${name}"
+  }
+}
+object Rank {
+  case class TextRelevance(ordering: Option[Orderings.Ordering] = None) extends Rank{
+    val name = "text_relevance"
+    def unary_- = this.copy(ordering = Some(Orderings.DESC))
+  }
+  case class Field(name: String, ordering: Option[Orderings.Ordering] = None) extends Rank {
+    def unary_- = this.copy(ordering = Some(Orderings.DESC))
   }
 }
 
@@ -165,6 +183,7 @@ object CloudSearch {
     facetConstraints: Seq[FacetConstraint] = Nil,
     facetSort: Seq[Sort] = Nil,
     facetTops: Seq[(String, Int)] = Nil,
+    ranks: Seq[Rank] = Nil,
     size: Option[Int] = None,
     start: Option[Int] = None)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
@@ -177,8 +196,9 @@ object CloudSearch {
       start.map("start" -> _.toString).toSeq ++
       facetConstraints.map(c => s"facet-${c.field}-constraints" -> c.value) ++
       facetSort.map(f => s"facet-${f.field}-sort" -> f.value) ++
-      facetTops.map(t => s"facet-${t._1}-top-n" -> t._2.toString)
-
+      facetTops.map(t => s"facet-${t._1}-top-n" -> t._2.toString) ++
+      ranks.map(_.toString).reduceLeftOption(_ + "," + _).map("rank" -> _).toSeq
+      println(params)
     request[T](domain, params)
   }
 

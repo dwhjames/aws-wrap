@@ -40,6 +40,7 @@ object CloudSearchSpec extends Specification {
     (__ \ "data" \ "title").read[Seq[String]])(Movie)
 
     Success((r.json \ "hits" \ "hit").as[Seq[JsValue]].map { js =>
+      println(js.validate(reader))
       js.validate(reader).get
     })
   }
@@ -196,6 +197,15 @@ object CloudSearchSpec extends Specification {
         facetTops = Seq("genre" -> 2)))
       checkResult(r)
       r.body._2.flatMap(_.constraints) must haveSize(2)
+    }
+
+    "Order results" in {
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        domain = domain,
+        query = Some("star wars"),
+        returnFields = Seq("title, genre"),
+        ranks = Seq(-Rank.Field("year"), -Rank.TextRelevance())))
+      checkResult(r)
     }
 
   }
