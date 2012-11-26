@@ -155,6 +155,7 @@ object CloudSearch {
     }
   }
 
+  // XXX: Builder ?
   def search[T](
     domain: (String, String),
     query: Option[String] = None,
@@ -163,6 +164,7 @@ object CloudSearch {
     facets: Seq[String] = Nil,
     facetConstraints: Seq[FacetConstraint] = Nil,
     facetSort: Seq[Sort] = Nil,
+    facetTops: Seq[(String, Int)] = Nil,
     size: Option[Int] = None,
     start: Option[Int] = None)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
@@ -174,7 +176,8 @@ object CloudSearch {
       size.map("size" -> _.toString).toSeq ++
       start.map("start" -> _.toString).toSeq ++
       facetConstraints.map(c => s"facet-${c.field}-constraints" -> c.value) ++
-      facetSort.map(f => s"facet-${f.field}-sort" -> f.value)
+      facetSort.map(f => s"facet-${f.field}-sort" -> f.value) ++
+      facetTops.map(t => s"facet-${t._1}-top-n" -> t._2.toString)
 
     request[T](domain, params)
   }

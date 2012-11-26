@@ -187,5 +187,16 @@ object CloudSearchSpec extends Specification {
       checkResult(r)
     }
 
+    "Set the maximum number of facet constraints" in {
+      val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
+        domain = domain,
+        query = Some("star wars"),
+        returnFields = Seq("title, genre"),
+        facets = Seq("genre"),
+        facetTops = Seq("genre" -> 2)))
+      checkResult(r)
+      r.body._2.flatMap(_.constraints) must haveSize(2)
+    }
+
   }
 }
