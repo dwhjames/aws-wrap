@@ -85,6 +85,7 @@ sealed trait Rank {
   }
 }
 object Rank {
+  //TODO: DRY
   case class TextRelevance(ordering: Option[Orderings.Ordering] = None) extends Rank{
     val name = "text_relevance"
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
@@ -92,8 +93,11 @@ object Rank {
   case class Field(name: String, ordering: Option[Orderings.Ordering] = None) extends Rank {
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
   }
+  //TODO: Nicer syntax for expression ?
+  case class RankExpr(name: String, expr: Option[String] = None, ordering: Option[Orderings.Ordering] = None) extends Rank {
+    def unary_- = this.copy(ordering = Some(Orderings.DESC))
+  }
 }
-
 
 object CloudSearch {
 
@@ -187,6 +191,12 @@ object CloudSearch {
     size: Option[Int] = None,
     start: Option[Int] = None)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
+    val exprs = ranks.flatMap {
+      case e: Rank.RankExpr =>
+        e.expr.map(x => s"facet-${e.name}-sort" -> x)
+      case _ => Nil
+    }
+
     val params =
       query.toSeq.map("q" -> _) ++
       returnFields.reduceLeftOption(_ + "," + _).map("return-fields" -> _).toSeq ++
@@ -197,8 +207,9 @@ object CloudSearch {
       facetConstraints.map(c => s"facet-${c.field}-constraints" -> c.value) ++
       facetSort.map(f => s"facet-${f.field}-sort" -> f.value) ++
       facetTops.map(t => s"facet-${t._1}-top-n" -> t._2.toString) ++
-      ranks.map(_.toString).reduceLeftOption(_ + "," + _).map("rank" -> _).toSeq
-      println(params)
+      ranks.map(_.toString).reduceLeftOption(_ + "," + _).map("rank" -> _).toSeq ++
+      exprs
+
     request[T](domain, params)
   }
 
