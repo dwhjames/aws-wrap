@@ -89,12 +89,12 @@ case class TableDescription(name: String,
                             provisionedThroughput: ProvisionedThroughput,
                             size: Option[Long])
 
-sealed trait ReturnValues
-
-object ReturnValues {
-  case object NONE extends ReturnValues { override def toString = "NONE" }
-  case object ALL_OLD extends ReturnValues { override def toString = "ALL_OLD" }
+object ReturnValues extends Enumeration {
+  type ReturnValue = Value
+  val NONE = Value("NONE")
+  val ALL_OLD = Value("ALL_OLD")
 }
+import ReturnValues.ReturnValue
 
 case class Expected(exists: Option[Boolean] = None, value: Option[DDBAttribute] = None)
 

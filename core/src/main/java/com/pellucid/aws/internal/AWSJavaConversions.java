@@ -1,5 +1,8 @@
 package com.pellucid.aws.internal;
 
+import scala.Predef;
+import scala.Tuple2;
+import scala.collection.JavaConverters;
 import scala.concurrent.Future;
 import akka.dispatch.*;
 
@@ -53,6 +56,12 @@ public class AWSJavaConversions {
         }
     }
 
+    public static <A, B> scala.collection.immutable.Map<A, B> toScalaMap(java.util.Map<A, B> m) {
+        return JavaConverters.mapAsScalaMapConverter(m).asScala().toMap(
+          Predef.<Tuple2<A, B>>conforms()
+        );
+    }
+
     public static <MS extends aws.core.Metadata, TS, TJ> Future<SimpleResult<TJ>> toJavaSimpleResult(Future<aws.core.Result<MS, TS>> scalaFuture,
             final Mapper<TS, TJ> bodyConvert) {
         return scalaFuture.map(new Mapper<aws.core.Result<MS, TS>, SimpleResult<TJ>>(){
@@ -61,7 +70,6 @@ public class AWSJavaConversions {
             }
         }, aws.core.AWS.defaultExecutionContext());
     }
-
 
 }
 

@@ -38,4 +38,19 @@ public class KeySchemaElement {
         return null; // Never happens
     }
 
+    @Override
+    public int hashCode() {
+        return toScala().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+    
+        if (obj instanceof KeySchemaElement == false) return false;
+        KeySchemaElement other = (KeySchemaElement)obj;
+        return toScala().equals(other.toScala());
+    }
+
 }

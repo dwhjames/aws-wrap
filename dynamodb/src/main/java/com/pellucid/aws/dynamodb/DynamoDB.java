@@ -1,19 +1,26 @@
 package com.pellucid.aws.dynamodb;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import scala.concurrent.Future;
-import scala.runtime.BoxedUnit;
-
-import akka.dispatch.Mapper;
-import com.pellucid.aws.internal.AWSJavaConversions;
-import com.pellucid.aws.results.SimpleResult;
+import java.util.Map;
 
 import play.libs.Scala;
-
 import scala.collection.JavaConversions;
+import scala.collection.JavaConverters;
 import scala.collection.Seq;
+import scala.concurrent.Future;
+import scala.runtime.BoxedUnit;
+import akka.dispatch.Mapper;
 
-import com.pellucid.aws.dynamodb.models.*;
+import com.pellucid.aws.dynamodb.models.AttributeValue;
+import com.pellucid.aws.dynamodb.models.Expected;
+import com.pellucid.aws.dynamodb.models.ItemResponse;
+import com.pellucid.aws.dynamodb.models.PrimaryKey;
+import com.pellucid.aws.dynamodb.models.ProvisionedThroughput;
+import com.pellucid.aws.dynamodb.models.TableDescription;
+import com.pellucid.aws.internal.AWSJavaConversions;
+import com.pellucid.aws.results.SimpleResult;
 
 public class DynamoDB {
 
@@ -152,6 +159,52 @@ public class DynamoDB {
         );
     }
 
+    /**
+     * Creates a new item, or replaces an old item with a new item (including all the attributes).
+     * If an item already exists in the specified table with the same primary key, the new item completely replaces the existing item. You can perform a conditional put (insert a new item if one with the specified primary key doesn't exist), or replace an existing item if it has certain attribute values.
+     *
+     * @param tableName
+     * @param item The [[Item]] to put. Must include the primary key values that define the item.
+     * Other attribute name-value pairs can be provided for the item. For more information about primary keys, see [[PrimaryKey]].
+     */
+    public Future<SimpleResult<ItemResponse>> putItem(String tableName,
+                Map<String, AttributeValue> item,
+                Map<String, Expected> expected,
+                ReturnValues returnValues) {
+        aws.dynamodb.Item sItem = scalaItemFromMap(item);
+        Map<String, aws.dynamodb.models.Expected> sExpected = new HashMap<String, aws.dynamodb.models.Expected>();
+        for (String key: expected.keySet()) {
+            sExpected.put(key, expected.get(key).toScala());
+        }
+        scala.Enumeration.Value rv;
+        if (returnValues == ReturnValues.ALL_OLD) {
+            rv = aws.dynamodb.models.ReturnValues$.MODULE$.ALL_OLD();
+        } else {
+            rv = aws.dynamodb.models.ReturnValues$.MODULE$.NONE();
+        }
+        return AWSJavaConversions.toJavaSimpleResult(
+                aws.dynamodb.DynamoDB.putItem(tableName,
+                                              sItem,
+                                              AWSJavaConversions.toScalaMap(sExpected),
+                                              rv,
+                                              scalaRegion,
+                                              aws.core.AWS.defaultExecutionContext()),
+                new Mapper<aws.dynamodb.models.ItemResponse, ItemResponse>() {
+                    @Override public ItemResponse apply(aws.dynamodb.models.ItemResponse resp) {
+                        return ItemResponse.fromScala(resp);
+                    }
+                }
+            );
+    }
+
+    private static aws.dynamodb.Item scalaItemFromMap(Map<String, AttributeValue> item) {
+        List<scala.Tuple2<String, aws.dynamodb.DDBAttribute>> sAttrs = new ArrayList<scala.Tuple2<String, aws.dynamodb.DDBAttribute>>();
+        for (String key: item.keySet()) {
+            sAttrs.add(new scala.Tuple2<String, aws.dynamodb.DDBAttribute>(key, item.get(key).toScala()));
+        }
+        return new aws.dynamodb.Item(JavaConversions.asScalaIterable(sAttrs).toSeq());
+    }
+
     private static aws.dynamodb.DDBRegion scalaRegion(DDBRegion region) {
         switch (region) {
         case US_EAST_1: return aws.dynamodb.DDBRegion$.MODULE$.US_EAST_1();
@@ -162,6 +215,10 @@ public class DynamoDB {
         case ASIA_NORTHEAST_1: return aws.dynamodb.DDBRegion$.MODULE$.ASIA_NORTHEAST_1();
         }
         return aws.dynamodb.DDBRegion$.MODULE$.DEFAULT();
+    }
+
+    public enum ReturnValues {
+        NONE, ALL_OLD
     }
 
 }

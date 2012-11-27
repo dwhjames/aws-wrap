@@ -35,6 +35,7 @@ import aws.dynamodb.DDBParsers._
 object DynamoDB {
 
   import aws.dynamodb._
+  import ReturnValues.ReturnValue
 
   private def request(operation: String,
                       body: JsValue)(implicit region: DDBRegion): Future[Response] = {
@@ -169,7 +170,7 @@ object DynamoDB {
   def putItem(tableName: String,
               item: Item,
               expected: Map[String, Expected] = Map.empty,
-              returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
+              returnValues: ReturnValue = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Item" -> Json.toJson(item),
@@ -197,7 +198,7 @@ object DynamoDB {
   def deleteItem(tableName: String,
                  key: KeyValue,
                  expected: Map[String, Expected] = Map.empty,
-                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
+                 returnValues: ReturnValue = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),
@@ -232,7 +233,7 @@ object DynamoDB {
                  key: KeyValue,
                  attributeUpdates: Map[String, Update],
                  expected: Map[String, Expected] = Map.empty,
-                 returnValues: ReturnValues = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
+                 returnValues: ReturnValue = ReturnValues.NONE)(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[ItemResponse]] = {
     val body = Json.obj(
       "TableName" -> JsString(tableName),
       "Key" -> Json.toJson(key),

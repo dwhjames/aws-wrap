@@ -37,4 +37,19 @@ public class PrimaryKey {
         return new aws.dynamodb.models.HashKey(hashKeyElement.toScala());
     }
 
+    @Override
+    public int hashCode() {
+        return toScala().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+    
+        if (obj instanceof PrimaryKey == false) return false;
+        PrimaryKey other = (PrimaryKey)obj;
+        return toScala().equals(other.toScala());
+    }
+
 }

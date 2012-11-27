@@ -64,7 +64,7 @@ case class Item(attributes: Seq[(String, DDBAttribute)]) {
   /**
    * Return the attribute corresponding to the key, throws NoSuchElementException if the attribute doesn't exist
    */
-  def appy(key: String): DDBAttribute = get(key) match {
+  def apply(key: String): DDBAttribute = get(key) match {
     case Some(attr) => attr
     case None => throw new NoSuchElementException()
   }
@@ -77,6 +77,8 @@ object Item {
   import language.implicitConversions
 
   val empty = Item(Nil)
+
+  def apply(attrs: Map[String, DDBAttribute]) = new Item(attrs.toSeq)
 
   /**
    * Build a DynamoDB item, using any type where a [[AttributeWrite]] is available.
