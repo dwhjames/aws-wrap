@@ -216,5 +216,14 @@ object CloudSearchSpec extends Specification {
       checkResult(r)
     }
 
+    "Filter results by score range" in {
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        domain = domain,
+        query = Some("star wars"),
+        returnFields = Seq("title, genre"),
+        scores = Seq("year" -> (0 to 5))))
+      checkResult(r)
+    }
+
   }
 }

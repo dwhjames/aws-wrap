@@ -94,8 +94,14 @@ object Rank {
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
   }
   //TODO: Nicer syntax for expression ?
+  // @see: http://docs.amazonwebservices.com/cloudsearch/latest/developerguide/rankexpressions.html
   case class RankExpr(name: String, expr: Option[String] = None, ordering: Option[Orderings.Ordering] = None) extends Rank {
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
+  }
+
+  def weight(ws: (String, Float)*) = {
+    import play.api.libs.json._
+    Json.obj("weights" -> ws.toMap[String, Float]).toString
   }
 }
 
@@ -188,6 +194,7 @@ object CloudSearch {
     facetSort: Seq[Sort] = Nil,
     facetTops: Seq[(String, Int)] = Nil,
     ranks: Seq[Rank] = Nil,
+    scores: Seq[(String, Range)] = Nil,
     size: Option[Int] = None,
     start: Option[Int] = None)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
@@ -208,7 +215,8 @@ object CloudSearch {
       facetSort.map(f => s"facet-${f.field}-sort" -> f.value) ++
       facetTops.map(t => s"facet-${t._1}-top-n" -> t._2.toString) ++
       ranks.map(_.toString).reduceLeftOption(_ + "," + _).map("rank" -> _).toSeq ++
-      exprs
+      exprs ++
+      scores.map(s => s"t-${s._1}" -> s"${s._2.start}..${s._2.end}")
 
     request[T](domain, params)
   }
