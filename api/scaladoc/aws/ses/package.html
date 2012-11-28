@@ -44,7 +44,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Access to Amazon <a href="http://aws.amazon.com/documentation/ses/" target="_blank">SES</a>.</p><p>DynamoDB is a NoSQL database, more advanced than <a href="" class="extype" name="aws.ses">SES</a>.</p><p>See the <a href="SES$.html" class="extype" name="aws.ses.SES">SES</a> object for available operations.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Access to Amazon <a href="http://aws.amazon.com/documentation/ses/" target="_blank">SES</a>.</p><p>See the <a href="SES$.html" class="extype" name="aws.ses.SES">SES</a> object for available operations.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -100,6 +100,19 @@
       </span>
       </h4>
       
+    </li><li name="aws.ses.Body" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BodyextendsProductwithSerializable"></a>
+      <a id="Body:Body"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Body.html"><span class="name">Body</span></a><span class="params">(<span name="text">text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="html">html: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
     </li><li name="aws.ses.CC" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CCextendsDestinationwithProductwithSerializable"></a>
       <a id="CC:CC"></a>
@@ -148,7 +161,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Email.html"><span class="name">Email</span></a><span class="params">(<span name="subject">subject: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="contentType">contentType: <a href="ContentTypes$.html#ContentType=aws.ses.ContentTypes.Value" class="extmbr" name="aws.ses.ContentTypes.ContentType">ContentType</a></span>, <span name="source">source: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinations">destinations: <span class="extype" name="scala.Seq">Seq</span>[<a href="Destination.html" class="extype" name="aws.ses.Destination">Destination</a>]</span>, <span name="replyTo">replyTo: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="returnPath">returnPath: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Email.html"><span class="name">Email</span></a><span class="params">(<span name="subject">subject: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <a href="Body.html" class="extype" name="aws.ses.Body">Body</a></span>, <span name="source">source: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinations">destinations: <span class="extype" name="scala.Seq">Seq</span>[<a href="Destination.html" class="extype" name="aws.ses.Destination">Destination</a>]</span>, <span name="replyTo">replyTo: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="returnPath">returnPath: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       

@@ -413,20 +413,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="aws.ses.SES#seIdentityFeedbackForwardingStatus" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="seIdentityFeedbackForwardingStatus(identity:String,status:aws.ses.Statuses.Status)(implicitregion:aws.ses.SESRegion):scala.concurrent.Future[aws.core.Result[aws.ses.SESMetadata,Unit]]"></a>
-      <a id="seIdentityFeedbackForwardingStatus(String,Status)(SESRegion):Future[Result[SESMetadata,Unit]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">seIdentityFeedbackForwardingStatus</span><span class="params">(<span name="identity">identity: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="status">status: <a href="Statuses$.html#Status=aws.ses.Statuses.Value" class="extmbr" name="aws.ses.Statuses.Status">Status</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SESRegion.html" class="extype" name="aws.ses.SESRegion">SESRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SESMetadata.html" class="extype" name="aws.ses.SESMetadata">SESMetadata</a>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Given an identity, enables or disables whether Amazon SES forwards feedback notifications as email.</p><div class="fullcomment"><div class="comment cmt"><p>Given an identity, enables or disables whether Amazon SES forwards feedback notifications as email.</p></div><dl class="paramcmts block"><dt class="param">identity</dt><dd class="cmt"><p>The identity for which to set feedback notification forwarding.</p></dd><dt class="param">status</dt><dd class="cmt"><p>Sets whether Amazon SES will forward feedback notifications as email.
-</p></dd></dl></div>
     </li><li name="aws.ses.SES#send" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="send(email:aws.ses.Email)(implicitregion:aws.ses.SESRegion):scala.concurrent.Future[aws.core.Result[aws.ses.SESMetadata,aws.ses.EmailResult]]"></a>
       <a id="send(Email)(SESRegion):Future[Result[SESMetadata,EmailResult]]"></a>
@@ -495,6 +481,20 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Enables or disables Easy DKIM signing of email sent from an identity</p><div class="fullcomment"><div class="comment cmt"><p>Enables or disables Easy DKIM signing of email sent from an identity</p></div><dl class="paramcmts block"><dt class="param">identity</dt><dd class="cmt"><p>The identity for which DKIM signing should be enabled or disabled.</p></dd><dt class="param">status</dt><dd class="cmt"><p>The DKIM signing status
+</p></dd></dl></div>
+    </li><li name="aws.ses.SES#setIdentityFeedbackForwardingStatus" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setIdentityFeedbackForwardingStatus(identity:String,status:aws.ses.Statuses.Status)(implicitregion:aws.ses.SESRegion):scala.concurrent.Future[aws.core.Result[aws.ses.SESMetadata,Unit]]"></a>
+      <a id="setIdentityFeedbackForwardingStatus(String,Status)(SESRegion):Future[Result[SESMetadata,Unit]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setIdentityFeedbackForwardingStatus</span><span class="params">(<span name="identity">identity: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="status">status: <a href="Statuses$.html#Status=aws.ses.Statuses.Value" class="extmbr" name="aws.ses.Statuses.Status">Status</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SESRegion.html" class="extype" name="aws.ses.SESRegion">SESRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SESMetadata.html" class="extype" name="aws.ses.SESMetadata">SESMetadata</a>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Given an identity, enables or disables whether Amazon SES forwards feedback notifications as email.</p><div class="fullcomment"><div class="comment cmt"><p>Given an identity, enables or disables whether Amazon SES forwards feedback notifications as email.</p></div><dl class="paramcmts block"><dt class="param">identity</dt><dd class="cmt"><p>The identity for which to set feedback notification forwarding.</p></dd><dt class="param">status</dt><dd class="cmt"><p>Sets whether Amazon SES will forward feedback notifications as email.
 </p></dd></dl></div>
     </li><li name="aws.ses.SES#setIdentityNotificationTopic" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="setIdentityNotificationTopic(identity:String,topic:String,notifType:aws.ses.NotificationTypes.NotificationType)(implicitregion:aws.ses.SESRegion):scala.concurrent.Future[aws.core.Result[aws.ses.SESMetadata,Unit]]"></a>

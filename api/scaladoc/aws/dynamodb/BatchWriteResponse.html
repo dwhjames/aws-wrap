@@ -40,11 +40,11 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">BatchWriteResponse</span><span class="params">(<span name="responses">responses: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="QueryResponse.html" class="extype" name="aws.dynamodb.QueryResponse">QueryResponse</a>)]</span>, <span name="unprocessed">unprocessed: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="WriteRequest.html" class="extype" name="aws.dynamodb.WriteRequest">WriteRequest</a>])]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">BatchWriteResponse</span><span class="params">(<span name="responses">responses: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="models/QueryResponse.html" class="extype" name="aws.dynamodb.models.QueryResponse">QueryResponse</a>)]</span>, <span name="unprocessed">unprocessed: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="WriteRequest.html" class="extype" name="aws.dynamodb.WriteRequest">WriteRequest</a>])]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Used for the response to <a href="DynamoDB$.html#batchWriteItem(requestItems:Map[String,Seq[aws.dynamodb.WriteRequest]])(implicitregion:aws.dynamodb.DDBRegion):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.BatchWriteResponse]]" class="extmbr" name="aws.dynamodb.DynamoDB#batchWriteItem">DynamoDB.batchWriteItem</a></p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Used for the response to <a href="DynamoDB$.html#batchWriteItem(requestItems:Map[String,Seq[aws.dynamodb.WriteRequest]])(implicitregion:aws.dynamodb.DDBRegion,implicitexecutor:scala.concurrent.ExecutionContext):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.BatchWriteResponse]]" class="extmbr" name="aws.dynamodb.DynamoDB#batchWriteItem">DynamoDB.batchWriteItem</a></p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -85,7 +85,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="aws.dynamodb.BatchWriteResponse#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(responses:Seq[(String,aws.dynamodb.QueryResponse)],unprocessed:Seq[(String,Seq[aws.dynamodb.WriteRequest])]):aws.dynamodb.BatchWriteResponse"></a>
+      <a id="&lt;init&gt;(responses:Seq[(String,aws.dynamodb.models.QueryResponse)],unprocessed:Seq[(String,Seq[aws.dynamodb.WriteRequest])]):aws.dynamodb.BatchWriteResponse"></a>
       <a id="&lt;init&gt;:BatchWriteResponse"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -93,7 +93,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">BatchWriteResponse</span><span class="params">(<span name="responses">responses: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="QueryResponse.html" class="extype" name="aws.dynamodb.QueryResponse">QueryResponse</a>)]</span>, <span name="unprocessed">unprocessed: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="WriteRequest.html" class="extype" name="aws.dynamodb.WriteRequest">WriteRequest</a>])]</span>)</span>
+        <span class="name">BatchWriteResponse</span><span class="params">(<span name="responses">responses: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="models/QueryResponse.html" class="extype" name="aws.dynamodb.models.QueryResponse">QueryResponse</a>)]</span>, <span name="unprocessed">unprocessed: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="WriteRequest.html" class="extype" name="aws.dynamodb.WriteRequest">WriteRequest</a>])]</span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -295,7 +295,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="aws.dynamodb.BatchWriteResponse#responses" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="responses:Seq[(String,aws.dynamodb.QueryResponse)]"></a>
+      <a id="responses:Seq[(String,aws.dynamodb.models.QueryResponse)]"></a>
       <a id="responses:Seq[(String,QueryResponse)]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -303,7 +303,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">responses</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="QueryResponse.html" class="extype" name="aws.dynamodb.QueryResponse">QueryResponse</a>)]</span>
+        <span class="name">responses</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="models/QueryResponse.html" class="extype" name="aws.dynamodb.models.QueryResponse">QueryResponse</a>)]</span>
       </span>
       </h4>
       

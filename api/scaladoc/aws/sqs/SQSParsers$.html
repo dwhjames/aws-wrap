@@ -168,6 +168,45 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="aws.sqs.SQSParsers#attributeListParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="attributeListParser:aws.core.parsers.Parser[Seq[aws.sqs.QueueAttributeValue]]"></a>
+      <a id="attributeListParser:Parser[Seq[QueueAttributeValue]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">attributeListParser</span><span class="result">: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="scala.Seq">Seq</span>[<a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a>]]</span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.SQSParsers#batchMessageIdParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="batchMessageIdParser:aws.core.parsers.Parser[Seq[String]]"></a>
+      <a id="batchMessageIdParser:Parser[Seq[String]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">batchMessageIdParser</span><span class="result">: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.SQSParsers#batchSendMessageBatchParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="batchSendMessageBatchParser:aws.core.parsers.Parser[Seq[aws.sqs.MessageResponse]]"></a>
+      <a id="batchSendMessageBatchParser:Parser[Seq[MessageResponse]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">batchSendMessageBatchParser</span><span class="result">: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="scala.Seq">Seq</span>[<a href="MessageResponse.html" class="extype" name="aws.sqs.MessageResponse">MessageResponse</a>]]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -265,6 +304,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="aws.sqs.SQSParsers#messageReceiveParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="messageReceiveParser:aws.core.parsers.Parser[Seq[aws.sqs.MessageReceive]]"></a>
+      <a id="messageReceiveParser:Parser[Seq[MessageReceive]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">messageReceiveParser</span><span class="result">: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="scala.Seq">Seq</span>[<a href="MessageReceive.html" class="extype" name="aws.sqs.MessageReceive">MessageReceive</a>]]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -305,28 +357,28 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="aws.sqs.SQSParsers#queueUrlParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="queueUrlParser:aws.core.parsers.Parser[String]"></a>
-      <a id="queueUrlParser:Parser[String]"></a>
+      <a id="queueUrlParser:aws.core.parsers.Parser[aws.sqs.SQS.Queue]"></a>
+      <a id="queueUrlParser:Parser[Queue]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">queueUrlParser</span><span class="result">: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+        <span class="name">queueUrlParser</span><span class="result">: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<a href="SQS$$Queue.html" class="extype" name="aws.sqs.SQS.Queue">Queue</a>]</span>
       </span>
       </h4>
       
     </li><li name="aws.sqs.SQSParsers#queuesListParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="queuesListParser:aws.core.parsers.Parser[aws.sqs.QueuesList]"></a>
-      <a id="queuesListParser:Parser[QueuesList]"></a>
+      <a id="queuesListParser:aws.core.parsers.Parser[Seq[aws.sqs.SQS.Queue]]"></a>
+      <a id="queuesListParser:Parser[Seq[Queue]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">queuesListParser</span><span class="result">: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<a href="QueuesList.html" class="extype" name="aws.sqs.QueuesList">QueuesList</a>]</span>
+        <span class="name">queuesListParser</span><span class="result">: <a href="../core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="scala.Seq">Seq</span>[<a href="SQS$$Queue.html" class="extype" name="aws.sqs.SQS.Queue">Queue</a>]]</span>
       </span>
       </h4>
       

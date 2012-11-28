@@ -122,10 +122,10 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="BatchGetResponse.html"><span class="name">BatchGetResponse</span></a><span class="params">(<span name="responses">responses: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="QueryResponse.html" class="extype" name="aws.dynamodb.QueryResponse">QueryResponse</a>)]</span>, <span name="unprocessed">unprocessed: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="GetRequest.html" class="extype" name="aws.dynamodb.GetRequest">GetRequest</a>])]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="BatchGetResponse.html"><span class="name">BatchGetResponse</span></a><span class="params">(<span name="responses">responses: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="models/QueryResponse.html" class="extype" name="aws.dynamodb.models.QueryResponse">QueryResponse</a>)]</span>, <span name="unprocessed">unprocessed: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="GetRequest.html" class="extype" name="aws.dynamodb.GetRequest">GetRequest</a>])]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">Used for the response to <a href="DynamoDB$.html#batchGetItem(requestItems:Map[String,aws.dynamodb.GetRequest])(implicitregion:aws.dynamodb.DDBRegion):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.BatchGetResponse]]" class="extmbr" name="aws.dynamodb.DynamoDB#batchGetItem">DynamoDB.batchGetItem</a></p>
+      <p class="comment cmt">Used for the response to <a href="DynamoDB$.html#batchGetItem(requestItems:Map[String,aws.dynamodb.GetRequest])(implicitregion:aws.dynamodb.DDBRegion,implicitexecutor:scala.concurrent.ExecutionContext):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.BatchGetResponse]]" class="extmbr" name="aws.dynamodb.DynamoDB#batchGetItem">DynamoDB.batchGetItem</a></p>
     </li><li name="aws.dynamodb.BatchWriteResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BatchWriteResponseextendsProductwithSerializable"></a>
       <a id="BatchWriteResponse:BatchWriteResponse"></a>
@@ -135,49 +135,10 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="BatchWriteResponse.html"><span class="name">BatchWriteResponse</span></a><span class="params">(<span name="responses">responses: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="QueryResponse.html" class="extype" name="aws.dynamodb.QueryResponse">QueryResponse</a>)]</span>, <span name="unprocessed">unprocessed: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="WriteRequest.html" class="extype" name="aws.dynamodb.WriteRequest">WriteRequest</a>])]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="BatchWriteResponse.html"><span class="name">BatchWriteResponse</span></a><span class="params">(<span name="responses">responses: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <a href="models/QueryResponse.html" class="extype" name="aws.dynamodb.models.QueryResponse">QueryResponse</a>)]</span>, <span name="unprocessed">unprocessed: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="WriteRequest.html" class="extype" name="aws.dynamodb.WriteRequest">WriteRequest</a>])]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">Used for the response to <a href="DynamoDB$.html#batchWriteItem(requestItems:Map[String,Seq[aws.dynamodb.WriteRequest]])(implicitregion:aws.dynamodb.DDBRegion):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.BatchWriteResponse]]" class="extmbr" name="aws.dynamodb.DynamoDB#batchWriteItem">DynamoDB.batchWriteItem</a></p>
-    </li><li name="aws.dynamodb.BinaryKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="BinaryKeyextendsKeySchemaElementwithProductwithSerializable"></a>
-      <a id="BinaryKey:BinaryKey"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="BinaryKey.html"><span class="name">BinaryKey</span></a><span class="params">(<span name="attribute">attribute: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="KeySchemaElement.html" class="extype" name="aws.dynamodb.KeySchemaElement">KeySchemaElement</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">Define a key from a binary attribute (see <a href="DDBBinary.html" class="extype" name="aws.dynamodb.DDBBinary">DDBBinary</a>).</p>
-    </li><li name="aws.dynamodb.CompositeKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="CompositeKeyextendsPrimaryKeywithProductwithSerializable"></a>
-      <a id="CompositeKey:CompositeKey"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="CompositeKey.html"><span class="name">CompositeKey</span></a><span class="params">(<span name="hashKey">hashKey: <a href="KeySchemaElement.html" class="extype" name="aws.dynamodb.KeySchemaElement">KeySchemaElement</a></span>, <span name="rangeKey">rangeKey: <a href="KeySchemaElement.html" class="extype" name="aws.dynamodb.KeySchemaElement">KeySchemaElement</a></span>)</span><span class="result"> extends <a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.CompositeKeyValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="CompositeKeyValueextendsKeyValuewithProductwithSerializable"></a>
-      <a id="CompositeKeyValue:CompositeKeyValue"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="CompositeKeyValue.html"><span class="name">CompositeKeyValue</span></a><span class="params">(<span name="hashKeyElement">hashKeyElement: <a href="DDBAttribute.html" class="extype" name="aws.dynamodb.DDBAttribute">DDBAttribute</a></span>, <span name="rangeKeyElement">rangeKeyElement: <a href="DDBAttribute.html" class="extype" name="aws.dynamodb.DDBAttribute">DDBAttribute</a></span>)</span><span class="result"> extends <a href="KeyValue.html" class="extype" name="aws.dynamodb.KeyValue">KeyValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
+      <p class="comment cmt">Used for the response to <a href="DynamoDB$.html#batchWriteItem(requestItems:Map[String,Seq[aws.dynamodb.WriteRequest]])(implicitregion:aws.dynamodb.DDBRegion,implicitexecutor:scala.concurrent.ExecutionContext):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.BatchWriteResponse]]" class="extmbr" name="aws.dynamodb.DynamoDB#batchWriteItem">DynamoDB.batchWriteItem</a></p>
     </li><li name="aws.dynamodb.DDBAttribute" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="DDBAttributeextendsObject"></a>
       <a id="DDBAttribute:DDBAttribute"></a>
@@ -323,20 +284,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="DeleteRequest.html"><span class="name">DeleteRequest</span></a><span class="params">(<span name="key">key: <a href="KeyValue.html" class="extype" name="aws.dynamodb.KeyValue">KeyValue</a></span>)</span><span class="result"> extends <a href="WriteRequest.html" class="extype" name="aws.dynamodb.WriteRequest">WriteRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.Expected" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ExpectedextendsProductwithSerializable"></a>
-      <a id="Expected:Expected"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="Expected.html"><span class="name">Expected</span></a><span class="params">(<span name="exists">exists: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>] = <span class="symbol">scala.None</span></span>, <span name="value">value: <span class="extype" name="scala.Option">Option</span>[<a href="DDBAttribute.html" class="extype" name="aws.dynamodb.DDBAttribute">DDBAttribute</a>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="DeleteRequest.html"><span class="name">DeleteRequest</span></a><span class="params">(<span name="key">key: <a href="models/KeyValue.html" class="extype" name="aws.dynamodb.models.KeyValue">KeyValue</a></span>)</span><span class="result"> extends <a href="WriteRequest.html" class="extype" name="aws.dynamodb.WriteRequest">WriteRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -349,33 +297,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="GetRequest.html"><span class="name">GetRequest</span></a><span class="params">(<span name="keys">keys: <span class="extype" name="scala.Seq">Seq</span>[<a href="KeyValue.html" class="extype" name="aws.dynamodb.KeyValue">KeyValue</a>]</span>, <span name="attributesToGet">attributesToGet: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="consistentRead">consistentRead: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.HashKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="HashKeyextendsPrimaryKeywithProductwithSerializable"></a>
-      <a id="HashKey:HashKey"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="HashKey.html"><span class="name">HashKey</span></a><span class="params">(<span name="hashKey">hashKey: <a href="KeySchemaElement.html" class="extype" name="aws.dynamodb.KeySchemaElement">KeySchemaElement</a></span>)</span><span class="result"> extends <a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.HashKeyValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="HashKeyValueextendsKeyValuewithProductwithSerializable"></a>
-      <a id="HashKeyValue:HashKeyValue"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="HashKeyValue.html"><span class="name">HashKeyValue</span></a><span class="params">(<span name="hashKeyElement">hashKeyElement: <a href="DDBAttribute.html" class="extype" name="aws.dynamodb.DDBAttribute">DDBAttribute</a></span>)</span><span class="result"> extends <a href="KeyValue.html" class="extype" name="aws.dynamodb.KeyValue">KeyValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="GetRequest.html"><span class="name">GetRequest</span></a><span class="params">(<span name="keys">keys: <span class="extype" name="scala.Seq">Seq</span>[<a href="models/KeyValue.html" class="extype" name="aws.dynamodb.models.KeyValue">KeyValue</a>]</span>, <span name="attributesToGet">attributesToGet: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="consistentRead">consistentRead: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -392,19 +314,6 @@
       </span>
       </h4>
       <p class="comment cmt">An item in DynamoDB.</p>
-    </li><li name="aws.dynamodb.ItemResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ItemResponseextendsProductwithSerializable"></a>
-      <a id="ItemResponse:ItemResponse"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="ItemResponse.html"><span class="name">ItemResponse</span></a><span class="params">(<span name="item">item: <a href="Item.html" class="extype" name="aws.dynamodb.Item">Item</a></span>, <span name="consumedCapacityUnits">consumedCapacityUnits: <span class="extype" name="scala.BigDecimal">BigDecimal</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
     </li><li name="aws.dynamodb.KeyCondition" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="KeyConditionextendsObject"></a>
       <a id="KeyCondition:KeyCondition"></a>
@@ -415,71 +324,6 @@
       </span>
       <span class="symbol">
         <a href="KeyCondition.html"><span class="name">KeyCondition</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.KeySchemaElement" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="KeySchemaElementextendsObject"></a>
-      <a id="KeySchemaElement:KeySchemaElement"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">sealed </span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="KeySchemaElement.html"><span class="name">KeySchemaElement</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">An element of a Key schema: can be a hash key or a range key.</p>
-    </li><li name="aws.dynamodb.KeyValue" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="KeyValueextendsObject"></a>
-      <a id="KeyValue:KeyValue"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">sealed </span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="KeyValue.html"><span class="name">KeyValue</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.NumberKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="NumberKeyextendsKeySchemaElementwithProductwithSerializable"></a>
-      <a id="NumberKey:NumberKey"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="NumberKey.html"><span class="name">NumberKey</span></a><span class="params">(<span name="attribute">attribute: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="KeySchemaElement.html" class="extype" name="aws.dynamodb.KeySchemaElement">KeySchemaElement</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">Define a key from a number attribute (see <a href="DDBNumber.html" class="extype" name="aws.dynamodb.DDBNumber">DDBNumber</a>).</p>
-    </li><li name="aws.dynamodb.PrimaryKey" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="PrimaryKeyextendsObject"></a>
-      <a id="PrimaryKey:PrimaryKey"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">sealed </span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="PrimaryKey.html"><span class="name">PrimaryKey</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">When you create a table, in addition to the table name, you must specify the primary key of the table.</p>
-    </li><li name="aws.dynamodb.ProvisionedThroughput" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ProvisionedThroughputextendsProductwithSerializable"></a>
-      <a id="ProvisionedThroughput:ProvisionedThroughput"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="ProvisionedThroughput.html"><span class="name">ProvisionedThroughput</span></a><span class="params">(<span name="readCapacityUnits">readCapacityUnits: <span class="extype" name="scala.Long">Long</span></span>, <span name="writeCapacityUnits">writeCapacityUnits: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -505,36 +349,10 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Query.html"><span class="name">Query</span></a><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="hashKeyValue">hashKeyValue: <a href="DDBAttribute.html" class="extype" name="aws.dynamodb.DDBAttribute">DDBAttribute</a></span>, <span name="attributesToGet">attributesToGet: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">scala.None</span></span>, <span name="consistentRead">consistentRead: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="count">count: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="rangeKeyCondition">rangeKeyCondition: <span class="extype" name="scala.Option">Option</span>[<a href="KeyCondition.html" class="extype" name="aws.dynamodb.KeyCondition">KeyCondition</a>] = <span class="symbol">scala.None</span></span>, <span name="scanIndexForward">scanIndexForward: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="exclusiveStartKey">exclusiveStartKey: <span class="extype" name="scala.Option">Option</span>[<a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Query.html"><span class="name">Query</span></a><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="hashKeyValue">hashKeyValue: <a href="DDBAttribute.html" class="extype" name="aws.dynamodb.DDBAttribute">DDBAttribute</a></span>, <span name="attributesToGet">attributesToGet: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">scala.None</span></span>, <span name="consistentRead">consistentRead: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="count">count: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="rangeKeyCondition">rangeKeyCondition: <span class="extype" name="scala.Option">Option</span>[<a href="KeyCondition.html" class="extype" name="aws.dynamodb.KeyCondition">KeyCondition</a>] = <span class="symbol">scala.None</span></span>, <span name="scanIndexForward">scanIndexForward: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="exclusiveStartKey">exclusiveStartKey: <span class="extype" name="scala.Option">Option</span>[<a href="models/PrimaryKey.html" class="extype" name="aws.dynamodb.models.PrimaryKey">PrimaryKey</a>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">A DynamoDB Query.</p>
-    </li><li name="aws.dynamodb.QueryResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="QueryResponseextendsProductwithSerializable"></a>
-      <a id="QueryResponse:QueryResponse"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="QueryResponse.html"><span class="name">QueryResponse</span></a><span class="params">(<span name="items">items: <span class="extype" name="scala.Seq">Seq</span>[<a href="Item.html" class="extype" name="aws.dynamodb.Item">Item</a>]</span>, <span name="count">count: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>, <span name="scannedCount">scannedCount: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>, <span name="lastEvaluatedKey">lastEvaluatedKey: <span class="extype" name="scala.Option">Option</span>[<a href="KeyValue.html" class="extype" name="aws.dynamodb.KeyValue">KeyValue</a>]</span>, <span name="consumedCapacityUnits">consumedCapacityUnits: <span class="extype" name="scala.BigDecimal">BigDecimal</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.ReturnValues" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="ReturnValuesextendsObject"></a>
-      <a id="ReturnValues:ReturnValues"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">sealed </span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="ReturnValues.html"><span class="name">ReturnValues</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
-      </span>
-      </h4>
-      
     </li><li name="aws.dynamodb.Status" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StatusextendsObject"></a>
       <a id="Status:Status"></a>
@@ -548,45 +366,6 @@
       </span>
       </h4>
       <p class="comment cmt">Represents the status of a table, and whether it is ready for reading or not.</p>
-    </li><li name="aws.dynamodb.StringKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="StringKeyextendsKeySchemaElementwithProductwithSerializable"></a>
-      <a id="StringKey:StringKey"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="StringKey.html"><span class="name">StringKey</span></a><span class="params">(<span name="attribute">attribute: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="KeySchemaElement.html" class="extype" name="aws.dynamodb.KeySchemaElement">KeySchemaElement</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">Define a key from a string attribute (see <a href="DDBString.html" class="extype" name="aws.dynamodb.DDBString">DDBString</a>).</p>
-    </li><li name="aws.dynamodb.TableDescription" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="TableDescriptionextendsProductwithSerializable"></a>
-      <a id="TableDescription:TableDescription"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="TableDescription.html"><span class="name">TableDescription</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="status">status: <a href="Status.html" class="extype" name="aws.dynamodb.Status">Status</a></span>, <span name="creationDateTime">creationDateTime: <span class="extype" name="java.util.Date">Date</span></span>, <span name="keySchema">keySchema: <a href="PrimaryKey.html" class="extype" name="aws.dynamodb.PrimaryKey">PrimaryKey</a></span>, <span name="provisionedThroughput">provisionedThroughput: <a href="ProvisionedThroughput.html" class="extype" name="aws.dynamodb.ProvisionedThroughput">ProvisionedThroughput</a></span>, <span name="size">size: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.Update" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="UpdateextendsObject"></a>
-      <a id="Update:Update"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">sealed </span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="Update.html"><span class="name">Update</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">Action to be used in <a href="DynamoDB$.html#updateItem(tableName:String,key:aws.dynamodb.KeyValue,attributeUpdates:Map[String,aws.dynamodb.Update],expected:Map[String,aws.dynamodb.Expected],returnValues:aws.dynamodb.ReturnValues)(implicitregion:aws.dynamodb.DDBRegion):scala.concurrent.Future[aws.core.Types.SimpleResult[aws.dynamodb.ItemResponse]]" class="extmbr" name="aws.dynamodb.DynamoDB#updateItem">DynamoDB.updateItem</a>.</p>
     </li><li name="aws.dynamodb.WriteRequest" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="WriteRequestextendsObject"></a>
       <a id="WriteRequest:WriteRequest"></a>
@@ -777,45 +556,6 @@
       </span>
       </h4>
       
-    </li><li name="aws.dynamodb.KeyValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="KeyValue"></a>
-      <a id="KeyValue:KeyValue"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="KeyValue$.html"><span class="name">KeyValue</span></a>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.PrimaryKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PrimaryKey"></a>
-      <a id="PrimaryKey:PrimaryKey"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="PrimaryKey$.html"><span class="name">PrimaryKey</span></a>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.ReturnValues" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ReturnValues"></a>
-      <a id="ReturnValues:ReturnValues"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="ReturnValues$.html"><span class="name">ReturnValues</span></a>
-      </span>
-      </h4>
-      
     </li><li name="aws.dynamodb.Status" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Status"></a>
       <a id="Status:Status"></a>
@@ -826,19 +566,6 @@
       </span>
       <span class="symbol">
         <a href="Status$.html"><span class="name">Status</span></a>
-      </span>
-      </h4>
-      
-    </li><li name="aws.dynamodb.Update" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Update"></a>
-      <a id="Update:Update"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="Update$.html"><span class="name">Update</span></a>
       </span>
       </h4>
       

@@ -84,7 +84,23 @@
         <div id="allMembers">
         
 
-        
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="aws.sqs.SQS.Queue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="QueueextendsProductwithSerializable"></a>
+      <a id="Queue:Queue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SQS$$Queue.html"><span class="name">Queue</span></a><span class="params">(<span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
 
         
 
@@ -155,6 +171,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="aws.sqs.SQS.ActionNames" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ActionNames"></a>
+      <a id="ActionNames:ActionNames"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SQS$$ActionNames$.html"><span class="name">ActionNames</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.SQS.Parameters" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Parameters"></a>
+      <a id="Parameters:Parameters"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SQS$$Parameters$.html"><span class="name">Parameters</span></a>
+      </span>
+      </h4>
+      
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -185,15 +227,15 @@
               
         </dd></dl></div>
     </li><li name="aws.sqs.SQS#createQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="createQueue(name:String,attributes:aws.sqs.QueueAttribute*)(implicitregion:aws.sqs.SQSRegion):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,String]]"></a>
-      <a id="createQueue(String,QueueAttribute*)(SQSRegion):Future[Result[SQSMeta,String]]"></a>
+      <a id="createQueue(name:String,attributes:aws.sqs.CreateAttributeValue*)(implicitregion:aws.sqs.SQSRegion):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,aws.sqs.SQS.Queue]]"></a>
+      <a id="createQueue(String,CreateAttributeValue*)(SQSRegion):Future[Result[SQSMeta,Queue]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createQueue</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="attributes">attributes: <a href="QueueAttribute.html" class="extype" name="aws.sqs.QueueAttribute">QueueAttribute</a>*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SQSRegion.html" class="extype" name="aws.sqs.SQSRegion">SQSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <span class="extype" name="scala.Predef.String">String</span>]]</span>
+        <span class="name">createQueue</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="attributes">attributes: <a href="CreateAttributeValue.html" class="extype" name="aws.sqs.CreateAttributeValue">CreateAttributeValue</a>*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SQSRegion.html" class="extype" name="aws.sqs.SQSRegion">SQSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <a href="SQS$$Queue.html" class="extype" name="aws.sqs.SQS.Queue">Queue</a>]]</span>
       </span>
       </h4>
       
@@ -278,16 +320,16 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="aws.sqs.SQS#getQueueUrl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getQueueUrl(name:String,queueOwnerAWSAccountId:Option[String])(implicitregion:aws.sqs.SQSRegion):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,String]]"></a>
-      <a id="getQueueUrl(String,Option[String])(SQSRegion):Future[Result[SQSMeta,String]]"></a>
+    </li><li name="aws.sqs.SQS#getQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getQueue(name:String,queueOwnerAWSAccountId:Option[String])(implicitregion:aws.sqs.SQSRegion):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,aws.sqs.SQS.Queue]]"></a>
+      <a id="getQueue(String,Option[String])(SQSRegion):Future[Result[SQSMeta,Queue]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getQueueUrl</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="queueOwnerAWSAccountId">queueOwnerAWSAccountId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SQSRegion.html" class="extype" name="aws.sqs.SQSRegion">SQSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <span class="extype" name="scala.Predef.String">String</span>]]</span>
+        <span class="name">getQueue</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="queueOwnerAWSAccountId">queueOwnerAWSAccountId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SQSRegion.html" class="extype" name="aws.sqs.SQSRegion">SQSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <a href="SQS$$Queue.html" class="extype" name="aws.sqs.SQS.Queue">Queue</a>]]</span>
       </span>
       </h4>
       
@@ -305,15 +347,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="aws.sqs.SQS#listQueues" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="listQueues(queueNamePrefix:String)(implicitregion:aws.sqs.SQSRegion):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,aws.sqs.QueuesList]]"></a>
-      <a id="listQueues(String)(SQSRegion):Future[Result[SQSMeta,QueuesList]]"></a>
+      <a id="listQueues(queueNamePrefix:String)(implicitregion:aws.sqs.SQSRegion):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,Seq[aws.sqs.SQS.Queue]]]"></a>
+      <a id="listQueues(String)(SQSRegion):Future[Result[SQSMeta,Seq[Queue]]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listQueues</span><span class="params">(<span name="queueNamePrefix">queueNamePrefix: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SQSRegion.html" class="extype" name="aws.sqs.SQSRegion">SQSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <a href="QueuesList.html" class="extype" name="aws.sqs.QueuesList">QueuesList</a>]]</span>
+        <span class="name">listQueues</span><span class="params">(<span name="queueNamePrefix">queueNamePrefix: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SQSRegion.html" class="extype" name="aws.sqs.SQSRegion">SQSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="SQS$$Queue.html" class="extype" name="aws.sqs.SQS.Queue">Queue</a>]]]</span>
       </span>
       </h4>
       
@@ -356,19 +398,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="aws.sqs.SQS#receiveMessage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="receiveMessage(queueURL:String,maxNumber:Option[Long],visibilityTimeout:Option[Long]):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,aws.sqs.SendMessageResult]]"></a>
-      <a id="receiveMessage(String,Option[Long],Option[Long]):Future[Result[SQSMeta,SendMessageResult]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">receiveMessage</span><span class="params">(<span name="queueURL">queueURL: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="maxNumber">maxNumber: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="visibilityTimeout">visibilityTimeout: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <a href="SendMessageResult.html" class="extype" name="aws.sqs.SendMessageResult">SendMessageResult</a>]]</span>
-      </span>
-      </h4>
-      
     </li><li name="aws.core.signature.V2#request" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="request(resource:String,parameters:Seq[(String,String)]):scala.concurrent.Future[play.api.libs.ws.Response]"></a>
       <a id="request(String,Seq[(String,String)]):Future[Response]"></a>
@@ -382,19 +411,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../core/signature/V2.html" class="extype" name="aws.core.signature.V2">V2</a></dd></dl></div>
-    </li><li name="aws.sqs.SQS#sendMessage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="sendMessage(queueURL:String,message:String,delaySeconds:Option[Long]):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,aws.sqs.SendMessageResult]]"></a>
-      <a id="sendMessage(String,String,Option[Long]):Future[Result[SQSMeta,SendMessageResult]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sendMessage</span><span class="params">(<span name="queueURL">queueURL: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="message">message: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="delaySeconds">delaySeconds: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <a href="SendMessageResult.html" class="extype" name="aws.sqs.SendMessageResult">SendMessageResult</a>]]</span>
-      </span>
-      </h4>
-      
     </li><li name="aws.core.signature.V2#signedUrl" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="signedUrl(method:String,url:String,params:Seq[(String,String)]):String"></a>
       <a id="signedUrl(String,String,Seq[(String,String)]):String"></a>

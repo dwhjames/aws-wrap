@@ -87,42 +87,224 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="aws.sqs.CreateQueueResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="CreateQueueResultextendsProductwithSerializable"></a>
-      <a id="CreateQueueResult:CreateQueueResult"></a>
+              <ol><li name="aws.sqs.ApproximateNumberOfMessages" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ApproximateNumberOfMessagesextendsQueueAttributeValuewithProductwithSerializable"></a>
+      <a id="ApproximateNumberOfMessages:ApproximateNumberOfMessages"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="CreateQueueResult.html"><span class="name">CreateQueueResult</span></a><span class="params">(<span name="queueURL">queueURL: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="ApproximateNumberOfMessages.html"><span class="name">ApproximateNumberOfMessages</span></a><span class="params">(<span name="count">count: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li name="aws.sqs.QueueAttribute" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="QueueAttributeextendsObject"></a>
-      <a id="QueueAttribute:QueueAttribute"></a>
+    </li><li name="aws.sqs.ApproximateNumberOfMessagesDelayed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ApproximateNumberOfMessagesDelayedextendsQueueAttributeValuewithProductwithSerializable"></a>
+      <a id="ApproximateNumberOfMessagesDelayed:ApproximateNumberOfMessagesDelayed"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier">sealed </span>
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ApproximateNumberOfMessagesDelayed.html"><span class="name">ApproximateNumberOfMessagesDelayed</span></a><span class="params">(<span name="count">count: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.ApproximateNumberOfMessagesNotVisible" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ApproximateNumberOfMessagesNotVisibleextendsQueueAttributeValuewithProductwithSerializable"></a>
+      <a id="ApproximateNumberOfMessagesNotVisible:ApproximateNumberOfMessagesNotVisible"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ApproximateNumberOfMessagesNotVisible.html"><span class="name">ApproximateNumberOfMessagesNotVisible</span></a><span class="params">(<span name="count">count: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.CreateAttributeValue" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CreateAttributeValueextendsQueueAttributeValue"></a>
+      <a id="CreateAttributeValue:CreateAttributeValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="QueueAttribute.html"><span class="name">QueueAttribute</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="CreateAttributeValue.html"><span class="name">CreateAttributeValue</span></a><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a></span>
       </span>
       </h4>
-      
-    </li><li name="aws.sqs.QueuesList" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="QueuesListextendsProductwithSerializable"></a>
-      <a id="QueuesList:QueuesList"></a>
+      <p class="comment cmt">A queue attribute that can be used in SQS.</p>
+    </li><li name="aws.sqs.CreatedTimestamp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CreatedTimestampextendsQueueAttributeValuewithProductwithSerializable"></a>
+      <a id="CreatedTimestamp:CreatedTimestamp"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="QueuesList.html"><span class="name">QueuesList</span></a><span class="params">(<span name="queues">queues: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="CreatedTimestamp.html"><span class="name">CreatedTimestamp</span></a><span class="params">(<span name="timestamp">timestamp: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.DelaySeconds" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DelaySecondsextendsQueueAttributeValuewithCreateAttributeValuewithProductwithSerializable"></a>
+      <a id="DelaySeconds:DelaySeconds"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DelaySeconds.html"><span class="name">DelaySeconds</span></a><span class="params">(<span name="seconds">seconds: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <a href="CreateAttributeValue.html" class="extype" name="aws.sqs.CreateAttributeValue">CreateAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.MaximumMessageSize" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MaximumMessageSizeextendsQueueAttributeValuewithCreateAttributeValuewithProductwithSerializable"></a>
+      <a id="MaximumMessageSize:MaximumMessageSize"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MaximumMessageSize.html"><span class="name">MaximumMessageSize</span></a><span class="params">(<span name="size">size: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <a href="CreateAttributeValue.html" class="extype" name="aws.sqs.CreateAttributeValue">CreateAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.MessageDelete" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageDeleteextendsProductwithSerializable"></a>
+      <a id="MessageDelete:MessageDelete"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageDelete.html"><span class="name">MessageDelete</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="receiptHandle">receiptHandle: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.MessageReceive" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageReceiveextendsProductwithSerializable"></a>
+      <a id="MessageReceive:MessageReceive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageReceive.html"><span class="name">MessageReceive</span></a><span class="params">(<span name="messageId">messageId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="md5OfBody">md5OfBody: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="receiptHandle">receiptHandle: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="attributes">attributes: <span class="extype" name="scala.Predef.Map">Map</span>[<a href="MessageAttributes$.html#MessageAttribute=aws.sqs.MessageAttributes.Value" class="extmbr" name="aws.sqs.MessageAttributes.MessageAttribute">MessageAttribute</a>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.MessageResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageResponseextendsProductwithSerializable"></a>
+      <a id="MessageResponse:MessageResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageResponse.html"><span class="name">MessageResponse</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="messageId">messageId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="md5OfBody">md5OfBody: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.MessageRetentionPeriod" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageRetentionPeriodextendsQueueAttributeValuewithCreateAttributeValuewithProductwithSerializable"></a>
+      <a id="MessageRetentionPeriod:MessageRetentionPeriod"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageRetentionPeriod.html"><span class="name">MessageRetentionPeriod</span></a><span class="params">(<span name="period">period: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <a href="CreateAttributeValue.html" class="extype" name="aws.sqs.CreateAttributeValue">CreateAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.MessageSend" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageSendextendsProductwithSerializable"></a>
+      <a id="MessageSend:MessageSend"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageSend.html"><span class="name">MessageSend</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="delaySeconds">delaySeconds: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A message, as used in Queue.</p>
+    </li><li name="aws.sqs.MessageVisibility" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageVisibilityextendsProductwithSerializable"></a>
+      <a id="MessageVisibility:MessageVisibility"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageVisibility.html"><span class="name">MessageVisibility</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="receiptHandle">receiptHandle: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="visibilityTimeout">visibilityTimeout: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.Policy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PolicyextendsQueueAttributeValuewithCreateAttributeValuewithProductwithSerializable"></a>
+      <a id="Policy:Policy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Policy.html"><span class="name">Policy</span></a><span class="params">(<span name="policy">policy: <span class="extype" name="play.api.libs.json.JsValue">JsValue</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <a href="CreateAttributeValue.html" class="extype" name="aws.sqs.CreateAttributeValue">CreateAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.QueueArn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="QueueArnextendsQueueAttributeValuewithProductwithSerializable"></a>
+      <a id="QueueArn:QueueArn"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="QueueArn.html"><span class="name">QueueArn</span></a><span class="params">(<span name="arn">arn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.QueueAttributeValue" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="QueueAttributeValueextendsObject"></a>
+      <a id="QueueAttributeValue:QueueAttributeValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="QueueAttributeValue.html"><span class="name">QueueAttributeValue</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.ReceiveMessageWaitTimeSeconds" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReceiveMessageWaitTimeSecondsextendsQueueAttributeValuewithCreateAttributeValuewithProductwithSerializable"></a>
+      <a id="ReceiveMessageWaitTimeSeconds:ReceiveMessageWaitTimeSeconds"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReceiveMessageWaitTimeSeconds.html"><span class="name">ReceiveMessageWaitTimeSeconds</span></a><span class="params">(<span name="waitTime">waitTime: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <a href="CreateAttributeValue.html" class="extype" name="aws.sqs.CreateAttributeValue">CreateAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -171,6 +353,19 @@
       </span>
       </h4>
       
+    </li><li name="aws.sqs.VisibilityTimeout" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="VisibilityTimeoutextendsQueueAttributeValuewithCreateAttributeValuewithProductwithSerializable"></a>
+      <a id="VisibilityTimeout:VisibilityTimeout"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="VisibilityTimeout.html"><span class="name">VisibilityTimeout</span></a><span class="params">(<span name="timeout">timeout: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <a href="CreateAttributeValue.html" class="extype" name="aws.sqs.CreateAttributeValue">CreateAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
     </li></ol>
             </div>
 
@@ -178,16 +373,42 @@
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="aws.sqs.QueueAttribute" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="QueueAttribute"></a>
-      <a id="QueueAttribute:QueueAttribute"></a>
+              <ol><li name="aws.sqs.MessageAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageAttributes"></a>
+      <a id="MessageAttributes:MessageAttributes"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="QueueAttribute$.html"><span class="name">QueueAttribute</span></a>
+        <a href="MessageAttributes$.html"><span class="name">MessageAttributes</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.QueueAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="QueueAttributeValue"></a>
+      <a id="QueueAttributeValue:QueueAttributeValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="QueueAttributeValue$.html"><span class="name">QueueAttributeValue</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.QueueAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="QueueAttributes"></a>
+      <a id="QueueAttributes:QueueAttributes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="QueueAttributes$.html"><span class="name">QueueAttributes</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
       </span>
       </h4>
       
@@ -201,6 +422,19 @@
       </span>
       <span class="symbol">
         <a href="SQS$.html"><span class="name">SQS</span></a><span class="result"> extends <a href="../core/signature/V2.html" class="extype" name="aws.core.signature.V2">V2</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.SQSErrors" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SQSErrors"></a>
+      <a id="SQSErrors:SQSErrors"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SQSErrors$.html"><span class="name">SQSErrors</span></a>
       </span>
       </h4>
       
