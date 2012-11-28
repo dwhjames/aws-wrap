@@ -84,7 +84,6 @@ sealed trait Rank {
   }
 }
 object Rank {
-  //TODO: DRY
   case class TextRelevance(ordering: Option[Orderings.Ordering] = None) extends Rank{
     val name = "text_relevance"
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
@@ -92,7 +91,6 @@ object Rank {
   case class Field(name: String, ordering: Option[Orderings.Ordering] = None) extends Rank {
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
   }
-  //TODO: Nicer syntax for expression ?
   // @see: http://docs.amazonwebservices.com/cloudsearch/latest/developerguide/rankexpressions.html
   case class RankExpr(name: String, expr: Option[String] = None, ordering: Option[Orderings.Ordering] = None) extends Rank {
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
@@ -108,6 +106,7 @@ object MatchExpressions {
   sealed trait MatchExpression {
     def and(ex: MatchExpression) = And(this, ex)
     def or(ex: MatchExpression) = Or(this, ex)
+    def unary_! = Not(this)
   }
 
   class Field private(name: String, value: String) extends MatchExpression {

@@ -101,8 +101,8 @@ object CloudSearchSpec extends Specification {
       import MatchExpressions._
       val ex = (Field("title", "Star Wars") or Field("title", "Star Trek")) and
         Filter("year", 1980 to 1990) and
-        Not(Field("director", "Carpenter")) and
-        Not(Field("title", "Spock"))
+        !Field("director", "Carpenter") and
+        !Field("title", "Spock")
 
       val expected =   Seq("Star Trek IV: The Voyage Home",
         "Star Trek V: The Final Frontier",
