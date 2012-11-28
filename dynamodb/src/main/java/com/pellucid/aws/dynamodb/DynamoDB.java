@@ -7,7 +7,6 @@ import java.util.Map;
 
 import play.libs.Scala;
 import scala.collection.JavaConversions;
-import scala.collection.JavaConverters;
 import scala.collection.Seq;
 import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
@@ -16,6 +15,7 @@ import akka.dispatch.Mapper;
 import com.pellucid.aws.dynamodb.models.AttributeValue;
 import com.pellucid.aws.dynamodb.models.Expected;
 import com.pellucid.aws.dynamodb.models.ItemResponse;
+import com.pellucid.aws.dynamodb.models.KeyValue;
 import com.pellucid.aws.dynamodb.models.PrimaryKey;
 import com.pellucid.aws.dynamodb.models.ProvisionedThroughput;
 import com.pellucid.aws.dynamodb.models.TableDescription;
@@ -159,6 +159,22 @@ public class DynamoDB {
         );
     }
 
+    public Future<SimpleResult<ItemResponse>> putItem(String tableName, Map<String, AttributeValue> item) {
+        return putItem(tableName, item, new HashMap<String, Expected>(), ReturnValues.NONE);
+    }
+
+    public Future<SimpleResult<ItemResponse>> putItem(String tableName,
+            Map<String, AttributeValue> item,
+            ReturnValues returnValues) {
+        return putItem(tableName, item, new HashMap<String, Expected>(), returnValues);
+    }
+
+    public Future<SimpleResult<ItemResponse>> putItem(String tableName,
+            Map<String, AttributeValue> item,
+            Map<String, Expected> expected) {
+        return putItem(tableName, item, expected, ReturnValues.NONE);
+    }
+
     /**
      * Creates a new item, or replaces an old item with a new item (including all the attributes).
      * If an item already exists in the specified table with the same primary key, the new item completely replaces the existing item. You can perform a conditional put (insert a new item if one with the specified primary key doesn't exist), or replace an existing item if it has certain attribute values.
@@ -182,19 +198,51 @@ public class DynamoDB {
         } else {
             rv = aws.dynamodb.models.ReturnValues$.MODULE$.NONE();
         }
+        return itemResponseConvert(
+                aws.dynamodb.DynamoDB.putItem(
+                        tableName,
+                        sItem,
+                        AWSJavaConversions.toScalaMap(sExpected),
+                        rv,
+                        scalaRegion,
+                        aws.core.AWS.defaultExecutionContext())
+                );
+    }
+
+    /**
+     * The GetItem operation returns a set of Attributes for an item that matches the primary key.
+     *
+     * The GetItem operation provides an eventually consistent read by default.
+     * If eventually consistent reads are not acceptable for your application, use ConsistentRead.
+     * Although this operation might take longer than a standard read, it always returns the last updated value.
+     * For more information, see [[http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/APISummary.html#DataReadConsistency Data Read and Consistency Considerations]].
+     */
+    public Future<SimpleResult<ItemResponse>> getItem(
+            String tableName,
+            KeyValue key,
+            List<String> attributesToGet,
+            Boolean consistentRead) {
+        return itemResponseConvert(
+                aws.dynamodb.DynamoDB.getItem(
+                        tableName,
+                        key.toScala(),
+                        JavaConversions.asScalaIterable(attributesToGet).toSeq(),
+                        consistentRead,
+                        scalaRegion,
+                        aws.core.AWS.defaultExecutionContext())
+                );
+    }
+
+    private static <MS extends aws.core.Metadata> Future<SimpleResult<ItemResponse>> itemResponseConvert(Future<aws.core.Result<MS, aws.dynamodb.models.ItemResponse>> scalaResponse) {
         return AWSJavaConversions.toJavaSimpleResult(
-                aws.dynamodb.DynamoDB.putItem(tableName,
-                                              sItem,
-                                              AWSJavaConversions.toScalaMap(sExpected),
-                                              rv,
-                                              scalaRegion,
-                                              aws.core.AWS.defaultExecutionContext()),
+                scalaResponse,
                 new Mapper<aws.dynamodb.models.ItemResponse, ItemResponse>() {
                     @Override public ItemResponse apply(aws.dynamodb.models.ItemResponse resp) {
                         return ItemResponse.fromScala(resp);
                     }
                 }
             );
+
     }
 
     private static aws.dynamodb.Item scalaItemFromMap(Map<String, AttributeValue> item) {

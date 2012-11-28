@@ -2,8 +2,8 @@ package com.pellucid.aws.dynamodb.models;
 
 public class PrimaryKey {
 
-    private KeySchemaElement hashKeyElement;
-    private KeySchemaElement rangeKeyElement;
+    private final KeySchemaElement hashKeyElement;
+    private final KeySchemaElement rangeKeyElement;
 
     public PrimaryKey(KeySchemaElement hashKeyElement, KeySchemaElement rangeKeyElement) {
         if (this.hashKeyElement == null) {
@@ -11,6 +11,10 @@ public class PrimaryKey {
         }
         this.hashKeyElement = hashKeyElement;
         this.rangeKeyElement = rangeKeyElement;
+    }
+
+    public PrimaryKey(KeySchemaElement hashKeyElement) {
+        this(hashKeyElement, null);
     }
 
     public KeySchemaElement hashKeyElement() {

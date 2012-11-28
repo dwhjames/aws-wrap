@@ -40,7 +40,7 @@ public class SimpleDBTest {
     public void listDomains() throws Exception {
         Result<SimpleDBMeta, Object> result = Await.result(sdb.createDomain("java-list-domain"), timeout);
         assertTrue(result.toString(), result.isSuccess());
-        List<String> domainNames = sdb.listDomains().get().body();
+        List<String> domainNames = Await.result(sdb.listDomains(), timeout).body();
         assertTrue("Couldn't find the created domain in the list", domainNames.contains("java-list-domain"));
         Result<SimpleDBMeta, Object> result2 = Await.result(sdb.deleteDomain("java-list-domain"), timeout);
         assertTrue(result2.toString(), result2.isSuccess());
