@@ -47,56 +47,46 @@ object CloudSearchSpec extends Specification {
   "CloudSearch API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
 
+    val search = Search(
+      domain = domain,
+      query = Some("star wars"),
+      returnFields = Seq("title"))
+
     "Search using String query" in {
-      val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title")))
+      val r = waitFor(CloudSearch.search[Seq[Movie]](search))
       checkResult(r)
     }
 
     "Search using MatchExpression and Filter" in {
-      import CloudSearch.MatchExpressions._
+      import MatchExpressions._
       val ex = Field("title", "star wars") and Filter("year", 2008)
-      val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        matchExpression = Some(ex),
-        returnFields = Seq("title")))
+      val r = waitFor(CloudSearch.search[Seq[Movie]](search.withMatchExpression(ex)))
       checkResult(r)
     }
 
     "Search using MatchExpression and Filter range" in {
-      import CloudSearch.MatchExpressions._
+      import MatchExpressions._
       val ex = Field("title", "star wars") and Filter("year", 2000 to 2012)
-      val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        matchExpression = Some(ex),
-        returnFields = Seq("title")))
+      val r = waitFor(CloudSearch.search[Seq[Movie]](search.withMatchExpression(ex)))
       checkResult(r)
     }
 
     "Search using MatchExpression (Field and Not)" in {
-      import CloudSearch.MatchExpressions._
+      import MatchExpressions._
       val ex = Field("title", "star wars") and Not(Filter("year", 2000 to 2012))
-      val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        matchExpression = Some(ex),
-        returnFields = Seq("title", "year")))
+      val r = waitFor(CloudSearch.search[Seq[Movie]](search.withMatchExpression(ex)))
       checkResult(r)
     }
 
     "Search using MatchExpression (star wars OR star strek)" in {
-      import CloudSearch.MatchExpressions._
+      import MatchExpressions._
       val ex = Field("title", "star wars") or Field("title", "star strek")
-      val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        matchExpression = Some(ex),
-        returnFields = Seq("title", "year")))
+      val r = waitFor(CloudSearch.search[Seq[Movie]](search.withMatchExpression(ex)))
       checkResult(r)
     }
 
     "Search using MatchExpression (Complex query)" in {
-      import CloudSearch.MatchExpressions._
+      import MatchExpressions._
       val ex = (Field("title", "Star Wars") or Field("title", "Star Trek")) and
         Filter("year", 1980 to 1990) and
         Not(Field("director", "Carpenter")) and
@@ -109,9 +99,10 @@ object CloudSearchSpec extends Specification {
         "Star Wars: Episode VI - Return of the Jedi")
 
       val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        matchExpression = Some(ex),
-        returnFields = Seq("title", "year")))
+        Search(domain)
+          .withMatchExpression(ex)
+          .withReturnFields("title", "year")))
+
       checkResult(r)
 
       val res = r.body.map(_.titles).flatten
@@ -121,10 +112,7 @@ object CloudSearchSpec extends Specification {
 
     "Search, 2 results" in {
       val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title"),
-        size = Some(2)))
+        search.withSize(2)))
       checkResult(r)
 
       val res = r.body
@@ -133,31 +121,23 @@ object CloudSearchSpec extends Specification {
 
     "Search, ignore 2 first results" in {
       val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title"),
-        start = Some(3)))
+        search.startAt(3)))
       checkResult(r)
-
       val res = r.body
     }
 
     "Search, with facets" in {
-      val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title, genre"),
-        facets = Seq("genre")))
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        search.withFacets("genre")))
       checkResult(r)
     }
 
     "Search, with facets constraints" in {
       val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title, genre"),
-        facets = Seq("genre"),
-        facetConstraints = Seq(FacetConstraint("genre", "Action"))))
+        search
+          .withFacets("genre")
+          .withFacetConstraints(FacetConstraint("genre", "Action"))))
+
       checkResult(r)
       val fs = r.body._2
       fs must haveSize(1)
@@ -168,60 +148,44 @@ object CloudSearchSpec extends Specification {
     }
 
     "Search using open intervals in MatchExpression " in {
-       import CloudSearch.MatchExpressions._
+       import MatchExpressions._
         val ex = Field("title", "star wars") and Not(Filter("year", to = Some(2000)))
-        val r = waitFor(CloudSearch.search[Seq[Movie]](
-          domain = domain,
-          matchExpression = Some(ex),
-          returnFields = Seq("title", "year")))
+        val r = waitFor(CloudSearch.search[Seq[Movie]](search.withMatchExpression(ex)))
         checkResult(r)
     }
 
     "Sort facets by COUNT(genre) (descending ordering)" in {
-      val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title, genre"),
-        facets = Seq("genre"),
-        facetSort = Seq(-Sort.Max("genre"))))
+      val r = waitFor(CloudSearch.search[Seq[Movie]](
+        search.withFacets("genre")
+          .withFacetSorts(-Sort.Max("genre"))))
       checkResult(r)
     }
 
     "Set the maximum number of facet constraints" in {
       val r = waitFor(CloudSearch.search[CloudSearch.WithFacets[Seq[Movie]]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title, genre"),
-        facets = Seq("genre"),
-        facetTops = Seq("genre" -> 2)))
+        search
+          .withFacets("genre")
+          .withFacetTops("genre" -> 2)))
+
       checkResult(r)
       r.body._2.flatMap(_.constraints) must haveSize(2)
     }
 
     "Order results" in {
       val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title, genre"),
-        ranks = Seq(-Rank.Field("year"), -Rank.TextRelevance())))
+        search.withRanks(-Rank.Field("year"), -Rank.TextRelevance())))
       checkResult(r)
     }
 
     "Order results using RankExpression" in {
       val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title, genre"),
-        ranks = Seq(-Rank.RankExpr("cos(text_relevance)"))))
+        search.withRanks(-Rank.RankExpr("cos(text_relevance)"))))
       checkResult(r)
     }
 
     "Filter results by score range" in {
       val r = waitFor(CloudSearch.search[Seq[Movie]](
-        domain = domain,
-        query = Some("star wars"),
-        returnFields = Seq("title, genre"),
-        scores = Seq("year" -> (0 to 5))))
+        search.withScores("year" -> (0 to 5))))
       checkResult(r)
     }
 

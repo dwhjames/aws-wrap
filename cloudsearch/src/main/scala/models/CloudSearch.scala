@@ -44,7 +44,6 @@ object FacetConstraint {
   }
 }
 
-
 // TODO: would be nice to check for double '-' calls
 sealed trait Sort {
   val field: String
@@ -105,13 +104,63 @@ object Rank {
   }
 }
 
+object MatchExpressions {
+  sealed trait MatchExpression {
+    def and(ex: MatchExpression) = And(this, ex)
+    def or(ex: MatchExpression) = Or(this, ex)
+  }
+
+  class Field private(name: String, value: String) extends MatchExpression {
+    override def toString = s"(field $name $value)"
+  }
+  object Field {
+    def apply(name: String, value: Number) = new Field(name, s"$value")
+    def apply(name: String, range: Range) = new Field(name, s"${range.start}..${range.end}")
+    def apply(name: String, from: Option[Int] = None, to: Option[Int] = None) = new Field(name, s"""${from.getOrElse("")}..${to.getOrElse("")}""")
+    def apply(name: String, value: String) = new Field(name, s"'$value'")
+  }
+
+  class Filter private(name: String, value: String) extends MatchExpression {
+    override def toString = s"(filter $name $value)"
+  }
+  object Filter {
+    def apply(name: String, value: Number) = new Filter(name, s"$value")
+    def apply(name: String, range: Range) = new Filter(name, s"${range.start}..${range.end}")
+    def apply(name: String, from: Option[Int] = None, to: Option[Int] = None) = new Filter(name, s"""${from.getOrElse("")}..${to.getOrElse("")}""")
+    def apply(name: String, value: String) = new Filter(name, s"'$value'")
+  }
+
+  class Not(ex: MatchExpression) extends MatchExpression {
+    override def toString = s"(not ${ex})"
+  }
+  object Not {
+    def apply(ex: MatchExpression) = new Not(ex)
+  }
+
+  class And(ms: Seq[MatchExpression]) extends MatchExpression {
+    override def toString = {
+      val es = ms.map(_.toString).mkString(" ")
+      s"(and ${es})"
+    }
+  }
+  object And {
+    def apply(ms: MatchExpression*) = new And(ms)
+  }
+
+  class Or(ms: Seq[MatchExpression]) extends MatchExpression {
+    override def toString = {
+      val es = ms.map(_.toString).mkString(" ")
+      s"(or ${es})"
+    }
+  }
+  object Or {
+    def apply(ms: MatchExpression*) = new Or(ms)
+  }
+}
+
 object CloudSearch {
 
   type WithFacets[T] = (T, Seq[Facet])
-
-  object Parameters {
-
-  }
 
   private def tryParse[T](resp: Response)(implicit p: Parser[Result[CloudSearchMetadata, T]]) =
     Parser.parse[Result[CloudSearchMetadata, T]](resp).fold(e => throw new RuntimeException(e), identity)
@@ -128,97 +177,51 @@ object CloudSearch {
       .map(tryParse[T])
   }
 
-  // TODO: open range
-  object MatchExpressions {
-    sealed trait MatchExpression {
-      def and(ex: MatchExpression) = And(this, ex)
-      def or(ex: MatchExpression) = Or(this, ex)
-    }
+  def search[T](search: Search)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) =
+    request[T](search.domain, search.toParams)
+}
 
-    class Field private(name: String, value: String) extends MatchExpression {
-      override def toString = s"(field $name $value)"
-    }
-    object Field {
-      def apply(name: String, value: Number) = new Field(name, s"$value")
-      def apply(name: String, range: Range) = new Field(name, s"${range.start}..${range.end}")
-      def apply(name: String, from: Option[Int] = None, to: Option[Int] = None) = new Field(name, s"""${from.getOrElse("")}..${to.getOrElse("")}""")
-      def apply(name: String, value: String) = new Field(name, s"'$value'")
-    }
+case class Search(domain: (String, String),
+  query: Option[String] = None,
+  matchExpression: Option[MatchExpressions.MatchExpression] = None,
+  returnFields: Seq[String] = Nil,
+  facets: Seq[String] = Nil,
+  facetConstraints: Seq[FacetConstraint] = Nil,
+  facetSort: Seq[Sort] = Nil,
+  facetTops: Seq[(String, Int)] = Nil,
+  ranks: Seq[Rank] = Nil,
+  scores: Seq[(String, Range)] = Nil,
+  size: Option[Int] = None,
+  startAt: Option[Int] = None) {
+    def withMatchExpression(m: MatchExpressions.MatchExpression) = this.copy(matchExpression = Some(m))
+    def withReturnFields(fs: String*) = this.copy(returnFields = this.returnFields ++ fs)
+    def withFacets(fs: String*) = this.copy(facets = this.facets ++ fs)
+    def withFacetConstraints(fs: FacetConstraint*) = this.copy(facetConstraints = this.facetConstraints ++ fs)
+    def withFacetSorts(fs: Sort*) = this.copy(facetSort = this.facetSort ++ fs)
+    def withFacetTops(fs: (String, Int)*) = this.copy(facetTops = this.facetTops ++ fs)
+    def withRanks(fs: Rank*) = this.copy(ranks = this.ranks ++ fs)
+    def withScores(ss: (String, Range)*) = this.copy(scores = this.scores ++ ss)
+    def withSize(s: Int) = this.copy(size = Some(s))
+    def startAt(i: Int) = this.copy(startAt = Some(i))
 
-    class Filter private(name: String, value: String) extends MatchExpression {
-      override def toString = s"(filter $name $value)"
-    }
-    object Filter {
-      def apply(name: String, value: Number) = new Filter(name, s"$value")
-      def apply(name: String, range: Range) = new Filter(name, s"${range.start}..${range.end}")
-      def apply(name: String, from: Option[Int] = None, to: Option[Int] = None) = new Filter(name, s"""${from.getOrElse("")}..${to.getOrElse("")}""")
-      def apply(name: String, value: String) = new Filter(name, s"'$value'")
-    }
-
-    class Not(ex: MatchExpression) extends MatchExpression {
-      override def toString = s"(not ${ex})"
-    }
-    object Not {
-      def apply(ex: MatchExpression) = new Not(ex)
-    }
-
-    class And(ms: Seq[MatchExpression]) extends MatchExpression {
-      override def toString = {
-        val es = ms.map(_.toString).mkString(" ")
-        s"(and ${es})"
+    def toParams = {
+      val exprs = ranks.flatMap {
+        case e: Rank.RankExpr =>
+          e.expr.map(x => s"facet-${e.name}-sort" -> x)
+        case _ => Nil
       }
-    }
-    object And {
-      def apply(ms: MatchExpression*) = new And(ms)
-    }
 
-    class Or(ms: Seq[MatchExpression]) extends MatchExpression {
-      override def toString = {
-        val es = ms.map(_.toString).mkString(" ")
-        s"(or ${es})"
-      }
-    }
-    object Or {
-      def apply(ms: MatchExpression*) = new Or(ms)
-    }
-  }
-
-  // XXX: Builder ?
-  def search[T](
-    domain: (String, String),
-    query: Option[String] = None,
-    matchExpression: Option[MatchExpressions.MatchExpression] = None,
-    returnFields: Seq[String] = Nil,
-    facets: Seq[String] = Nil,
-    facetConstraints: Seq[FacetConstraint] = Nil,
-    facetSort: Seq[Sort] = Nil,
-    facetTops: Seq[(String, Int)] = Nil,
-    ranks: Seq[Rank] = Nil,
-    scores: Seq[(String, Range)] = Nil,
-    size: Option[Int] = None,
-    start: Option[Int] = None)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
-
-    val exprs = ranks.flatMap {
-      case e: Rank.RankExpr =>
-        e.expr.map(x => s"facet-${e.name}-sort" -> x)
-      case _ => Nil
-    }
-
-    val params =
       query.toSeq.map("q" -> _) ++
       returnFields.reduceLeftOption(_ + "," + _).map("return-fields" -> _).toSeq ++
       matchExpression.map("bq" -> _.toString).toSeq ++
       facets.reduceLeftOption(_ + "," + _).map("facet" -> _).toSeq ++
       size.map("size" -> _.toString).toSeq ++
-      start.map("start" -> _.toString).toSeq ++
+      startAt.map("start" -> _.toString).toSeq ++
       facetConstraints.map(c => s"facet-${c.field}-constraints" -> c.value) ++
       facetSort.map(f => s"facet-${f.field}-sort" -> f.value) ++
       facetTops.map(t => s"facet-${t._1}-top-n" -> t._2.toString) ++
       ranks.map(_.toString).reduceLeftOption(_ + "," + _).map("rank" -> _).toSeq ++
       exprs ++
       scores.map(s => s"t-${s._1}" -> s"${s._2.start}..${s._2.end}")
-
-    request[T](domain, params)
-  }
-
+    }
 }
