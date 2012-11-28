@@ -204,6 +204,9 @@ case class Search(domain: (String, String),
     def withSize(s: Int) = this.copy(size = Some(s))
     def startAt(i: Int) = this.copy(startAt = Some(i))
 
+    def search[T]()(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) =
+      CloudSearch.search[T](this)
+
     def toParams = {
       val exprs = ranks.flatMap {
         case e: Rank.RankExpr =>
