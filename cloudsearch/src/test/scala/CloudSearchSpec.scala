@@ -207,7 +207,7 @@ object CloudSearchSpec extends Specification {
 
     "Order results using RankExpression" in {
       val r = waitFor(search
-        .withRanks(-Rank.RankExpr("cos(text_relevance)"))
+        .withRanks(-Rank.RankExpr("customExpression", Some("cos(text_relevance)")))
         .search[Seq[Movie]]())
       checkResult(r)
     }

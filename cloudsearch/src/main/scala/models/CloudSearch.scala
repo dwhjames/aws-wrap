@@ -32,6 +32,19 @@ import aws.core.utils._
 case class CloudSearchMetadata(requestId: String, time: Duration, cpuTime: Duration) extends Metadata
 case class Facet(name: String, constraints: Seq[(String, Int)])
 
+/**
+* This class represents the field values (facet constraints) that you want to count for a particular field.
+* Constraint can be Strings, bounded or unbounded ranges, and numeric values.
+* {{{
+*    Search(
+*      domain,
+*      query = Some("star wars"),
+*      returnFields = Seq("title"))
+*    .withFacets("genre")
+*    .withFacetConstraints(FacetConstraint("genre", "Action")) // Only count facets for field 'genre', with value 'Action'
+*    .search[CloudSearch.WithFacets[Seq[Movie]]]()
+* }}}
+*/
 class FacetConstraint private(val field: String, val value: String)
 object FacetConstraint {
   def apply(field: String, value: Number) = new FacetConstraint(field, s"$value")
@@ -44,7 +57,21 @@ object FacetConstraint {
   }
 }
 
+
 // TODO: would be nice to check for double '-' calls
+/**
+* How you want to sort facet values for a particular field.
+* Use methods in the Sort object to create instances.
+* {{{
+*   Search(
+*      domain,
+*      query = Some("star wars"),
+*      returnFields = Seq("title"))
+*   .withFacets("genre", "year")
+*   .withFacetSorts(-Sort.Max("year")) // Sort the facet values according to the maximum values in the specified field. (descending order)
+*   .search[Seq[Movie]]()
+* }}}
+*/
 sealed trait Sort {
   val field: String
   def value: String
@@ -57,12 +84,22 @@ object Orderings extends Enumeration {
 }
 
 object Sort {
+  /**
+  * Sort the facet values alphabetically (in ascending order).
+  */
   case class Alpha(field: String) extends Sort {
     override val value = "Alpha"
   }
+  /**
+  * Sort the facet values by their counts (in descending order).
+  */
   case class Count(field: String) extends Sort {
     override val value = "Count"
   }
+  /**
+  * Sort the facet values according to the maximum values in the specified field.
+  * The facet values are sorted in ascending order. To sort in descending order, prefix the sort option with - (minus): -Sort.Max("field").
+  */
   case class Max(field: String, ordering: Option[Orderings.Ordering] = None) extends Sort {
     override def value = {
       val order = ordering.map(_.toString).getOrElse("")
@@ -70,11 +107,34 @@ object Sort {
     }
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
   }
+  /**
+  * Sort the facet values according to the sum of the values in the specified field (in ascending order).
+  */
   case class Sum(field: String) extends Sort {
     override def value = s"Sum($field)"
   }
 }
 
+/**
+*  Fields or rank expression to use for ranking.
+*  A maximum of 10 fields and rank expressions can be specified per query.
+*  You can use any uint field to rank results numerically.
+*  Any result-enabled text or literal field can be used to rank results alphabetically.
+*  To rank results by relevance, you can specify the name of a custom rank expression or text_relevance.
+*  Hits are ordered according to the specified rank field(s).
+*  By default, hits are ranked in ascending order.
+*  You can prefix a field name with a minus (-) to rank in descending order.
+*  If no rank parameter is specified, it defaults to rank=-text_relevance, which lists results according to their text_relevance scores with the highest-scoring documents first.
+*
+* {{{
+*   Search(
+*      domain,
+*      query = Some("star wars"),
+*      returnFields = Seq("title"))
+*   .withRanks(-Rank.Field("year"), -Rank.TextRelevance())
+*   .search[Seq[Movie]]()
+* }}}
+*/
 sealed trait Rank {
   val name: String
   val ordering: Option[Orderings.Ordering]
@@ -84,15 +144,32 @@ sealed trait Rank {
   }
 }
 object Rank {
+  /**
+  * Rank results by relevance
+  */
   case class TextRelevance(ordering: Option[Orderings.Ordering] = None) extends Rank{
     val name = "text_relevance"
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
   }
+  /**
+  * Rank results alphabetically.
+  */
   case class Field(name: String, ordering: Option[Orderings.Ordering] = None) extends Rank {
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
   }
-  // @see: http://docs.amazonwebservices.com/cloudsearch/latest/developerguide/rankexpressions.html
-  case class RankExpr(name: String, expr: Option[String] = None, ordering: Option[Orderings.Ordering] = None) extends Rank {
+  /**
+  * Rank results using a rank expression.
+  * {{{
+  *   Search(
+  *     domain,
+  *     query = Some("star wars"),
+  *     returnFields = Seq("title"))
+  *   .withRanks(-Rank.RankExpr("customExpression", Some("cos(text_relevance)")))
+  *   .search[Seq[Movie]]()
+  * }}}
+  * @see: http://docs.amazonwebservices.com/cloudsearch/latest/developerguide/rankexpressions.html
+  */
+  case class RankExpr(name: String, expr: Option[String], ordering: Option[Orderings.Ordering] = None) extends Rank {
     def unary_- = this.copy(ordering = Some(Orderings.DESC))
   }
 
@@ -102,6 +179,23 @@ object Rank {
   }
 }
 
+/**
+* Build a match expression that define a Boolean search.
+* {{{
+*   // This expression will match movies with title containing "Star Wars" or "Star Trek"
+*   // realeased from 1980 to 1990, that haven't been directed by "Carpenter", and the title must not contains "Spock".
+*
+*   val ex = (Field("title", "Star Wars") or Field("title", "Star Trek")) and
+*      Filter("year", 1980 to 1990) and
+*      !Field("director", "Carpenter") and
+*      !Field("title", "Spock")
+*
+*   Search(domain)
+*      .withMatchExpression(ex)
+*      .withReturnFields("title", "year")
+*      .search[Seq[Movie]]())
+* }}}
+*/
 object MatchExpressions {
   sealed trait MatchExpression {
     def and(ex: MatchExpression) = And(this, ex)
@@ -203,6 +297,40 @@ case class Search(domain: (String, String),
     def withSize(s: Int) = this.copy(size = Some(s))
     def startAt(i: Int) = this.copy(startAt = Some(i))
 
+    /**
+    * Execute query, and parse results as type T
+    * You must provide an implicit Parser[T]
+    * For example, to search for movies:
+    * {{{
+    *   // parse movies out of a response
+    *   implicit val moviesParser = Parser[Seq[Movie]] { r =>
+    *     import play.api.libs.json.util._
+    *     val reader = ((__ \ "id").read[String] and
+    *     (__ \ "data" \ "title").read[Seq[String]])(Movie)
+    *
+    *     Success((r.json \ "hits" \ "hit").as[Seq[JsValue]].map { js =>
+    *       js.validate(reader).get
+    *     })
+    *   }
+    *
+    *   val movies: Result[CloudSearchMetadata, Seq[Movie]] = Search(
+    *     domain = domain,
+    *     query = Some("star wars"),
+    *     returnFields = Seq("title"))
+    *   .search[Seq[Movie]]()
+    * }}}
+    *
+    * Note: you can get facets using "CloudSearch.WithFacets[T]".
+    * It's a tuple containing the expected result type, and facets: (T, Seq[Facet])
+    * {{{
+    *   type MoviesWithFacets = CloudSearch.WithFacets[Seq[Movie]] // CloudSearch.WithFacets[Seq[Movie]] === (Seq[Movie], Seq[Facet])
+    *   val movies: Result[CloudSearchMetadata, Seq[Movie]] = Search(
+    *     domain = domain,
+    *     query = Some("star wars"),
+    *     returnFields = Seq("title"))
+    *   .search[MoviesWithFacets]()
+    * }}}
+    */
     def search[T]()(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) =
       CloudSearch.search[T](this)
 
