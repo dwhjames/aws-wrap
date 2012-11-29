@@ -83,8 +83,8 @@ private[models] object Http {
 
   import play.api.http._
   private object Writes {
-    implicit def writeableOf_Nothing[Nothing] = Writeable[Unit](content => Array[Byte]())
-    implicit def contentTypeOf_Nothing = ContentTypeOf[Nothing](None)
+    implicit def contentTypeOf_Nothing = ContentTypeOf[Unit](None)
+    implicit def writeableOf_Nothing[Nothing] = Writeable[Unit] { content: Unit => Array[Byte]() }
   }
 
   def get[T](

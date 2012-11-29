@@ -51,9 +51,7 @@ object JsonFormats {
     (__ \ 'HashKeyElement).read[KeySchemaElement].map(e => HashKey(e)),
     Writes((key: HashKey) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKey))))
 
-  implicit val CompositeKeyFormat = (
-    (__ \ 'HashKeyElement).format[KeySchemaElement] and
-    (__ \ 'RangeKeyElement).format[KeySchemaElement])(CompositeKey, unlift(CompositeKey.unapply))
+  implicit val CompositeKeyFormat = Json.format[CompositeKey]
 
   implicit val PrimaryKeyFormat = Format[PrimaryKey](
     Reads((json: JsValue) => ((json \ "HashKeyElement").validate[KeySchemaElement], (json \ "RangeKeyElement").asOpt[KeySchemaElement]) match {
@@ -66,17 +64,9 @@ object JsonFormats {
       case c: CompositeKey => Json.toJson(c)
     }))
 
-  implicit val ProvisionedThroughputFormat = (
-    (__ \ 'ReadCapacityUnits).format[Long] and
-    (__ \ 'WriteCapacityUnits).format[Long])(ProvisionedThroughput, unlift(ProvisionedThroughput.unapply))
+  implicit val ProvisionedThroughputFormat = Json.format[ProvisionedThroughput]
 
-  implicit val TableDescriptionFormat = (
-    (__ \ 'TableName).format[String] and
-    (__ \ 'TableStatus).format[Status] and
-    (__ \ 'CreationDateTime).format[java.util.Date] and
-    (__ \ 'KeySchema).format[PrimaryKey] and
-    (__ \ 'ProvisionedThroughput).format[ProvisionedThroughput] and
-    Format.optional[Long](__ \ 'TableSizeBytes))(TableDescription, unlift(TableDescription.unapply))
+  implicit val TableDescriptionFormat = Json.format[TableDescription]
 
   implicit val DDBAttributeFormat = Format[DDBAttribute](
     Reads((json: JsValue) => json match {
@@ -119,9 +109,7 @@ object JsonFormats {
     (__ \ 'HashKeyElement).read[DDBAttribute].map(e => HashKeyValue(e)),
     Writes((key: HashKeyValue) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKeyElement))))
 
-  implicit val CompositeKeyValueFormat = (
-    (__ \ 'HashKeyElement).format[DDBAttribute] and
-    (__ \ 'RangeKeyElement).format[DDBAttribute])(CompositeKeyValue.apply _, unlift(CompositeKeyValue.unapply))
+  implicit val CompositeKeyValueFormat = Json.format[CompositeKeyValue]
 
   implicit val KeyValueFormat = Format[KeyValue](
     Reads((json: JsValue) =>
