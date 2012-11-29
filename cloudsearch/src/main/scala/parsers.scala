@@ -18,8 +18,7 @@ object CloudSearchParsers {
     val read = (r.json \ "info").validate((
       (__ \ "rid").read[String] and
       (__ \ "time-ms").read[Long].map(Duration(_, MILLISECONDS)) and
-      (__ \ "cpu-time-ms").read[Long].map(Duration(_, MILLISECONDS))
-    )(CloudSearchMetadata))
+      (__ \ "cpu-time-ms").read[Long].map(Duration(_, MILLISECONDS)))(CloudSearchMetadata))
     Success(read.get)
   }
 
@@ -27,14 +26,14 @@ object CloudSearchParsers {
   implicit def facetsParser = Parser[Seq[Facet]] { r =>
     val facets = (r.json \ "facets").validate[JsObject]
     val jsresult = facets.flatMap { f =>
-      val results = f.fields.map { case (k, co) =>
-        val constraints = co \ "constraints"
-        constraints.validate[Seq[(String, Int)]](Reads.seq(
-          ((__ \ "value").read[String] and (__ \ "count").read[Int]).tupled
-        )).map(Facet(k, _))
+      val results = f.fields.map {
+        case (k, co) =>
+          val constraints = co \ "constraints"
+          constraints.validate[Seq[(String, Int)]](Reads.seq(
+            ((__ \ "value").read[String] and (__ \ "count").read[Int]).tupled)).map(Facet(k, _))
       }
 
-      results.foldLeft(JsSuccess(Nil): JsResult[Seq[Facet]]){
+      results.foldLeft(JsSuccess(Nil): JsResult[Seq[Facet]]) {
         case (JsSuccess(seq, _), n) =>
           n match {
             case JsSuccess(e, _) => JsSuccess(seq :+ e)
