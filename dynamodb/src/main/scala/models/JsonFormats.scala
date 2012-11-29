@@ -21,6 +21,7 @@ import play.api.libs.json.Json._
 import play.api.libs.json.util._
 import play.api.libs.json.Reads._
 import play.api.libs.json.Writes._
+import play.api.libs.functional.syntax._
 
 import aws.core.utils.Crypto
 
@@ -51,7 +52,9 @@ object JsonFormats {
     (__ \ 'HashKeyElement).read[KeySchemaElement].map(e => HashKey(e)),
     Writes((key: HashKey) => Json.obj("HashKeyElement" -> Json.toJson(key.hashKey))))
 
-  implicit val CompositeKeyFormat = Json.format[CompositeKey]
+  implicit val CompositeKeyFormat = (
+    (__ \ 'HashKeyElement).format[KeySchemaElement] and
+    (__ \ 'RangeKeyElement).format[KeySchemaElement])(CompositeKey, unlift(CompositeKey.unapply))
 
   implicit val PrimaryKeyFormat = Format[PrimaryKey](
     Reads((json: JsValue) => ((json \ "HashKeyElement").validate[KeySchemaElement], (json \ "RangeKeyElement").asOpt[KeySchemaElement]) match {
@@ -64,9 +67,17 @@ object JsonFormats {
       case c: CompositeKey => Json.toJson(c)
     }))
 
-  implicit val ProvisionedThroughputFormat = Json.format[ProvisionedThroughput]
+  implicit val ProvisionedThroughputFormat = (
+    (__ \ 'ReadCapacityUnits).format[Long] and
+    (__ \ 'WriteCapacityUnits).format[Long])(ProvisionedThroughput, unlift(ProvisionedThroughput.unapply))
 
-  implicit val TableDescriptionFormat = Json.format[TableDescription]
+  implicit val TableDescriptionFormat = (
+    (__ \ 'TableName).format[String] and
+    (__ \ 'TableStatus).format[Status] and
+    (__ \ 'CreationDateTime).format[java.util.Date] and
+    (__ \ 'KeySchema).format[PrimaryKey] and
+    (__ \ 'ProvisionedThroughput).format[ProvisionedThroughput] and
+    Format.optional[Long](__ \ 'TableSizeBytes))(TableDescription, unlift(TableDescription.unapply))
 
   implicit val DDBAttributeFormat = Format[DDBAttribute](
     Reads((json: JsValue) => json match {
