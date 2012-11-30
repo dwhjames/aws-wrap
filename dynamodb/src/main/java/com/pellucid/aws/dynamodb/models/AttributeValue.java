@@ -1,6 +1,9 @@
 package com.pellucid.aws.dynamodb.models;
 
 import java.nio.ByteBuffer;
+import java.util.Set;
+
+import scala.collection.JavaConversions;
 
 import aws.dynamodb.DDBNumber;
 import aws.dynamodb.DDBString;
@@ -40,8 +43,20 @@ public class AttributeValue {
         return new AttributeValue(new aws.dynamodb.DDBNumber(value));
     }
 
+    public static AttributeValue createN(Long value) {
+        return createN(new Double(value));
+    }
+
+    public static AttributeValue createN(Integer value) {
+        return createN(new Double(value));
+    }
+
     public static AttributeValue createB(ByteBuffer value) {
         return new AttributeValue(new aws.dynamodb.DDBBinary(value.array()));
     }
+
+    /* public static AttributeValue createSS(Set<String> value) {
+        return new AttributeValue(new aws.dynamodb.DDBStringSet(JavaConversions.asScalaSet(value).toSet()));
+    }*/
 
 }

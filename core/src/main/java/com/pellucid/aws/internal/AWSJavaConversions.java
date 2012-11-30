@@ -62,6 +62,12 @@ public class AWSJavaConversions {
         );
     }
 
+    public static <A> scala.collection.immutable.Set<A> toScalaSet(java.util.Set<A> m) {
+        return JavaConverters.asScalaSetConverter(m).asScala().toSet(); //(
+          //Predef.<A>conforms()
+        //);
+    }
+
     public static <MS extends aws.core.Metadata, TS, TJ> Future<SimpleResult<TJ>> toJavaSimpleResult(Future<aws.core.Result<MS, TS>> scalaFuture,
             final Mapper<TS, TJ> bodyConvert) {
         return scalaFuture.map(new Mapper<aws.core.Result<MS, TS>, SimpleResult<TJ>>(){

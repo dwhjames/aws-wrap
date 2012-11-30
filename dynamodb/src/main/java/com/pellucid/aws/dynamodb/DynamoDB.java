@@ -209,6 +209,18 @@ public class DynamoDB {
                 );
     }
 
+    public Future<SimpleResult<ItemResponse>> getItem(String tableName, KeyValue key) {
+        return getItem(tableName, key, new ArrayList<String>());
+    }
+
+    public Future<SimpleResult<ItemResponse>> getItem(String tableName, KeyValue key, boolean consistentRead) {
+        return getItem(tableName, key, new ArrayList<String>(), consistentRead);
+    }
+
+    public Future<SimpleResult<ItemResponse>> getItem(String tableName, KeyValue key, List<String> attributesToGet) {
+        return getItem(tableName, key, attributesToGet, false);
+    }
+
     /**
      * The GetItem operation returns a set of Attributes for an item that matches the primary key.
      *
