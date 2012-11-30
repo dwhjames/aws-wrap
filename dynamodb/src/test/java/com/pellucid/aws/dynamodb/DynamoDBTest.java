@@ -74,9 +74,9 @@ public class DynamoDBTest {
         SimpleResult<ItemResponse> putResult = get(ddb.putItem(table, NTESLA));
         assertTrue(putResult.toString(), putResult.isSuccess());
         SimpleResult<ItemResponse> getResult = get(
-                // TODO: the API to create a value is ugly, change it!
-                ddb.getItem(table, KeyValue.hashKey(AttributeValue.createS("ntesla")))
+                ddb.getItem(table, KeyValue.hashKey("ntesla"))
                 );
+        assertTrue(getResult.body().get("firstName").getS() == "Nikola");
         assertTrue(getResult.toString(), putResult.isSuccess());
 
         waitUntilReady(table);

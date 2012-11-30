@@ -7,6 +7,7 @@ import scala.collection.JavaConversions;
 
 import aws.dynamodb.DDBNumber;
 import aws.dynamodb.DDBString;
+import aws.dynamodb.DDBBinary;
 
 public class AttributeValue {
 
@@ -29,6 +30,21 @@ public class AttributeValue {
 
     public aws.dynamodb.DDBAttribute toScala() {
         return this.scalaAttribute;
+    }
+
+    public String getS() {
+        if (this.scalaAttribute instanceof DDBString) return ((DDBString)this.scalaAttribute).value();
+        throw new RuntimeException("Not a String type");
+    }
+
+    public Double getN() {
+        if (this.scalaAttribute instanceof DDBNumber) return ((DDBNumber)this.scalaAttribute).value();
+        throw new RuntimeException("Not a Number type");
+    }
+
+    public ByteBuffer getB() {
+        if (this.scalaAttribute instanceof DDBBinary) return ByteBuffer.wrap(((DDBBinary)this.scalaAttribute).value());
+        throw new RuntimeException("Not a Binary type");
     }
 
     public static AttributeValue fromScala(aws.dynamodb.DDBAttribute scalaAttribute) {

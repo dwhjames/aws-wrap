@@ -20,19 +20,15 @@ import aws.dynamodb.models._
 
 sealed trait KeyCondition
 
-object KeyCondition {
+case class EqualTo(value: DDBAttribute) extends KeyCondition
 
-  case class EqualTo(value: DDBAttribute) extends KeyCondition
+case class LessThan(value: DDBAttribute, orEqual: Boolean) extends KeyCondition
 
-  case class LessThan(value: DDBAttribute, orEqual: Boolean) extends KeyCondition
+case class GreaterThan(value: DDBAttribute, orEqual: Boolean) extends KeyCondition
 
-  case class GreaterThan(value: DDBAttribute, orEqual: Boolean) extends KeyCondition
+case class BeginsWith(value: DDBAttribute) extends KeyCondition
 
-  case class BeginsWith(value: DDBAttribute) extends KeyCondition
-
-  case class Between(lowerBound: DDBAttribute, upperBound: DDBAttribute) extends KeyCondition
-
-}
+case class Between(lowerBound: DDBAttribute, upperBound: DDBAttribute) extends KeyCondition
 
 /**
  * A DynamoDB Query.

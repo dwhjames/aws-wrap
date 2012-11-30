@@ -1,5 +1,7 @@
 package com.pellucid.aws.dynamodb.models;
 
+import java.nio.ByteBuffer;
+
 public class KeyValue {
 
     private final AttributeValue hashKeyElement;
@@ -13,6 +15,18 @@ public class KeyValue {
 
     public static KeyValue hashKey(AttributeValue hashKeyValue) {
         return new KeyValue(hashKeyValue, null);
+    }
+
+    public static KeyValue hashKey(String value) {
+        return hashKey(AttributeValue.createS(value));
+    }
+
+    public static KeyValue hashKey(Double value) {
+        return hashKey(AttributeValue.createN(value));
+    }
+
+    public static KeyValue hashKey(ByteBuffer value) {
+        return hashKey(AttributeValue.createB(value));
     }
 
     public static KeyValue compositeKey(AttributeValue hashKeyValue, AttributeValue rangeKeyValue) {
@@ -33,6 +47,16 @@ public class KeyValue {
         } else {
             return new aws.dynamodb.models.CompositeKeyValue(hashKeyElement.toScala(), rangeKeyElement.toScala());
         }
+    }
+
+    public static KeyValue fromScala(aws.dynamodb.models.KeyValue sKeyValue) {
+        if (sKeyValue == null) return null;
+        AttributeValue rangeKeyElement = null;
+        AttributeValue hashKeyElement = AttributeValue.fromScala(sKeyValue.hashKeyElement());
+        if (sKeyValue instanceof aws.dynamodb.models.CompositeKeyValue) {
+            rangeKeyElement = AttributeValue.fromScala(((aws.dynamodb.models.CompositeKeyValue)sKeyValue).rangeKeyElement());
+        }
+        return new KeyValue(hashKeyElement, rangeKeyElement);
     }
 
 }

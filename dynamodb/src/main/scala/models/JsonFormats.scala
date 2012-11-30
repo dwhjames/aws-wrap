@@ -151,19 +151,19 @@ object JsonFormats {
       "Value" -> update.value)))
 
   implicit val KeyConditionWrites = Writes[KeyCondition](_ match {
-    case KeyCondition.EqualTo(value) => Json.obj(
+    case EqualTo(value) => Json.obj(
       "ComparisonOperator" -> JsString("EQ"),
       "AttributeValueList" -> Json.arr(Json.toJson(value)))
-    case KeyCondition.LessThan(value, orEqual) => Json.obj(
+    case LessThan(value, orEqual) => Json.obj(
       "ComparisonOperator" -> JsString(if (orEqual) "LE" else "LT"),
       "AttributeValueList" -> Json.arr(Json.toJson(value)))
-    case KeyCondition.GreaterThan(value, orEqual) => Json.obj(
+    case GreaterThan(value, orEqual) => Json.obj(
       "ComparisonOperator" -> JsString(if (orEqual) "GE" else "GT"),
       "AttributeValueList" -> Json.arr(Json.toJson(value)))
-    case KeyCondition.BeginsWith(value) => Json.obj(
+    case BeginsWith(value) => Json.obj(
       "ComparisonOperator" -> JsString("BEGIN_WITH"),
       "AttributeValueList" -> Json.arr(Json.toJson(value)))
-    case KeyCondition.Between(lowerBound, upperBound) => Json.obj(
+    case Between(lowerBound, upperBound) => Json.obj(
       "ComparisonOperator" -> JsString("BETWEEN"),
       "AttributeValueList" -> Json.arr(Json.toJson(lowerBound), Json.toJson(upperBound)))
   })

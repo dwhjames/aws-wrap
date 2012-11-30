@@ -27,6 +27,10 @@ public class AWSRegion {
         this.service = service;
     }
 
+    public String name() {
+        return name;
+    }
+
     public String host() {
         return String.format("%s.%s.%s", this.service, this.subdomain, AWSRegion.BASE);
     }

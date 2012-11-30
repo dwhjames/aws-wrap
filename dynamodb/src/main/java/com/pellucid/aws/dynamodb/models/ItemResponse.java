@@ -4,10 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import scala.collection.JavaConverters;
 import scala.collection.JavaConversions;
-
-import aws.dynamodb.DDBAttribute;
 
 public class ItemResponse {
 
@@ -19,8 +16,12 @@ public class ItemResponse {
         this.consumedCapacityUnits = consumedCapacityUnits;
     }
 
-    public Map<String, AttributeValue> item() {
+    public Map<String, AttributeValue> all() {
         return new HashMap<String, AttributeValue>(this.item);
+    }
+
+    public AttributeValue get(String name) {
+        return this.item.get(name);
     }
 
     public BigDecimal consumedCapacityUnits() {
