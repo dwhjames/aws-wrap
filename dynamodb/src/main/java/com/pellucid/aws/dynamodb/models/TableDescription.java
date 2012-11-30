@@ -68,7 +68,7 @@ public class TableDescription {
             tableDesc.creationDateTime(),
             PrimaryKey.fromScala(tableDesc.keySchema()),
             ProvisionedThroughput.fromScala(tableDesc.provisionedThroughput()),
-            (Long)tableDesc.size().getOrElse(null)
+            (Long)Scala.orNull(tableDesc.size())
         );
     }
 }
