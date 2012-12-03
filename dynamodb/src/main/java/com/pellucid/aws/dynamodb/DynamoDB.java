@@ -15,6 +15,7 @@ import akka.dispatch.Mapper;
 import com.pellucid.aws.dynamodb.models.AttributeValue;
 import com.pellucid.aws.dynamodb.models.Expected;
 import com.pellucid.aws.dynamodb.models.ItemResponse;
+import com.pellucid.aws.dynamodb.models.KeyCondition;
 import com.pellucid.aws.dynamodb.models.KeyValue;
 import com.pellucid.aws.dynamodb.models.PrimaryKey;
 import com.pellucid.aws.dynamodb.models.ProvisionedThroughput;
@@ -257,6 +258,29 @@ public class DynamoDB {
                 });
     }
 
+    public Future<SimpleResult<QueryResponse>> scan(
+            String tableName,
+            List<String> attributesToGet,
+            Long limit,
+            boolean count,
+            KeyCondition scanFilter,
+            PrimaryKey exclusiveStartKey) {
+        return AWSJavaConversions.toJavaSimpleResult(
+                aws.dynamodb.DynamoDB.scan(
+                        tableName,
+                        JavaConversions.asScalaIterable(attributesToGet).toSeq(),
+                        Scala.Option((Object)limit),
+                        count,
+                        Scala.Option(scanFilter == null ? null : scanFilter.toScala()),
+                        Scala.Option(exclusiveStartKey == null ? null : exclusiveStartKey.toScala()),
+                        scalaRegion, aws.core.AWS.defaultExecutionContext()),
+                        new Mapper<aws.dynamodb.models.QueryResponse, QueryResponse>() {
+                    @Override public QueryResponse apply(aws.dynamodb.models.QueryResponse result) {
+                        return QueryResponse.fromScala(result);
+                    }
+                });
+    }
+
     private static <MS extends aws.core.Metadata> Future<SimpleResult<ItemResponse>> itemResponseConvert(Future<aws.core.Result<MS, aws.dynamodb.models.ItemResponse>> scalaResponse) {
         return AWSJavaConversions.toJavaSimpleResult(
                 scalaResponse,
@@ -266,7 +290,6 @@ public class DynamoDB {
                     }
                 }
                 );
-
     }
 
     private static aws.dynamodb.Item scalaItemFromMap(Map<String, AttributeValue> item) {
