@@ -10,9 +10,20 @@ import play.api.libs.json.util._
 import play.api.libs.json._
 
 import aws.core._
+import aws.core.Types._
 import aws.core.parsers._
 
 object CloudSearchParsers {
+
+  implicit def batchResponseParser = Parser[BatchResponse] { r =>
+    val read = r.json.validate((
+      (__ \ "status").read[String].map(Statuses.withName(_)) and
+      (__ \ "adds").read[Int] and
+      (__ \ "deletes").read[Int] and
+      (__ \ "errors").read[Seq[JsObject]].map(_.map(x => (x \ "message").as[String])).orElse(Reads.pure(Nil)) and
+      (__ \ "warnings").read[Seq[JsObject]].map(_.map(x => (x \ "message").as[String])).orElse(Reads.pure(Nil)))(BatchResponse))
+    Success(read.get)
+  }
 
   implicit def cloudSearchMetadataParser = Parser[CloudSearchMetadata] { r =>
     val read = (r.json \ "info").validate((
@@ -49,6 +60,12 @@ object CloudSearchParsers {
   implicit def entityWithFacetsParser[T](implicit ep: Parser[T], fsp: Parser[Seq[Facet]]): Parser[(T, Seq[Facet])] =
     ep and fsp
 
+  implicit def safeSimpleResultParser[T](implicit p: Parser[T]): Parser[SimpleResult[T]] = {
+    val resultParser = Parser.resultParser(Parser.emptyMetadataParser, p)
+    Parser.xmlErrorParser[EmptyMeta.type].or(resultParser)
+  }
+
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[CloudSearchMetadata, T]] =
     Parser.xmlErrorParser[CloudSearchMetadata].or(Parser.resultParser(cloudSearchMetadataParser, p))
+
 }

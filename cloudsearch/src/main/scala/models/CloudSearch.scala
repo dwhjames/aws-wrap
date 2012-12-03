@@ -17,12 +17,14 @@
 package aws.cloudsearch
 
 import java.util.Date
+import java.util.Locale
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
+import play.api.libs.json._
 
 import aws.core._
 import aws.core.Types._
@@ -31,6 +33,15 @@ import aws.core.utils._
 
 case class CloudSearchMetadata(requestId: String, time: Duration, cpuTime: Duration) extends Metadata
 case class Facet(name: String, constraints: Seq[(String, Int)])
+case class SDF[T](id: String, version: Int, lang: Locale, document: Option[T])
+
+object Statuses extends Enumeration {
+  type Status = Value
+  val SUCCESS = Value("success")
+  val ERROR = Value("error")
+}
+
+case class BatchResponse(status: Statuses.Status, adds: Int, deletes: Int, errors: Seq[String], warnings: Seq[String])
 
 /**
 * This class represents the field values (facet constraints) that you want to count for a particular field.
@@ -253,6 +264,9 @@ object MatchExpressions {
 
 object CloudSearch {
 
+  import aws.cloudsearch.CloudSearchParsers._
+
+  val VERSION = "2011-02-01"
   type WithFacets[T] = (T, Seq[Facet])
 
   private def tryParse[T](resp: Response)(implicit p: Parser[Result[CloudSearchMetadata, T]]) =
@@ -261,9 +275,8 @@ object CloudSearch {
   private def request[T](domain: (String, String), params: Seq[(String, String)] = Nil)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) = {
 
     val allHeaders = Nil
-    val version = "2011-02-01"
 
-    WS.url(s"http://search-${domain._1}-${domain._2}.${region.subdomain}.cloudsearch.amazonaws.com/${version}/search")
+    WS.url(s"http://search-${domain._1}-${domain._2}.${region.subdomain}.cloudsearch.amazonaws.com/${VERSION}/search")
       .withHeaders(allHeaders: _*)
       .withQueryString(params: _*)
       .get()
@@ -272,6 +285,36 @@ object CloudSearch {
 
   def search[T](search: Search)(implicit region: CloudSearchRegion, p: Parser[Result[CloudSearchMetadata, T]]) =
     request[T](search.domain, search.toParams)
+
+  def delete(domain: (String, String), id: String, version: Int)(implicit region: CloudSearchRegion) = {
+    import Json._
+    val json = Json.arr(Json.obj(
+        "type" -> "delete",
+        "id" -> id,
+        "version" -> version))
+
+    WS.url(s"http://search-${domain._1}-${domain._2}.${region.subdomain}.cloudsearch.amazonaws.com/${VERSION}/documents/batch")
+      .post(json)
+      .map(resp => Parser.parse[SimpleResult[BatchResponse]](resp).fold(e => throw new RuntimeException(e), identity))
+  }
+
+  def upload[T](domain: (String, String), sdf: SDF[T])(implicit w: Writes[T], region: CloudSearchRegion) = {
+    val allHeaders = Nil
+    val version = "2011-02-01"
+
+    val json = Json.arr(
+      Json.obj(
+        "type" -> "add",
+        "id" -> sdf.id,
+        "version" -> sdf.version,
+        "lang" -> sdf.lang.getLanguage,
+        "fields" -> w.writes(sdf.document.get)))
+
+    WS.url(s"http://search-${domain._1}-${domain._2}.${region.subdomain}.cloudsearch.amazonaws.com/${VERSION}/documents/batch")
+      .withHeaders(allHeaders: _*)
+      .post(json)
+      .map(resp => Parser.parse[SimpleResult[BatchResponse]](resp).fold(e => throw new RuntimeException(e), identity))
+  }
 }
 
 case class Search(domain: (String, String),

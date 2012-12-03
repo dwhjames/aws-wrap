@@ -217,5 +217,29 @@ object CloudSearchSpec extends Specification {
       checkResult(r)
     }
 
+    "Upload and delete documents" in {
+      implicit val movieWrites = Writes[Movie]( (m: Movie) => Json.obj("title" -> m.titles))
+      val d = SDF(
+        id = "centquarantedouze",
+        version = 1,
+        lang = java.util.Locale.ENGLISH,
+        document  = Some(Movie("1", "White Fire" :: Nil)))
+      val r = waitFor(CloudSearch.upload(domain, d))
+      val rd = waitFor(CloudSearch.delete(domain, "centquarantedouze", 1))
+
+      checkResult(r)
+      r.body match {
+        case BatchResponse(Statuses.SUCCESS, 1, 0, _, _) => success
+        case _ => failure
+      }
+
+      checkResult(rd)
+      rd.body match {
+        case BatchResponse(Statuses.SUCCESS, 0, 1, _, _) => success
+        case _ => failure
+      }
+
+    }
+
   }
 }
