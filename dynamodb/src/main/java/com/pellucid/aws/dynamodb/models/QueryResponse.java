@@ -29,6 +29,10 @@ public class QueryResponse {
         return items;
     }
 
+    public Map<String, AttributeValue> itemAt(int position) {
+        return items().get(position);
+    }
+
     public Long count() {
         return (Long)Scala.orNull(this.scalaResponse.count());
     }

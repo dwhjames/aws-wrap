@@ -1,6 +1,6 @@
 package com.pellucid.aws.dynamodb;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +18,8 @@ import com.pellucid.aws.dynamodb.models.KeySchemaElement.AttributeType;
 import com.pellucid.aws.dynamodb.models.KeyValue;
 import com.pellucid.aws.dynamodb.models.PrimaryKey;
 import com.pellucid.aws.dynamodb.models.ProvisionedThroughput;
+import com.pellucid.aws.dynamodb.models.Query;
+import com.pellucid.aws.dynamodb.models.QueryResponse;
 import com.pellucid.aws.dynamodb.models.TableDescription;
 import com.pellucid.aws.dynamodb.models.TableStatus;
 import com.pellucid.aws.results.SimpleResult;
@@ -65,7 +67,7 @@ public class DynamoDBTest {
 
     @Test
     public void putAndGetItems() throws Exception {
-        String table = "java-putget-table";
+        String table = "java-putget";
         PrimaryKey key = new PrimaryKey(new KeySchemaElement("id", AttributeType.StringType));
         SimpleResult<TableDescription> result = get(ddb.createTable(table, key, throughput));
         assertTrue(result.toString(), result.isSuccess());
@@ -73,11 +75,36 @@ public class DynamoDBTest {
 
         SimpleResult<ItemResponse> putResult = get(ddb.putItem(table, NTESLA));
         assertTrue(putResult.toString(), putResult.isSuccess());
-        SimpleResult<ItemResponse> getResult = get(
-                ddb.getItem(table, KeyValue.hashKey("ntesla"))
-                );
+        SimpleResult<ItemResponse> getResult = get(ddb.getItem(table, KeyValue.hashKey("ntesla"), true));
+        assertTrue(getResult.toString(), getResult.isSuccess());
         assertTrue(getResult.body().get("firstName").getS() == "Nikola");
-        assertTrue(getResult.toString(), putResult.isSuccess());
+
+        waitUntilReady(table);
+        SimpleResult<Object> result2 = get(ddb.deleteTable(table));
+        assertTrue(result2.toString(), result2.isSuccess());
+    }
+
+    @Test
+    public void query() throws Exception {
+        String table = "java-query";
+        PrimaryKey key = new PrimaryKey(
+                new KeySchemaElement("id", AttributeType.StringType),
+                new KeySchemaElement("awesomeLevel", AttributeType.NumberType)
+                );
+        System.out.println("Create table");
+        SimpleResult<TableDescription> result = get(ddb.createTable(table, key, throughput));
+        assertTrue(result.toString(), result.isSuccess());
+        waitUntilReady(table);
+
+        SimpleResult<ItemResponse> putResult = get(ddb.putItem(table, NTESLA));
+        assertTrue(putResult.toString(), putResult.isSuccess());
+
+        Query query = new Query(table).withConsistentRead(true).withHashKeyValue(AttributeValue.createS("ntesla"));
+        SimpleResult<QueryResponse> queryResult = get(ddb.query(query));
+        assertTrue(queryResult.toString(), queryResult.isSuccess());
+        assertTrue("Didn't found any result, should have found ntesla", queryResult.body().count() > 0);
+        assertNotNull("Couldn't find attribute firstName", queryResult.body().itemAt(0).get("firstName"));
+        assertTrue("firstName should be Nikola", queryResult.body().itemAt(0).get("firstName").getS().equals("Nikola"));
 
         waitUntilReady(table);
         SimpleResult<Object> result2 = get(ddb.deleteTable(table));

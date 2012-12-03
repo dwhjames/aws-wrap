@@ -158,9 +158,9 @@ public class Query {
                 Scala.Option((Object)this.limit),
                 this.consistentRead,
                 this.count,
-                Scala.Option(this.rangeKeyCondition.toScala()),
+                Scala.Option(this.rangeKeyCondition == null ? null : this.rangeKeyCondition.toScala()),
                 this.scanIndexForward,
-                Scala.Option(this.exclusiveStartKey.toScala())
+                Scala.Option(this.exclusiveStartKey == null ? null : this.exclusiveStartKey.toScala())
                 );
     }
 
