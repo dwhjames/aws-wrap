@@ -3,6 +3,7 @@ package aws.cloudsearch
 import scala.concurrent.Future
 import play.api.libs.ws._
 import play.api.libs.ws.WS._
+import play.api.libs.functional.syntax._
 import aws.core._
 
 import org.specs2.mutable._

@@ -398,3 +398,24 @@ case class Search(domain: (String, String),
       scores.map(s => s"t-${s._1}" -> s"${s._2.start}..${s._2.end}")
     }
 }
+
+object Search {
+  import com.pellucid.aws.cloudsearch.models.{Search => JSearch}
+  def fromJava(js: JSearch) = {
+    Search(js.getDomain.getName -> js.getDomain.getId)
+  }
+  //def fromJava(js: JSearch) = Search(
+  //    js.getDomain.getName -> js.getDomain.getId,
+  //    Option(js.getQuery),
+  //    Option(js.getMatchExpression.toScala),
+  //    js.getReturnFields,
+  //    js.getFacets,
+  //    js.getFacetConstraints,
+  //    js.getFacetSort,
+  //    js.getFacetTops,
+  //    js.getRanks,
+  //    js.getScores,
+  //    js.getSize,
+  //    js.getStartAt
+  //  )
+}

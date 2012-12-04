@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit._
 import play.api.libs.ws.Response
 import play.api.libs.json.util._
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 import aws.core._
 import aws.core.Types._
