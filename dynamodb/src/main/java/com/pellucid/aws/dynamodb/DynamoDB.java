@@ -13,6 +13,7 @@ import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
 
 import com.pellucid.aws.dynamodb.models.AttributeValue;
+import com.pellucid.aws.dynamodb.models.BatchWriteResponse;
 import com.pellucid.aws.dynamodb.models.Expected;
 import com.pellucid.aws.dynamodb.models.ItemResponse;
 import com.pellucid.aws.dynamodb.models.KeyCondition;
@@ -22,6 +23,7 @@ import com.pellucid.aws.dynamodb.models.ProvisionedThroughput;
 import com.pellucid.aws.dynamodb.models.Query;
 import com.pellucid.aws.dynamodb.models.QueryResponse;
 import com.pellucid.aws.dynamodb.models.TableDescription;
+import com.pellucid.aws.dynamodb.models.WriteRequest;
 import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.results.SimpleResult;
 
@@ -280,6 +282,25 @@ public class DynamoDB {
                     }
                 });
     }
+
+    public Future<SimpleResult<BatchWriteResponse>> batchWriteItem(Map<String, List<WriteRequest>> requestItems) {
+                return AWSJavaConversions.toJavaSimpleResult(
+                        aws.dynamodb.DynamoDB.batchWriteItem(
+                                WriteRequest.requestMapToScala(requestItems),
+                                scalaRegion, aws.core.AWS.defaultExecutionContext()),
+                                new Mapper<aws.dynamodb.BatchWriteResponse, BatchWriteResponse>() {
+                            @Override public BatchWriteResponse apply(aws.dynamodb.BatchWriteResponse result) {
+                                return BatchWriteResponse.fromScala(result);
+                            }
+                        });
+    }
+
+    /*
+      def batchGetItem(requestItems: Map[String, GetRequest])(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[BatchGetResponse]] = {
+        post[BatchGetResponse]("BatchGetItem", Json.obj(
+          "RequestItems" -> Json.toJson(requestItems)))
+      }
+     */
 
     private static <MS extends aws.core.Metadata> Future<SimpleResult<ItemResponse>> itemResponseConvert(Future<aws.core.Result<MS, aws.dynamodb.models.ItemResponse>> scalaResponse) {
         return AWSJavaConversions.toJavaSimpleResult(

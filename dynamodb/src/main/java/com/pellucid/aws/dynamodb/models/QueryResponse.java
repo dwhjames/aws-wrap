@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import akka.dispatch.Mapper;
+
+import com.pellucid.aws.internal.AWSJavaConversions;
+
 import play.libs.Scala;
 import scala.collection.JavaConversions;
 
