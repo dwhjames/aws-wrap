@@ -401,6 +401,9 @@ package aws.cloudsearch {
 
 }
 
+/**
+* Java API
+*/
 package com.pellucid.aws.cloudsearch {
   import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -427,19 +430,21 @@ package com.pellucid.aws.cloudsearch {
       )
   }
 
-
-  import JavaConverters._
   class CloudSearch(val scalaRegion: CloudSearchRegion) {
+    import JavaConverters._
+    import scala.concurrent.Future
+    import com.pellucid.aws.results.{ Result => JResult }
+
     def this() = this(CloudSearchRegion.DEFAULT)
 
-    def search[T](search: JSearch, p: Parser[T]) = {
+    def search[T](search: JSearch, p: Parser[T]): Future[JResult[CloudSearchMetadata, T]] = {
       import aws.core.parsers._
       import CloudSearchParsers._
 
       implicit val parser = p
       implicit val region = scalaRegion
       fromJava(search).search[T].map { result =>
-        new com.pellucid.aws.results.Result[CloudSearchMetadata, T] {
+        new JResult[CloudSearchMetadata, T] {
           def metadata = result.metadata
           def isSuccess = result.toEither.fold(err => false, b => true)
           def body = result.body

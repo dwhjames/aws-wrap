@@ -24,7 +24,6 @@ import com.pellucid.aws.cloudsearch.CloudSearch;
 import com.pellucid.aws.cloudsearch.models.*;
 
 // HUMF
-import aws.core.*;
 import aws.cloudsearch.CloudSearchMetadata;
 
 public class CloudSearchTest {
@@ -46,7 +45,7 @@ public class CloudSearchTest {
       }
     }
 
-    private final static Parser movieParser = new BaseParser<List<Movie>>() {
+    private final static Parser<List<Movie>> movieParser = new BaseParser<List<Movie>>() {
       @Override
       public ParseResult<List<Movie>> apply(Response resp) {
         List<Movie> ms = new ArrayList<Movie>();
@@ -72,8 +71,7 @@ public class CloudSearchTest {
       Search s = new Search(domain)
         .withReturnFields("title")
         .withQuery("star wars");
-      scala.concurrent.Future<Result<CloudSearchMetadata, List<Movie>>> eventuallyResult = cloudSearch.search(s, movieParser);
-      Result<CloudSearchMetadata, List<Movie>> result = get(eventuallyResult);
+      Result<CloudSearchMetadata, List<Movie>> result = get(cloudSearch.search(s, movieParser));
       assertTrue("request failed", result.isSuccess());
       assertFalse("empty result", result.body().isEmpty());
     }
