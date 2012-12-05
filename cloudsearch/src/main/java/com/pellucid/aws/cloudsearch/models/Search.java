@@ -68,6 +68,10 @@ public class Search {
   public int getStartAt(){ return startAt;}
 
 
+  public Search withQuery(String query) {
+    return new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSort, facetTops, ranks, scores, size, startAt);
+  }
+
   public Search withMatchExpression(MatchExpression matchExpression) {
     return new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSort, facetTops, ranks, scores, size, startAt);
   }

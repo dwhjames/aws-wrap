@@ -35,6 +35,7 @@ object ApplicationBuild extends Build {
         ),
         libraryDependencies ++= Seq(
           "play" %% "play" % AWS.playVersion,
+          "play" %% "play-java" % AWS.playVersion,
           "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2" % "test",
           "com.novocode" % "junit-interface" % "0.10-M2" % "test"),
         testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")

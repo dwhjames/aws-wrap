@@ -13,81 +13,99 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package aws.core.parsers {
 
-package aws.core.parsers
+  import scala.annotation.implicitNotFound
+  import play.api.libs.ws.Response
+  import aws.core._
 
-import scala.annotation.implicitNotFound
+  @implicitNotFound("No parser found for type ${To}. Try to implement an implicit aws.core.parsers.Parser for this type.")
+  trait Parser[To] extends (Response => ParseResult[To]) {
+    def map[B](f: (To => B)): Parser[B] = this.flatMap { parsed => Parser.pure(f(parsed)) }
+    def flatMap[B](f: (To => Parser[B])) = Parser[B] { r =>
+      this(r).fold[ParseResult[B]](
+        e => Failure(e),
+        parsed => f(parsed)(r))
+    }
 
-import play.api.libs.ws.Response
+    def and[B](pb: Parser[B]) = Parser[(To, B)] { r =>
+      val r1 = this(r)
+      val r2 = pb(r)
+      // XXX: we loose 1 error message if both are failures
+      (r1, r2) match {
+        case (Success(v1), Success(v2)) => Success(v1 -> v2)
+        case (Failure(e), _) => Failure(e)
+        case (_, Failure(e)) => Failure(e)
+      }
+    }
 
-import aws.core._
-
-@implicitNotFound("No parser found for type ${To}. Try to implement an implicit aws.core.parsers.Parser for this type.")
-trait Parser[To] extends (Response => ParseResult[To]) {
-  def map[B](f: (To => B)): Parser[B] = this.flatMap { parsed => Parser.pure(f(parsed)) }
-  def flatMap[B](f: (To => Parser[B])) = Parser[B] { r =>
-    this(r).fold[ParseResult[B]](
-      e => Failure(e),
-      parsed => f(parsed)(r))
-  }
-
-  def and[B](pb: Parser[B]) = Parser[(To, B)] { r =>
-    val r1 = this(r)
-    val r2 = pb(r)
-    // XXX: we loose 1 error message if both are failures
-    (r1, r2) match {
-      case (Success(v1), Success(v2)) => Success(v1 -> v2)
-      case (Failure(e), _) => Failure(e)
-      case (_, Failure(e)) => Failure(e)
+    def or[Other >: To, B <: Other](alternative: Parser[B]) = Parser[Other] { r =>
+      this(r).fold(
+        e => alternative(r).fold(_ => Failure(e), s => Success(s)): ParseResult[Other],
+        s => Success(s))
     }
   }
 
-  def or[Other >: To, B <: Other](alternative: Parser[B]) = Parser[Other] { r =>
-    this(r).fold(
-      e => alternative(r).fold(_ => Failure(e), s => Success(s)): ParseResult[Other],
-      s => Success(s))
+  sealed trait ParseResult[+To] {
+    def fold[U](e: (String => U), s: (To => U)): U
   }
-}
-
-sealed trait ParseResult[+To] {
-  def fold[U](e: (String => U), s: (To => U)): U
-}
-case class Success[To](value: To) extends ParseResult[To] {
-  override def fold[U](e: (String => U), s: (To => U)): U = s(value)
-}
-case class Failure(failure: String) extends ParseResult[Nothing] {
-  override def fold[U](e: (String => U), s: (Nothing => U)): U = e(failure)
-}
-
-object Parser {
-
-  def pure[To](v: To) = Parser[To](_ => Success(v))
-
-  def apply[To](transformer: (Response => ParseResult[To])): Parser[To] = new Parser[To] {
-    def apply(r: Response) = transformer(r)
+  case class Success[To](value: To) extends ParseResult[To] {
+    override def fold[U](e: (String => U), s: (To => U)): U = s(value)
+  }
+  case class Failure(failure: String) extends ParseResult[Nothing] {
+    override def fold[U](e: (String => U), s: (Nothing => U)): U = e(failure)
   }
 
-  def parse[To](r: Response)(implicit p: Parser[To]): ParseResult[To] = p(r)
+  object Parser {
 
-  def resultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] = mp.flatMap { meta =>
-    p.map { body =>
-      Result(meta, body)
+    def pure[To](v: To) = Parser[To](_ => Success(v))
+
+    def apply[To](transformer: (Response => ParseResult[To])): Parser[To] = new Parser[To] {
+      def apply(r: Response) = transformer(r)
     }
+
+    def parse[To](r: Response)(implicit p: Parser[To]): ParseResult[To] = p(r)
+
+    def resultParser[M <: Metadata, T](implicit mp: Parser[M], p: Parser[T]): Parser[Result[M, T]] = mp.flatMap { meta =>
+      p.map { body =>
+        Result(meta, body)
+      }
+    }
+
+    implicit val unitParser: Parser[Unit] = Parser.pure(())
+
+    implicit val emptyMetadataParser: Parser[EmptyMeta.type] = Parser.pure(EmptyMeta)
+
+    def xmlErrorParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[AWSError[M]] { r =>
+      (r.status match {
+        // TODO: really test content
+        case s if (s / 100 == 2) => Some(Failure("Error expected, found success (status 2xx)"))
+        case _ => for (
+          code <- (r.xml \\ "Error" \ "Code").headOption.map(_.text);
+          message <- (r.xml \\ "Error" \ "Message").headOption.map(_.text)
+        ) yield Success(AWSError(meta, code, message))
+      }).getOrElse(sys.error("Failed to parse error: " + r.body))
+    })
+
   }
+}
 
-  implicit val unitParser: Parser[Unit] = Parser.pure(())
+/**
+* Java API
+*/
+package com.pellucid.aws.core.parsers {
+  import aws.core.parsers.{ Parser => SParser, ParseResult => SParseResult, Success => SSuccess, Failure => SFailure }
 
-  implicit val emptyMetadataParser: Parser[EmptyMeta.type] = Parser.pure(EmptyMeta)
+  trait Parser[To] extends SParser[To]
+  sealed trait ParseResult[To] extends SParseResult[To]
+  class Success[To](value: To) extends SSuccess[To](value) with ParseResult[To]
+  class Failure(failure: String) extends SFailure(failure) with ParseResult[Nothing]
 
-  def xmlErrorParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[AWSError[M]] { r =>
-    (r.status match {
-      // TODO: really test content
-      case s if (s / 100 == 2) => Some(Failure("Error expected, found success (status 2xx)"))
-      case _ => for (
-        code <- (r.xml \\ "Error" \ "Code").headOption.map(_.text);
-        message <- (r.xml \\ "Error" \ "Message").headOption.map(_.text)
-      ) yield Success(AWSError(meta, code, message))
-    }).getOrElse(sys.error("Failed to parse error: " + r.body))
-  })
+  abstract class BaseParser[To] extends Parser[To] {
+    import play.libs.WS.{ Response => JResponse }
+    import play.api.libs.ws.Response
 
+    def apply(r: Response): SParseResult[To] = this.apply(new JResponse(r.ahcResponse))
+    def apply(r: JResponse): ParseResult[To]
+  }
 }

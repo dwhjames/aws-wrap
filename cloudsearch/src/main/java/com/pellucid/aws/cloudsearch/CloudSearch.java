@@ -1,3 +1,4 @@
+/*
 package com.pellucid.aws.cloudsearch;
 
 import scala.concurrent.Future;
@@ -26,3 +27,4 @@ public class CloudSearch {
     return delegate.search(aws.cloudsearch.Search.fromJava(search), scalaRegion, p);
   }
 }
+*/
