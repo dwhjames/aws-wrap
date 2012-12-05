@@ -36,4 +36,13 @@ public class ItemResponse {
         return new ItemResponse(item, scalaResponse.consumedCapacityUnits().underlying());
     }
 
+    @Override public String toString() {
+        StringBuilder result = new StringBuilder("ItemResponse(\n");
+        for (String key: item.keySet()) {
+            result.append(key + " -> " + item.get(key) + "\n");
+        }
+        result.append("consumedCapacityUnits = " + consumedCapacityUnits);
+        return result.toString();
+    }
+
 }

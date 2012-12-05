@@ -81,7 +81,6 @@ public class WriteRequest {
                         return AWSJavaConversions.toSeq(srequests);
                     }
                 });
-
     }
 
 }

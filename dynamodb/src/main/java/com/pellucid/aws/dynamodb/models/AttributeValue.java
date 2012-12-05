@@ -75,4 +75,9 @@ public class AttributeValue {
         return new AttributeValue(new aws.dynamodb.DDBStringSet(JavaConversions.asScalaSet(value).toSet()));
     }*/
 
+    @Override
+    public String toString() {
+        return this.scalaAttribute.toString();
+    }
+
 }

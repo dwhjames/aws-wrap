@@ -1,8 +1,12 @@
 package com.pellucid.aws.dynamodb;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -12,6 +16,7 @@ import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 
 import com.pellucid.aws.dynamodb.models.AttributeValue;
+import com.pellucid.aws.dynamodb.models.BatchWriteResponse;
 import com.pellucid.aws.dynamodb.models.ItemResponse;
 import com.pellucid.aws.dynamodb.models.KeySchemaElement;
 import com.pellucid.aws.dynamodb.models.KeySchemaElement.AttributeType;
@@ -22,6 +27,7 @@ import com.pellucid.aws.dynamodb.models.Query;
 import com.pellucid.aws.dynamodb.models.QueryResponse;
 import com.pellucid.aws.dynamodb.models.TableDescription;
 import com.pellucid.aws.dynamodb.models.TableStatus;
+import com.pellucid.aws.dynamodb.models.WriteRequest;
 import com.pellucid.aws.results.SimpleResult;
 
 public class DynamoDBTest {
@@ -40,6 +46,14 @@ public class DynamoDBTest {
         NTESLA.put("awesomeLevel", AttributeValue.createN(1000L));
     }
 
+    private static Map<String, AttributeValue> TEDISON = new HashMap<String, AttributeValue>();
+    static {
+        TEDISON.put("id", AttributeValue.createS("tedison"));
+        TEDISON.put("firstName", AttributeValue.createS("Thomas"));
+        TEDISON.put("lastName", AttributeValue.createS("Edison"));
+        TEDISON.put("awesomeLevel", AttributeValue.createN(800L));
+    }
+
     private <T> T get(Future<T> f) throws Exception {
         return Await.result(f, timeout);
     }
@@ -53,7 +67,7 @@ public class DynamoDBTest {
         }
         Thread.sleep(2000);
     }
-
+/*
     @Test
     public void createAndDeleteTable() throws Exception {
         String table = "java-create-table";
@@ -77,7 +91,8 @@ public class DynamoDBTest {
         assertTrue(putResult.toString(), putResult.isSuccess());
         SimpleResult<ItemResponse> getResult = get(ddb.getItem(table, KeyValue.hashKey("ntesla"), true));
         assertTrue(getResult.toString(), getResult.isSuccess());
-        assertTrue(getResult.body().get("firstName").getS() == "Nikola");
+        assertEquals("First name should be Nikola, but we got " + getResult.toString(),
+                getResult.body().get("firstName").getS(), "Nikola");
 
         waitUntilReady(table);
         SimpleResult<Object> result2 = get(ddb.deleteTable(table));
@@ -91,7 +106,6 @@ public class DynamoDBTest {
                 new KeySchemaElement("id", AttributeType.StringType),
                 new KeySchemaElement("awesomeLevel", AttributeType.NumberType)
                 );
-        System.out.println("Create table");
         SimpleResult<TableDescription> result = get(ddb.createTable(table, key, throughput));
         assertTrue(result.toString(), result.isSuccess());
         waitUntilReady(table);
@@ -105,6 +119,33 @@ public class DynamoDBTest {
         assertTrue("Didn't found any result, should have found ntesla", queryResult.body().count() > 0);
         assertNotNull("Couldn't find attribute firstName", queryResult.body().itemAt(0).get("firstName"));
         assertTrue("firstName should be Nikola", queryResult.body().itemAt(0).get("firstName").getS().equals("Nikola"));
+
+        waitUntilReady(table);
+        SimpleResult<Object> result2 = get(ddb.deleteTable(table));
+        assertTrue(result2.toString(), result2.isSuccess());
+    }
+*/
+    @Test
+    public void batch() throws Exception {
+        String table = "java-batch";
+        PrimaryKey key = new PrimaryKey(
+                new KeySchemaElement("id", AttributeType.StringType),
+                new KeySchemaElement("awesomeLevel", AttributeType.NumberType)
+                );
+        SimpleResult<TableDescription> result = get(ddb.createTable(table, key, throughput));
+        assertTrue(result.toString(), result.isSuccess());
+
+        waitUntilReady(table);
+        List<WriteRequest> requests = new ArrayList<WriteRequest>();
+        requests.add(WriteRequest.put(NTESLA));
+        requests.add(WriteRequest.put(TEDISON));
+        SimpleResult<BatchWriteResponse> writeResult = get(ddb.batchWriteItem(table, requests));
+        assertTrue(writeResult.toString(), writeResult.isSuccess());
+
+        SimpleResult<ItemResponse> getResult = get(ddb.getItem(table, KeyValue.hashKey("tedison"), true));
+        assertTrue(getResult.toString(), getResult.isSuccess());
+        assertEquals("First name should be Thomas, but we got " + getResult.toString(),
+                getResult.body().get("firstName").getS(), "Thomas");
 
         waitUntilReady(table);
         SimpleResult<Object> result2 = get(ddb.deleteTable(table));

@@ -13,8 +13,10 @@ import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
 
 import com.pellucid.aws.dynamodb.models.AttributeValue;
+import com.pellucid.aws.dynamodb.models.BatchGetResponse;
 import com.pellucid.aws.dynamodb.models.BatchWriteResponse;
 import com.pellucid.aws.dynamodb.models.Expected;
+import com.pellucid.aws.dynamodb.models.GetRequest;
 import com.pellucid.aws.dynamodb.models.ItemResponse;
 import com.pellucid.aws.dynamodb.models.KeyCondition;
 import com.pellucid.aws.dynamodb.models.KeyValue;
@@ -283,24 +285,36 @@ public class DynamoDB {
                 });
     }
 
-    public Future<SimpleResult<BatchWriteResponse>> batchWriteItem(Map<String, List<WriteRequest>> requestItems) {
-                return AWSJavaConversions.toJavaSimpleResult(
-                        aws.dynamodb.DynamoDB.batchWriteItem(
-                                WriteRequest.requestMapToScala(requestItems),
-                                scalaRegion, aws.core.AWS.defaultExecutionContext()),
-                                new Mapper<aws.dynamodb.BatchWriteResponse, BatchWriteResponse>() {
-                            @Override public BatchWriteResponse apply(aws.dynamodb.BatchWriteResponse result) {
-                                return BatchWriteResponse.fromScala(result);
-                            }
-                        });
+    public Future<SimpleResult<BatchWriteResponse>> batchWriteItem(String tableName, List<WriteRequest> writeRequests) {
+        Map<String, List<WriteRequest>> requestItems = new HashMap<String, List<WriteRequest>>();
+        requestItems.put(tableName, writeRequests);
+        return batchWriteItem(requestItems);
     }
 
-    /*
-      def batchGetItem(requestItems: Map[String, GetRequest])(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[BatchGetResponse]] = {
-        post[BatchGetResponse]("BatchGetItem", Json.obj(
-          "RequestItems" -> Json.toJson(requestItems)))
-      }
-     */
+    public Future<SimpleResult<BatchWriteResponse>> batchWriteItem(Map<String, List<WriteRequest>> requestItems) {
+        return AWSJavaConversions.toJavaSimpleResult(
+                aws.dynamodb.DynamoDB.batchWriteItem(
+                        WriteRequest.requestMapToScala(requestItems),
+                        scalaRegion, aws.core.AWS.defaultExecutionContext()),
+                        new Mapper<aws.dynamodb.BatchWriteResponse, BatchWriteResponse>() {
+                    @Override public BatchWriteResponse apply(aws.dynamodb.BatchWriteResponse result) {
+                        return BatchWriteResponse.fromScala(result);
+                    }
+                });
+    }
+
+    public Future<SimpleResult<BatchGetResponse>> batchGetItem(Map<String, GetRequest> requestItems) {
+        return AWSJavaConversions.toJavaSimpleResult(
+                aws.dynamodb.DynamoDB.batchGetItem(
+                        GetRequest.requestMapToScala(requestItems),
+                        scalaRegion, aws.core.AWS.defaultExecutionContext()),
+                        new Mapper<aws.dynamodb.BatchGetResponse, BatchGetResponse>() {
+                    @Override public BatchGetResponse apply(aws.dynamodb.BatchGetResponse result) {
+                        System.out.println("Response: " + result);
+                        return BatchGetResponse.fromScala(result);
+                    }
+                });
+    }
 
     private static <MS extends aws.core.Metadata> Future<SimpleResult<ItemResponse>> itemResponseConvert(Future<aws.core.Result<MS, aws.dynamodb.models.ItemResponse>> scalaResponse) {
         return AWSJavaConversions.toJavaSimpleResult(
