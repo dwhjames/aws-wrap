@@ -209,20 +209,36 @@ object JsonFormats {
         Json.obj("Key" -> Json.toJson(key)))
     }))
 
-  implicit val BatchGetRequestWrites = Format[GetRequest](
-    Reads(json => ((json \ "Keys").validate[Seq[KeyValue]], (json \ "AttributesToGet").validate[Seq[String]]) match {
-      case (JsSuccess(keys, _), JsSuccess(attr, _)) => JsSuccess(GetRequest(keys, attr))
-      case (JsSuccess(keys, _), _) => JsSuccess(GetRequest(keys))
-      case (err: JsError, _) => err
+  implicit val BatchGetRequestWrites = Format[Seq[GetRequest]](
+    Reads((json: JsValue) => json match {
+      case JsObject(fields) => JsSuccess(fields.map { case (name, jsvalue) =>
+        (name, (jsvalue \ "Keys").validate[Seq[KeyValue]], (jsvalue \ "AttributesToGet").validate[Seq[String]]) match {
+          case (n, JsSuccess(keys, _), JsSuccess(attr, _)) => JsSuccess(GetRequest(n, keys, attr))
+          case (n, JsSuccess(keys, _), _) => JsSuccess(GetRequest(n, keys))
+          case (_, err: JsError, _) => err
+          case (_, _, err: JsError) => err
+        }
+      } collect {
+        case JsSuccess(request, _) => request
+      })
+      case _ => JsError("JsObject expected")
     }),
-    Writes(request =>
-      Json.obj(
+    Writes((requests: Seq[GetRequest]) => {
+      val o: Seq[(String, JsValue)] = requests.map(request => {
+        val key = request.tableName
+        val fields = Json.obj(
         "Keys" -> Json.toJson(request.keys),
         "ConsistentRead" -> Json.toJson(request.consistentRead)) ++
-        (request.attributesToGet match {
-          case Nil => Json.obj()
-          case attr => Json.obj("AttributesToGet" -> Json.toJson(attr))
-        })))
+          (request.attributesToGet match {
+            case Nil => Json.obj()
+            case attr => Json.obj("AttributesToGet" -> Json.toJson(attr))
+          })
+          (key, fields)
+      })
+      JsObject(o)
+    }
+    )
+  )
 
   implicit val BatchWriteResponseReads = Reads[BatchWriteResponse](json => {
     val responses = (json \ "Responses").as[Map[String, QueryResponse]].toSeq

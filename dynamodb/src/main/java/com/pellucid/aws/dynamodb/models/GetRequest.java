@@ -17,25 +17,25 @@ public class GetRequest {
         this.sRequest = sRequest;
     }
 
-    public GetRequest(List<KeyValue> keys, boolean consistentRead) {
-        this(keys, new ArrayList<String>(), consistentRead);
+    public GetRequest(String tableName, List<KeyValue> keys, boolean consistentRead) {
+        this(tableName, keys, new ArrayList<String>(), consistentRead);
     }
 
-    public GetRequest(List<KeyValue> keys) {
-        this(keys, new ArrayList<String>(), false);
+    public GetRequest(String tableName, List<KeyValue> keys) {
+        this(tableName, keys, new ArrayList<String>(), false);
     }
 
-    public GetRequest(List<KeyValue> keys, List<String> attributesToGet) {
-        this(keys, attributesToGet, false);
+    public GetRequest(String tableName, List<KeyValue> keys, List<String> attributesToGet) {
+        this(tableName, keys, attributesToGet, false);
     }
 
-    public GetRequest(List<KeyValue> keys, List<String> attributesToGet, boolean consistentRead) {
+    public GetRequest(String tableName, List<KeyValue> keys, List<String> attributesToGet, boolean consistentRead) {
         scala.collection.Seq<aws.dynamodb.models.KeyValue> sKeys = AWSJavaConversions.toSeq(Lists.map(keys, new Mapper<KeyValue, aws.dynamodb.models.KeyValue>(){
             @Override public aws.dynamodb.models.KeyValue apply(KeyValue kv) {
                 return kv.toScala();
             }
         }));
-        this.sRequest = new aws.dynamodb.GetRequest(sKeys, AWSJavaConversions.toSeq(attributesToGet), consistentRead);
+        this.sRequest = new aws.dynamodb.GetRequest(tableName, sKeys, AWSJavaConversions.toSeq(attributesToGet), consistentRead);
     }
 
     public GetRequest fromScala(aws.dynamodb.GetRequest sRequest) {
@@ -44,16 +44,6 @@ public class GetRequest {
 
     public aws.dynamodb.GetRequest toScala() {
         return this.sRequest;
-    }
-
-    public static scala.collection.immutable.Map<String, aws.dynamodb.GetRequest> requestMapToScala(Map<String, GetRequest> requests) {
-        return AWSJavaConversions.toScalaMap(
-                requests,
-                new Mapper<GetRequest, aws.dynamodb.GetRequest>() {
-                    @Override public aws.dynamodb.GetRequest apply(GetRequest requests) {
-                        return requests.toScala();
-                    }
-                });
     }
 
 }

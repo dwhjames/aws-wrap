@@ -269,7 +269,7 @@ object DynamoDB {
       "RequestItems" -> Json.toJson(requestItems)))
   }
 
-  def batchGetItem(requestItems: Map[String, GetRequest])(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[BatchGetResponse]] = {
+  def batchGetItem(requestItems: Seq[GetRequest])(implicit region: DDBRegion, executor: ExecutionContext): Future[SimpleResult[BatchGetResponse]] = {
     post[BatchGetResponse]("BatchGetItem", Json.obj(
       "RequestItems" -> Json.toJson(requestItems)))
   }

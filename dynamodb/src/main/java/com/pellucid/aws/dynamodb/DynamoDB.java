@@ -27,6 +27,7 @@ import com.pellucid.aws.dynamodb.models.QueryResponse;
 import com.pellucid.aws.dynamodb.models.TableDescription;
 import com.pellucid.aws.dynamodb.models.WriteRequest;
 import com.pellucid.aws.internal.AWSJavaConversions;
+import com.pellucid.aws.internal.Lists;
 import com.pellucid.aws.results.SimpleResult;
 
 public class DynamoDB {
@@ -303,10 +304,14 @@ public class DynamoDB {
                 });
     }
 
-    public Future<SimpleResult<BatchGetResponse>> batchGetItem(Map<String, GetRequest> requestItems) {
+    public Future<SimpleResult<BatchGetResponse>> batchGetItem(List<GetRequest> requestItems) {
         return AWSJavaConversions.toJavaSimpleResult(
                 aws.dynamodb.DynamoDB.batchGetItem(
-                        GetRequest.requestMapToScala(requestItems),
+                        AWSJavaConversions.toSeq(Lists.map(requestItems, new Mapper<GetRequest, aws.dynamodb.GetRequest>(){
+                            @Override public aws.dynamodb.GetRequest apply(GetRequest request) {
+                                return request.toScala();
+                            }
+                        })),
                         scalaRegion, aws.core.AWS.defaultExecutionContext()),
                         new Mapper<aws.dynamodb.BatchGetResponse, BatchGetResponse>() {
                     @Override public BatchGetResponse apply(aws.dynamodb.BatchGetResponse result) {
