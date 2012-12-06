@@ -35,20 +35,23 @@ object SNSParsers {
       (r.xml \\ "NextToken").headOption.map(_.text)))
   }
 
-  implicit def createTopicsResultParser = Parser[CreateTopicResult] { r: Response =>
-    Success(
-      CreateTopicResult((r.xml \\ "TopicArn").text))
+  def createTopicsParser = Parser[String] { r: Response =>
+    Success((r.xml \\ "TopicArn").text)
   }
 
-  implicit def subscribeResultParser = Parser[SubscriptionResult] { r: Response =>
-    Success(
-      SubscriptionResult((r.xml \\ "SubscriptionArn").text))
+  def createTopicsResultParser = safeResultParser(createTopicsParser)
+
+  def subscribeParser = Parser[String] { r: Response =>
+    Success((r.xml \\ "SubscriptionArn").text)
   }
 
-  implicit def publishResultParser = Parser[PublishResult] { r: Response =>
-    Success(
-      PublishResult((r.xml \\ "MessageId").text))
+  def subscribeResultParser = safeResultParser(subscribeParser)
+
+  def publishParser = Parser[String] { r: Response =>
+    Success((r.xml \\ "MessageId").text)
   }
+
+  def publishResultParser = safeResultParser(publishParser)
 
   implicit def topicAttributesResultParser = Parser[TopicAttributesResult] { r: Response =>
     val entries = parseAttributes(r.xml \\ "Attributes" head)

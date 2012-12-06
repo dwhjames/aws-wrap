@@ -48,7 +48,37 @@ public class SNS {
                 JavaConversions.iterableAsScalaIterable(sActions).toSeq(),
                 this.scalaRegion));
     }
-
+/*
+    public Future<Result<SNSMeta, SubscriptionResult>> confirmSubscription(
+            String topicArn,
+            String token) {
+        return confirmSubscription(topicArn, token, false);
+    }
+*/
+    /**
+     * Verifies an endpoint owner's intent to receive messages by validating the token
+     * sent to the endpoint by an earlier Subscribe action. If the token is valid, the action creates a new subscription and
+     * returns its Amazon Resource Name (ARN).
+     *
+     * @param topicArn The ARN of the topic for which you wish to confirm a subscription.
+     * @param token Short-lived token sent to an endpoint during the Subscribe action.
+     * @param authenticateOnUnsubscribe Disallows unauthenticated unsubscribes of the subscription.
+     *        If the value of this parameter is true and the request has an AWS signature,
+     *        then only the topic owner and the subscription owner can unsubscribe the endpoint.
+     */
+/*    public Future<Result<SNSMeta, SubscriptionResult>> confirmSubscription(
+            String topicArn,
+            String token,
+            boolean authenticateOnUnsubscribe) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.confirmSubscription(topicArn, token, authenticateOnUnsubscribe),
+                new MetadataConvert(),
+                new Mapper<aws.sns.SubscriptionResult, SubscriptionResult>() {
+            @Override public SubscriptionResult apply(aws.sns.SubscriptionResult result) {
+                return SubscriptionResult.fromScala(result);
+            }
+        });
+    }
+*/
     private static Future<Result<SNSMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.sns.SNSMeta, BoxedUnit>> scalaResult) {
         return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new Mapper<BoxedUnit, Object>() {
             @Override public Object apply(BoxedUnit unit) {

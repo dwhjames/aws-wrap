@@ -214,7 +214,6 @@ public class SimpleDB {
                 return SDBDomainMetadata.fromScalaMetadata(metadata);
             }
         });
-
     }
 
     public Future<Result<SimpleDBMeta, List<SDBItem>>> select(String expression) {

@@ -38,7 +38,7 @@ object SNSSpec extends Specification {
     "Delete a topic" in {
       val r = Await.result(SNS.createTopic("test-topic-delete"), Duration(30, SECONDS)) match {
         case AWSError(_, code, message) => failure(code + ": " + message)
-        case Result(_, result) => Await.result(SNS.deleteTopic(result.topicArn), Duration(30, SECONDS))
+        case Result(_, result) => Await.result(SNS.deleteTopic(result), Duration(30, SECONDS))
       }
       checkResult(r)
     }
@@ -46,8 +46,7 @@ object SNSSpec extends Specification {
     "List topics" in {
       Await.result(SNS.createTopic("test-topic-list"), Duration(30, SECONDS)) match {
         case AWSError(_, code, message) => failure(code + ": " + message)
-        case Result(_, result) => {
-          val newTopic = result.topicArn
+        case Result(_, newTopic) => {
           Await.result(SNS.listTopics(), Duration(30, SECONDS)) match {
             case AWSError(_, code, message) => failure(message)
             case Result(_, listresult) => listresult.topics.exists(_ == newTopic) must beEqualTo(true)
@@ -59,7 +58,7 @@ object SNSSpec extends Specification {
     "Subscribe" in {
       val subscribeFuture = SNS.createTopic("test-subsciptions").flatMap(_ match {
         case e@AWSError(_, _, _) => Future.successful(e)
-        case Result(_, createRes) => SNS.subscribe(Endpoint.Http("http://example.com"), createRes.topicArn)
+        case Result(_, topicArn) => SNS.subscribe(Endpoint.Http("http://example.com"), topicArn)
       })
 
       val r = Await.result(subscribeFuture, Duration(30, SECONDS))
@@ -69,7 +68,7 @@ object SNSSpec extends Specification {
     "Publish" in {
       val publishFuture = SNS.createTopic("test-publish").flatMap(_ match {
         case e@AWSError(_, _, _) => Future.successful(e)
-        case Result(_, createRes) => SNS.publish(createRes.topicArn, Message("hello, there", Some("just for http")))
+        case Result(_, topicArn) => SNS.publish(topicArn, Message("hello, there", Some("just for http")))
       })
 
       val r = Await.result(publishFuture, Duration(30, SECONDS))
@@ -81,8 +80,7 @@ object SNSSpec extends Specification {
       val actions = Seq(Action.ListTopics)
       val topicArn = Await.result(SNS.createTopic("test-permissions"), Duration(30, SECONDS)) match {
         case AWSError(_, code, message) => failure(code + ": " + message)
-        case Result(_, result) => {
-          val newTopic = result.topicArn
+        case Result(_, newTopic) => {
           checkResult(Await.result(SNS.addPermission(newTopic, "Foobar", accounts, actions), Duration(30, SECONDS)))
           checkResult(Await.result(SNS.removePermission(newTopic, "Foobar"), Duration(30, SECONDS)))
         }
@@ -93,8 +91,7 @@ object SNSSpec extends Specification {
       val displayName = "Some Display Name"
       Await.result(SNS.createTopic("test-topic-attributes"), Duration(30, SECONDS)) match {
         case AWSError(_, code, message) => failure(code + ": " + message)
-        case Result(_, createResult) => {
-          val topicArn = createResult.topicArn
+        case Result(_, topicArn) => {
           checkResult(Await.result(SNS.setTopicDisplayName(topicArn, displayName), Duration(30, SECONDS)))
           Await.result(SNS.getTopicAttributes(topicArn), Duration(30, SECONDS)) match {
             case AWSError(_, code, message) => failure(code + ": " + message)

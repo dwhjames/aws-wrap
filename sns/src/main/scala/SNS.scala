@@ -90,11 +90,11 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    *        If the value of this parameter is true and the request has an AWS signature,
    *        then only the topic owner and the subscription owner can unsubscribe the endpoint.
    */
-  def confirmSubscription(topicArn: String, token: String, authenticateOnUnsubscribe: Boolean = false)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
-    get[SubscriptionResult](
+  def confirmSubscription(topicArn: String, token: String, authenticateOnUnsubscribe: Boolean = false)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
+    get[String](
       Action("ConfirmSubscription"),
       TopicArn(topicArn),
-      AuthenticateOnUnsubscribe(authenticateOnUnsubscribe))
+      AuthenticateOnUnsubscribe(authenticateOnUnsubscribe))(region, subscribeResultParser)
   }
 
   /**
@@ -107,8 +107,8 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    *
    * @param name The name of the topic you want to create.
    */
-  def createTopic(name: String)(implicit region: SNSRegion): Future[Result[SNSMeta, CreateTopicResult]] = {
-    get[CreateTopicResult](Action("CreateTopic"), Name(name))
+  def createTopic(name: String)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
+    get[String](Action("CreateTopic"), Name(name))(region, createTopicsResultParser)
   }
 
   /**
@@ -200,9 +200,9 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    */
   def publish(topicArn: String,
               message: Message,
-              subject: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, PublishResult]] = {
+              subject: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
     val params = Seq(Action("Publish"), TopicArn(topicArn)) ++ MessageParameters(message) ++ Subject(subject)
-    get[PublishResult](params: _*)
+    get[String](params: _*)(region, publishResultParser)
   }
 
   /**
@@ -260,9 +260,9 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    * @param endpoint The endpoint that you want to receive notifications.
    * @param topicArn The ARN of topic you want to subscribe to.
    */
-  def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionResult]] = {
+  def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
     val params = Seq(Action("Subscribe"), TopicArn(topicArn)) ++ EndpointProtocol(endpoint)
-    get[SubscriptionResult](params: _*)
+    get[String](params: _*)(region, subscribeResultParser)
   }
 
   def unsubscribe(subscriptionArn: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
