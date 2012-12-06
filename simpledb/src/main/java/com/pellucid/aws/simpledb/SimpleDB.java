@@ -13,7 +13,6 @@ import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
 
 import com.pellucid.aws.internal.AWSJavaConversions;
-import com.pellucid.aws.internal.MetadataConvert;
 import com.pellucid.aws.results.Result;
 
 public class SimpleDB {

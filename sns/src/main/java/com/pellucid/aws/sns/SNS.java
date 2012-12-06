@@ -6,11 +6,11 @@ import scala.collection.JavaConversions;
 import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
+import play.libs.Scala;
 
-import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.results.Result;
-import com.pellucid.aws.utils.Identity;
-import com.pellucid.aws.utils.Lists;
+import com.pellucid.aws.internal.AWSJavaConversions;
+import com.pellucid.aws.utils.*;
 
 public class SNS {
 
@@ -114,6 +114,44 @@ public class SNS {
                 new Mapper<aws.sns.SubscriptionAttributes, SubscriptionAttributes>() {
             @Override public SubscriptionAttributes apply(aws.sns.SubscriptionAttributes attributes) {
                 return SubscriptionAttributes.fromScala(attributes);
+            }
+        });
+    }
+
+    /**
+     * Returns all of the properties of a topic.
+     * Topic properties returned might differ based on the authorization of the user.
+     *
+     * @param topicArn The ARN of the topic whose properties you want to get.
+     */
+    public Future<Result<SNSMeta, TopicAttributes>> getTopicAttributes(String topicArn) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.getTopicAttributes(topicArn, scalaRegion),
+                new MetadataConvert(),
+                new Mapper<aws.sns.TopicAttributes, TopicAttributes>() {
+            @Override public TopicAttributes apply(aws.sns.TopicAttributes attributes) {
+                return TopicAttributes.fromScala(attributes);
+            }
+        });
+    }
+
+    public Future<Result<SNSMeta, SubscriptionList>> listSubscriptions() {
+        return listSubscriptions(null);
+    }
+
+    /**
+     * Returns a list of the requester's subscriptions.
+     * Each call returns a limited list of subscriptions, up to 100.
+     * If there are more subscriptions, a NextToken is also returned.
+     * Use the NextToken parameter in a new ListSubscriptions call to get further results.
+     *
+     * @param nextToken Token returned by the previous `listSubscriptions` request.
+     */
+    public Future<Result<SNSMeta, SubscriptionList>> listSubscriptions(String nextToken) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.listSubscriptions(Scala.Option(nextToken), scalaRegion),
+                new MetadataConvert(),
+                new Mapper<aws.sns.SubscriptionList, SubscriptionList>() {
+            @Override public SubscriptionList apply(aws.sns.SubscriptionList attributes) {
+                return SubscriptionList.fromScala(attributes);
             }
         });
     }
