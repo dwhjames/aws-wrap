@@ -6,6 +6,7 @@ import java.util.List;
 import akka.dispatch.Mapper;
 
 import com.pellucid.aws.internal.*;
+import com.pellucid.aws.utils.Lists;
 
 public class GetRequest {
 

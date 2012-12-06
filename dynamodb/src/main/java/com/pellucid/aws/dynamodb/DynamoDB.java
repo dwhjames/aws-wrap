@@ -14,6 +14,7 @@ import akka.dispatch.Mapper;
 
 import com.pellucid.aws.internal.*;
 import com.pellucid.aws.results.SimpleResult;
+import com.pellucid.aws.utils.Lists;
 
 import com.pellucid.aws.dynamodb.models.*;
 

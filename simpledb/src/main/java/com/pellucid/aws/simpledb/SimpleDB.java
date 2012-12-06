@@ -291,5 +291,14 @@ public class SimpleDB {
         return aws.simpledb.SDBRegion$.MODULE$.DEFAULT();
     }
 
+    private static class MetadataConvert extends Mapper<aws.simpledb.SimpleDBMeta, SimpleDBMeta> {
+
+        @Override
+        public SimpleDBMeta apply(aws.simpledb.SimpleDBMeta scalaMeta) {
+            return new SimpleDBMeta(scalaMeta.requestId(), scalaMeta.boxUsage());
+        }
+
+    }
+
 }
 

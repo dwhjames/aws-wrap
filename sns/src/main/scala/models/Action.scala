@@ -20,64 +20,83 @@ sealed trait Action
 
 object Action {
 
-  case object AddPermission extends Action {
+  object AddPermission extends Action {
     override def toString = "AddPermission"
   }
 
-  case object ConfirmSubscription extends Action {
+  object ConfirmSubscription extends Action {
     override def toString = "ConfirmSubscription"
   }
 
-  case object CreateTopic extends Action {
+  object CreateTopic extends Action {
     override def toString = "CreateTopic"
   }
 
-  case object DeleteTopic extends Action {
+  object DeleteTopic extends Action {
     override def toString = "DeleteTopic"
   }
 
-  case object GetSubscriptionAttributes extends Action {
+  object GetSubscriptionAttributes extends Action {
     override def toString = "GetSubscriptionAttributes"
   }
 
-  case object GetTopicAttributes extends Action {
+  object GetTopicAttributes extends Action {
     override def toString = "GetTopicAttributes"
   }
 
-  case object ListSubscriptions extends Action {
+  object ListSubscriptions extends Action {
     override def toString = "ListSubscriptions"
   }
 
-  case object ListSubscriptionsByTopic extends Action {
+  object ListSubscriptionsByTopic extends Action {
     override def toString = "ListSubscriptionsByTopic"
   }
 
-  case object ListTopics extends Action {
+  object ListTopics extends Action {
     override def toString = "ListTopics"
   }
 
-  case object Publish extends Action {
+  object Publish extends Action {
     override def toString = "Publish"
   }
 
-  case object RemovePermission extends Action {
+  object RemovePermission extends Action {
     override def toString = "RemovePermission"
   }
 
-  case object SetSubscriptionAttributes extends Action {
+  object SetSubscriptionAttributes extends Action {
     override def toString = "SetSubscriptionAttributes"
   }
 
-  case object SetTopicAttributes extends Action {
+  object SetTopicAttributes extends Action {
     override def toString = "SetTopicAttributes"
   }
 
-  case object Subscribe extends Action {
+  object Subscribe extends Action {
     override def toString = "Subscribe"
   }
 
-  case object Unsubscribe extends Action {
+  object Unsubscribe extends Action {
     override def toString = "Unsubscribe"
+  }
+
+  def apply(name: String) = name match {
+    case "AddPermission" => AddPermission
+    case "ConfirmSubscription" => ConfirmSubscription
+    case "CreateTopic" => CreateTopic
+    case "DeleteTopic" => DeleteTopic
+    case "GetSubscriptionAttributes" => GetSubscriptionAttributes
+    case "GetTopicAttributes" => GetTopicAttributes
+    case "ListSubscriptions" => ListSubscriptions
+    case "ListSubscriptionsByTopic" => ListSubscriptionsByTopic
+    case "ListTopics" => ListTopics
+    case "Publish" => Publish
+    case "RemovePermission" => RemovePermission
+    case "SetSubscriptionAttributes" => SetSubscriptionAttributes
+    case "SetTopicAttributes" => SetTopicAttributes
+    case "Subscribe" => Subscribe
+    case "Unsubscribe" => Unsubscribe
+    case _ => sys.error("Unkown action: " + name)
   }
 
 }
