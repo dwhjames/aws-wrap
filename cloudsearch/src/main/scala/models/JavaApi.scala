@@ -13,14 +13,14 @@ package com.pellucid.aws.cloudsearch {
   object JavaConverters {
 
     def toScala(js: JSearch): Search = aws.cloudsearch.Search(
-        js.domain.getName -> js.domain.getId,
+        js.domain.name -> js.domain.id,
         Option(js.query),
         Option(js.matchExpression).map(toScala),
         js.returnFields.asScala,
         Option(js.facets).map(_.asScala).toSeq.flatten,
         Option(js.facetConstraints).map(_.asScala).toSeq.flatten.map(toScala),
-        //js.getFacetSort,
-        //js.getFacetTops,
+        Option(js.facetSorts).map(_.asScala).toSeq.flatten.map(toScala),
+        Option(js.facetTops).map(_.asScala.mapValues(x => x: Int).toSeq).toSeq.flatten,
         //js.getRanks,
         //js.getScores,
         size = Option(js.size).map(x => x:Int),
@@ -28,7 +28,7 @@ package com.pellucid.aws.cloudsearch {
       )
 
     import aws.cloudsearch.MatchExpressions.MatchExpression
-    import com.pellucid.aws.cloudsearch.models.{ MatchExpression => JMatchExpression, FacetConstraint => JFacetConstraint, Facet => JFacet }
+    import com.pellucid.aws.cloudsearch.models.{ MatchExpression => JMatchExpression, FacetConstraint => JFacetConstraint, Facet => JFacet, Sort => JSort }
     def toJava(m: MatchExpression): JMatchExpression = new JMatchExpression {
       override val underlying = m
       override def toString = m.toString
@@ -37,6 +37,7 @@ package com.pellucid.aws.cloudsearch {
 
     def toScala(m: JMatchExpression): MatchExpression = m.underlying
     def toScala(f: JFacetConstraint): FacetConstraint = f.underlying
+    def toScala(s: JSort): Sort = s.underlying
 
   }
 
@@ -92,6 +93,10 @@ package com.pellucid.aws.cloudsearch.models {
   import scala.collection.JavaConverters._
 
   @BeanInfo
+  class Domain(val name: String, val id: String){
+    override def toString = s"Domain($name, $id)"
+  }
+  @BeanInfo
   class WithFacets[T](val facets: JList[Facet], val body: T) {
     override def toString = s"WithFacets($facets, $body)"
   }
@@ -111,6 +116,8 @@ package com.pellucid.aws.cloudsearch.models {
     def filterValue(name: String, value: Int) = toJava(Filter(name, value))
     def filterValue(name: String, value: String) = toJava(Filter(name, value))
     def filterRange(name: String, from: Int, to: Int) = toJava(Filter(name, scala.Range(from, to)))
+    def filterTo(name: String, to: Int) = toJava(Filter(name, to = Some(to)))
+    def filterFrom(name: String, from: Int) = toJava(Filter(name, from = Some(from)))
     def not(m: MatchExpression) = toJava(Not(toScala(m)))
   }
 
@@ -123,7 +130,28 @@ package com.pellucid.aws.cloudsearch.models {
   }
 
   // TODO
-  trait Sort
+  import aws.cloudsearch.{ Sort => SSort }
+  trait Ordering
+  object Desc extends Ordering
+  object Asc extends Ordering
+  object Order {
+    val DESC = Desc
+    val ASC = Asc
+  }
+  class Sort(val underlying: SSort)
+  class Ordered(override val underlying: SSort, val order: Ordering) extends Sort(underlying)
+
+  object Sort {
+    def alpha(field: String) = new Sort(SSort.Alpha(field))
+    def count(field: String) = new Sort(SSort.Count(field))
+    def max(field: String) = new Sort(SSort.Max(field))
+    def max(field: String, ordering: Ordering) = ordering match {
+      case o: Desc.type => new Sort(-SSort.Max(field))
+      case _ => new Sort(SSort.Max(field))
+    }
+    def sum(field: String) = new Sort(SSort.Sum(field))
+  }
+
   // TODO
   trait Rank
 
@@ -135,7 +163,7 @@ package com.pellucid.aws.cloudsearch.models {
     val returnFields: JList[String],
     val facets: JList[String],
     val facetConstraints: JList[FacetConstraint],
-    val facetSort: JList[Sort],
+    val facetSorts: JList[Sort],
     val facetTops: JMap[String, Integer],
     val ranks: JList[Rank],
     val scores: JMap[String, Range],
@@ -145,37 +173,41 @@ package com.pellucid.aws.cloudsearch.models {
     def this(domain: Domain) = this(domain, null, null, null, null, null, null, null, null, null, null, null)
 
     def withQuery(query: String) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSort, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
     def withMatchExpression(matchExpression: MatchExpression) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSort, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
     // TODO: merge instead of replacing
     @scala.annotation.varargs
     def withReturnFields(returnFields: String*) =
-      new Search(domain, query, matchExpression, returnFields.asJava, facets, facetConstraints, facetSort, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields.asJava, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
     @scala.annotation.varargs
     def withFacets(facets: String*) =
-      new Search(domain, query, matchExpression, returnFields, facets.asJava, facetConstraints, facetSort, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets.asJava, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
     @scala.annotation.varargs
     def withFacetConstraints(facetConstraints: FacetConstraint*) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints.asJava, facetSort, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints.asJava, facetSorts, facetTops, ranks, scores, size, startAt)
 
-    // TODO:
-    // def withFacetSorts(fs: Sort*)
-    // def withFacetTops(fs: (String, Int)*)
+    @scala.annotation.varargs
+    def withFacetSorts(facetSorts: Sort*) =
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts.asJava, facetTops, ranks, scores, size, startAt)
+
+    def withFacetTops(facetTops: JMap[String, Integer]) =
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
+
     // def withRanks(fs: Rank*)
     // def withScores(ss: (String, Range)*)
 
     def withSize(size: Integer) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSort, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
     def startAt(startAt: Integer) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSort, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
     override def toString =
-      s"Search($domain, $query, $matchExpression, $returnFields, $facets, $facetConstraints, $facetSort, $facetTops, $ranks, $scores, $size, $startAt)"
+      s"Search($domain, $query, $matchExpression, $returnFields, $facets, $facetConstraints, $facetSorts, $facetTops, $ranks, $scores, $size, $startAt)"
   }
 }

@@ -26,7 +26,7 @@ import com.pellucid.aws.cloudsearch.models.*;
 
 import static com.pellucid.aws.cloudsearch.models.MatchExpression.*;
 
-// HUMF
+// TODO: HUMF
 import aws.cloudsearch.CloudSearchMetadata;
 
 public class CloudSearchTest {
@@ -197,9 +197,63 @@ public class CloudSearchTest {
         .withFacetConstraints(new FacetConstraint("genre", "Action"));
 
       Result<CloudSearchMetadata, WithFacets<List<Movie>>> result = get(cloudSearch.searchWithFacets(s, movieParser));
-      System.out.println("BODY: " + result.body());
+
       assertTrue("request failed", result.isSuccess());
       assertFalse("empty result", result.body().body().isEmpty());
+    }
+
+
+    @Test
+    public void searchOpenIntervals() throws Exception {
+      MatchExpression ex = field("title", "star wars")
+        .and(not(filterTo("year", 2000)));
+
+      Search s = base
+        .withMatchExpression(ex);
+
+      Result<CloudSearchMetadata, List<Movie>> result = get(cloudSearch.search(s, movieParser));
+
+      assertTrue("request failed", result.isSuccess());
+      assertFalse("empty result", result.body().isEmpty());
+    }
+
+    @Test
+    public void sortFacetsByCountGenreDescending() throws Exception {
+      Search s = base
+        .withQuery("star wars")
+        .withFacets("genre")
+        .withFacetSorts(Sort.max("genre", Order.DESC()));
+
+      Result<CloudSearchMetadata, List<Movie>> result = get(cloudSearch.search(s, movieParser));
+
+      assertTrue("request failed", result.isSuccess());
+      assertFalse("empty result", result.body().isEmpty());
+    }
+
+    @Test
+    public void maxNumberOfFacetConstraints() throws Exception {
+      Map<String, Integer> tops = new HashMap<String, Integer>(){{
+        put("genre", 2);
+      }};
+
+      Search s = base
+        .withQuery("star wars")
+        .withFacets("genre")
+        .withFacetTops(tops);
+
+      Result<CloudSearchMetadata, WithFacets<List<Movie>>> result = get(cloudSearch.searchWithFacets(s, movieParser));
+
+      assertTrue("request failed", result.isSuccess());
+      assertFalse("empty result", result.body().body().isEmpty());
+
+      List<String> constraints = new ArrayList<String>();
+
+      for(Facet f : result.body().facets()){
+        constraints.addAll(f.constraints().keySet());
+      }
+
+      assertEquals("Unexpected constraints result", 2, constraints.size());
+
     }
 
 }
