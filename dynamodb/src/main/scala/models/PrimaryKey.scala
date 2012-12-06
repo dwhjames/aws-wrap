@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package aws.dynamodb.models
+package aws.dynamodb
 
 /**
  * An element of a Key schema: can be a hash key or a range key.

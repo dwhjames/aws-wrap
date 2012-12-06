@@ -41,20 +41,20 @@ public class KeyValue {
         return rangeKeyElement;
     }
 
-    public aws.dynamodb.models.KeyValue toScala() {
+    public aws.dynamodb.KeyValue toScala() {
         if (rangeKeyElement == null) {
-            return new aws.dynamodb.models.HashKeyValue(hashKeyElement.toScala());
+            return new aws.dynamodb.HashKeyValue(hashKeyElement.toScala());
         } else {
-            return new aws.dynamodb.models.CompositeKeyValue(hashKeyElement.toScala(), rangeKeyElement.toScala());
+            return new aws.dynamodb.CompositeKeyValue(hashKeyElement.toScala(), rangeKeyElement.toScala());
         }
     }
 
-    public static KeyValue fromScala(aws.dynamodb.models.KeyValue sKeyValue) {
+    public static KeyValue fromScala(aws.dynamodb.KeyValue sKeyValue) {
         if (sKeyValue == null) return null;
         AttributeValue rangeKeyElement = null;
         AttributeValue hashKeyElement = AttributeValue.fromScala(sKeyValue.hashKeyElement());
-        if (sKeyValue instanceof aws.dynamodb.models.CompositeKeyValue) {
-            rangeKeyElement = AttributeValue.fromScala(((aws.dynamodb.models.CompositeKeyValue)sKeyValue).rangeKeyElement());
+        if (sKeyValue instanceof aws.dynamodb.CompositeKeyValue) {
+            rangeKeyElement = AttributeValue.fromScala(((aws.dynamodb.CompositeKeyValue)sKeyValue).rangeKeyElement());
         }
         return new KeyValue(hashKeyElement, rangeKeyElement);
     }

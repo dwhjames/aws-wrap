@@ -12,23 +12,10 @@ import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
 
-import com.pellucid.aws.dynamodb.models.AttributeValue;
-import com.pellucid.aws.dynamodb.models.BatchGetResponse;
-import com.pellucid.aws.dynamodb.models.BatchWriteResponse;
-import com.pellucid.aws.dynamodb.models.Expected;
-import com.pellucid.aws.dynamodb.models.GetRequest;
-import com.pellucid.aws.dynamodb.models.ItemResponse;
-import com.pellucid.aws.dynamodb.models.KeyCondition;
-import com.pellucid.aws.dynamodb.models.KeyValue;
-import com.pellucid.aws.dynamodb.models.PrimaryKey;
-import com.pellucid.aws.dynamodb.models.ProvisionedThroughput;
-import com.pellucid.aws.dynamodb.models.Query;
-import com.pellucid.aws.dynamodb.models.QueryResponse;
-import com.pellucid.aws.dynamodb.models.TableDescription;
-import com.pellucid.aws.dynamodb.models.WriteRequest;
-import com.pellucid.aws.internal.AWSJavaConversions;
-import com.pellucid.aws.internal.Lists;
+import com.pellucid.aws.internal.*;
 import com.pellucid.aws.results.SimpleResult;
+
+import com.pellucid.aws.dynamodb.models.*;
 
 public class DynamoDB {
 
@@ -84,8 +71,8 @@ public class DynamoDB {
             PrimaryKey keySchema,
             ProvisionedThroughput provisionedThroughput) {
         return AWSJavaConversions.toJavaSimpleResult(aws.dynamodb.DynamoDB.createTable(tableName, keySchema.toScala(), provisionedThroughput.toScala(), scalaRegion, aws.core.AWS.defaultExecutionContext()),
-                new Mapper<aws.dynamodb.models.TableDescription, TableDescription>() {
-            @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
+                new Mapper<aws.dynamodb.TableDescription, TableDescription>() {
+            @Override public TableDescription apply(aws.dynamodb.TableDescription tableDesc) {
                 return TableDescription.fromScala(tableDesc);
             }
         });
@@ -112,8 +99,8 @@ public class DynamoDB {
                         provisionedThroughput.toScala(),
                         scalaRegion,
                         aws.core.AWS.defaultExecutionContext()),
-                        new Mapper<aws.dynamodb.models.TableDescription, TableDescription>() {
-                    @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
+                        new Mapper<aws.dynamodb.TableDescription, TableDescription>() {
+                    @Override public TableDescription apply(aws.dynamodb.TableDescription tableDesc) {
                         return TableDescription.fromScala(tableDesc);
                     }
                 });
@@ -159,8 +146,8 @@ public class DynamoDB {
     public Future<SimpleResult<TableDescription>> describeTable(String tableName) {
         return AWSJavaConversions.toJavaSimpleResult(
                 aws.dynamodb.DynamoDB.describeTable(tableName, scalaRegion, aws.core.AWS.defaultExecutionContext()),
-                new Mapper<aws.dynamodb.models.TableDescription, TableDescription>() {
-                    @Override public TableDescription apply(aws.dynamodb.models.TableDescription tableDesc) {
+                new Mapper<aws.dynamodb.TableDescription, TableDescription>() {
+                    @Override public TableDescription apply(aws.dynamodb.TableDescription tableDesc) {
                         return TableDescription.fromScala(tableDesc);
                     }
                 }
@@ -196,15 +183,15 @@ public class DynamoDB {
             Map<String, Expected> expected,
             ReturnValues returnValues) {
         aws.dynamodb.Item sItem = scalaItemFromMap(item);
-        Map<String, aws.dynamodb.models.Expected> sExpected = new HashMap<String, aws.dynamodb.models.Expected>();
+        Map<String, aws.dynamodb.Expected> sExpected = new HashMap<String, aws.dynamodb.Expected>();
         for (String key: expected.keySet()) {
             sExpected.put(key, expected.get(key).toScala());
         }
         scala.Enumeration.Value rv;
         if (returnValues == ReturnValues.ALL_OLD) {
-            rv = aws.dynamodb.models.ReturnValues$.MODULE$.ALL_OLD();
+            rv = aws.dynamodb.ReturnValues$.MODULE$.ALL_OLD();
         } else {
-            rv = aws.dynamodb.models.ReturnValues$.MODULE$.NONE();
+            rv = aws.dynamodb.ReturnValues$.MODULE$.NONE();
         }
         return itemResponseConvert(
                 aws.dynamodb.DynamoDB.putItem(
@@ -256,8 +243,8 @@ public class DynamoDB {
     public Future<SimpleResult<QueryResponse>> query(Query query) {
         return AWSJavaConversions.toJavaSimpleResult(
                 aws.dynamodb.DynamoDB.query(query.toScala(), scalaRegion, aws.core.AWS.defaultExecutionContext()),
-                new Mapper<aws.dynamodb.models.QueryResponse, QueryResponse>() {
-                    @Override public QueryResponse apply(aws.dynamodb.models.QueryResponse result) {
+                new Mapper<aws.dynamodb.QueryResponse, QueryResponse>() {
+                    @Override public QueryResponse apply(aws.dynamodb.QueryResponse result) {
                         return QueryResponse.fromScala(result);
                     }
                 });
@@ -279,8 +266,8 @@ public class DynamoDB {
                         Scala.Option(scanFilter == null ? null : scanFilter.toScala()),
                         Scala.Option(exclusiveStartKey == null ? null : exclusiveStartKey.toScala()),
                         scalaRegion, aws.core.AWS.defaultExecutionContext()),
-                        new Mapper<aws.dynamodb.models.QueryResponse, QueryResponse>() {
-                    @Override public QueryResponse apply(aws.dynamodb.models.QueryResponse result) {
+                        new Mapper<aws.dynamodb.QueryResponse, QueryResponse>() {
+                    @Override public QueryResponse apply(aws.dynamodb.QueryResponse result) {
                         return QueryResponse.fromScala(result);
                     }
                 });
@@ -321,11 +308,11 @@ public class DynamoDB {
                 });
     }
 
-    private static <MS extends aws.core.Metadata> Future<SimpleResult<ItemResponse>> itemResponseConvert(Future<aws.core.Result<MS, aws.dynamodb.models.ItemResponse>> scalaResponse) {
+    private static <MS extends aws.core.Metadata> Future<SimpleResult<ItemResponse>> itemResponseConvert(Future<aws.core.Result<MS, aws.dynamodb.ItemResponse>> scalaResponse) {
         return AWSJavaConversions.toJavaSimpleResult(
                 scalaResponse,
-                new Mapper<aws.dynamodb.models.ItemResponse, ItemResponse>() {
-                    @Override public ItemResponse apply(aws.dynamodb.models.ItemResponse resp) {
+                new Mapper<aws.dynamodb.ItemResponse, ItemResponse>() {
+                    @Override public ItemResponse apply(aws.dynamodb.ItemResponse resp) {
                         return ItemResponse.fromScala(resp);
                     }
                 }

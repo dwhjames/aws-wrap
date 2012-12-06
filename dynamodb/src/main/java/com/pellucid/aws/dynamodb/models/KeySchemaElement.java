@@ -22,16 +22,16 @@ public class KeySchemaElement {
         return this.attributeType;
     }
 
-    public aws.dynamodb.models.KeySchemaElement toScala() {
+    public aws.dynamodb.KeySchemaElement toScala() {
         switch (attributeType) {
-        case StringType: return new aws.dynamodb.models.StringKey(attributeName);
-        case NumberType: return new aws.dynamodb.models.NumberKey(attributeName);
-        case BinaryType: return new aws.dynamodb.models.BinaryKey(attributeName);
+        case StringType: return new aws.dynamodb.StringKey(attributeName);
+        case NumberType: return new aws.dynamodb.NumberKey(attributeName);
+        case BinaryType: return new aws.dynamodb.BinaryKey(attributeName);
         }
         return null; // Never happens
     }
 
-    public static KeySchemaElement fromScala(aws.dynamodb.models.KeySchemaElement scalaKSE) {
+    public static KeySchemaElement fromScala(aws.dynamodb.KeySchemaElement scalaKSE) {
         if ("S".equals(scalaKSE.typeCode())) return new KeySchemaElement(scalaKSE.attribute(), AttributeType.StringType);
         if ("N".equals(scalaKSE.typeCode())) return new KeySchemaElement(scalaKSE.attribute(), AttributeType.NumberType);
         if ("B".equals(scalaKSE.typeCode())) return new KeySchemaElement(scalaKSE.attribute(), AttributeType.BinaryType);

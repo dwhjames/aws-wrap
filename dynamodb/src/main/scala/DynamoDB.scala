@@ -28,7 +28,6 @@ import aws.core.parsers._
 import aws.core.utils._
 import aws.core.signature._
 
-import aws.dynamodb.models._
 import aws.dynamodb.JsonFormats._
 import aws.dynamodb.DDBParsers._
 

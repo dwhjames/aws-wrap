@@ -26,8 +26,8 @@ public class Expected {
         return exists;
     }
 
-    public aws.dynamodb.models.Expected toScala() {
-        return new aws.dynamodb.models.Expected(Scala.Option((Object)exists), Scala.Option(value.toScala()));
+    public aws.dynamodb.Expected toScala() {
+        return new aws.dynamodb.Expected(Scala.Option((Object)exists), Scala.Option(value.toScala()));
     }
 
 }

@@ -16,8 +16,6 @@
 
 package aws.dynamodb
 
-import aws.dynamodb.models._
-
 sealed trait WriteRequest
 
 case class PutRequest(item: Map[String, DDBAttribute]) extends WriteRequest

@@ -19,10 +19,10 @@ public class BatchWriteResponse {
 
     public Map<String, QueryResponse> responses() {
         return AWSJavaConversions.toJavaMap(sResponse.responses().toMap(
-                Predef.<Tuple2<String, aws.dynamodb.models.QueryResponse>>conforms()
-                ), new Mapper<aws.dynamodb.models.QueryResponse, QueryResponse>(){
+                Predef.<Tuple2<String, aws.dynamodb.QueryResponse>>conforms()
+                ), new Mapper<aws.dynamodb.QueryResponse, QueryResponse>(){
             @Override
-            public QueryResponse apply(aws.dynamodb.models.QueryResponse sResponse) {
+            public QueryResponse apply(aws.dynamodb.QueryResponse sResponse) {
                 return QueryResponse.fromScala(sResponse);
             }
         });

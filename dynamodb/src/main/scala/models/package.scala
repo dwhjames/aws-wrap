@@ -14,71 +14,7 @@
  * limitations under the License.
  */
 
-package aws.dynamodb.models
-
-import aws.dynamodb._
-
-/**
- * Action to be used in [[DynamoDB.updateItem]].
- */
-sealed trait Update {
-  def value: DDBAttribute
-  def action: String
-}
-
-object Update {
-
-  case class Put(value: DDBAttribute) extends Update {
-    override def action = "PUT"
-  }
-
-  case class Delete(value: DDBAttribute) extends Update {
-    override def action = "DELETE"
-  }
-
-  case class Add(value: DDBAttribute) extends Update {
-    override def action = "ADD"
-  }
-
-  def put[T](value: T)(implicit wrt: AttributeWrite[T]) = Put(wrt.writes(value))
-
-  def delete[T](value: T)(implicit wrt: AttributeWrite[T]) = Delete(wrt.writes(value))
-
-  def add[T](value: T)(implicit wrt: AttributeWrite[T]) = Add(wrt.writes(value))
-
-  def apply(action: String, value: DDBAttribute) = action.toLowerCase match {
-    case "put" => Put(value)
-    case "delete" => Delete(value)
-    case "add" => Add(value)
-    case action => sys.error("Unkown action for Update: " + action)
-  }
-}
-
-sealed trait KeyValue {
-  def hashKeyElement: DDBAttribute
-}
-
-case class HashKeyValue(hashKeyElement: DDBAttribute) extends KeyValue
-
-case class CompositeKeyValue(hashKeyElement: DDBAttribute, rangeKeyElement: DDBAttribute) extends KeyValue
-
-object KeyValue {
-  def apply(value: String) = new HashKeyValue(DDBString(value))
-  def apply(value: Long) = new HashKeyValue(DDBNumber(value))
-  def apply(value: Array[Byte]) = new HashKeyValue(DDBBinary(value))
-
-  def apply(hash: String, range: String) = new CompositeKeyValue(DDBString(hash), DDBString(range))
-  def apply(hash: Long, range: String) = new CompositeKeyValue(DDBNumber(hash), DDBString(range))
-  def apply(hash: Array[Byte], range: String) = new CompositeKeyValue(DDBBinary(hash), DDBString(range))
-
-  def apply(hash: String, range: Long) = new CompositeKeyValue(DDBString(hash), DDBNumber(range))
-  def apply(hash: Long, range: Long) = new CompositeKeyValue(DDBNumber(hash), DDBNumber(range))
-  def apply(hash: Array[Byte], range: Long) = new CompositeKeyValue(DDBBinary(hash), DDBNumber(range))
-
-  def apply(hash: String, range: Array[Byte]) = new CompositeKeyValue(DDBString(hash), DDBBinary(range))
-  def apply(hash: Long, range: Array[Byte]) = new CompositeKeyValue(DDBNumber(hash), DDBBinary(range))
-  def apply(hash: Array[Byte], range: Array[Byte]) = new CompositeKeyValue(DDBBinary(hash), DDBBinary(range))
-}
+package aws.dynamodb
 
 case class ProvisionedThroughput(readCapacityUnits: Long, writeCapacityUnits: Long)
 

@@ -15,9 +15,9 @@ import scala.collection.JavaConversions;
 
 public class QueryResponse {
 
-    private aws.dynamodb.models.QueryResponse scalaResponse;
+    private aws.dynamodb.QueryResponse scalaResponse;
 
-    private QueryResponse(aws.dynamodb.models.QueryResponse scalaResponse) {
+    private QueryResponse(aws.dynamodb.QueryResponse scalaResponse) {
         this.scalaResponse = scalaResponse;
     }
 
@@ -53,7 +53,7 @@ public class QueryResponse {
         return this.scalaResponse.consumedCapacityUnits().underlying();
     }
 
-    public static QueryResponse fromScala(aws.dynamodb.models.QueryResponse scalaResponse) {
+    public static QueryResponse fromScala(aws.dynamodb.QueryResponse scalaResponse) {
         return new QueryResponse(scalaResponse);
     }
 

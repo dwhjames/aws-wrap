@@ -2,12 +2,10 @@ package com.pellucid.aws.dynamodb.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import akka.dispatch.Mapper;
 
-import com.pellucid.aws.internal.AWSJavaConversions;
-import com.pellucid.aws.internal.Lists;
+import com.pellucid.aws.internal.*;
 
 public class GetRequest {
 
@@ -30,8 +28,8 @@ public class GetRequest {
     }
 
     public GetRequest(String tableName, List<KeyValue> keys, List<String> attributesToGet, boolean consistentRead) {
-        scala.collection.Seq<aws.dynamodb.models.KeyValue> sKeys = AWSJavaConversions.toSeq(Lists.map(keys, new Mapper<KeyValue, aws.dynamodb.models.KeyValue>(){
-            @Override public aws.dynamodb.models.KeyValue apply(KeyValue kv) {
+        scala.collection.Seq<aws.dynamodb.KeyValue> sKeys = AWSJavaConversions.toSeq(Lists.map(keys, new Mapper<KeyValue, aws.dynamodb.KeyValue>(){
+            @Override public aws.dynamodb.KeyValue apply(KeyValue kv) {
                 return kv.toScala();
             }
         }));

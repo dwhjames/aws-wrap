@@ -1,6 +1,7 @@
 package com.pellucid.aws.dynamodb;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -18,11 +19,14 @@ import com.pellucid.aws.dynamodb.models.AttributeValue;
 import com.pellucid.aws.dynamodb.models.BatchGetResponse;
 import com.pellucid.aws.dynamodb.models.BatchWriteResponse;
 import com.pellucid.aws.dynamodb.models.GetRequest;
+import com.pellucid.aws.dynamodb.models.ItemResponse;
 import com.pellucid.aws.dynamodb.models.KeySchemaElement;
 import com.pellucid.aws.dynamodb.models.KeySchemaElement.AttributeType;
 import com.pellucid.aws.dynamodb.models.KeyValue;
 import com.pellucid.aws.dynamodb.models.PrimaryKey;
 import com.pellucid.aws.dynamodb.models.ProvisionedThroughput;
+import com.pellucid.aws.dynamodb.models.Query;
+import com.pellucid.aws.dynamodb.models.QueryResponse;
 import com.pellucid.aws.dynamodb.models.TableDescription;
 import com.pellucid.aws.dynamodb.models.TableStatus;
 import com.pellucid.aws.dynamodb.models.WriteRequest;
@@ -65,7 +69,7 @@ public class DynamoDBTest {
         }
         Thread.sleep(2000);
     }
-/*
+
     @Test
     public void createAndDeleteTable() throws Exception {
         String table = "java-create-table";
@@ -122,7 +126,7 @@ public class DynamoDBTest {
         SimpleResult<Object> result2 = get(ddb.deleteTable(table));
         assertTrue(result2.toString(), result2.isSuccess());
     }
-*/
+
     @Test
     public void batch() throws Exception {
         String table = "java-batch";

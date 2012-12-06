@@ -16,8 +16,6 @@
 
 package aws.dynamodb
 
-import aws.dynamodb.models._
-
 sealed trait KeyCondition
 
 case class EqualTo(value: DDBAttribute) extends KeyCondition

@@ -51,8 +51,8 @@ public class TableDescription {
         return this.size;
     }
 
-    public aws.dynamodb.models.TableDescription toScala() {
-        return new aws.dynamodb.models.TableDescription(
+    public aws.dynamodb.TableDescription toScala() {
+        return new aws.dynamodb.TableDescription(
                 name,
                 aws.dynamodb.Status$.MODULE$.apply(status.toString()),
                 creationDateTime,
@@ -61,7 +61,7 @@ public class TableDescription {
                 Scala.Option((Object)size));
     }
 
-    public static TableDescription fromScala(aws.dynamodb.models.TableDescription tableDesc) {
+    public static TableDescription fromScala(aws.dynamodb.TableDescription tableDesc) {
         return new TableDescription(
             tableDesc.name(),
             TableStatus.valueOf(tableDesc.status().toString()),

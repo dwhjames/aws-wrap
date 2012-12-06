@@ -18,11 +18,11 @@ public class ProvisionedThroughput {
         return this.writeCapacityUnits;
     }
 
-    public aws.dynamodb.models.ProvisionedThroughput toScala() {
-        return new aws.dynamodb.models.ProvisionedThroughput(readCapacityUnits, writeCapacityUnits);
+    public aws.dynamodb.ProvisionedThroughput toScala() {
+        return new aws.dynamodb.ProvisionedThroughput(readCapacityUnits, writeCapacityUnits);
     }
 
-    public static ProvisionedThroughput fromScala(aws.dynamodb.models.ProvisionedThroughput scalaTP) {
+    public static ProvisionedThroughput fromScala(aws.dynamodb.ProvisionedThroughput scalaTP) {
         return new ProvisionedThroughput(scalaTP.readCapacityUnits(), scalaTP.writeCapacityUnits());
     }
 

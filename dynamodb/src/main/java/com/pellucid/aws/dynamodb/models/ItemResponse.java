@@ -28,7 +28,7 @@ public class ItemResponse {
         return this.consumedCapacityUnits;
     }
 
-    public static ItemResponse fromScala(aws.dynamodb.models.ItemResponse scalaResponse) {
+    public static ItemResponse fromScala(aws.dynamodb.ItemResponse scalaResponse) {
         Map<String, AttributeValue> item = new HashMap<String, AttributeValue>();
         for (String key: JavaConversions.asJavaIterable(scalaResponse.item().keys())) {
             item.put(key, AttributeValue.fromScala(scalaResponse.item().apply(key)));
