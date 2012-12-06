@@ -29,8 +29,8 @@ object SNSParsers {
     Success(SNSMeta(r.xml \\ "RequestId" text))
   }
 
-  implicit def listTopicsResultParser = Parser[ListTopicsResult] { r: Response =>
-    Success(ListTopicsResult(
+  implicit def listTopicsResultParser = Parser[ListTopics] { r: Response =>
+    Success(ListTopics(
       (r.xml \\ "TopicArn").map(_.text),
       (r.xml \\ "NextToken").headOption.map(_.text)))
   }
@@ -53,9 +53,9 @@ object SNSParsers {
 
   def publishResultParser = safeResultParser(publishParser)
 
-  implicit def topicAttributesResultParser = Parser[TopicAttributesResult] { r: Response =>
+  implicit def topicAttributesResultParser = Parser[TopicAttributes] { r: Response =>
     val entries = parseAttributes(r.xml \\ "Attributes" head)
-    Success(TopicAttributesResult(
+    Success(TopicAttributes(
       entries("TopicArn"),
       entries("Owner"),
       entries("DisplayName"),
@@ -67,9 +67,9 @@ object SNSParsers {
       entries.get("EffectiveDeliveryPolicy").map(Json.parse(_))))
   }
 
-  implicit def subscriptionAttributesResultParser = Parser[SubscriptionAttributesResult] { r: Response =>
+  implicit def subscriptionAttributesResultParser = Parser[SubscriptionAttributes] { r: Response =>
     val entries = parseAttributes(r.xml \\ "Attributes" head)
-    Success(SubscriptionAttributesResult(
+    Success(SubscriptionAttributes(
       entries("SubscriptionArn"),
       entries("TopicArn"),
       entries("Owner"),
@@ -78,9 +78,9 @@ object SNSParsers {
       entries.get("EffectiveDeliveryPolicy").map(Json.parse(_))))
   }
 
-  implicit def subscriptionListResultParser = Parser[SubscriptionListResult] { r: Response =>
+  implicit def subscriptionListResultParser = Parser[SubscriptionList] { r: Response =>
     Success(
-      SubscriptionListResult(
+      SubscriptionList(
         (r.xml \\ "Subscriptions").map(parseSubscription(_)).flatten,
         (r.xml \\ "NextToken").headOption.map(_.text)))
   }

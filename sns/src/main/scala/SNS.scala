@@ -129,8 +129,8 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    *
    * @param subscriptionArn The ARN of the subscription whose properties you want to get.
    */
-  def getSubscriptionAttributes(subscriptionArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionAttributesResult]] = {
-    get[SubscriptionAttributesResult](
+  def getSubscriptionAttributes(subscriptionArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionAttributes]] = {
+    get[SubscriptionAttributes](
       Action("SubscriptionAttributesResult"),
       SubscriptionArn(subscriptionArn))
   }
@@ -141,8 +141,8 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    *
    * @param topicArn The ARN of the topic whose properties you want to get.
    */
-  def getTopicAttributes(topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, TopicAttributesResult]] = {
-    get[TopicAttributesResult](Action("GetTopicAttributes"), TopicArn(topicArn))
+  def getTopicAttributes(topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, TopicAttributes]] = {
+    get[TopicAttributes](Action("GetTopicAttributes"), TopicArn(topicArn))
   }
 
   /**
@@ -153,9 +153,9 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    *
    * @param nextToken Token returned by the previous `listSubscriptions` request.
    */
-  def listSubscriptions(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
+  def listSubscriptions(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionList]] = {
     val params = Seq(Action("ListSubscriptions")) ++ NextToken(nextToken)
-    get[SubscriptionListResult](params: _*)
+    get[SubscriptionList](params: _*)
   }
 
   /**
@@ -167,11 +167,11 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    * @param topicArn The ARN of the topic for which you wish to find subscriptions.
    * @param nextToken Token returned by the previous 'listSubscriptionsByTopic` request.
    */
-  def listSubscriptionsByTopic(topicArn: String, nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionListResult]] = {
+  def listSubscriptionsByTopic(topicArn: String, nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionList]] = {
     val params = Seq(
       Action("ListSubscriptionsByTopic"),
       TopicArn(topicArn)) ++ NextToken(nextToken)
-    get[SubscriptionListResult](params: _*)
+    get[SubscriptionList](params: _*)
   }
 
   /**
@@ -181,9 +181,9 @@ object SNS extends V2[SNSMeta](version = "2010-03-31") {
    *
    * @param nextToken Token returned by the previous `listTopics` request.
    */
-  def listTopics(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, ListTopicsResult]] = {
+  def listTopics(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, ListTopics]] = {
     val params = Seq(Action("ListTopics")) ++ NextToken(nextToken)
-    get[ListTopicsResult](params: _*)
+    get[ListTopics](params: _*)
   }
 
   /**

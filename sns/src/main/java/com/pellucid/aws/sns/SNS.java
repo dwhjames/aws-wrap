@@ -1,17 +1,16 @@
 package com.pellucid.aws.sns;
 
+import java.util.List;
+
 import scala.collection.JavaConversions;
 import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
-
-import java.util.List;
-
 import akka.dispatch.Mapper;
 
 import com.pellucid.aws.internal.AWSJavaConversions;
-import com.pellucid.aws.utils.Lists;
 import com.pellucid.aws.results.Result;
-import com.pellucid.aws.sns.SNSRegion;
+import com.pellucid.aws.utils.Identity;
+import com.pellucid.aws.utils.Lists;
 
 public class SNS {
 
@@ -48,13 +47,13 @@ public class SNS {
                 JavaConversions.iterableAsScalaIterable(sActions).toSeq(),
                 this.scalaRegion));
     }
-/*
-    public Future<Result<SNSMeta, SubscriptionResult>> confirmSubscription(
+
+    public Future<Result<SNSMeta, String>> confirmSubscription(
             String topicArn,
             String token) {
         return confirmSubscription(topicArn, token, false);
     }
-*/
+
     /**
      * Verifies an endpoint owner's intent to receive messages by validating the token
      * sent to the endpoint by an earlier Subscribe action. If the token is valid, the action creates a new subscription and
@@ -66,19 +65,59 @@ public class SNS {
      *        If the value of this parameter is true and the request has an AWS signature,
      *        then only the topic owner and the subscription owner can unsubscribe the endpoint.
      */
-/*    public Future<Result<SNSMeta, SubscriptionResult>> confirmSubscription(
+    public Future<Result<SNSMeta, String>> confirmSubscription(
             String topicArn,
             String token,
             boolean authenticateOnUnsubscribe) {
-        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.confirmSubscription(topicArn, token, authenticateOnUnsubscribe),
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.confirmSubscription(topicArn, token, authenticateOnUnsubscribe, this.scalaRegion),
                 new MetadataConvert(),
-                new Mapper<aws.sns.SubscriptionResult, SubscriptionResult>() {
-            @Override public SubscriptionResult apply(aws.sns.SubscriptionResult result) {
-                return SubscriptionResult.fromScala(result);
+                new Identity<String>()
+        );
+    }
+
+    /**
+     * Deletes a topic and all its subscriptions.
+     * Deleting a topic might prevent some messages previously sent to the topic from being delivered to subscribers.
+     * This action is idempotent, so deleting a topic that does not exist will not result in an error.
+     *
+     * @param topicArn The ARN of the topic you want to delete.
+     */
+    public Future<Result<SNSMeta, Object>> deleteTopic(String topicArn) {
+        return convertEmptyResult(aws.sns.SNS.deleteTopic(topicArn, this.scalaRegion));
+    }
+
+    /**
+     * Creates a topic to which notifications can be published. Users can create at most 100 topics.
+     * For more information, see http://aws.amazon.com/sns. This action is idempotent, so if the requester already owns a topic
+     * with the specified name, that topic's ARN will be returned without creating a new topic.
+     *
+     * Constraints: Topic names must be made up of only uppercase and lowercase ASCII letters, numbers, underscores, and hyphens,
+     * and must be between 1 and 256 characters long.
+     *
+     * @param name The name of the topic you want to create.
+     */
+    public Future<Result<SNSMeta, String>> createTopic(String name) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.createTopic(name, this.scalaRegion),
+                new MetadataConvert(),
+                new Identity<String>()
+        );
+    }
+
+    /**
+     * Returns all of the properties of a subscription.
+     *
+     * @param subscriptionArn The ARN of the subscription whose properties you want to get.
+     */
+    public Future<Result<SNSMeta, SubscriptionAttributes>> getSubscriptionAttributes(String subscriptionArn) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.getSubscriptionAttributes(subscriptionArn, scalaRegion),
+                new MetadataConvert(),
+                new Mapper<aws.sns.SubscriptionAttributes, SubscriptionAttributes>() {
+            @Override public SubscriptionAttributes apply(aws.sns.SubscriptionAttributes attributes) {
+                return SubscriptionAttributes.fromScala(attributes);
             }
         });
     }
-*/
+
     private static Future<Result<SNSMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.sns.SNSMeta, BoxedUnit>> scalaResult) {
         return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new Mapper<BoxedUnit, Object>() {
             @Override public Object apply(BoxedUnit unit) {
