@@ -256,4 +256,17 @@ public class CloudSearchTest {
 
     }
 
+    @Test
+    public void orderResults() throws Exception {
+      Search s = base
+        .withQuery("star wars")
+        .withRanks(Rank.field("year", Order.DESC()), Rank.textRelevance(Order.DESC()));
+
+      Result<CloudSearchMetadata, List<Movie>> result =
+        get(cloudSearch.search(s, movieParser));
+
+      assertTrue("request failed", result.isSuccess());
+      assertFalse("empty result", result.body().isEmpty());
+    }
+
 }

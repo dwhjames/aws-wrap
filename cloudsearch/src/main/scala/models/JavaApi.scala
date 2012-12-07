@@ -21,14 +21,14 @@ package com.pellucid.aws.cloudsearch {
         Option(js.facetConstraints).map(_.asScala).toSeq.flatten.map(toScala),
         Option(js.facetSorts).map(_.asScala).toSeq.flatten.map(toScala),
         Option(js.facetTops).map(_.asScala.mapValues(x => x: Int).toSeq).toSeq.flatten,
-        //js.getRanks,
+        Option(js.ranks).map(_.asScala).toSeq.flatten.map(toScala),
         //js.getScores,
         size = Option(js.size).map(x => x:Int),
         startAt = Option(js.startAt).map(x => x:Int)
       )
 
     import aws.cloudsearch.MatchExpressions.MatchExpression
-    import com.pellucid.aws.cloudsearch.models.{ MatchExpression => JMatchExpression, FacetConstraint => JFacetConstraint, Facet => JFacet, Sort => JSort }
+    import com.pellucid.aws.cloudsearch.models.{ MatchExpression => JMatchExpression, FacetConstraint => JFacetConstraint, Facet => JFacet, Sort => JSort, Rank => JRank }
     def toJava(m: MatchExpression): JMatchExpression = new JMatchExpression {
       override val underlying = m
       override def toString = m.toString
@@ -38,6 +38,7 @@ package com.pellucid.aws.cloudsearch {
     def toScala(m: JMatchExpression): MatchExpression = m.underlying
     def toScala(f: JFacetConstraint): FacetConstraint = f.underlying
     def toScala(s: JSort): Sort = s.underlying
+    def toScala(r: JRank): Rank = r.underlying
 
   }
 
@@ -152,8 +153,29 @@ package com.pellucid.aws.cloudsearch.models {
     def sum(field: String) = new Sort(SSort.Sum(field))
   }
 
-  // TODO
-  trait Rank
+  import aws.cloudsearch.{ Orderings, Rank => SRank }
+  class Rank(val underlying: SRank)
+  object Rank {
+    import SRank._
+    def textRelevance() = new Rank(TextRelevance())
+    def textRelevance(ordering: Ordering) = ordering match {
+      case o: Desc.type => new Rank(TextRelevance(Some(Orderings.DESC)))
+      case _ => new Rank(TextRelevance(Some(Orderings.ASC)))
+    }
+    def field(name: String) = new Rank(Field(name))
+    def field(name: String, ordering: Ordering) = ordering match {
+      case o: Desc.type => new Rank(Field(name, Some(Orderings.DESC)))
+      case _ => new Rank(Field(name, Some(Orderings.ASC)))
+    }
+
+    def rankExpr(name: String) = new Rank(RankExpr(name, None))
+    def rankExpr(name: String, expr: String) = new Rank(RankExpr(name, Some(expr)))
+    def rankExpr(name: String, expr: String, ordering: Ordering) = ordering match {
+      case o: Desc.type => new Rank(RankExpr(name, Some(expr), Some(Orderings.DESC)))
+      case _ => new Rank(RankExpr(name, Some(expr), Some(Orderings.ASC)))
+    }
+  }
+
 
   @BeanInfo
   class Search(
@@ -198,7 +220,10 @@ package com.pellucid.aws.cloudsearch.models {
     def withFacetTops(facetTops: JMap[String, Integer]) =
       new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
-    // def withRanks(fs: Rank*)
+    @scala.annotation.varargs
+    def withRanks(ranks: Rank*) =
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks.asJava, scores, size, startAt)
+
     // def withScores(ss: (String, Range)*)
 
     def withSize(size: Integer) =
