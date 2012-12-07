@@ -15,7 +15,7 @@ object SNSSpec extends Specification {
 
   implicit val region = SNSRegion.EU_WEST_1
 
-  "SimpleDB API" should {
+  "SNS API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
 
     def checkResult[T](r: Result[SNSMeta, T]) = r match {
