@@ -156,6 +156,50 @@ public class SNS {
         });
     }
 
+    public Future<Result<SNSMeta, SubscriptionList>> listSubscriptionsByTopic(String topicArn) {
+        listSubscriptionsByTopic(topicArn, null);
+    }
+
+    /**
+     * Returns a list of the subscriptions to a specific topic.
+     * Each call returns a limited list of subscriptions, up to 100.
+     * If there are more subscriptions, a `nextToken` is also returned.
+     * Use the `nextToken` parameter in a new `listSubscriptionsByTopic` call to get further results.
+     *
+     * @param topicArn The ARN of the topic for which you wish to find subscriptions.
+     * @param nextToken Token returned by the previous 'listSubscriptionsByTopic` request.
+     */
+    public Future<Result<SNSMeta, SubscriptionList>> listSubscriptionsByTopic(String topicArn, String nextToken) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.listSubscriptionsByToken(topicArn, Scala.Option(nextToken), scalaRegion),
+                new MetadataConvert(),
+                new Mapper<aws.sns.SubscriptionList, SubscriptionList>() {
+            @Override public SubscriptionList apply(aws.sns.SubscriptionList attributes) {
+                return SubscriptionList.fromScala(attributes);
+            }
+        });
+    }
+
+    public Future<Result<SNSMeta, ListTopics>> listTopics() {
+        return listTopics(null);
+    }
+
+    /**
+     * Returns a list of the requester's topics. Each call returns a limited list of topics, up to 100.
+     * If there are more topics, a `nextToken` is also returned.
+     * Use the `nextToken` parameter in a new `listTopics` call to get further results.
+     *
+     * @param nextToken Token returned by the previous `listTopics` request.
+     */
+    public Future<Result<SNSMeta, ListTopics>> listTopics(String nextToken) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.listTopics(Scala.Option(nextToken), scalaRegion),
+                new MetadataConvert(),
+                new Mapper<aws.sns.ListTopics, ListTopics>() {
+            @Override public ListTopics apply(aws.sns.ListTopics attributes) {
+                return ListTopics.fromScala(attributes);
+            }
+        });
+    }
+
     private static Future<Result<SNSMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.sns.SNSMeta, BoxedUnit>> scalaResult) {
         return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new Mapper<BoxedUnit, Object>() {
             @Override public Object apply(BoxedUnit unit) {
