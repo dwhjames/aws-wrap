@@ -22,13 +22,13 @@ package com.pellucid.aws.cloudsearch {
         Option(js.facetSorts).map(_.asScala).toSeq.flatten.map(toScala),
         Option(js.facetTops).map(_.asScala.mapValues(x => x: Int).toSeq).toSeq.flatten,
         Option(js.ranks).map(_.asScala).toSeq.flatten.map(toScala),
-        //js.getScores,
-        size = Option(js.size).map(x => x:Int),
-        startAt = Option(js.startAt).map(x => x:Int)
+        Option(js.scores).map(_.asScala).toSeq.flatten.map(toScala),
+        Option(js.size).map(x => x:Int),
+        Option(js.startAt).map(x => x:Int)
       )
 
     import aws.cloudsearch.MatchExpressions.MatchExpression
-    import com.pellucid.aws.cloudsearch.models.{ MatchExpression => JMatchExpression, FacetConstraint => JFacetConstraint, Facet => JFacet, Sort => JSort, Rank => JRank }
+    import com.pellucid.aws.cloudsearch.models.{ MatchExpression => JMatchExpression, FacetConstraint => JFacetConstraint, Facet => JFacet, Sort => JSort, Rank => JRank, Score }
     def toJava(m: MatchExpression): JMatchExpression = new JMatchExpression {
       override val underlying = m
       override def toString = m.toString
@@ -39,6 +39,7 @@ package com.pellucid.aws.cloudsearch {
     def toScala(f: JFacetConstraint): FacetConstraint = f.underlying
     def toScala(s: JSort): Sort = s.underlying
     def toScala(r: JRank): Rank = r.underlying
+    def toScala(s: Score): (String, Range) = s.underlying
 
   }
 
@@ -92,6 +93,12 @@ package com.pellucid.aws.cloudsearch.models {
 
   import com.pellucid.aws.cloudsearch.JavaConverters._
   import scala.collection.JavaConverters._
+
+  class Score(val underlying: (String, Range))
+  object Score {
+    def range(name: String, from: Int, to: Int) = new Score(name -> Range(from, to))
+  }
+
 
   @BeanInfo
   class Domain(val name: String, val id: String){
@@ -188,7 +195,7 @@ package com.pellucid.aws.cloudsearch.models {
     val facetSorts: JList[Sort],
     val facetTops: JMap[String, Integer],
     val ranks: JList[Rank],
-    val scores: JMap[String, Range],
+    val scores: JList[Score],
     val size: Integer,
     val startAt: Integer){
 
@@ -224,7 +231,9 @@ package com.pellucid.aws.cloudsearch.models {
     def withRanks(ranks: Rank*) =
       new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks.asJava, scores, size, startAt)
 
-    // def withScores(ss: (String, Range)*)
+    @scala.annotation.varargs
+    def withScores(scores: Score*) =
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores.asJava, size, startAt)
 
     def withSize(size: Integer) =
       new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)

@@ -269,4 +269,29 @@ public class CloudSearchTest {
       assertFalse("empty result", result.body().isEmpty());
     }
 
+    @Test
+    public void orderResultsWithRankExpr() throws Exception {
+      Search s = base
+        .withQuery("star wars")
+        .withRanks(Rank.rankExpr("customExpression", "cos(text_relevance)", Order.DESC()));
+
+      Result<CloudSearchMetadata, List<Movie>> result =
+        get(cloudSearch.search(s, movieParser));
+
+      assertTrue("request failed", result.isSuccess());
+      assertFalse("empty result", result.body().isEmpty());
+    }
+
+     @Test
+     public void filterResultsByScoreRange() throws Exception {
+       Search s = base
+         .withQuery("star wars")
+         .withScores(Score.range("year", 0, 5));
+
+       Result<CloudSearchMetadata, List<Movie>> result =
+         get(cloudSearch.search(s, movieParser));
+
+       assertTrue("request failed", result.isSuccess());
+    }
+
 }
