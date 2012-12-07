@@ -102,19 +102,6 @@ delivery protocols.</p><p>See the <a href="SNS$.html" class="extype" name="aws.s
       </span>
       </h4>
       
-    </li><li name="aws.sns.CreateTopicResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="CreateTopicResultextendsProductwithSerializable"></a>
-      <a id="CreateTopicResult:CreateTopicResult"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="CreateTopicResult.html"><span class="name">CreateTopicResult</span></a><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
     </li><li name="aws.sns.Endpoint" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="EndpointextendsObject"></a>
       <a id="Endpoint:Endpoint"></a>
@@ -128,16 +115,16 @@ delivery protocols.</p><p>See the <a href="SNS$.html" class="extype" name="aws.s
       </span>
       </h4>
       <p class="comment cmt">An endpoint to receive notifications.</p>
-    </li><li name="aws.sns.ListTopicsResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ListTopicsResultextendsProductwithSerializable"></a>
-      <a id="ListTopicsResult:ListTopicsResult"></a>
+    </li><li name="aws.sns.ListTopics" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ListTopicsextendsProductwithSerializable"></a>
+      <a id="ListTopics:ListTopics"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="ListTopicsResult.html"><span class="name">ListTopicsResult</span></a><span class="params">(<span name="topics">topics: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="ListTopics.html"><span class="name">ListTopics</span></a><span class="params">(<span name="topics">topics: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -151,19 +138,6 @@ delivery protocols.</p><p>See the <a href="SNS$.html" class="extype" name="aws.s
       </span>
       <span class="symbol">
         <a href="Message.html"><span class="name">Message</span></a><span class="params">(<span name="default">default: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="http">http: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="https">https: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="email">email: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="emailJson">emailJson: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="sqs">sqs: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.sns.PublishResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PublishResultextendsProductwithSerializable"></a>
-      <a id="PublishResult:PublishResult"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="PublishResult.html"><span class="name">PublishResult</span></a><span class="params">(<span name="messageId">messageId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -212,55 +186,42 @@ delivery protocols.</p><p>See the <a href="SNS$.html" class="extype" name="aws.s
       </span>
       </h4>
       
-    </li><li name="aws.sns.SubscriptionAttributesResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SubscriptionAttributesResultextendsProductwithSerializable"></a>
-      <a id="SubscriptionAttributesResult:SubscriptionAttributesResult"></a>
+    </li><li name="aws.sns.SubscriptionAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SubscriptionAttributesextendsProductwithSerializable"></a>
+      <a id="SubscriptionAttributes:SubscriptionAttributes"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SubscriptionAttributesResult.html"><span class="name">SubscriptionAttributesResult</span></a><span class="params">(<span name="subscriptionArn">subscriptionArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="owner">owner: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="confirmationWasAuthenticated">confirmationWasAuthenticated: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="deliveryPolicy">deliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="effectiveDeliveryPolicy">effectiveDeliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="SubscriptionAttributes.html"><span class="name">SubscriptionAttributes</span></a><span class="params">(<span name="subscriptionArn">subscriptionArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="owner">owner: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="confirmationWasAuthenticated">confirmationWasAuthenticated: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="deliveryPolicy">deliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="effectiveDeliveryPolicy">effectiveDeliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li name="aws.sns.SubscriptionListResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SubscriptionListResultextendsProductwithSerializable"></a>
-      <a id="SubscriptionListResult:SubscriptionListResult"></a>
+    </li><li name="aws.sns.SubscriptionList" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SubscriptionListextendsProductwithSerializable"></a>
+      <a id="SubscriptionList:SubscriptionList"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SubscriptionListResult.html"><span class="name">SubscriptionListResult</span></a><span class="params">(<span name="subscriptions">subscriptions: <span class="extype" name="scala.Seq">Seq</span>[<a href="Subscription.html" class="extype" name="aws.sns.Subscription">Subscription</a>]</span>, <span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="SubscriptionList.html"><span class="name">SubscriptionList</span></a><span class="params">(<span name="subscriptions">subscriptions: <span class="extype" name="scala.Seq">Seq</span>[<a href="Subscription.html" class="extype" name="aws.sns.Subscription">Subscription</a>]</span>, <span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li name="aws.sns.SubscriptionResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SubscriptionResultextendsProductwithSerializable"></a>
-      <a id="SubscriptionResult:SubscriptionResult"></a>
+    </li><li name="aws.sns.TopicAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TopicAttributesextendsProductwithSerializable"></a>
+      <a id="TopicAttributes:TopicAttributes"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SubscriptionResult.html"><span class="name">SubscriptionResult</span></a><span class="params">(<span name="subscriptionArn">subscriptionArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="aws.sns.TopicAttributesResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="TopicAttributesResultextendsProductwithSerializable"></a>
-      <a id="TopicAttributesResult:TopicAttributesResult"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="TopicAttributesResult.html"><span class="name">TopicAttributesResult</span></a><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="owner">owner: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="displayName">displayName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="subscriptionsPending">subscriptionsPending: <span class="extype" name="scala.Int">Int</span></span>, <span name="subscriptionsConfirmed">subscriptionsConfirmed: <span class="extype" name="scala.Int">Int</span></span>, <span name="subscriptionsDeleted">subscriptionsDeleted: <span class="extype" name="scala.Int">Int</span></span>, <span name="policy">policy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="deliveryPolicy">deliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="effectiveDeliveryPolicy">effectiveDeliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="TopicAttributes.html"><span class="name">TopicAttributes</span></a><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="owner">owner: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="displayName">displayName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="subscriptionsPending">subscriptionsPending: <span class="extype" name="scala.Int">Int</span></span>, <span name="subscriptionsConfirmed">subscriptionsConfirmed: <span class="extype" name="scala.Int">Int</span></span>, <span name="subscriptionsDeleted">subscriptionsDeleted: <span class="extype" name="scala.Int">Int</span></span>, <span name="policy">policy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="deliveryPolicy">deliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>, <span name="effectiveDeliveryPolicy">effectiveDeliveryPolicy: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       

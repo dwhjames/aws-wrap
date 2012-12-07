@@ -216,15 +216,15 @@ granting access for the specified AWS accounts to the specified actions.
               
         </dd></dl></div>
     </li><li name="aws.sns.SNS#confirmSubscription" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="confirmSubscription(topicArn:String,token:String,authenticateOnUnsubscribe:Boolean)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.SubscriptionResult]]"></a>
-      <a id="confirmSubscription(String,String,Boolean)(SNSRegion):Future[Result[SNSMeta,SubscriptionResult]]"></a>
+      <a id="confirmSubscription(topicArn:String,token:String,authenticateOnUnsubscribe:Boolean)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,String]]"></a>
+      <a id="confirmSubscription(String,String,Boolean)(SNSRegion):Future[Result[SNSMeta,String]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">confirmSubscription</span><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="authenticateOnUnsubscribe">authenticateOnUnsubscribe: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="SubscriptionResult.html" class="extype" name="aws.sns.SubscriptionResult">SubscriptionResult</a>]]</span>
+        <span class="name">confirmSubscription</span><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="authenticateOnUnsubscribe">authenticateOnUnsubscribe: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <span class="extype" name="scala.Predef.String">String</span>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Verifies an endpoint owner's intent to receive messages by validating the token
@@ -236,15 +236,15 @@ returns its Amazon Resource Name (ARN).
        then only the topic owner and the subscription owner can unsubscribe the endpoint.
 </p></dd></dl></div>
     </li><li name="aws.sns.SNS#createTopic" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="createTopic(name:String)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.CreateTopicResult]]"></a>
-      <a id="createTopic(String)(SNSRegion):Future[Result[SNSMeta,CreateTopicResult]]"></a>
+      <a id="createTopic(name:String)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,String]]"></a>
+      <a id="createTopic(String)(SNSRegion):Future[Result[SNSMeta,String]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createTopic</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="CreateTopicResult.html" class="extype" name="aws.sns.CreateTopicResult">CreateTopicResult</a>]]</span>
+        <span class="name">createTopic</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <span class="extype" name="scala.Predef.String">String</span>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Creates a topic to which notifications can be published.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a topic to which notifications can be published. Users can create at most 100 topics.
@@ -339,30 +339,30 @@ This action is idempotent, so deleting a topic that does not exist will not resu
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="aws.sns.SNS#getSubscriptionAttributes" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getSubscriptionAttributes(subscriptionArn:String)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.SubscriptionAttributesResult]]"></a>
-      <a id="getSubscriptionAttributes(String)(SNSRegion):Future[Result[SNSMeta,SubscriptionAttributesResult]]"></a>
+      <a id="getSubscriptionAttributes(subscriptionArn:String)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.SubscriptionAttributes]]"></a>
+      <a id="getSubscriptionAttributes(String)(SNSRegion):Future[Result[SNSMeta,SubscriptionAttributes]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getSubscriptionAttributes</span><span class="params">(<span name="subscriptionArn">subscriptionArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="SubscriptionAttributesResult.html" class="extype" name="aws.sns.SubscriptionAttributesResult">SubscriptionAttributesResult</a>]]</span>
+        <span class="name">getSubscriptionAttributes</span><span class="params">(<span name="subscriptionArn">subscriptionArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="SubscriptionAttributes.html" class="extype" name="aws.sns.SubscriptionAttributes">SubscriptionAttributes</a>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Returns all of the properties of a subscription.</p><div class="fullcomment"><div class="comment cmt"><p>Returns all of the properties of a subscription.
 </p></div><dl class="paramcmts block"><dt class="param">subscriptionArn</dt><dd class="cmt"><p>The ARN of the subscription whose properties you want to get.
 </p></dd></dl></div>
     </li><li name="aws.sns.SNS#getTopicAttributes" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getTopicAttributes(topicArn:String)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.TopicAttributesResult]]"></a>
-      <a id="getTopicAttributes(String)(SNSRegion):Future[Result[SNSMeta,TopicAttributesResult]]"></a>
+      <a id="getTopicAttributes(topicArn:String)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.TopicAttributes]]"></a>
+      <a id="getTopicAttributes(String)(SNSRegion):Future[Result[SNSMeta,TopicAttributes]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getTopicAttributes</span><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="TopicAttributesResult.html" class="extype" name="aws.sns.TopicAttributesResult">TopicAttributesResult</a>]]</span>
+        <span class="name">getTopicAttributes</span><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="TopicAttributes.html" class="extype" name="aws.sns.TopicAttributes">TopicAttributes</a>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Returns all of the properties of a topic.</p><div class="fullcomment"><div class="comment cmt"><p>Returns all of the properties of a topic.
@@ -383,15 +383,15 @@ Topic properties returned might differ based on the authorization of the user.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="aws.sns.SNS#listSubscriptions" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="listSubscriptions(nextToken:Option[String])(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.SubscriptionListResult]]"></a>
-      <a id="listSubscriptions(Option[String])(SNSRegion):Future[Result[SNSMeta,SubscriptionListResult]]"></a>
+      <a id="listSubscriptions(nextToken:Option[String])(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.SubscriptionList]]"></a>
+      <a id="listSubscriptions(Option[String])(SNSRegion):Future[Result[SNSMeta,SubscriptionList]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listSubscriptions</span><span class="params">(<span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="SubscriptionListResult.html" class="extype" name="aws.sns.SubscriptionListResult">SubscriptionListResult</a>]]</span>
+        <span class="name">listSubscriptions</span><span class="params">(<span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="SubscriptionList.html" class="extype" name="aws.sns.SubscriptionList">SubscriptionList</a>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a list of the requester's subscriptions.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a list of the requester's subscriptions.
@@ -401,15 +401,15 @@ Use the NextToken parameter in a new ListSubscriptions call to get further resul
 </p></div><dl class="paramcmts block"><dt class="param">nextToken</dt><dd class="cmt"><p>Token returned by the previous <code>listSubscriptions</code> request.
 </p></dd></dl></div>
     </li><li name="aws.sns.SNS#listSubscriptionsByTopic" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="listSubscriptionsByTopic(topicArn:String,nextToken:Option[String])(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.SubscriptionListResult]]"></a>
-      <a id="listSubscriptionsByTopic(String,Option[String])(SNSRegion):Future[Result[SNSMeta,SubscriptionListResult]]"></a>
+      <a id="listSubscriptionsByTopic(topicArn:String,nextToken:Option[String])(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.SubscriptionList]]"></a>
+      <a id="listSubscriptionsByTopic(String,Option[String])(SNSRegion):Future[Result[SNSMeta,SubscriptionList]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listSubscriptionsByTopic</span><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="SubscriptionListResult.html" class="extype" name="aws.sns.SubscriptionListResult">SubscriptionListResult</a>]]</span>
+        <span class="name">listSubscriptionsByTopic</span><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="SubscriptionList.html" class="extype" name="aws.sns.SubscriptionList">SubscriptionList</a>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a list of the subscriptions to a specific topic.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a list of the subscriptions to a specific topic.
@@ -419,15 +419,15 @@ Use the <code>nextToken</code> parameter in a new <code>listSubscriptionsByTopic
 </p></div><dl class="paramcmts block"><dt class="param">topicArn</dt><dd class="cmt"><p>The ARN of the topic for which you wish to find subscriptions.</p></dd><dt class="param">nextToken</dt><dd class="cmt"><p>Token returned by the previous 'listSubscriptionsByTopic<code> request.
 </code></p></dd></dl></div>
     </li><li name="aws.sns.SNS#listTopics" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="listTopics(nextToken:Option[String])(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.ListTopicsResult]]"></a>
-      <a id="listTopics(Option[String])(SNSRegion):Future[Result[SNSMeta,ListTopicsResult]]"></a>
+      <a id="listTopics(nextToken:Option[String])(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.ListTopics]]"></a>
+      <a id="listTopics(Option[String])(SNSRegion):Future[Result[SNSMeta,ListTopics]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listTopics</span><span class="params">(<span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="ListTopicsResult.html" class="extype" name="aws.sns.ListTopicsResult">ListTopicsResult</a>]]</span>
+        <span class="name">listTopics</span><span class="params">(<span name="nextToken">nextToken: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="ListTopics.html" class="extype" name="aws.sns.ListTopics">ListTopics</a>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a list of the requester's topics.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a list of the requester's topics. Each call returns a limited list of topics, up to 100.
@@ -475,15 +475,15 @@ Use the <code>nextToken</code> parameter in a new <code>listTopics</code> call t
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="aws.sns.SNS#publish" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="publish(topicArn:String,message:aws.sns.Message,subject:Option[String])(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.PublishResult]]"></a>
-      <a id="publish(String,Message,Option[String])(SNSRegion):Future[Result[SNSMeta,PublishResult]]"></a>
+      <a id="publish(topicArn:String,message:aws.sns.Message,subject:Option[String])(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,String]]"></a>
+      <a id="publish(String,Message,Option[String])(SNSRegion):Future[Result[SNSMeta,String]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">publish</span><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="message">message: <a href="Message.html" class="extype" name="aws.sns.Message">Message</a></span>, <span name="subject">subject: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="PublishResult.html" class="extype" name="aws.sns.PublishResult">PublishResult</a>]]</span>
+        <span class="name">publish</span><span class="params">(<span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="message">message: <a href="Message.html" class="extype" name="aws.sns.Message">Message</a></span>, <span name="subject">subject: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <span class="extype" name="scala.Predef.String">String</span>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Sends a message to all of a topic's subscribed endpoints.</p><div class="fullcomment"><div class="comment cmt"><p>Sends a message to all of a topic's subscribed endpoints.
@@ -587,15 +587,15 @@ The format of the outgoing message to each subscribed endpoint depends on the no
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../core/signature/V2.html" class="extype" name="aws.core.signature.V2">V2</a></dd></dl></div>
     </li><li name="aws.sns.SNS#subscribe" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="subscribe(endpoint:aws.sns.Endpoint,topicArn:String)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,aws.sns.SubscriptionResult]]"></a>
-      <a id="subscribe(Endpoint,String)(SNSRegion):Future[Result[SNSMeta,SubscriptionResult]]"></a>
+      <a id="subscribe(endpoint:aws.sns.Endpoint,topicArn:String)(implicitregion:aws.sns.SNSRegion):scala.concurrent.Future[aws.core.Result[aws.sns.SNSMeta,String]]"></a>
+      <a id="subscribe(Endpoint,String)(SNSRegion):Future[Result[SNSMeta,String]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">subscribe</span><span class="params">(<span name="endpoint">endpoint: <a href="Endpoint.html" class="extype" name="aws.sns.Endpoint">Endpoint</a></span>, <span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <a href="SubscriptionResult.html" class="extype" name="aws.sns.SubscriptionResult">SubscriptionResult</a>]]</span>
+        <span class="name">subscribe</span><span class="params">(<span name="endpoint">endpoint: <a href="Endpoint.html" class="extype" name="aws.sns.Endpoint">Endpoint</a></span>, <span name="topicArn">topicArn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="region">region: <a href="SNSRegion.html" class="extype" name="aws.sns.SNSRegion">SNSRegion</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SNSMeta.html" class="extype" name="aws.sns.SNSMeta">SNSMeta</a>, <span class="extype" name="scala.Predef.String">String</span>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">The Subscribe action prepares to subscribe an endpoint by sending the endpoint a confirmation message.</p><div class="fullcomment"><div class="comment cmt"><p>The Subscribe action prepares to subscribe an endpoint by sending the endpoint a confirmation message.

@@ -4,3 +4,5 @@ com.pellucid.aws.dynamodb.models
 com.pellucid.aws.internal
 com.pellucid.aws.results
 com.pellucid.aws.simpledb
+com.pellucid.aws.sns
+com.pellucid.aws.utils
