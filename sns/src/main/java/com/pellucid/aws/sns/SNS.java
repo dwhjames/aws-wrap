@@ -2,15 +2,20 @@ package com.pellucid.aws.sns;
 
 import java.util.List;
 
+import org.codehaus.jackson.JsonNode;
+
+import play.api.libs.json.Json;
+import play.api.libs.json.JsValue;
+import play.libs.Scala;
 import scala.collection.JavaConversions;
 import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
-import play.libs.Scala;
 
-import com.pellucid.aws.results.Result;
 import com.pellucid.aws.internal.AWSJavaConversions;
-import com.pellucid.aws.utils.*;
+import com.pellucid.aws.results.Result;
+import com.pellucid.aws.utils.Identity;
+import com.pellucid.aws.utils.Lists;
 
 public class SNS {
 
@@ -69,10 +74,7 @@ public class SNS {
             String topicArn,
             String token,
             boolean authenticateOnUnsubscribe) {
-        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.confirmSubscription(topicArn, token, authenticateOnUnsubscribe, this.scalaRegion),
-                new MetadataConvert(),
-                new Identity<String>()
-                );
+        return convertStringResult(aws.sns.SNS.confirmSubscription(topicArn, token, authenticateOnUnsubscribe, this.scalaRegion));
     }
 
     /**
@@ -97,10 +99,7 @@ public class SNS {
      * @param name The name of the topic you want to create.
      */
     public Future<Result<SNSMeta, String>> createTopic(String name) {
-        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.createTopic(name, this.scalaRegion),
-                new MetadataConvert(),
-                new Identity<String>()
-                );
+        return convertStringResult(aws.sns.SNS.createTopic(name, this.scalaRegion));
     }
 
     /**
@@ -184,8 +183,7 @@ public class SNS {
         return listTopics(null);
     }
 
-    public Future<Result<SNSMeta, String>> publish(String topicArn,
-            Message message) {
+    public Future<Result<SNSMeta, String>> publish(String topicArn, Message message) {
         return publish(topicArn, message, null);
     }
 
@@ -204,9 +202,7 @@ public class SNS {
     public Future<Result<SNSMeta, String>> publish(String topicArn,
                 Message message,
                 String subject) {
-        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.publish(topicArn, message.toScala(), Scala.Option(subject), scalaRegion),
-                new MetadataConvert(),
-                new Identity());
+        return convertStringResult(aws.sns.SNS.publish(topicArn, message.toScala(), Scala.Option(subject), scalaRegion));
     }
 
     /**
@@ -224,6 +220,51 @@ public class SNS {
                 return ListTopics.fromScala(attributes);
             }
         });
+    }
+
+    /**
+     * The RemovePermission action removes a statement from a topic's access control policy.
+     *
+     * @param topicArn The ARN of the topic whose access control policy you wish to modify.
+     * @param label The unique label of the statement you want to remove.
+     *
+     */
+    public Future<Result<SNSMeta, Object>> removePermission(String topicArn, String label) {
+        return convertEmptyResult(aws.sns.SNS.removePermission(topicArn, label, scalaRegion));
+    }
+
+    public Future<Result<SNSMeta, Object>> setTopicDisplayName(String topicArn, String name) {
+        return convertEmptyResult(aws.sns.SNS.setTopicDisplayName(topicArn, name, scalaRegion));
+    }
+
+    public Future<Result<SNSMeta, Object>> setTopicPolicy(String topicArn, JsonNode policy) {
+        JsValue json = Json.parse(policy.toString());
+        return convertEmptyResult(aws.sns.SNS.setTopicPolicy(topicArn, json, scalaRegion));
+    }
+
+    public Future<Result<SNSMeta, Object>> setTopicDeliveryPolicy(String topicArn, JsonNode deliveryPolicy) {
+        JsValue json = Json.parse(deliveryPolicy.toString());
+        return convertEmptyResult(aws.sns.SNS.setTopicDeliveryPolicy(topicArn, json, scalaRegion));
+    }
+
+    /**
+     * The Subscribe action prepares to subscribe an endpoint by sending the endpoint a confirmation message.
+     * To actually create a subscription, the endpoint owner must call the ConfirmSubscription action with the token
+     * from the confirmation message. Confirmation tokens are valid for three days.
+     *
+     * @param endpoint The endpoint that you want to receive notifications.
+     * @param topicArn The ARN of topic you want to subscribe to.
+     */
+    public Future<Result<SNSMeta, String>> subscribe(Endpoint endpoint, String topicArn) {
+        return convertStringResult(aws.sns.SNS.subscribe(endpoint.toScala(), topicArn, scalaRegion));
+    }
+
+    public Future<Result<SNSMeta, Object>> unsubscribe(String subscriptionArn) {
+        return convertEmptyResult(aws.sns.SNS.unsubscribe(subscriptionArn, scalaRegion));
+    }
+
+    private static Future<Result<SNSMeta, String>> convertStringResult(Future<aws.core.Result<aws.sns.SNSMeta, String>> scalaResult) {
+        return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new Identity());
     }
 
     private static Future<Result<SNSMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.sns.SNSMeta, BoxedUnit>> scalaResult) {

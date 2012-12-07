@@ -26,7 +26,7 @@ sealed trait Endpoint {
 
 object Endpoint {
 
-  def apply(endpoint: String, protocol: String) = protocol match {
+  def apply(endpoint: String, protocol: String): Endpoint = protocol match {
     case "http" => Http(endpoint)
     case "https" => Https(endpoint)
     case "email" => Email(endpoint)

@@ -19,4 +19,8 @@ public class Endpoint {
         return this.value;
     }
 
+    public aws.sns.Endpoint toScala() {
+        return aws.sns.Endpoint$.MODULE$.apply(protocol, value);
+    }
+
 }
