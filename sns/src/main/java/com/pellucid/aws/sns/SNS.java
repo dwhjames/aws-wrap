@@ -72,7 +72,7 @@ public class SNS {
         return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.confirmSubscription(topicArn, token, authenticateOnUnsubscribe, this.scalaRegion),
                 new MetadataConvert(),
                 new Identity<String>()
-        );
+                );
     }
 
     /**
@@ -100,7 +100,7 @@ public class SNS {
         return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.createTopic(name, this.scalaRegion),
                 new MetadataConvert(),
                 new Identity<String>()
-        );
+                );
     }
 
     /**
@@ -157,7 +157,7 @@ public class SNS {
     }
 
     public Future<Result<SNSMeta, SubscriptionList>> listSubscriptionsByTopic(String topicArn) {
-        listSubscriptionsByTopic(topicArn, null);
+        return listSubscriptionsByTopic(topicArn, null);
     }
 
     /**
@@ -170,7 +170,8 @@ public class SNS {
      * @param nextToken Token returned by the previous 'listSubscriptionsByTopic` request.
      */
     public Future<Result<SNSMeta, SubscriptionList>> listSubscriptionsByTopic(String topicArn, String nextToken) {
-        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.listSubscriptionsByToken(topicArn, Scala.Option(nextToken), scalaRegion),
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.listSubscriptionsByTopic(topicArn, Scala.Option(nextToken),
+                scalaRegion),
                 new MetadataConvert(),
                 new Mapper<aws.sns.SubscriptionList, SubscriptionList>() {
             @Override public SubscriptionList apply(aws.sns.SubscriptionList attributes) {
