@@ -184,6 +184,31 @@ public class SNS {
         return listTopics(null);
     }
 
+    public Future<Result<SNSMeta, String>> publish(String topicArn,
+            Message message) {
+        return publish(topicArn, message, null);
+    }
+
+    /**
+     * Sends a message to all of a topic's subscribed endpoints.
+     * When a `messageId` is returned, the message has been saved and Amazon SNS will attempt to deliver it to the topic's subscribers shortly.
+     * The format of the outgoing message to each subscribed endpoint depends on the notification protocol selected.
+     *
+     * @param topicArn The topic you want to publish to.
+     * @param message The message you want to send to the topic.
+     * @param subject Optional parameter to be used as the "Subject" line of when the message is delivered to e-mail endpoints.
+     *                This field will also be included, if present, in the standard JSON messages delivered to other endpoints.
+     *                Constraints: Subjects must be ASCII text that begins with a letter, number or punctuation mark;
+     *                must not include line breaks or control characters; and must be less than 100 characters long.
+     */
+    public Future<Result<SNSMeta, String>> publish(String topicArn,
+                Message message,
+                String subject) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sns.SNS.publish(topicArn, message.toScala(), Scala.Option(subject), scalaRegion),
+                new MetadataConvert(),
+                new Identity());
+    }
+
     /**
      * Returns a list of the requester's topics. Each call returns a limited list of topics, up to 100.
      * If there are more topics, a `nextToken` is also returned.
