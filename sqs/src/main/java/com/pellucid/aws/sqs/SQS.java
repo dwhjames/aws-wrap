@@ -1,10 +1,15 @@
 package com.pellucid.aws.sqs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import scala.collection.JavaConversions;
 import scala.concurrent.Future;
+import scala.collection.Seq;
+import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
+
+import play.libs.Scala;
 
 import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.results.Result;
@@ -18,8 +23,11 @@ public class SQS {
         this.scalaRegion = scalaRegion(region);
     }
 
-    public Future<Result<SQSMeta, Queue>> createQueue(String name, List<QueueAttributeValue> attributes) {
+    public Future<Result<SQSMeta, Queue>> createQueue(String name) {
+        return createQueue(name, new ArrayList<QueueAttributeValue>());
+    }
 
+    public Future<Result<SQSMeta, Queue>> createQueue(String name, List<QueueAttributeValue> attributes) {
         return convertQueueResult(aws.sqs.SQS.createQueue(name,
                 JavaConversions.asScalaIterable(Lists.map(attributes, new Mapper<QueueAttributeValue, aws.sqs.CreateAttributeValue>(){
                     @Override public aws.sqs.CreateAttributeValue apply(QueueAttributeValue attr) {
@@ -29,22 +37,32 @@ public class SQS {
                 scalaRegion
                 ));
     }
-    /*
-      def listQueues(queueNamePrefix: String = "")(implicit region: SQSRegion): Future[Result[SQSMeta, Seq[Queue]]] = {
-        val params = Seq(Action("ListQueues")) ++ QueueNamePrefix(queueNamePrefix)
-        get[Seq[Queue]](params: _*)
-      }
 
-      def deleteQueue(queueURL: String): Future[EmptyResult[SQSMeta]] = {
-        val params = Seq(Action("DeleteQueue"))
-        get[Unit](queueURL, params: _*)
-      }
+    public Future<Result<SQSMeta, List<Queue>>> listQueues() {
+        return listQueues("");
+    }
 
-      def getQueue(name: String, queueOwnerAWSAccountId: Option[String] = None)(implicit region: SQSRegion): Future[Result[SQSMeta, Queue]] = {
-        val params = Seq(Action("GetQueueUrl"), QueueName(name)) ++ QueueOwnerAWSAccountId(queueOwnerAWSAccountId)
-        get[Queue](params: _*)
-      }
-     */
+    public Future<Result<SQSMeta, List<Queue>>> listQueues(String queueNamePrefix) {
+        return AWSJavaConversions.toJavaResultFuture(aws.sqs.SQS.listQueues(queueNamePrefix, scalaRegion),
+                new MetadataConvert(),
+                new Mapper<Seq<aws.sqs.SQS.Queue>, List<Queue>>() {
+            @Override public List<Queue> apply(Seq<aws.sqs.SQS.Queue> queueSeq) {
+                return Lists.map(JavaConversions.seqAsJavaList(queueSeq), new QueueConvert());
+            }
+        });
+    }
+
+    public Future<Result<SQSMeta, Object>> deleteQueue(String queueURL) {
+        return convertEmptyResult(aws.sqs.SQS.deleteQueue(queueURL));
+    }
+
+    public Future<Result<SQSMeta, Queue>> getQueue(String name) {
+        return getQueue(name, null);
+    }
+
+    public Future<Result<SQSMeta, Queue>> getQueue(String name, String queueOwnerAWSAccountId) {
+        return convertQueueResult(aws.sqs.SQS.getQueue(name, Scala.Option(queueOwnerAWSAccountId), scalaRegion));
+    }
 
     private static aws.sqs.SQSRegion scalaRegion(SQSRegion region) {
         switch (region) {
@@ -61,6 +79,14 @@ public class SQS {
 
     private static Future<Result<SQSMeta, Queue>> convertQueueResult(Future<aws.core.Result<aws.sqs.SQSMeta, aws.sqs.SQS.Queue>> scalaResult) {
         return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new QueueConvert());
+    }
+
+    private static Future<Result<SQSMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.sqs.SQSMeta, BoxedUnit>> scalaResult) {
+        return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new Mapper<BoxedUnit, Object>() {
+            @Override public Object apply(BoxedUnit unit) {
+                return null;
+            }
+        });
     }
 
     private static class QueueConvert extends Mapper<aws.sqs.SQS.Queue, Queue> {
