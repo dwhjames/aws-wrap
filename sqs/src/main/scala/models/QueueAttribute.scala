@@ -67,8 +67,6 @@ case class CreatedTimestamp(timestamp: Long) extends QueueAttributeValue {
   override def value = timestamp.toString
 }
 
-// CreatedTimestamp
-
 case class DelaySeconds(seconds: Long) extends QueueAttributeValue with CreateAttributeValue {
   override def attribute = QueueAttributes.DelaySeconds
   override def value = seconds.toString
@@ -107,7 +105,7 @@ case class VisibilityTimeout(timeout: Long) extends QueueAttributeValue with Cre
 }
 
 object QueueAttributeValue {
-  def apply(name: String, value: String) = name match {
+  def apply(name: String, value: String): QueueAttributeValue = name match {
     case "ApproximateNumberOfMessages" => ApproximateNumberOfMessages(value.toLong)
     case "ApproximateNumberOfMessagesDelayed" => ApproximateNumberOfMessagesDelayed(value.toLong)
     case "ApproximateNumberOfMessagesNotVisible" => ApproximateNumberOfMessagesNotVisible(value.toLong)
