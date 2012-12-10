@@ -8,7 +8,18 @@ package com.pellucid.aws.cloudsearch {
   import aws.core._
   import aws.core.parsers.Parser
   import aws.cloudsearch._
-  import com.pellucid.aws.cloudsearch.models.{ Search => JSearch }
+  import com.pellucid.aws.cloudsearch.models.{
+    Search => JSearch,
+    MatchExpression => JMatchExpression,
+    FacetConstraint => JFacetConstraint,
+    Facet => JFacet,
+    Sort => JSort,
+    Rank => JRank,
+    Score,
+    SDF => JSDF,
+    Domain,
+    BatchResponse => JBatchResponse,
+    CloudSearchMetadata => JCloudSearchMetadata }
 
   object JavaConverters {
 
@@ -28,37 +39,46 @@ package com.pellucid.aws.cloudsearch {
       )
 
     import aws.cloudsearch.MatchExpressions.MatchExpression
-    import com.pellucid.aws.cloudsearch.models.{ MatchExpression => JMatchExpression, FacetConstraint => JFacetConstraint, Facet => JFacet, Sort => JSort, Rank => JRank, Score }
     def toJava(m: MatchExpression): JMatchExpression = new JMatchExpression {
       override val underlying = m
       override def toString = m.toString
     }
     def toJava(f: Facet): JFacet = new JFacet(f.name, f.constraints.toMap.asJava)
+    def toJava(b: BatchResponse): JBatchResponse = new JBatchResponse(
+      b.status.toString,
+      b.adds,
+      b.deletes,
+      Option(b.errors).toSeq.flatten.asJava,
+      Option(b.warnings).toSeq.flatten.asJava)
+
+    def toJava(c: CloudSearchMetadata): JCloudSearchMetadata =
+      new JCloudSearchMetadata(c.requestId, c.time.toMillis, c.cpuTime.toMillis)
 
     def toScala(m: JMatchExpression): MatchExpression = m.underlying
     def toScala(f: JFacetConstraint): FacetConstraint = f.underlying
     def toScala(s: JSort): Sort = s.underlying
     def toScala(r: JRank): Rank = r.underlying
     def toScala(s: Score): (String, Range) = s.underlying
-
+    def toScala(s: JSDF): SDF[org.codehaus.jackson.JsonNode] = SDF(s.id, s.version, s.lang, Option(s.document))
+    def toScala(s: Domain): (String, String) = s.name -> s.id
   }
 
   class CloudSearch(val scalaRegion: CloudSearchRegion) {
     import JavaConverters._
     import scala.concurrent.Future
-    import com.pellucid.aws.results.{ Result => JResult }
+    import com.pellucid.aws.results.{ Result => JResult, SimpleResult => JSimpleResult }
 
     def this() = this(CloudSearchRegion.DEFAULT)
 
-    def search[T](search: JSearch, p: Parser[T]): Future[JResult[CloudSearchMetadata, T]] = {
+    def search[T](search: JSearch, p: Parser[T]): Future[JResult[JCloudSearchMetadata, T]] = {
       import aws.core.parsers._
       import CloudSearchParsers._
 
       implicit val parser = p
       implicit val region = scalaRegion
       toScala(search).search[T].map { result =>
-        new JResult[CloudSearchMetadata, T] {
-          def metadata = result.metadata
+        new JResult[JCloudSearchMetadata, T] {
+          def metadata = toJava(result.metadata)
           def isSuccess = result.toEither.fold(err => false, b => true)
           def body = result.body
         }
@@ -66,7 +86,7 @@ package com.pellucid.aws.cloudsearch {
     }
 
     import com.pellucid.aws.cloudsearch.models.{ WithFacets => JWithFacets }
-    def searchWithFacets[T](search: JSearch, p: Parser[T]): Future[JResult[CloudSearchMetadata, JWithFacets[T]]] = {
+    def searchWithFacets[T](search: JSearch, p: Parser[T]): Future[JResult[JCloudSearchMetadata, JWithFacets[T]]] = {
       import aws.core.parsers._
       import CloudSearchParsers._
 
@@ -74,31 +94,80 @@ package com.pellucid.aws.cloudsearch {
       implicit val region = scalaRegion
 
       toScala(search).search[CloudSearch.WithFacets[T]].map { result =>
-        new JResult[CloudSearchMetadata, JWithFacets[T]] {
-          def metadata = result.metadata
+        new JResult[JCloudSearchMetadata, JWithFacets[T]] {
+          def metadata = toJava(result.metadata)
           def isSuccess = result.toEither.fold(err => false, b => true)
           def body = new JWithFacets(result.body._2.map(toJava).asJava, result.body._1)
         }
       }
     }
+
+    import com.pellucid.aws.cloudsearch.models.{ Domain, SDF => JSDF }
+    def upload(domain: Domain, doc: JSDF): Future[JSimpleResult[JBatchResponse]] = {
+      import org.codehaus.jackson._
+      import org.codehaus.jackson.map._
+
+      implicit val region = scalaRegion
+
+      val mapper = new ObjectMapper
+
+      val content = mapper.createObjectNode
+      content.put("type", "add")
+      content.put("id", doc.id)
+      content.put("version", doc.version)
+      content.put("lang", doc.lang.getLanguage)
+      content.put("fields", doc.document)
+
+      val json = mapper.createArrayNode
+      json.add(content)
+
+
+      CloudSearch.uploadRaw(toScala(domain), json.toString).map { result =>
+        new JSimpleResult[JBatchResponse] {
+          def metadata = throw new RuntimeException("SimpleResult does not have metadata")
+          def isSuccess = result.toEither.fold(err => false, b => true)
+          def body = toJava(result.body)
+        }
+      }
+    }
+
+    def delete(domain: Domain, id: String, version: Int): Future[JSimpleResult[JBatchResponse]] = {
+      implicit val region = scalaRegion
+      CloudSearch.delete(toScala(domain), id, version).map { result =>
+        new JSimpleResult[JBatchResponse] {
+          def metadata = throw new RuntimeException("SimpleResult does not have metadata")
+          def isSuccess = result.toEither.fold(err => false, b => true)
+          def body = toJava(result.body)
+        }
+      }
+    }
+
   }
 }
-
-
 
 package com.pellucid.aws.cloudsearch.models {
 
   import scala.reflect.BeanInfo
-  import java.util.{ List => JList, Map => JMap }
+  import java.util.{ List => JList, Map => JMap, Locale }
 
   import com.pellucid.aws.cloudsearch.JavaConverters._
   import scala.collection.JavaConverters._
+
+  @BeanInfo
+  class CloudSearchMetadata(val requestId: String, val time: Long, val cpuTime: Long)
+
+  @BeanInfo
+  class BatchResponse(status: String, adds: Int, deletes: Int, errors: JList[String], warnings: JList[String])
+
+  @BeanInfo
+  class SDF(val id: String, val version: Int, val lang: Locale, val document: org.codehaus.jackson.JsonNode) {
+    override def toString = s"SDF($id, $version, $lang, $document)"
+  }
 
   class Score(val underlying: (String, Range))
   object Score {
     def range(name: String, from: Int, to: Int) = new Score(name -> Range(from, to))
   }
-
 
   @BeanInfo
   class Domain(val name: String, val id: String){
@@ -137,7 +206,6 @@ package com.pellucid.aws.cloudsearch.models {
     def this(field: String, values: JList[String]) = this(FC.apply(field, values.asScala))
   }
 
-  // TODO
   import aws.cloudsearch.{ Sort => SSort }
   trait Ordering
   object Desc extends Ordering

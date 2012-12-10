@@ -299,9 +299,6 @@ package aws.cloudsearch {
     }
 
     def upload[T](domain: (String, String), sdf: SDF[T])(implicit w: Writes[T], region: CloudSearchRegion) = {
-      val allHeaders = Nil
-      val version = "2011-02-01"
-
       val json = Json.arr(
         Json.obj(
           "type" -> "add",
@@ -310,9 +307,22 @@ package aws.cloudsearch {
           "lang" -> sdf.lang.getLanguage,
           "fields" -> w.writes(sdf.document.get)))
 
+      val allHeaders = Nil
+      val version = "2011-02-01"
+
       WS.url(s"http://search-${domain._1}-${domain._2}.${region.subdomain}.cloudsearch.amazonaws.com/${VERSION}/documents/batch")
         .withHeaders(allHeaders: _*)
         .post(json)
+        .map(resp => Parser.parse[SimpleResult[BatchResponse]](resp).fold(e => throw new RuntimeException(e), identity))
+    }
+
+    def uploadRaw[T](domain: (String, String), body: String)(implicit region: CloudSearchRegion) = {
+      val allHeaders = Seq("Content-Type" -> "application/json")
+      val version = "2011-02-01"
+
+      WS.url(s"http://search-${domain._1}-${domain._2}.${region.subdomain}.cloudsearch.amazonaws.com/${VERSION}/documents/batch")
+        .withHeaders(allHeaders: _*)
+        .post(body)
         .map(resp => Parser.parse[SimpleResult[BatchResponse]](resp).fold(e => throw new RuntimeException(e), identity))
     }
   }
