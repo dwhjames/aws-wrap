@@ -96,7 +96,7 @@ public class SQS {
         }
     }
 
-    private static class MetadataConvert extends Mapper<aws.sqs.SQSMeta, SQSMeta> {
+    static class MetadataConvert extends Mapper<aws.sqs.SQSMeta, SQSMeta> {
         @Override
         public SQSMeta apply(aws.sqs.SQSMeta scalaMeta) {
             return new SQSMeta(scalaMeta.requestId());
