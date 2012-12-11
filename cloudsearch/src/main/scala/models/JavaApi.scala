@@ -262,6 +262,8 @@ package com.pellucid.aws.cloudsearch.models {
     @BeanProperty val size: Integer,
     @BeanProperty val startAt: Integer){
 
+    private def concat[T](l1: JList[T], l2: Seq[T]): JList[T] = (l1.asScala ++ l2).asJava
+
     def this(domain: Domain) = this(domain, null, null, null, null, null, null, null, null, null, null, null)
 
     def withQuery(query: String) =
@@ -270,33 +272,35 @@ package com.pellucid.aws.cloudsearch.models {
     def withMatchExpression(matchExpression: MatchExpression) =
       new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
-    // TODO: merge instead of replacing
     @scala.annotation.varargs
     def withReturnFields(returnFields: String*) =
-      new Search(domain, query, matchExpression, returnFields.asJava, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, concat(this.returnFields, returnFields), facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
     @scala.annotation.varargs
     def withFacets(facets: String*) =
-      new Search(domain, query, matchExpression, returnFields, facets.asJava, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, concat(this.facets, facets), facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
 
     @scala.annotation.varargs
     def withFacetConstraints(facetConstraints: FacetConstraint*) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints.asJava, facetSorts, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, concat(this.facetConstraints, facetConstraints), facetSorts, facetTops, ranks, scores, size, startAt)
 
     @scala.annotation.varargs
     def withFacetSorts(facetSorts: Sort*) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts.asJava, facetTops, ranks, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, concat(this.facetSorts, facetSorts), facetTops, ranks, scores, size, startAt)
 
-    def withFacetTops(facetTops: JMap[String, Integer]) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
+    // TODO: merge instead of replacing
+    def withFacetTops(facetTops: JMap[String, Integer]) = {
+      val merged  = (facetTops.asScala ++ this.facetTops.asScala).asJava
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, merged, ranks, scores, size, startAt)
+    }
 
     @scala.annotation.varargs
     def withRanks(ranks: Rank*) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks.asJava, scores, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, concat(this.ranks, ranks), scores, size, startAt)
 
     @scala.annotation.varargs
     def withScores(scores: Score*) =
-      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores.asJava, size, startAt)
+      new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, concat(this.scores, scores), size, startAt)
 
     def withSize(size: Integer) =
       new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, facetTops, ranks, scores, size, startAt)
