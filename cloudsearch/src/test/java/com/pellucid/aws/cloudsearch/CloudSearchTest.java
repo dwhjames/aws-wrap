@@ -84,6 +84,7 @@ public class CloudSearchTest {
     Search s = base.withQuery("star wars");
     Result<CloudSearchMetadata, List<Movie>> result = get(cloudSearch.search(s, movieParser));
     assertTrue("request failed", result.isSuccess());
+    assertNotNull("No requestId", result.metadata().getRequestId());
     assertFalse("empty result", result.body().isEmpty());
   }
 

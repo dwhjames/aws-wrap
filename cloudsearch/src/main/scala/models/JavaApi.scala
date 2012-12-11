@@ -147,38 +147,35 @@ package com.pellucid.aws.cloudsearch {
 
 package com.pellucid.aws.cloudsearch.models {
 
-  import scala.reflect.BeanInfo
   import java.util.{ List => JList, Map => JMap, Locale }
-
+  import scala.reflect.BeanProperty
   import com.pellucid.aws.cloudsearch.JavaConverters._
   import scala.collection.JavaConverters._
 
-  @BeanInfo
-  class CloudSearchMetadata(val requestId: String, val time: Long, val cpuTime: Long)
 
-  @BeanInfo
-  class BatchResponse(status: String, adds: Int, deletes: Int, errors: JList[String], warnings: JList[String])
+  class CloudSearchMetadata(@BeanProperty val requestId: String, @BeanProperty val time: Long, @BeanProperty val cpuTime: Long)
 
-  @BeanInfo
-  class SDF(val id: String, val version: Int, val lang: Locale, val document: org.codehaus.jackson.JsonNode) {
+  class BatchResponse(@BeanProperty val status: String, @BeanProperty val adds: Int, @BeanProperty val deletes: Int, @BeanProperty val errors: JList[String], @BeanProperty val warnings: JList[String])
+
+  class SDF(@BeanProperty val id: String, @BeanProperty val version: Int, @BeanProperty val lang: Locale, @BeanProperty val document: org.codehaus.jackson.JsonNode) {
     override def toString = s"SDF($id, $version, $lang, $document)"
   }
 
-  class Score(val underlying: (String, Range))
+  class Score(@BeanProperty val underlying: (String, Range))
   object Score {
     def range(name: String, from: Int, to: Int) = new Score(name -> Range(from, to))
   }
 
-  @BeanInfo
-  class Domain(val name: String, val id: String){
+
+  class Domain(@BeanProperty val name: String, @BeanProperty val id: String){
     override def toString = s"Domain($name, $id)"
   }
-  @BeanInfo
-  class WithFacets[T](val facets: JList[Facet], val body: T) {
+
+  class WithFacets[T](@BeanProperty val facets: JList[Facet], @BeanProperty val body: T) {
     override def toString = s"WithFacets($facets, $body)"
   }
-  @BeanInfo
-  class Facet(val name: String, val constraints: JMap[String, Int]) {
+
+  class Facet(@BeanProperty val name: String, @BeanProperty val constraints: JMap[String, Int]) {
     override def toString = s"Facet($name, $constraints)"
   }
 
@@ -251,21 +248,19 @@ package com.pellucid.aws.cloudsearch.models {
     }
   }
 
-
-  @BeanInfo
   class Search(
-    val domain: Domain,
-    val query: String,
-    val matchExpression: MatchExpression,
-    val returnFields: JList[String],
-    val facets: JList[String],
-    val facetConstraints: JList[FacetConstraint],
-    val facetSorts: JList[Sort],
-    val facetTops: JMap[String, Integer],
-    val ranks: JList[Rank],
-    val scores: JList[Score],
-    val size: Integer,
-    val startAt: Integer){
+    @BeanProperty val domain: Domain,
+    @BeanProperty val query: String,
+    @BeanProperty val matchExpression: MatchExpression,
+    @BeanProperty val returnFields: JList[String],
+    @BeanProperty val facets: JList[String],
+    @BeanProperty val facetConstraints: JList[FacetConstraint],
+    @BeanProperty val facetSorts: JList[Sort],
+    @BeanProperty val facetTops: JMap[String, Integer],
+    @BeanProperty val ranks: JList[Rank],
+    @BeanProperty val scores: JList[Score],
+    @BeanProperty val size: Integer,
+    @BeanProperty val startAt: Integer){
 
     def this(domain: Domain) = this(domain, null, null, null, null, null, null, null, null, null, null, null)
 
