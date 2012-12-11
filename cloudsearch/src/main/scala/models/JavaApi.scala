@@ -262,7 +262,10 @@ package com.pellucid.aws.cloudsearch.models {
     @BeanProperty val size: Integer,
     @BeanProperty val startAt: Integer){
 
-    private def concat[T](l1: JList[T], l2: Seq[T]): JList[T] = (l1.asScala ++ l2).asJava
+    private def concat[T](l1: JList[T], l2: Seq[T]): JList[T] = l1 match {
+      case null => l2.asJava
+      case _ => (l1.asScala ++ l2).asJava
+    }
 
     def this(domain: Domain) = this(domain, null, null, null, null, null, null, null, null, null, null, null)
 
@@ -288,9 +291,11 @@ package com.pellucid.aws.cloudsearch.models {
     def withFacetSorts(facetSorts: Sort*) =
       new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, concat(this.facetSorts, facetSorts), facetTops, ranks, scores, size, startAt)
 
-    // TODO: merge instead of replacing
     def withFacetTops(facetTops: JMap[String, Integer]) = {
-      val merged  = (facetTops.asScala ++ this.facetTops.asScala).asJava
+      val merged  =this.facetTops match {
+        case null => facetTops
+        case _ => (facetTops.asScala ++ this.facetTops.asScala).asJava
+      }
       new Search(domain, query, matchExpression, returnFields, facets, facetConstraints, facetSorts, merged, ranks, scores, size, startAt)
     }
 
