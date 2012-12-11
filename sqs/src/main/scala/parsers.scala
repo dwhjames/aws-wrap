@@ -24,7 +24,6 @@ import aws.core._
 import aws.core.parsers._
 
 import aws.sqs.SQS.Queue
-import aws.sqs.MessageAttributes.MessageAttribute
 
 object SQSParsers {
   import language.postfixOps
@@ -53,7 +52,7 @@ object SQSParsers {
         n \\ "MD5OfBody" text,
         n \\ "ReceiptHandle" text,
         (n \\ "Attribute" map { attrNode: Node =>
-          MessageAttributes.withName(attrNode \\ "Name" text) -> (attrNode \\ "Value" text)
+          MessageAttribute(attrNode \\ "Name" text) -> (attrNode \\ "Value" text)
         }).toMap)
     })
   }

@@ -24,8 +24,6 @@ import aws.core._
 import aws.core.Types._
 import aws.core.signature.V2
 
-import MessageAttributes.MessageAttribute
-
 case class SQSMeta(requestId: String) extends Metadata
 
 object SQS extends V2[SQSMeta](version = "2012-11-05") {
@@ -127,7 +125,7 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
       SQS.get[SendMessageResult](this.url, params: _*)
     }
 
-    def receiveMessage(attributes: Seq[MessageAttribute] = Seq(MessageAttributes.All),
+    def receiveMessage(attributes: Seq[MessageAttribute] = Seq(MessageAttribute.All),
                        maxNumber: Option[Long] = None,
                        visibilityTimeout: Option[Long] = None,
                        waitTimeSeconds: Option[Long] = None): Future[Result[SQSMeta, Seq[MessageReceive]]] = {
@@ -139,7 +137,7 @@ object SQS extends V2[SQSMeta](version = "2012-11-05") {
       get[Seq[MessageReceive]](this.url, params: _*)
     }
 
-    def messageEnumerator(attributes: Seq[MessageAttribute] = Seq(MessageAttributes.All),
+    def messageEnumerator(attributes: Seq[MessageAttribute] = Seq(MessageAttribute.All),
                           visibilityTimeout: Option[Long] = None)(implicit executor: ExecutionContext): Enumerator[MessageReceive] = generateM {
       receiveMessage(attributes, Some(1), visibilityTimeout, Some(20)).map {
         _ match {

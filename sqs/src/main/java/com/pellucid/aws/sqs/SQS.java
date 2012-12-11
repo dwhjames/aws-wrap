@@ -3,13 +3,12 @@ package com.pellucid.aws.sqs;
 import java.util.ArrayList;
 import java.util.List;
 
+import play.libs.Scala;
 import scala.collection.JavaConversions;
-import scala.concurrent.Future;
 import scala.collection.Seq;
+import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
-
-import play.libs.Scala;
 
 import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.results.Result;
@@ -102,5 +101,16 @@ public class SQS {
             return new SQSMeta(scalaMeta.requestId());
         }
     }
+
+    static Seq<aws.sqs.MessageAttribute> convertMessageAttributes(List<MessageAttribute> attributes) {
+        return AWSJavaConversions.toSeq(Lists.map(attributes, new MessageAttributeConvert()));
+    }
+
+    static class MessageAttributeConvert extends Mapper<MessageAttribute, aws.sqs.MessageAttribute> {
+        @Override public aws.sqs.MessageAttribute apply(MessageAttribute jAttributes) {
+            return aws.sqs.MessageAttribute$.MODULE$.apply(jAttributes.toString());
+        }
+    }
+
 
 }
