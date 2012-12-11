@@ -145,12 +145,17 @@ package com.pellucid.aws.cloudsearch {
   }
 }
 
+
+/**
+* This package contains all the Java equivalent of the Scala classes
+*/
 package com.pellucid.aws.cloudsearch.models {
 
   import java.util.{ List => JList, Map => JMap, Locale }
   import scala.reflect.BeanProperty
   import com.pellucid.aws.cloudsearch.JavaConverters._
   import scala.collection.JavaConverters._
+
 
 
   class CloudSearchMetadata(@BeanProperty val requestId: String, @BeanProperty val time: Long, @BeanProperty val cpuTime: Long)
@@ -184,6 +189,23 @@ package com.pellucid.aws.cloudsearch.models {
     def and(m: MatchExpression) = toJava(toScala(this).and(toScala(m)))
     def or(m: MatchExpression) = toJava(toScala(this).or(toScala(m)))
   }
+  /**
+  * Build a match expression that define a Boolean search.
+  * {{{
+  *   // This expression will match movies with title containing "Star Wars" or "Star Trek"
+  *   // realeased from 1980 to 1990, that haven't been directed by "Carpenter", and the title must not contains "Spock".
+  *
+  *   MatchExpression ex =
+  *      (field("title", "Star Wars").or(field("title", "Star Trek")))
+  *        .and(filterRange("year", 1980, 1990))
+  *        .and(not(field("director", "Carpenter")))
+  *        .and(not(field("title", "Spock")));
+  *
+  *   Search s = new Search(domain)
+  *     .withReturnFields("title")
+  *     .withMatchExpression(ex);
+  * }}}
+  */
   object MatchExpression {
     import aws.cloudsearch.MatchExpressions.{ MatchExpression => _, _ }
     def field(name: String, value: String) = toJava(Field(name, value))
@@ -196,6 +218,20 @@ package com.pellucid.aws.cloudsearch.models {
   }
 
   import aws.cloudsearch.{ FacetConstraint => FC }
+  /**
+  * This class represents the field values (facet constraints) that you want to count for a particular field.
+  * Constraint can be Strings, bounded or unbounded ranges, and numeric values.
+  * <pre>
+  * <code>
+  *  Search s = new Search(domain)
+  *   .withReturnFields("title")
+  *   .withQuery("star wars")
+  *   .withFacets("genre")
+  *   .withFacetConstraints(new FacetConstraint("genre", "Action"));
+  * </code>
+  * </pre>
+  * Result<CloudSearchMetadata, WithFacets<List<Movie>>> result = get(cloudSearch.searchWithFacets(s, movieParser));
+  */
   class FacetConstraint(val underlying: FC) {
     def this(field: String, value: Number) = this(FC.apply(field, value))
     def this(field: String, value: String) = this(FC.apply(field, value))
@@ -214,21 +250,69 @@ package com.pellucid.aws.cloudsearch.models {
   class Sort(val underlying: SSort)
   class Ordered(override val underlying: SSort, val order: Ordering) extends Sort(underlying)
 
+  /**
+  * How you want to sort facet values for a particular field.
+  * Use methods in the Sort object to create instances.
+  * <pre>
+  * <code>
+  *   Search s = new Search(domain)
+  *    .withReturnFields("title")
+  *    .withQuery("star wars")
+  *    .withFacets("genre")
+  *    .withFacetSorts(Sort.max("genre", Order.DESC()));
+  * </code>
+  * </pre>
+  */
   object Sort {
+    /**
+    * Sort the facet values alphabetically (in ascending order).
+    */
     def alpha(field: String) = new Sort(SSort.Alpha(field))
+    /**
+    * Sort the facet values by their counts (in descending order).
+    */
     def count(field: String) = new Sort(SSort.Count(field))
+    /**
+    * Sort the facet values according to the maximum values in the specified field.
+    * The facet values are sorted in ascending order.
+    */
     def max(field: String) = new Sort(SSort.Max(field))
     def max(field: String, ordering: Ordering) = ordering match {
       case o: Desc.type => new Sort(-SSort.Max(field))
       case _ => new Sort(SSort.Max(field))
     }
+    /**
+    * Sort the facet values according to the sum of the values in the specified field (in ascending order).
+    */
     def sum(field: String) = new Sort(SSort.Sum(field))
   }
 
   import aws.cloudsearch.{ Orderings, Rank => SRank }
   class Rank(val underlying: SRank)
+  /**
+  *  Fields or rank expression to use for ranking.
+  *  A maximum of 10 fields and rank expressions can be specified per query.
+  *  You can use any uint field to rank results numerically.
+  *  Any result-enabled text or literal field can be used to rank results alphabetically.
+  *  To rank results by relevance, you can specify the name of a custom rank expression or text_relevance.
+  *  Hits are ordered according to the specified rank field(s).
+  *  By default, hits are ranked in ascending order.
+  *  If no rank parameter is specified, it defaults to rank=-text_relevance, which lists results according to their text_relevance scores with the highest-scoring documents first.
+  *
+  * <pre>
+  * <code>
+  *   Search s = new Search(domain)
+  *     .withReturnFields("title")
+  *     .withQuery("star wars")
+  *     .withRanks(Rank.rankExpr("customExpression", "cos(text_relevance)", Order.DESC()));
+  * </code>
+  * </pre>
+  */
   object Rank {
     import SRank._
+    /**
+    * Rank results by relevance
+    */
     def textRelevance() = new Rank(TextRelevance())
     def textRelevance(ordering: Ordering) = ordering match {
       case o: Desc.type => new Rank(TextRelevance(Some(Orderings.DESC)))
@@ -239,7 +323,16 @@ package com.pellucid.aws.cloudsearch.models {
       case o: Desc.type => new Rank(Field(name, Some(Orderings.DESC)))
       case _ => new Rank(Field(name, Some(Orderings.ASC)))
     }
-
+    /**
+    * Rank results using a rank expression.
+    * {{{
+    *   Search s = new Search(domain)
+    *     .withReturnFields("title")
+    *     .withQuery("star wars")
+    *     .withRanks(Rank.rankExpr("customExpression", "cos(text_relevance)", Order.DESC()));
+    * }}}
+    * @see: http://docs.amazonwebservices.com/cloudsearch/latest/developerguide/rankexpressions.html
+    */
     def rankExpr(name: String) = new Rank(RankExpr(name, None))
     def rankExpr(name: String, expr: String) = new Rank(RankExpr(name, Some(expr)))
     def rankExpr(name: String, expr: String, ordering: Ordering) = ordering match {
