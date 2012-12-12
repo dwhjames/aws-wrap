@@ -29,18 +29,6 @@ case class SQSMeta(requestId: String) extends Metadata
 object SQS extends V2[SQSMeta](version = "2012-11-05") {
 
   import SQSParsers._
-  import QueueAttributes.QueueAttribute
-
-  object ActionNames extends Enumeration {
-    type ActionName = Value
-    val SendMessage = Value("SendMessage")
-    val ReceiveMessage = Value("ReceiveMessage")
-    val DeleteMessage = Value("DeleteMessage ")
-    val ChangeMessageVisibility = Value("ChangeMessageVisibility ")
-    val GetQueueAttributes = Value("GetQueueAttributes ")
-    val GetQueueUrl = Value("GetQueueUrl")
-  }
-  import ActionNames.ActionName
 
   object Parameters {
     def AccountIds(accountIds: Seq[String]): Seq[(String, String)] = (for ((accountId, i) <- accountIds.zipWithIndex) yield {

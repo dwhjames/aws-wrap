@@ -61,6 +61,82 @@ public class Queue {
         });
     }
 
+    public Future<Result<SQSMeta, List<QueueAttributeValue>>> getAttributes(List<QueueAttribute> attributes) {
+        return AWSJavaConversions.toJavaResultFuture(toScala().getAttributes(
+                AWSJavaConversions.toSeq(Lists.map(attributes, new Mapper<QueueAttribute, aws.sqs.QueueAttribute>() {
+                    @Override public aws.sqs.QueueAttribute apply(QueueAttribute attribute) {
+                        return aws.sqs.QueueAttribute$.MODULE$.apply(attribute.toString());
+                    }
+                }))
+                ),
+                new SQS.MetadataConvert(),
+                new Mapper<Seq<aws.sqs.QueueAttributeValue>, List<QueueAttributeValue>>() {
+            @Override public List<QueueAttributeValue> apply(Seq<aws.sqs.QueueAttributeValue> result) {
+                return Lists.map(JavaConversions.seqAsJavaList(result), new Mapper<aws.sqs.QueueAttributeValue, QueueAttributeValue>(){
+                    @Override public QueueAttributeValue apply(aws.sqs.QueueAttributeValue sQueueAttributeValue) {
+                        return QueueAttributeValue.fromScala(sQueueAttributeValue);
+                    }
+                });
+            }
+        });
+    }
+
+    public Future<Result<SQSMeta, Object>> setAttributes(List<QueueAttributeValue> attributes) {
+        return SQS.convertEmptyResult(toScala().setAttributes(convertAttributeValueList(attributes)));
+    }
+
+    public Future<Result<SQSMeta, Object>> addPermission(String label, List<String> accountIds, List<ActionName> actionNames) {
+        return SQS.convertEmptyResult(toScala().addPermission(
+                label,
+                AWSJavaConversions.toSeq(accountIds),
+                AWSJavaConversions.toSeq(Lists.map(actionNames, new Mapper<ActionName, aws.sqs.ActionName>(){
+                    @Override public aws.sqs.ActionName apply(ActionName actionName) {
+                        return aws.sqs.ActionName$.MODULE$.apply(actionName.toString());
+                    }
+                }))
+                ));
+    }
+
+      /*
+      def removePermission(label: String): Future[EmptyResult[SQSMeta]] = {
+        SQS.get[Unit](this.url, Action("RemovePermission"), "Label" -> label)
+      }
+
+      def deleteMessage(receiptHandle: String): Future[EmptyResult[SQSMeta]] = {
+        SQS.get[Unit](this.url, Action("DeleteMessage"), "ReceiptHandle" -> receiptHandle)
+      }
+
+      def sendMessageBatch(messages: MessageSend*): Future[Result[SQSMeta, Seq[MessageResponse]]] = {
+        val params = Seq(Action("SendMessageBatch")) ++ BatchSendEntry(messages)
+        SQS.get[Seq[MessageResponse]](this.url, params: _*)
+      }
+
+      def deleteMessageBatch(messages: MessageDelete*): Future[Result[SQSMeta, Seq[String]]] = {
+        val params = Seq(Action("DeleteMessageBatch")) ++ BatchDeleteEntry(messages)
+        SQS.get[Seq[String]](this.url, params: _*)
+      }
+
+      def changeMessageVisibility(receiptHandle: String, visibilityTimeout: Long): Future[EmptyResult[SQSMeta]] = {
+        SQS.get[Unit](this.url,
+          Action("ChangeMessageVisibility"),
+          "ReceiptHandle" -> receiptHandle,
+          "VisibilityTimeout" -> visibilityTimeout.toString)
+      }
+
+      def changeMessageVisibilityBatch(messages: MessageVisibility*): Future[Result[SQSMeta, Seq[String]]] = {
+        val params = Seq(Action("ChangeMessageVisibilityBatch")) ++ BatchMessageVisibility(messages)
+        SQS.get[Seq[String]](this.url, params: _*)
+      }
+     */
+
+    private Seq<aws.sqs.QueueAttributeValue> convertAttributeValueList(List<QueueAttributeValue> attributes) {
+        return AWSJavaConversions.toSeq(Lists.map(attributes, new Mapper<QueueAttributeValue, aws.sqs.QueueAttributeValue>(){
+            @Override public aws.sqs.QueueAttributeValue apply(QueueAttributeValue attributeValue) {
+                return attributeValue.toScala();
+            }
+        }));
+    }
+
     public aws.sqs.SQS.Queue toScala() {
         return new aws.sqs.SQS.Queue(this.url);
     }

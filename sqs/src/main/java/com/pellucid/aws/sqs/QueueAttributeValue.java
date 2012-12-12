@@ -17,6 +17,10 @@ public class QueueAttributeValue {
         return aws.sqs.QueueAttributeValue$.MODULE$.apply(attribute, value);
     }
 
+    public static QueueAttributeValue fromScala(aws.sqs.QueueAttributeValue scalaQAV) {
+        return new QueueAttributeValue(scalaQAV.attribute().toString(), scalaQAV.value());
+    }
+
     public static QueueAttributeValue approximateNumberOfMessages(Long value) {
         return new QueueAttributeValue("ApproximateNumberOfMessages", value.toString());
     }

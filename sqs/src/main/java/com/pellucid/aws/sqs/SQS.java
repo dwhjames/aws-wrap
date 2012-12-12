@@ -80,7 +80,7 @@ public class SQS {
         return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new QueueConvert());
     }
 
-    private static Future<Result<SQSMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.sqs.SQSMeta, BoxedUnit>> scalaResult) {
+    static Future<Result<SQSMeta, Object>> convertEmptyResult(Future<aws.core.Result<aws.sqs.SQSMeta, BoxedUnit>> scalaResult) {
         return AWSJavaConversions.toJavaResultFuture(scalaResult, new MetadataConvert(), new Mapper<BoxedUnit, Object>() {
             @Override public Object apply(BoxedUnit unit) {
                 return null;
