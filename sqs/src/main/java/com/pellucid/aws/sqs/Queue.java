@@ -97,37 +97,66 @@ public class Queue {
                 ));
     }
 
-      /*
-      def removePermission(label: String): Future[EmptyResult[SQSMeta]] = {
-        SQS.get[Unit](this.url, Action("RemovePermission"), "Label" -> label)
-      }
+    public Future<Result<SQSMeta, Object>> removePermission(String label) {
+        return SQS.convertEmptyResult(toScala().removePermission(label));
+    }
 
-      def deleteMessage(receiptHandle: String): Future[EmptyResult[SQSMeta]] = {
-        SQS.get[Unit](this.url, Action("DeleteMessage"), "ReceiptHandle" -> receiptHandle)
-      }
+    public Future<Result<SQSMeta, Object>> deleteMessage(String receiptHandle) {
+        return SQS.convertEmptyResult(toScala().deleteMessage(receiptHandle));
+    }
 
-      def sendMessageBatch(messages: MessageSend*): Future[Result[SQSMeta, Seq[MessageResponse]]] = {
-        val params = Seq(Action("SendMessageBatch")) ++ BatchSendEntry(messages)
-        SQS.get[Seq[MessageResponse]](this.url, params: _*)
-      }
+    public Future<Result<SQSMeta, List<MessageResponse>>> sendMessageBatch(List<MessageSend> messages) {
+        return AWSJavaConversions.toJavaResultFuture(toScala().sendMessageBatch(
+                AWSJavaConversions.toSeq(Lists.map(messages, new Mapper<MessageSend, aws.sqs.MessageSend>(){
+                    @Override public aws.sqs.MessageSend apply(MessageSend message) {
+                        return message.toScala();
+                    }
+                }))),
+                new SQS.MetadataConvert(),
+                new Mapper<Seq<aws.sqs.MessageResponse>, List<MessageResponse>>() {
+            @Override public List<MessageResponse> apply(Seq<aws.sqs.MessageResponse> result) {
+                return Lists.map(JavaConversions.seqAsJavaList(result), new Mapper<aws.sqs.MessageResponse, MessageResponse>(){
+                    @Override public MessageResponse apply(aws.sqs.MessageResponse sQueueAttributeValue) {
+                        return MessageResponse.fromScala(sQueueAttributeValue);
+                    }
+                });
+            }
+        });
+    }
 
-      def deleteMessageBatch(messages: MessageDelete*): Future[Result[SQSMeta, Seq[String]]] = {
-        val params = Seq(Action("DeleteMessageBatch")) ++ BatchDeleteEntry(messages)
-        SQS.get[Seq[String]](this.url, params: _*)
-      }
+    public Future<Result<SQSMeta, List<String>>> deleteMessageBatch(List<MessageDelete> messages) {
+        return AWSJavaConversions.toJavaResultFuture(toScala().deleteMessageBatch(
+                AWSJavaConversions.toSeq(Lists.map(messages, new Mapper<MessageDelete, aws.sqs.MessageDelete>(){
+                    @Override public aws.sqs.MessageDelete apply(MessageDelete message) {
+                        return message.toScala();
+                    }
+                }))),
+                new SQS.MetadataConvert(),
+                new Mapper<Seq<String>, List<String>>() {
+            @Override public List<String> apply(Seq<String> result) {
+                return JavaConversions.seqAsJavaList(result);
+            }
+        });
+    }
 
-      def changeMessageVisibility(receiptHandle: String, visibilityTimeout: Long): Future[EmptyResult[SQSMeta]] = {
-        SQS.get[Unit](this.url,
-          Action("ChangeMessageVisibility"),
-          "ReceiptHandle" -> receiptHandle,
-          "VisibilityTimeout" -> visibilityTimeout.toString)
-      }
+    public Future<Result<SQSMeta, Object>> changeMessageVisibility(String receiptHandle, Long visibilityTimeout) {
+        return SQS.convertEmptyResult(toScala().changeMessageVisibility(receiptHandle, visibilityTimeout));
+    }
 
-      def changeMessageVisibilityBatch(messages: MessageVisibility*): Future[Result[SQSMeta, Seq[String]]] = {
-        val params = Seq(Action("ChangeMessageVisibilityBatch")) ++ BatchMessageVisibility(messages)
-        SQS.get[Seq[String]](this.url, params: _*)
-      }
-     */
+    public Future<Result<SQSMeta, List<String>>> changeMessageVisibilityBatch(List<MessageVisibility> messages) {
+        return AWSJavaConversions.toJavaResultFuture(toScala().changeMessageVisibilityBatch(
+                AWSJavaConversions.toSeq(Lists.map(messages, new Mapper<MessageVisibility, aws.sqs.MessageVisibility>(){
+                    @Override public aws.sqs.MessageVisibility apply(MessageVisibility message) {
+                        return message.toScala();
+                    }
+                }))),
+                new SQS.MetadataConvert(),
+                new Mapper<Seq<String>, List<String>>() {
+            @Override public List<String> apply(Seq<String> result) {
+                return JavaConversions.seqAsJavaList(result);
+            }
+        });
+    }
 
     private Seq<aws.sqs.QueueAttributeValue> convertAttributeValueList(List<QueueAttributeValue> attributes) {
         return AWSJavaConversions.toSeq(Lists.map(attributes, new Mapper<QueueAttributeValue, aws.sqs.QueueAttributeValue>(){
