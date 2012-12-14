@@ -44,7 +44,7 @@ object Bucket {
    * Not every string is an acceptable bucket name.
    * @see http://docs.amazonwebservices.com/AmazonS3/2006-03-01/dev/index.html?UsingBucket.html
    * @param bucketname The name of the bucket you want to create.
-   * @param acls predifined grants for this Bucket
+   * @param acls predefined grants for this Bucket
    * @param permissions Explicit access permissions
    * @param region Physical location of the bucket
    */
