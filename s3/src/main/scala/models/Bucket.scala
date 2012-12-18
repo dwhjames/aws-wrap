@@ -65,7 +65,10 @@ object Bucket {
    * @param versionState Versioning state of the bucket
    * @param mfaDeleteState Specifies whether MFA Delete is enabled in the bucket versioning configuration. When enabled, the bucket owner must include the x-amz-mfa request header in requests to change the versioning state of a bucket and to permanently delete a versioned object.
    */
-  def setVersioningConfiguration(bucketname: String, versionState: VersionStates.VersionState, mfaDeleteState: Option[(MFADeleteStates.MFADeleteState, MFA)] = None) = {
+  def setVersioningConfiguration(
+      bucketname: String,
+      versionState: VersionStates.VersionState,
+      mfaDeleteState: Option[(MFADeleteStates.MFADeleteState, MFA)] = None): Future[EmptyResult[S3Metadata]] = {
 
     val b =
       <VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
