@@ -1,8 +1,9 @@
 package com.pellucid.aws.s3.models;
 
-import scala.concurrent.Future;
+import java.util.Date;
 
 import play.libs.Scala;
+import scala.concurrent.Future;
 
 import com.pellucid.aws.results.Result;
 import com.pellucid.aws.s3.S3;
@@ -13,12 +14,19 @@ public class Bucket {
 
     private String bucketName;
 
+    private Date creationDate;
+
     public static enum VersionState {
         ENABLED, SUSPENDED
     }
 
     public Bucket(String bucketName) {
+        this(bucketName, null);
+    }
+
+    public Bucket(String bucketName, Date creationDate) {
         this.bucketName = bucketName;
+        this.creationDate = creationDate;
     }
 
     /**

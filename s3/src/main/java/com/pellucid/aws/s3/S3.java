@@ -1,10 +1,12 @@
 package com.pellucid.aws.s3;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import play.libs.Scala;
-import scala.concurrent.ExecutionContext;
+import scala.collection.JavaConversions;
+import scala.collection.Seq;
 import scala.concurrent.Future;
 import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
@@ -12,6 +14,7 @@ import akka.dispatch.Mapper;
 import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.results.Result;
 import com.pellucid.aws.s3.models.Bucket;
+import com.pellucid.aws.utils.Lists;
 
 public class S3 {
 
@@ -110,6 +113,23 @@ public class S3 {
      */
     public Future<Result<S3Metadata, Object>> deleteBucket(String bucketname) {
         return convertEmptyResult(aws.s3.models.Bucket.delete(bucketname));
+    }
+
+    /**
+     * Returns a list of all buckets owned by the authenticated sender of the request.
+     * Anonymous users cannot list buckets, and you cannot list buckets that you did not create.
+     */
+    public Future<Result<S3Metadata, List<Bucket>>> listBuckets() {
+        return AWSJavaConversions.toJavaResultFuture(
+                aws.s3.models.Bucket.list(), new MetadataConvert(), new Mapper<Seq<aws.s3.models.Bucket>, List<Bucket>>() {
+            @Override public List<Bucket> apply(Seq<aws.s3.models.Bucket> scalaBuckets) {
+                return Lists.map(JavaConversions.seqAsJavaList(scalaBuckets), new Mapper<aws.s3.models.Bucket, Bucket>() {
+                    @Override public Bucket apply(aws.s3.models.Bucket scalaBucket) {
+                        return new Bucket(scalaBucket.name(), scalaBucket.creationDate());
+                    }
+                });
+            }
+        });
     }
 
     public static Future<Result<S3Metadata, Object>> convertEmptyResult(Future<aws.core.Result<aws.s3.models.S3Metadata, BoxedUnit>> scalaResult) {
