@@ -44,7 +44,19 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>This class represents the field values (facet constraints) that you want to count for a particular field.
+Constraint can be Strings, bounded or unbounded ranges, and numeric values.
+<pre>
+<code>
+ Search s = new Search(domain)
+  .withReturnFields("title")
+  .withQuery("star wars")
+  .withFacets("genre")
+  .withFacetConstraints(new FacetConstraint("genre", "Action"));
+</code>
+</pre>
+Result&lt;CloudSearchMetadata, WithFacets&lt;List&lt;Movie&gt;&gt;&gt; result = get(cloudSearch.searchWithFacets(s, movieParser));
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

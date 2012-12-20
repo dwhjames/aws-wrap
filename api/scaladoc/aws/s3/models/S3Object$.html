@@ -227,15 +227,15 @@
 To use this implementation of the operation, you must have READ access to the bucket.
 </p></div></div>
     </li><li name="aws.s3.models.S3Object#delete" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="delete(bucketname:String,objectName:String,versionId:Option[String],mfa:Option[aws.s3.S3.MFA]):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Unit]]"></a>
-      <a id="delete(String,String,Option[String],Option[MFA]):Future[Result[S3Metadata,Unit]]"></a>
+      <a id="delete(bucketname:String,objectName:String,versionId:Option[String],mfa:Option[aws.s3.S3.MFA]):scala.concurrent.Future[aws.core.Types.EmptyResult[aws.s3.models.S3Metadata]]"></a>
+      <a id="delete(String,String,Option[String],Option[MFA]):Future[EmptyResult[S3Metadata]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">delete</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="objectName">objectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="versionId">versionId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="mfa">mfa: <span class="extype" name="scala.Option">Option</span>[<a href="../S3$$MFA.html" class="extype" name="aws.s3.S3.MFA">MFA</a>] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
+        <span class="name">delete</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="objectName">objectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="versionId">versionId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="mfa">mfa: <span class="extype" name="scala.Option">Option</span>[<a href="../S3$$MFA.html" class="extype" name="aws.s3.S3.MFA">MFA</a>] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Types$.html#EmptyResult[M&lt;:aws.core.Metadata]=aws.core.Result[M,Unit]" class="extmbr" name="aws.core.Types.EmptyResult">EmptyResult</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Removes the null version (if there is one) of an object and inserts a delete marker, which becomes the latest version of the object.</p><div class="fullcomment"><div class="comment cmt"><p>Removes the null version (if there is one) of an object and inserts a delete marker, which becomes the latest version of the object.
@@ -376,15 +376,15 @@ If there isn't a null version, Amazon S3 does not remove any objects.</p></div><
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="aws.s3.models.S3Object#put" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="put(bucketname:String,body:java.io.File):scala.concurrent.Future[aws.core.Result[aws.s3.models.S3Metadata,Unit]]"></a>
-      <a id="put(String,File):Future[Result[S3Metadata,Unit]]"></a>
+      <a id="put(bucketname:String,body:java.io.File):scala.concurrent.Future[aws.core.Types.EmptyResult[aws.s3.models.S3Metadata]]"></a>
+      <a id="put(String,File):Future[EmptyResult[S3Metadata]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">put</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
+        <span class="name">put</span><span class="params">(<span name="bucketname">bucketname: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../core/Types$.html#EmptyResult[M&lt;:aws.core.Metadata]=aws.core.Result[M,Unit]" class="extmbr" name="aws.core.Types.EmptyResult">EmptyResult</a>[<a href="S3Metadata.html" class="extype" name="aws.s3.models.S3Metadata">S3Metadata</a>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Adds an object to a bucket.</p><div class="fullcomment"><div class="comment cmt"><p>Adds an object to a bucket. You must have WRITE permissions on a bucket to add an object to it.</p></div><dl class="paramcmts block"><dt class="param">bucketname</dt><dd class="cmt"><p>Name of the target bucket</p></dd><dt class="param">body</dt><dd class="cmt"><p>The File to upload to this Bucket

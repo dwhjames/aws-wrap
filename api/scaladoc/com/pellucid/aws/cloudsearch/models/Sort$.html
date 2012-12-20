@@ -44,7 +44,18 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>How you want to sort facet values for a particular field.
+Use methods in the Sort object to create instances.
+<pre>
+<code>
+  Search s = new Search(domain)
+   .withReturnFields("title")
+   .withQuery("star wars")
+   .withFacets("genre")
+   .withFacetSorts(Sort.max("genre", Order.DESC()));
+</code>
+</pre>
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -167,7 +178,7 @@
         <span class="name">alpha</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Sort.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Sort">Sort</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Sort the facet values alphabetically (in ascending order).</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -209,7 +220,7 @@
         <span class="name">count</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Sort.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Sort">Sort</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Sort the facet values by their counts (in descending order).</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -304,7 +315,7 @@
       </span>
       </h4>
       
-    </li><li name="com.pellucid.aws.cloudsearch.models.Sort#max" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.aws.cloudsearch.models.Sort#max" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="max(field:String):com.pellucid.aws.cloudsearch.models.Sort"></a>
       <a id="max(String):Sort"></a>
       <h4 class="signature">
@@ -316,7 +327,9 @@
         <span class="name">max</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Sort.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Sort">Sort</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Sort the facet values according to the maximum values in the specified field.</p><div class="fullcomment"><div class="comment cmt"><p>Sort the facet values according to the maximum values in the specified field.
+The facet values are sorted in ascending order.
+</p></div></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -368,7 +381,7 @@
         <span class="name">sum</span><span class="params">(<span name="field">field: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Sort.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Sort">Sort</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Sort the facet values according to the sum of the values in the specified field (in ascending order).</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

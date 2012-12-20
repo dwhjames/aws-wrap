@@ -172,7 +172,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="aws.sqs.SQS.Queue#addPermission" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="addPermission(label:String,accountIds:Seq[String],actionNames:Seq[aws.sqs.SQS.ActionNames.ActionName]):scala.concurrent.Future[aws.core.Types.EmptyResult[aws.sqs.SQSMeta]]"></a>
+      <a id="addPermission(label:String,accountIds:Seq[String],actionNames:Seq[aws.sqs.ActionName]):scala.concurrent.Future[aws.core.Types.EmptyResult[aws.sqs.SQSMeta]]"></a>
       <a id="addPermission(String,Seq[String],Seq[ActionName]):Future[EmptyResult[SQSMeta]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -180,7 +180,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addPermission</span><span class="params">(<span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="accountIds">accountIds: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="actionNames">actionNames: <span class="extype" name="scala.Seq">Seq</span>[<a href="SQS$$ActionNames$.html#ActionName=aws.sqs.SQS.ActionNames.Value" class="extmbr" name="aws.sqs.SQS.ActionNames.ActionName">ActionName</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Types$.html#EmptyResult[M&lt;:aws.core.Metadata]=aws.core.Result[M,Unit]" class="extmbr" name="aws.core.Types.EmptyResult">EmptyResult</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>]]</span>
+        <span class="name">addPermission</span><span class="params">(<span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="accountIds">accountIds: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="actionNames">actionNames: <span class="extype" name="scala.Seq">Seq</span>[<a href="ActionName.html" class="extype" name="aws.sqs.ActionName">ActionName</a>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Types$.html#EmptyResult[M&lt;:aws.core.Metadata]=aws.core.Result[M,Unit]" class="extmbr" name="aws.core.Types.EmptyResult">EmptyResult</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>]]</span>
       </span>
       </h4>
       
@@ -308,7 +308,7 @@
       </h4>
       
     </li><li name="aws.sqs.SQS.Queue#getAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getAttributes(attributes:aws.sqs.QueueAttributes.QueueAttribute*):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,Seq[aws.sqs.QueueAttributeValue]]]"></a>
+      <a id="getAttributes(attributes:aws.sqs.QueueAttribute*):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,Seq[aws.sqs.QueueAttributeValue]]]"></a>
       <a id="getAttributes(QueueAttribute*):Future[Result[SQSMeta,Seq[QueueAttributeValue]]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -316,7 +316,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getAttributes</span><span class="params">(<span name="attributes">attributes: <a href="QueueAttributes$.html#QueueAttribute=aws.sqs.QueueAttributes.Value" class="extmbr" name="aws.sqs.QueueAttributes.QueueAttribute">QueueAttribute</a>*</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a>]]]</span>
+        <span class="name">getAttributes</span><span class="params">(<span name="attributes">attributes: <a href="QueueAttribute.html" class="extype" name="aws.sqs.QueueAttribute">QueueAttribute</a>*</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a>]]]</span>
       </span>
       </h4>
       
@@ -347,7 +347,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="aws.sqs.SQS.Queue#messageEnumerator" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="messageEnumerator(attributes:Seq[aws.sqs.MessageAttributes.MessageAttribute],visibilityTimeout:Option[Long])(implicitexecutor:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator[aws.sqs.MessageReceive]"></a>
+      <a id="messageEnumerator(attributes:Seq[aws.sqs.MessageAttribute],visibilityTimeout:Option[Long])(implicitexecutor:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator[aws.sqs.MessageReceive]"></a>
       <a id="messageEnumerator(Seq[MessageAttribute],Option[Long])(ExecutionContext):Enumerator[MessageReceive]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -355,7 +355,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">messageEnumerator</span><span class="params">(<span name="attributes">attributes: <span class="extype" name="scala.Seq">Seq</span>[<a href="MessageAttributes$.html#MessageAttribute=aws.sqs.MessageAttributes.Value" class="extmbr" name="aws.sqs.MessageAttributes.MessageAttribute">MessageAttribute</a>] = <span class="symbol"><span class="name"><a href="MessageAttributes$.html">Seq(MessageAttributes.All)</a></span></span></span>, <span name="visibilityTimeout">visibilityTimeout: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="executor">executor: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span><span class="result">: <span class="extype" name="play.api.libs.iteratee.Enumerator">Enumerator</span>[<a href="MessageReceive.html" class="extype" name="aws.sqs.MessageReceive">MessageReceive</a>]</span>
+        <span class="name">messageEnumerator</span><span class="params">(<span name="attributes">attributes: <span class="extype" name="scala.Seq">Seq</span>[<a href="MessageAttribute.html" class="extype" name="aws.sqs.MessageAttribute">MessageAttribute</a>] = <span class="symbol"><span class="name"><a href="MessageAttribute$.html">Seq(MessageAttribute.All)</a></span></span></span>, <span name="visibilityTimeout">visibilityTimeout: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="executor">executor: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span><span class="result">: <span class="extype" name="play.api.libs.iteratee.Enumerator">Enumerator</span>[<a href="MessageReceive.html" class="extype" name="aws.sqs.MessageReceive">MessageReceive</a>]</span>
       </span>
       </h4>
       
@@ -399,7 +399,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="aws.sqs.SQS.Queue#receiveMessage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="receiveMessage(attributes:Seq[aws.sqs.MessageAttributes.MessageAttribute],maxNumber:Option[Long],visibilityTimeout:Option[Long],waitTimeSeconds:Option[Long]):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,Seq[aws.sqs.MessageReceive]]]"></a>
+      <a id="receiveMessage(attributes:Seq[aws.sqs.MessageAttribute],maxNumber:Option[Long],visibilityTimeout:Option[Long],waitTimeSeconds:Option[Long]):scala.concurrent.Future[aws.core.Result[aws.sqs.SQSMeta,Seq[aws.sqs.MessageReceive]]]"></a>
       <a id="receiveMessage(Seq[MessageAttribute],Option[Long],Option[Long],Option[Long]):Future[Result[SQSMeta,Seq[MessageReceive]]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -407,7 +407,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">receiveMessage</span><span class="params">(<span name="attributes">attributes: <span class="extype" name="scala.Seq">Seq</span>[<a href="MessageAttributes$.html#MessageAttribute=aws.sqs.MessageAttributes.Value" class="extmbr" name="aws.sqs.MessageAttributes.MessageAttribute">MessageAttribute</a>] = <span class="symbol"><span class="name"><a href="MessageAttributes$.html">Seq(MessageAttributes.All)</a></span></span></span>, <span name="maxNumber">maxNumber: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="visibilityTimeout">visibilityTimeout: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="waitTimeSeconds">waitTimeSeconds: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="MessageReceive.html" class="extype" name="aws.sqs.MessageReceive">MessageReceive</a>]]]</span>
+        <span class="name">receiveMessage</span><span class="params">(<span name="attributes">attributes: <span class="extype" name="scala.Seq">Seq</span>[<a href="MessageAttribute.html" class="extype" name="aws.sqs.MessageAttribute">MessageAttribute</a>] = <span class="symbol"><span class="name"><a href="MessageAttribute$.html">Seq(MessageAttribute.All)</a></span></span></span>, <span name="maxNumber">maxNumber: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="visibilityTimeout">visibilityTimeout: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="waitTimeSeconds">waitTimeSeconds: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/Result.html" class="extype" name="aws.core.Result">Result</a>[<a href="SQSMeta.html" class="extype" name="aws.sqs.SQSMeta">SQSMeta</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="MessageReceive.html" class="extype" name="aws.sqs.MessageReceive">MessageReceive</a>]]]</span>
       </span>
       </h4>
       

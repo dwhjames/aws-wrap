@@ -44,7 +44,18 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Build a match expression that define a Boolean search.</p><pre><span class="cmt">// This expression will match movies with title containing "Star Wars" or "Star Trek"</span>
+<span class="cmt">// realeased from 1980 to 1990, that haven't been directed by "Carpenter", and the title must not contains "Spock".</span>
+
+MatchExpression ex =
+   (field(<span class="lit">"title"</span>, <span class="lit">"Star Wars"</span>).or(field(<span class="lit">"title"</span>, <span class="lit">"Star Trek"</span>)))
+     .and(filterRange(<span class="lit">"year"</span>, <span class="num">1980</span>, <span class="num">1990</span>))
+     .and(not(field(<span class="lit">"director"</span>, <span class="lit">"Carpenter"</span>)))
+     .and(not(field(<span class="lit">"title"</span>, <span class="lit">"Spock"</span>)));
+
+Search s = <span class="kw">new</span> Search(domain)
+  .withReturnFields(<span class="lit">"title"</span>)
+  .withMatchExpression(ex);</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

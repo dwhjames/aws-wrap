@@ -213,6 +213,19 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.pellucid.aws.cloudsearch.CloudSearch#delete" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="delete(domain:com.pellucid.aws.cloudsearch.models.Domain,id:String,version:Int):scala.concurrent.Future[com.pellucid.aws.results.SimpleResult[com.pellucid.aws.cloudsearch.models.BatchResponse]]"></a>
+      <a id="delete(Domain,String,Int):Future[SimpleResult[BatchResponse]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">delete</span><span class="params">(<span name="domain">domain: <a href="models/Domain.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Domain">Domain</a></span>, <span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="version">version: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.pellucid.aws.results.SimpleResult">SimpleResult</span>[<a href="models/BatchResponse.html" class="extype" name="com.pellucid.aws.cloudsearch.models.BatchResponse">BatchResponse</a>]]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -347,7 +360,7 @@
       </h4>
       
     </li><li name="com.pellucid.aws.cloudsearch.CloudSearch#search" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="search[T](search:com.pellucid.aws.cloudsearch.models.Search,p:aws.core.parsers.Parser[T]):scala.concurrent.Future[com.pellucid.aws.results.Result[aws.cloudsearch.CloudSearchMetadata,T]]"></a>
+      <a id="search[T](search:com.pellucid.aws.cloudsearch.models.Search,p:aws.core.parsers.Parser[T]):scala.concurrent.Future[com.pellucid.aws.results.Result[com.pellucid.aws.cloudsearch.models.CloudSearchMetadata,T]]"></a>
       <a id="search[T](Search,Parser[T]):Future[Result[CloudSearchMetadata,T]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -355,12 +368,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">search</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="search">search: <a href="models/Search.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Search">Search</a></span>, <span name="p">p: <a href="../../../../aws/core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="com.pellucid.aws.cloudsearch.CloudSearch.search.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.pellucid.aws.results.Result">Result</span>[<a href="../../../../aws/cloudsearch/CloudSearchMetadata.html" class="extype" name="aws.cloudsearch.CloudSearchMetadata">CloudSearchMetadata</a>, <span class="extype" name="com.pellucid.aws.cloudsearch.CloudSearch.search.T">T</span>]]</span>
+        <span class="name">search</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="search">search: <a href="models/Search.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Search">Search</a></span>, <span name="p">p: <a href="../../../../aws/core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="com.pellucid.aws.cloudsearch.CloudSearch.search.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.pellucid.aws.results.Result">Result</span>[<a href="models/CloudSearchMetadata.html" class="extype" name="com.pellucid.aws.cloudsearch.models.CloudSearchMetadata">CloudSearchMetadata</a>, <span class="extype" name="com.pellucid.aws.cloudsearch.CloudSearch.search.T">T</span>]]</span>
       </span>
       </h4>
       
     </li><li name="com.pellucid.aws.cloudsearch.CloudSearch#searchWithFacets" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="searchWithFacets[T](search:com.pellucid.aws.cloudsearch.models.Search,p:aws.core.parsers.Parser[T]):scala.concurrent.Future[com.pellucid.aws.results.Result[aws.cloudsearch.CloudSearchMetadata,com.pellucid.aws.cloudsearch.models.WithFacets[T]]]"></a>
+      <a id="searchWithFacets[T](search:com.pellucid.aws.cloudsearch.models.Search,p:aws.core.parsers.Parser[T]):scala.concurrent.Future[com.pellucid.aws.results.Result[com.pellucid.aws.cloudsearch.models.CloudSearchMetadata,com.pellucid.aws.cloudsearch.models.WithFacets[T]]]"></a>
       <a id="searchWithFacets[T](Search,Parser[T]):Future[Result[CloudSearchMetadata,WithFacets[T]]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -368,7 +381,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">searchWithFacets</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="search">search: <a href="models/Search.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Search">Search</a></span>, <span name="p">p: <a href="../../../../aws/core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="com.pellucid.aws.cloudsearch.CloudSearch.searchWithFacets.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.pellucid.aws.results.Result">Result</span>[<a href="../../../../aws/cloudsearch/CloudSearchMetadata.html" class="extype" name="aws.cloudsearch.CloudSearchMetadata">CloudSearchMetadata</a>, <a href="models/WithFacets.html" class="extype" name="com.pellucid.aws.cloudsearch.models.WithFacets">WithFacets</a>[<span class="extype" name="com.pellucid.aws.cloudsearch.CloudSearch.searchWithFacets.T">T</span>]]]</span>
+        <span class="name">searchWithFacets</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="search">search: <a href="models/Search.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Search">Search</a></span>, <span name="p">p: <a href="../../../../aws/core/parsers/Parser.html" class="extype" name="aws.core.parsers.Parser">Parser</a>[<span class="extype" name="com.pellucid.aws.cloudsearch.CloudSearch.searchWithFacets.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.pellucid.aws.results.Result">Result</span>[<a href="models/CloudSearchMetadata.html" class="extype" name="com.pellucid.aws.cloudsearch.models.CloudSearchMetadata">CloudSearchMetadata</a>, <a href="models/WithFacets.html" class="extype" name="com.pellucid.aws.cloudsearch.models.WithFacets">WithFacets</a>[<span class="extype" name="com.pellucid.aws.cloudsearch.CloudSearch.searchWithFacets.T">T</span>]]]</span>
       </span>
       </h4>
       
@@ -398,6 +411,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.pellucid.aws.cloudsearch.CloudSearch#upload" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="upload(domain:com.pellucid.aws.cloudsearch.models.Domain,doc:com.pellucid.aws.cloudsearch.models.SDF):scala.concurrent.Future[com.pellucid.aws.results.SimpleResult[com.pellucid.aws.cloudsearch.models.BatchResponse]]"></a>
+      <a id="upload(Domain,SDF):Future[SimpleResult[BatchResponse]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">upload</span><span class="params">(<span name="domain">domain: <a href="models/Domain.html" class="extype" name="com.pellucid.aws.cloudsearch.models.Domain">Domain</a></span>, <span name="doc">doc: <a href="models/SDF.html" class="extype" name="com.pellucid.aws.cloudsearch.models.SDF">SDF</a></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.pellucid.aws.results.SimpleResult">SimpleResult</span>[<a href="models/BatchResponse.html" class="extype" name="com.pellucid.aws.cloudsearch.models.BatchResponse">BatchResponse</a>]]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

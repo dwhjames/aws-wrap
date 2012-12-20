@@ -87,7 +87,20 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="aws.sqs.ApproximateNumberOfMessages" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="aws.sqs.ActionName" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ActionNameextendsObject"></a>
+      <a id="ActionName:ActionName"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActionName.html"><span class="name">ActionName</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.ApproximateNumberOfMessages" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ApproximateNumberOfMessagesextendsQueueAttributeValuewithProductwithSerializable"></a>
       <a id="ApproximateNumberOfMessages:ApproximateNumberOfMessages"></a>
       <h4 class="signature">
@@ -178,6 +191,19 @@
       </span>
       </h4>
       
+    </li><li name="aws.sqs.MessageAttribute" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MessageAttributeextendsObject"></a>
+      <a id="MessageAttribute:MessageAttribute"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageAttribute.html"><span class="name">MessageAttribute</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="aws.sqs.MessageDelete" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MessageDeleteextendsProductwithSerializable"></a>
       <a id="MessageDelete:MessageDelete"></a>
@@ -200,7 +226,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="MessageReceive.html"><span class="name">MessageReceive</span></a><span class="params">(<span name="messageId">messageId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="md5OfBody">md5OfBody: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="receiptHandle">receiptHandle: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="attributes">attributes: <span class="extype" name="scala.Predef.Map">Map</span>[<a href="MessageAttributes$.html#MessageAttribute=aws.sqs.MessageAttributes.Value" class="extmbr" name="aws.sqs.MessageAttributes.MessageAttribute">MessageAttribute</a>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="MessageReceive.html"><span class="name">MessageReceive</span></a><span class="params">(<span name="messageId">messageId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="md5OfBody">md5OfBody: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="receiptHandle">receiptHandle: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="attributes">attributes: <span class="extype" name="scala.Predef.Map">Map</span>[<a href="MessageAttribute.html" class="extype" name="aws.sqs.MessageAttribute">MessageAttribute</a>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -279,6 +305,19 @@
       </span>
       <span class="symbol">
         <a href="QueueArn.html"><span class="name">QueueArn</span></a><span class="params">(<span name="arn">arn: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="QueueAttributeValue.html" class="extype" name="aws.sqs.QueueAttributeValue">QueueAttributeValue</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.QueueAttribute" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="QueueAttributeextendsObject"></a>
+      <a id="QueueAttribute:QueueAttribute"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="QueueAttribute.html"><span class="name">QueueAttribute</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
@@ -373,16 +412,42 @@
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="aws.sqs.MessageAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="MessageAttributes"></a>
-      <a id="MessageAttributes:MessageAttributes"></a>
+              <ol><li name="aws.sqs.ActionName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ActionName"></a>
+      <a id="ActionName:ActionName"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="MessageAttributes$.html"><span class="name">MessageAttributes</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
+        <a href="ActionName$.html"><span class="name">ActionName</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.MessageAttribute" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageAttribute"></a>
+      <a id="MessageAttribute:MessageAttribute"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageAttribute$.html"><span class="name">MessageAttribute</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="aws.sqs.QueueAttribute" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="QueueAttribute"></a>
+      <a id="QueueAttribute:QueueAttribute"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="QueueAttribute$.html"><span class="name">QueueAttribute</span></a>
       </span>
       </h4>
       
@@ -396,19 +461,6 @@
       </span>
       <span class="symbol">
         <a href="QueueAttributeValue$.html"><span class="name">QueueAttributeValue</span></a>
-      </span>
-      </h4>
-      
-    </li><li name="aws.sqs.QueueAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="QueueAttributes"></a>
-      <a id="QueueAttributes:QueueAttributes"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="QueueAttributes$.html"><span class="name">QueueAttributes</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
       </span>
       </h4>
       
