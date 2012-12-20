@@ -1,7 +1,10 @@
 package com.pellucid.aws.s3.models;
 
 import java.util.Date;
+
 import play.libs.Scala;
+
+import com.pellucid.aws.s3.models.S3Object.StorageClass;
 
 public class Content {
 
@@ -34,15 +37,19 @@ public class Content {
     public Long size() {
         return (Long)Scala.orNull(this.scalaContent.size());
     }
-    /*
+
     public StorageClass storageClass() {
-        return Scala.orNull(this.scalaContent.storageClass());
+        scala.Enumeration.Value scalaStorage = Scala.orNull(this.scalaContent.storageClass());
+        if (scalaStorage == aws.s3.models.S3Object.StorageClasses$.MODULE$.STANDARD()) {
+            return StorageClass.STANDARD;
+        }
+        return null;
     }
     
     public Owner owner() {
-        return this.scalaContent.owner();
+        return Owner.fromScala(this.scalaContent.owner());
     }
-    */
+
     public static Content fromScala(aws.s3.models.Content scalaContent) {
         return new Content(scalaContent);
     }

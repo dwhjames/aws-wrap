@@ -10,6 +10,10 @@ import com.pellucid.aws.utils.Lists;
 
 public class S3Object {
 
+    public enum StorageClass {
+        STANDARD
+    }
+
     private aws.s3.models.S3Object scalaObject;
 
     private S3Object(aws.s3.models.S3Object scalaObject) {
