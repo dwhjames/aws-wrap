@@ -124,13 +124,13 @@ object S3Object {
   * Returns some or all (up to 1000) of the objects in a bucket.
   * To use this implementation of the operation, you must have READ access to the bucket.
   */
-  def content(bucketname: String) =
+  def content(bucketname: String): Future[Result[S3Metadata, S3Object]] =
     Http.get[S3Object](Some(bucketname))
 
   /**
   * List metadata about all of the versions of objects in a bucket
   */
-  def getVersions(bucketname: String) =
+  def getVersions(bucketname: String): Future[Result[S3Metadata, Versions]] =
     Http.get[Versions](Some(bucketname), subresource = Some("versions"))
 
   /**
@@ -142,7 +142,7 @@ object S3Object {
   // TODO: ACL
   // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
   // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
-  def put(bucketname: String, body: File) =
+  def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]] =
     Http.upload[Unit](PUT, bucketname, body.getName, body)
 
   /**
@@ -153,7 +153,11 @@ object S3Object {
   * @param versionId specific object version to delete
   * @param mfa Required to permanently delete a versioned object if versioning is configured with MFA Delete enabled.
   */
-  def delete(bucketname: String, objectName: String, versionId: Option[String] = None, mfa: Option[MFA] = None) = {
+  def delete(
+       bucketname: String,
+       objectName: String,
+       versionId: Option[String] = None,
+       mfa: Option[MFA] = None): Future[EmptyResult[S3Metadata]] = {
     Http.delete[Unit](Some(bucketname),
       Some(objectName),
       parameters = mfa.map{ m => Parameters.X_AMZ_MFA(m) }.toSeq,

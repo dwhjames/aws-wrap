@@ -14,6 +14,7 @@ import akka.dispatch.Mapper;
 import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.results.Result;
 import com.pellucid.aws.s3.models.Bucket;
+import com.pellucid.aws.s3.models.S3Object.StorageClass;
 import com.pellucid.aws.utils.Lists;
 
 public class S3 {
@@ -147,4 +148,11 @@ public class S3 {
         }
     }
 
+    public static StorageClass storageClassFromScala(scala.Enumeration.Value scalaStorage) {
+        if (scalaStorage == aws.s3.models.S3Object.StorageClasses$.MODULE$.STANDARD()) {
+            return StorageClass.STANDARD;
+        }
+        return null;
+    }
+    
 }

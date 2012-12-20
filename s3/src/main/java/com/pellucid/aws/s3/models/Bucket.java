@@ -1,6 +1,7 @@
 package com.pellucid.aws.s3.models;
 
 import java.util.Date;
+import java.io.File;
 
 import play.libs.Scala;
 import scala.concurrent.Future;
@@ -59,15 +60,21 @@ public class Bucket {
                  return S3Object.fromScala(scalaObject);
              }
          });
-
      }
 
      /**
      * List metadata about all of the versions of objects in a bucket
      */
-/*     def getVersions(bucketname: String) =
-       Http.get[Versions](Some(bucketname), subresource = Some("versions"))
-*/
+     public Future<Result<S3Metadata, Versions>> getVersions() {
+         return AWSJavaConversions.toJavaResultFuture(
+                 aws.s3.models.S3Object$.MODULE$.getVersions(bucketName),
+                 new S3.MetadataConvert(), new Mapper<aws.s3.models.Versions, Versions>() {
+             @Override public Versions apply(aws.s3.models.Versions scalaObject) {
+                 return Versions.fromScala(scalaObject);
+             }
+         });
+     }
+
      /**
      * Adds an object to a bucket. You must have WRITE permissions on a bucket to add an object to it.
      * @param bucketname Name of the target bucket
@@ -75,9 +82,10 @@ public class Bucket {
      */
      // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
      // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
-/*     def put(bucketname: String, body: File) =
-       Http.upload[Unit](PUT, bucketname, body.getName, body)
-*/
+     public Future<Result<S3Metadata, Object>> put(File body) {
+         return S3.convertEmptyResult(aws.s3.models.S3Object$.MODULE$.put(bucketName, body));
+     }
+
      /**
      * Removes the null version (if there is one) of an object and inserts a delete marker, which becomes the latest version of the object.
      * If there isn't a null version, Amazon S3 does not remove any objects.
