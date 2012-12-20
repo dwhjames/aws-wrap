@@ -140,7 +140,7 @@ public class S3 {
         });
     }
 
-    static class MetadataConvert extends Mapper<aws.s3.models.S3Metadata, S3Metadata> {
+    public static class MetadataConvert extends Mapper<aws.s3.models.S3Metadata, S3Metadata> {
         @Override
         public S3Metadata apply(aws.s3.models.S3Metadata scalaMeta) {
             return S3Metadata.fromScala(scalaMeta);
