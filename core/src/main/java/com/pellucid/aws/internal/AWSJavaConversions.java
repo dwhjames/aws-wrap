@@ -7,6 +7,7 @@ import scala.Predef;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
 import scala.collection.JavaConverters;
+import scala.collection.Seq;
 import scala.concurrent.Future;
 import akka.dispatch.Mapper;
 
@@ -85,6 +86,14 @@ public class AWSJavaConversions {
         Map<String, B> result = new HashMap<String, B>();
         for (String key: JavaConversions.asJavaIterable(sMap.keys())) {
             result.put(key, convert.apply(sMap.apply(key)));
+        }
+        return result;
+    }
+
+    public static <A, B> Map<A, B> toJavaMap(Seq<Tuple2<A, B>> seqOfPairs) {
+        Map<A, B> result = new HashMap<A, B>();
+        for (Tuple2<A, B> pair: JavaConversions.asJavaIterable(seqOfPairs)) {
+            result.put(pair._1(), pair._2());
         }
         return result;
     }
