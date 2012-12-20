@@ -1,18 +1,18 @@
 package com.pellucid.aws.s3.models;
 
-import java.util.Date;
 import java.io.File;
+import java.util.Date;
+import java.util.Map;
 
 import play.libs.Scala;
 import scala.concurrent.Future;
-import scala.runtime.BoxedUnit;
 import akka.dispatch.Mapper;
 
 import com.pellucid.aws.internal.AWSJavaConversions;
 import com.pellucid.aws.results.Result;
 import com.pellucid.aws.s3.S3;
 import com.pellucid.aws.s3.S3Metadata;
-
+import com.pellucid.aws.utils.Maps;
 
 public class Bucket {
 
@@ -22,6 +22,10 @@ public class Bucket {
 
     public static enum VersionState {
         ENABLED, SUSPENDED
+    }
+
+    public Date creationDate() {
+        return this.creationDate;
     }
 
     public Bucket(String bucketName) {
@@ -121,10 +125,27 @@ public class Bucket {
      * @param objects Seq of objectName -> objectVersion
      * @param mfa Required to permanently delete a versioned object if versioning is configured with MFA Delete enabled.
      */
-/*    public Future<Result<S3Metadata, BatchDeletion>> batchDelete(Map<String, String> objects, MFA mfa)  {
+    public Future<Result<S3Metadata, BatchDeletion>> batchDelete(Map<String, String> objects, MFA mfa)  {
+        return AWSJavaConversions.toJavaResultFuture(
+                aws.s3.models.S3Object$.MODULE$.batchDelete(
+                        bucketName,
+                        AWSJavaConversions.toScalaMap(Maps.mapValues(objects, new Mapper<String, scala.Option<String>>(){
+                            @Override public scala.Option<String> apply(String s) {
+                                return Scala.Option(s);
+                            }
+                        })).toSeq(),
+                        Scala.Option(mfa.toScala())),
+                        new S3.MetadataConvert(), new Mapper<aws.s3.models.BatchDeletion, BatchDeletion>() {
+                    @Override public BatchDeletion apply(aws.s3.models.BatchDeletion scalaObject) {
+                        return BatchDeletion.fromScala(scalaObject);
+                    }
+                }
+                );
+    }
 
-     }*/
-
+    public Future<Result<S3Metadata, BatchDeletion>> batchDelete(Map<String, String> objects)  {
+        return batchDelete(objects, null);
+    }
 
     private static scala.Enumeration.Value versionStateScala(VersionState state) {
         if (state == VersionState.ENABLED) {
