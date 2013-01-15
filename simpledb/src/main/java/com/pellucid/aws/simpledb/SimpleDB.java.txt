@@ -1,4 +1,4 @@
-package com.pellucid.aws.simpledb;
+/*package com.pellucid.aws.simpledb;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class SimpleDB {
     public SimpleDB(SDBRegion region) {
         this.scalaRegion = SimpleDB.scalaRegion(region);
     }
-
+*/
     /**
      * Creates a new domain. The domain name must be unique among the domains associated with the Access Key ID used.
      * The CreateDomain operation might take 10 or more seconds to complete.

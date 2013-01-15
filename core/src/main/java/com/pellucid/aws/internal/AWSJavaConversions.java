@@ -9,6 +9,7 @@ import scala.collection.JavaConversions;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
 import scala.concurrent.Future;
+import scala.concurrent.ExecutionContext;
 import akka.dispatch.Mapper;
 
 import com.pellucid.aws.results.AWSError;
@@ -39,12 +40,12 @@ public class AWSJavaConversions {
     public static <MS extends aws.core.Metadata, TS, MJ, TJ> Future<Result<MJ, TJ>> toJavaResultFuture(
             Future<aws.core.Result<MS, TS>> scalaResult,
             final Mapper<MS, MJ> metadataConvert,
-            final Mapper<TS, TJ> bodyConvert) {
+            final Mapper<TS, TJ> bodyConvert, final ExecutionContext executionContext) {
         return scalaResult.map(new Mapper<aws.core.Result<MS, TS>, Result<MJ, TJ>>(){
             @Override public Result<MJ, TJ> apply(aws.core.Result<MS, TS> scalaResult) {
                 return toJavaResult(scalaResult, metadataConvert, bodyConvert);
             }
-        }, aws.core.AWS.defaultExecutionContext());
+        }, executionContext);
     }
 
     public static <MS extends aws.core.Metadata, TS, TJ> SimpleResult<TJ> toJavaSimpleResult(aws.core.Result<MS, TS> scalaResult,
@@ -99,12 +100,12 @@ public class AWSJavaConversions {
     }
 
     public static <MS extends aws.core.Metadata, TS, TJ> Future<SimpleResult<TJ>> toJavaSimpleResult(Future<aws.core.Result<MS, TS>> scalaFuture,
-            final Mapper<TS, TJ> bodyConvert) {
+            final Mapper<TS, TJ> bodyConvert, final ExecutionContext executionContext) {
         return scalaFuture.map(new Mapper<aws.core.Result<MS, TS>, SimpleResult<TJ>>(){
             @Override public SimpleResult<TJ> apply(aws.core.Result<MS, TS> scalaResult) {
                 return toJavaSimpleResult(scalaResult, bodyConvert);
             }
-        }, aws.core.AWS.defaultExecutionContext());
+        }, executionContext);
     }
 
 }

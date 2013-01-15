@@ -11,6 +11,9 @@ import org.specs2.mutable._
 
 object SimpleDBSpec extends Specification {
 
+  object TestCake extends AWS with SimpleDBLayer
+  import TestCake._
+
   import scala.concurrent._
   import scala.concurrent.duration.Duration
   import java.util.concurrent.TimeUnit._

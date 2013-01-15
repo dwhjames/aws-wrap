@@ -1,4 +1,4 @@
-package com.pellucid.aws.dynamodb;
+/*package com.pellucid.aws.dynamodb;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class DynamoDB {
 
     public Future<SimpleResult<List<String>>> listTables(Integer limit) {
         return this.listTables(limit, null);
-    }
+    }*/
 
     /**
      * Returns a sequence of all the tables names associated with the current account and endpoint.
@@ -46,14 +46,14 @@ public class DynamoDB {
      * @param limit A number of maximum table names to return
      * @param exclusiveStartTableName The name of the table that starts the list. If you already ran a ListTables operation and received an LastEvaluatedTableName value in the response, use that value here to continue the list.
      */
-    public Future<SimpleResult<List<String>>> listTables(Integer limit, String exclusiveStartTableName) {
+    /*public Future<SimpleResult<List<String>>> listTables(Integer limit, String exclusiveStartTableName) {
         return AWSJavaConversions.toJavaSimpleResult(aws.dynamodb.DynamoDB.listTables(Scala.Option((Object)limit), Scala.Option(exclusiveStartTableName), scalaRegion, aws.core.AWS.defaultExecutionContext()),
                 new Mapper<Seq<String>, List<String>>() {
             @Override public List<String> apply(Seq<String> tableNames) {
                 return JavaConversions.seqAsJavaList(tableNames);
             }
         });
-    }
+    }*/
 
     /**
      * The CreateTable operation adds a new table to your account. The table name must be unique among those associated with the AWS Account issuing the request,
@@ -68,7 +68,7 @@ public class DynamoDB {
      *                  Names can be between 3 and 255 characters long.
      * @param keySchema the primary key structure for the table. See [[PrimaryKey]] for more information.
      */
-    public Future<SimpleResult<TableDescription>> createTable(String tableName,
+    /*public Future<SimpleResult<TableDescription>> createTable(String tableName,
             PrimaryKey keySchema,
             ProvisionedThroughput provisionedThroughput) {
         return AWSJavaConversions.toJavaSimpleResult(aws.dynamodb.DynamoDB.createTable(tableName, keySchema.toScala(), provisionedThroughput.toScala(), scalaRegion, aws.core.AWS.defaultExecutionContext()),
@@ -77,7 +77,7 @@ public class DynamoDB {
                 return TableDescription.fromScala(tableDesc);
             }
         });
-    }
+    }*/
 
     /**
      * Updates the provisioned throughput for the given table. Setting the throughput for a table
@@ -93,7 +93,7 @@ public class DynamoDB {
      *
      * @param tableName
      */
-    public Future<SimpleResult<TableDescription>> updateTable(String tableName,
+    /*public Future<SimpleResult<TableDescription>> updateTable(String tableName,
             ProvisionedThroughput provisionedThroughput) {
         return AWSJavaConversions.toJavaSimpleResult(
                 aws.dynamodb.DynamoDB.updateTable(tableName,
@@ -105,7 +105,7 @@ public class DynamoDB {
                         return TableDescription.fromScala(tableDesc);
                     }
                 });
-    }
+    }*/
 
     /**
      * The DeleteTable operation deletes a table and all of its items.
@@ -123,7 +123,7 @@ public class DynamoDB {
      *
      * @param tableName
      */
-    public Future<SimpleResult<Object>> deleteTable(String tableName) {
+    /*public Future<SimpleResult<Object>> deleteTable(String tableName) {
         return AWSJavaConversions.toJavaSimpleResult(
                 aws.dynamodb.DynamoDB.deleteTable(tableName, scalaRegion, aws.core.AWS.defaultExecutionContext()),
                 new Mapper<BoxedUnit, Object>() {
@@ -132,7 +132,7 @@ public class DynamoDB {
                     }
                 }
                 );
-    }
+    }*/
 
     /**
      * Returns information about the table, including the current status of the table,
@@ -144,7 +144,7 @@ public class DynamoDB {
      *
      * @param tableName
      */
-    public Future<SimpleResult<TableDescription>> describeTable(String tableName) {
+    /*public Future<SimpleResult<TableDescription>> describeTable(String tableName) {
         return AWSJavaConversions.toJavaSimpleResult(
                 aws.dynamodb.DynamoDB.describeTable(tableName, scalaRegion, aws.core.AWS.defaultExecutionContext()),
                 new Mapper<aws.dynamodb.TableDescription, TableDescription>() {
@@ -169,7 +169,7 @@ public class DynamoDB {
             Map<String, AttributeValue> item,
             Map<String, Expected> expected) {
         return putItem(tableName, item, expected, ReturnValues.NONE);
-    }
+    }*/
 
     /**
      * Creates a new item, or replaces an old item with a new item (including all the attributes).
@@ -179,7 +179,7 @@ public class DynamoDB {
      * @param item The [[Item]] to put. Must include the primary key values that define the item.
      * Other attribute name-value pairs can be provided for the item. For more information about primary keys, see [[PrimaryKey]].
      */
-    public Future<SimpleResult<ItemResponse>> putItem(String tableName,
+    /*public Future<SimpleResult<ItemResponse>> putItem(String tableName,
             Map<String, AttributeValue> item,
             Map<String, Expected> expected,
             ReturnValues returnValues) {
@@ -215,7 +215,7 @@ public class DynamoDB {
 
     public Future<SimpleResult<ItemResponse>> getItem(String tableName, KeyValue key, List<String> attributesToGet) {
         return getItem(tableName, key, attributesToGet, false);
-    }
+    }*/
 
     /**
      * The GetItem operation returns a set of Attributes for an item that matches the primary key.
@@ -225,7 +225,7 @@ public class DynamoDB {
      * Although this operation might take longer than a standard read, it always returns the last updated value.
      * For more information, see [[http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/APISummary.html#DataReadConsistency Data Read and Consistency Considerations]].
      */
-    public Future<SimpleResult<ItemResponse>> getItem(
+    /*public Future<SimpleResult<ItemResponse>> getItem(
             String tableName,
             KeyValue key,
             List<String> attributesToGet,
@@ -344,4 +344,4 @@ public class DynamoDB {
         NONE, ALL_OLD
     }
 
-}
+}*/
