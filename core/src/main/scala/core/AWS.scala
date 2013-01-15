@@ -62,8 +62,8 @@ trait AWS {
   def canonicalQueryString(params: Seq[(String, String)]) =
     params.sortBy(_._1).map { p => SignerEncoder.encode(p._1) + "=" + SignerEncoder.encode(p._2) }.mkString("&")
 
-  private def httpDateFormat(date: Date) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(date)
-  private def httpDateparse(date: String) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").parse(date)
+  def httpDateFormat(date: Date) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(date)
+  def httpDateparse(date: String) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").parse(date)
 
   object Parameters {
     def TimeStamp(date: Date) = "Timestamp" -> isoDateFormat(date)

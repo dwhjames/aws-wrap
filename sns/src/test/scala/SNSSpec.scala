@@ -15,6 +15,9 @@ object SNSSpec extends Specification {
 
   implicit val region = SNSRegion.EU_WEST_1
 
+  object TestCake extends AWS with SNSLayer
+  import TestCake._
+
   "SNS API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
 
