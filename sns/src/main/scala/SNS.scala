@@ -19,7 +19,6 @@ package aws.sns
 import java.util.Date
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 import play.api.libs.ws._
 import play.api.libs.json._

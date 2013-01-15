@@ -44,9 +44,11 @@ object ApplicationBuild extends Build {
 
     lazy val core = Project("core", file("core"), settings = commonSettings)
 
-    lazy val s3 = Project("s3", file("s3"), settings = commonSettings).dependsOn(core)
+    //REVIST THIS AND MAKE IT WORK WITH NEW WAY OF DOING CREDENTIALS
+    //lazy val s3 = Project("s3", file("s3"), settings = commonSettings).dependsOn(core)
 
-    lazy val sqs = Project("sqs", file("sqs"), settings = commonSettings).dependsOn(core)
+    //REVIST THIS AND MAKE IT WORK WITH NEW WAY OF DOING CREDENTIALS
+    //lazy val sqs = Project("sqs", file("sqs"), settings = commonSettings).dependsOn(core)
 
     lazy val sns = Project("sns", file("sns"), settings = commonSettings).dependsOn(core)
 
@@ -54,12 +56,14 @@ object ApplicationBuild extends Build {
 
     lazy val simpledb = Project("simpledb", file("simpledb"), settings = commonSettings).dependsOn(core)
 
-    lazy val ses = Project("ses", file("ses"), settings = commonSettings).dependsOn(core)
+    //REVIST THIS AND MAKE IT WORK WITH NEW WAY OF DOING CREDENTIALS
+    //lazy val ses = Project("ses", file("ses"), settings = commonSettings).dependsOn(core)
 
-    lazy val cloudsearch = Project("cloud-search", file("cloudsearch"), settings = commonSettings).dependsOn(core)
+    //REVIST THIS AND MAKE IT WORK WITH NEW WAY OF DOING CREDENTIALS
+    //lazy val cloudsearch = Project("cloud-search", file("cloudsearch"), settings = commonSettings).dependsOn(core)
 
     lazy val root = Project("root", file("."), settings = Project.defaultSettings ++ Unidoc.settings).aggregate(
-        cloudsearch, core, s3, simpledb, sqs, sns, dynamodb, ses
+        core, simpledb, sns, dynamodb
     )
 
 }
