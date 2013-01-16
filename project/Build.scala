@@ -7,9 +7,9 @@ import scalariform.formatter.preferences._
 import com.typesafe.sbtscalariform.ScalariformPlugin._
 
 object AWS {
-    val scalaVersion = "2.10.0-RC1"
+    val scalaVersion = "2.10.0"
     val version = "0.1-SNAPSHOT"
-    val playVersion = "2.1-e5217b2"
+    val playVersion = "2.1-RC2"
     val repository = "AWS" at "http://pellucidanalytics.github.com/aws/repository/"
 }
 
