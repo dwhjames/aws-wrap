@@ -183,7 +183,7 @@ object S3Object {
         }
       </Delete>
 
-    val ps = Seq(Parameters.MD5(b.mkString), AWS.Parameters.ContentLength(b.mkString.length)) ++
+    val ps = Seq(Parameters.MD5(b.mkString), aws.s3.AWS.Parameters.ContentLength(b.mkString.length)) ++
       mfa.map(m => Parameters.X_AMZ_MFA(m)).toSeq
 
     Http.post[Node, BatchDeletion](Some(bucketname),

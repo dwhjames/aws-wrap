@@ -16,6 +16,8 @@
 
 package aws.s3
 
+object AWS extends  aws.core.AWS{}
+
 object S3 {
 
   val ACCESS_KEY_ID = ""
@@ -47,7 +49,7 @@ object S3 {
   }
 
   object Parameters {
-    import aws.core.AWS._
+    import AWS._
 
     def MD5(content: String) = ("Content-MD5" -> aws.core.utils.Crypto.base64(java.security.MessageDigest.getInstance("MD5").digest(content.getBytes)))
 

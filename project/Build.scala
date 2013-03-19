@@ -45,7 +45,7 @@ object ApplicationBuild extends Build {
     lazy val core = Project("core", file("core"), settings = commonSettings)
 
     //REVIST THIS AND MAKE IT WORK WITH NEW WAY OF DOING CREDENTIALS
-    //lazy val s3 = Project("s3", file("s3"), settings = commonSettings).dependsOn(core)
+    lazy val s3 = Project("s3", file("s3"), settings = commonSettings).dependsOn(core)
 
     //REVIST THIS AND MAKE IT WORK WITH NEW WAY OF DOING CREDENTIALS
     //lazy val sqs = Project("sqs", file("sqs"), settings = commonSettings).dependsOn(core)

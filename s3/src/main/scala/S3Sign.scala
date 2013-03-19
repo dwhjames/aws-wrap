@@ -64,10 +64,10 @@ object S3Sign {
            contentType: Option[String] = None,
            headers: Seq[(String, String)] = Nil): Seq[(String, String)] = {
 
-    import AWS.Parameters._
+    import aws.s3.AWS.Parameters._
     import aws.core.SignerEncoder.encode
 
-    val d = AWS.httpDateFormat(new Date)
+    val d = aws.s3.AWS.httpDateFormat(new Date)
 
     val s = toSign(
       method,
@@ -77,10 +77,10 @@ object S3Sign {
       canonicalizedAmzHeaders(headers),
       canonicalizedResource(bucketname, objectName, subresource, queryString))
 
-    ("Authorization" -> ("AWS " + AWS.key + ":" + signature(s))) :: ("Date" -> d) :: Nil
+    ("Authorization" -> ("AWS " + aws.s3.AWS.awsKey + ":" + signature(s))) :: ("Date" -> d) :: Nil
   }
 
-  private def signature(data: String) = Crypto.base64(Crypto.hmacSHA1(data.getBytes(), AWS.secret))
+  private def signature(data: String) = Crypto.base64(Crypto.hmacSHA1(data.getBytes(), aws.s3.AWS.awsSecret))
 
 }
 
