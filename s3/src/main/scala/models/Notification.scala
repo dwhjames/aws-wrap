@@ -39,8 +39,8 @@ case class NotificationConfiguration(topic: String, event: Events.Event)
 object NotificationConfiguration {
   import Http._
   import Parameters._
-  import Permisions._
-  import ACLs._
+  import aws.s3.Permissions._
+  import aws.s3.ACLs._
 
   /**
    * Enable notifications of specified events for a bucket. Currently, the s3:ReducedRedundancyLostObject event is the only event supported for notifications.

@@ -57,7 +57,7 @@ object S3Parsers {
       val grants = (n \ "TargetGrants" \ "Grant").toSeq.map { g =>
         val mail = (g \ "Grantee" \ "EmailAddress").text
         val perm = (g \ "Permission").text
-        S3.Parameters.Permisions.Grantees.Email(mail) -> perm
+        aws.s3.Permissions.Grantees.Email(mail) -> perm
       }
       LoggingStatus((n \ "TargetBucket").text, (n \ "TargetPrefix").text, grants)
     })

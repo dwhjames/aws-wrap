@@ -6,7 +6,7 @@ import play.api.libs.ws.WS._
 
 import aws.core._
 import aws.s3.models._
-import aws.s3.S3.Parameters.Permisions._
+import aws.s3.Permissions._
 import org.specs2.mutable._
 
 import scala.concurrent._
@@ -26,7 +26,7 @@ object TestUtils extends Specification { // Evil hack to access Failure
   def waitFor[T](f: Future[T]) = Await.result(f, Duration(30, SECONDS))
 
   def del(name: String) = {
-    val delete = waitFor(Bucket.delete(name))
+    val delete = waitFor(S3.Bucket.delete(name))
     checkResult(delete)
   }
 }
@@ -39,15 +39,15 @@ object BucketSpec extends Specification {
 
     "Create and delete a bucket" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketCreate"
-      val create = waitFor(Bucket.create(bucketName))
+      val create = waitFor(S3.Bucket.create(bucketName))
       checkResult(create)
       del(bucketName)
     }
 
     "Create a private bucket using canned ACL" in {
-      import aws.s3.S3.Parameters.Permisions.ACLs._
+      import aws.s3.ACLs._
       val bucketName = aws.s3.AWS.awsKey + "testBucketAcl"
-      val res = waitFor(Bucket.create(bucketName, Some(PRIVATE)))
+      val res = waitFor(S3.Bucket.create(bucketName, Some(PRIVATE)))
       checkResult(res)
       del(bucketName)
     }
@@ -60,13 +60,13 @@ object BucketSpec extends Specification {
         GRANT_WRITE(Email("erwan.loisant@pellucid.com")) ::
         GRANT_READ_ACP(Email("erwan.loisant@pellucid.com")) :: Nil
 
-      val res = waitFor(Bucket.create(bucketName, permissions = perms))
+      val res = waitFor(S3.Bucket.create(bucketName, permissions = perms))
       checkResult(res)
       del(bucketName)
     }
 
     "List buckets" in {
-      val res = waitFor(Bucket.list())
+      val res = waitFor(S3.Bucket.list())
       checkResult(res)
     }
 
@@ -75,9 +75,9 @@ object BucketSpec extends Specification {
       import aws.s3.S3._
 
       val bucketName = aws.s3.AWS.awsKey + "testBucketEnableVersion"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
 
-      val res = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED))
+      val res = waitFor(S3.Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED))
 
       checkResult(res)
       del(bucketName)
@@ -89,9 +89,9 @@ object BucketSpec extends Specification {
       import aws.s3.S3._
 
       val bucketName = aws.s3.AWS.awsKey + "testBucketEnableMFA"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
 
-      val res = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED, Some(MFADeleteStates.ENABLED -> MFA(???, ???))))
+      val res = waitFor(S3.Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED, Some(MFADeleteStates.ENABLED -> MFA(???, ???))))
 
       checkResult(res)
       del(bucketName)
@@ -109,10 +109,10 @@ object LoggingSpec extends Specification {
         GRANT_READ_ACP(Uri("http://acs.amazonaws.com/groups/s3/LogDelivery")) :: Nil
 
       val target = aws.s3.AWS.awsKey + "testBucketLoggingTarget"
-      val t = waitFor(Bucket.create(target, permissions = ps))
+      val t = waitFor(S3.Bucket.create(target, permissions = ps))
 
       val logged = aws.s3.AWS.awsKey + "testBucketLogging"
-      waitFor(Bucket.create(logged))
+      waitFor(S3.Bucket.create(logged))
 
       val res = waitFor(Logging.enable(logged, target, Seq(Email("dustin.whitney@pellucid.com") -> Logging.LoggingPermisions.FULL_CONTROL)))
 
@@ -124,7 +124,7 @@ object LoggingSpec extends Specification {
 
     "Show Logging Statuses" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketLoggingStatuses"
-      waitFor(Bucket.create(bucketName))
+      waitFor(S3.Bucket.create(bucketName))
       val res = waitFor(Logging.get(bucketName))
       checkResult(res)
       del(bucketName)
@@ -137,7 +137,7 @@ object TagSpec extends Specification {
   "S3 Bucket Tagging API" should {
     "create tags" in {
       val tagged = aws.s3.AWS.awsKey + "testBucketLoggingTagged"
-      val c = waitFor(Bucket.create(tagged))
+      val c = waitFor(S3.Bucket.create(tagged))
       val res = waitFor(Tag.create(tagged, Tag("Project", "Project One"), Tag("User", "jsmith")))
       del(tagged)
       checkResult(res)
@@ -145,7 +145,7 @@ object TagSpec extends Specification {
 
     "list tags" in {
       val tagged = aws.s3.AWS.awsKey + "testBucketLoggingTaggedList"
-      val c = waitFor(Bucket.create(tagged))
+      val c = waitFor(S3.Bucket.create(tagged))
       val tags = Seq(Tag("Project", "Project One"), Tag("User", "jsmith"))
       waitFor(Tag.create(tagged, tags: _*))
 
@@ -160,7 +160,7 @@ object TagSpec extends Specification {
 
     "delete tags" in {
       val tagged = aws.s3.AWS.awsKey + "testBucketLoggingTaggedDelete"
-      val c = waitFor(Bucket.create(tagged))
+      val c = waitFor(S3.Bucket.create(tagged))
       val tags = Seq(Tag("Project", "Project One"), Tag("User", "jsmith"))
       waitFor(Tag.create(tagged, tags: _*))
       val res = waitFor(Tag.delete(tagged))
@@ -179,7 +179,7 @@ object CORSSpec extends Specification {
   "S3 Bucket CORS API" should {
     "create cors" in {
       val cors = aws.s3.AWS.awsKey + "testBucketCors"
-      val cr = waitFor(Bucket.create(cors))
+      val cr = waitFor(S3.Bucket.create(cors))
 
       val rules = Seq(
         CORSRule(
@@ -194,7 +194,7 @@ object CORSSpec extends Specification {
 
     "get cors" in {
       val cors = aws.s3.AWS.awsKey + "testBucketCorsGet"
-      val cr = waitFor(Bucket.create(cors))
+      val cr = waitFor(S3.Bucket.create(cors))
 
       val rules = Seq(
         CORSRule(
@@ -213,7 +213,7 @@ object CORSSpec extends Specification {
 
     "delete cors" in {
       val cors = aws.s3.AWS.awsKey + "testBucketCorsDelete"
-      val cr = waitFor(Bucket.create(cors))
+      val cr = waitFor(S3.Bucket.create(cors))
 
       val rules = Seq(
         CORSRule(
@@ -237,7 +237,7 @@ object LifecycleSpec extends Specification {
     "create lifecycle" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketLifecycle"
 
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
       val res = waitFor(LifecycleConf.create(bucketName, LifecycleConf(Some("42"), "test-", LifecycleConf.Statuses.ENABLED, Duration(42, DAYS))))
 
       del(bucketName)
@@ -247,7 +247,7 @@ object LifecycleSpec extends Specification {
     "delete lifecycle" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketLifecycleDelete"
 
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
       waitFor(LifecycleConf.create(bucketName, LifecycleConf(Some("42"), "test-", LifecycleConf.Statuses.ENABLED, Duration(42, DAYS))))
       val res = waitFor(LifecycleConf.delete(bucketName))
 
@@ -258,7 +258,7 @@ object LifecycleSpec extends Specification {
     "get lifecycle" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketLifecycleGet"
 
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
       val conf = LifecycleConf(Some("42"), "test-", LifecycleConf.Statuses.ENABLED, Duration(42, DAYS))
       waitFor(LifecycleConf.create(bucketName, conf))
       val res = waitFor(LifecycleConf.get(bucketName))
@@ -276,7 +276,7 @@ object S3ObjectSpec extends Specification {
 
     "get versions" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketVersions"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
 
       // TODO: put objects to get versions
       val res = waitFor(S3Object.getVersions(bucketName))
@@ -287,7 +287,7 @@ object S3ObjectSpec extends Specification {
 
     "get contents" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketContent"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
 
       // TODO: put objects to get versions
       val res = waitFor(S3Object.content(bucketName))
@@ -299,7 +299,7 @@ object S3ObjectSpec extends Specification {
       import play.api.libs.iteratee._
 
       val bucketName = aws.s3.AWS.awsKey + "testBucketUp"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
 
       val f = new java.io.File("s3/src/test/resources/fry.gif")
       if(!f.exists)
@@ -317,7 +317,7 @@ object S3ObjectSpec extends Specification {
       import aws.s3.S3._
 
       val bucketName = aws.s3.AWS.awsKey + "testBucketDelVersions"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
 
       val vr = waitFor(Bucket.setVersioningConfiguration(bucketName, VersionStates.ENABLED))
 
@@ -347,7 +347,7 @@ object S3ObjectSpec extends Specification {
       import scala.language.postfixOps
 
       val bucketName = aws.s3.AWS.awsKey + "testBucketDel"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
 
       val f = new java.io.File("s3/src/test/resources/fry.gif")
       val f2 = new java.io.File("s3/src/test/resources/fry2.jpg")
@@ -399,7 +399,7 @@ object PolicySpec extends Specification {
 
     "create policy" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketPoliciesCreate"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
       val res = waitFor(Policy.create(bucketName, policy(bucketName)))
 
       del(bucketName)
@@ -408,7 +408,7 @@ object PolicySpec extends Specification {
 
     "get policy" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketPoliciesGet"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
       waitFor(Policy.create(bucketName, policy(bucketName)))
 
       val res = waitFor(Policy.get(bucketName))
@@ -422,7 +422,7 @@ object PolicySpec extends Specification {
 
     "delete policy" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketPoliciesDelete"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
       waitFor(Policy.create(bucketName, policy(bucketName)))
       val res = waitFor(Policy.delete(bucketName))
       del(bucketName)
@@ -439,7 +439,7 @@ object NotificationsSpec extends Specification {
     "create notification conf" in {
       skipped("Needs a topic to be created")
       val bucketName = aws.s3.AWS.awsKey + "testBucketNotifCreate"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
       val res = waitFor(NotificationConfiguration.create(bucketName, NotificationConfiguration(s"arn:aws:sns:${region.subdomain}:123456789012:myTopic", Events.REDUCED_REDUNDANCY_LOST_OBJECT)))
 
       del(bucketName)
@@ -448,7 +448,7 @@ object NotificationsSpec extends Specification {
 
     "get notification conf" in {
       val bucketName = aws.s3.AWS.awsKey + "testBucketNotifGet"
-      val cr = waitFor(Bucket.create(bucketName))
+      val cr = waitFor(S3.Bucket.create(bucketName))
 
       val res = waitFor(NotificationConfiguration.get(bucketName))
 

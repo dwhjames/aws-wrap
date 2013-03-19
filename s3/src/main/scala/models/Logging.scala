@@ -33,7 +33,7 @@ import aws.s3.S3Parsers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import aws.s3.S3.Parameters.Permisions.Grantees._
+import aws.s3.Permissions.Grantees._
 
 case class LoggingStatus(bucket: String, prefix: String, grants: Seq[(Grantee, String)])
 object Logging {

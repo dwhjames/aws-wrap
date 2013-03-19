@@ -45,8 +45,8 @@ case class CORSRule(origins: Seq[String] = Nil,
 object CORSRule {
   import Http._
   import Parameters._
-  import Permisions._
-  import ACLs._
+  import aws.s3.Permissions._
+  import aws.s3.ACLs._
 
   /**
    * Sets the Cross-Origin Resource Sharing configuration for your bucket.

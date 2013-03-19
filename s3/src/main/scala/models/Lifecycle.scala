@@ -35,8 +35,8 @@ case class LifecycleConf(id: Option[String], prefix: String, status: LifecycleCo
 object LifecycleConf {
   import Http._
   import Parameters._
-  import Permisions._
-  import ACLs._
+  import aws.s3.Permissions._
+  import aws.s3.ACLs._
 
   object Statuses extends Enumeration {
     type Status = Value
