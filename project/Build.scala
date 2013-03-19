@@ -11,6 +11,7 @@ object AWS {
     val version = "0.1-SNAPSHOT"
     val playVersion = "2.1-RC2"
     val repository = "AWS" at "http://pellucidanalytics.github.com/aws/repository/"
+
 }
 
 object ApplicationBuild extends Build {
@@ -29,14 +30,13 @@ object ApplicationBuild extends Build {
         compileOrder in Compile := CompileOrder.ScalaThenJava,
         compileOrder in Test := CompileOrder.Mixed,
         resolvers ++= Seq(
-          AWS.repository,
           "typesafe" at "http://repo.typesafe.com/typesafe/releases",
           "sonatype" at "http://oss.sonatype.org/content/repositories/releases"
         ),
         libraryDependencies ++= Seq(
           "play" %% "play" % AWS.playVersion,
           "play" %% "play-java" % AWS.playVersion,
-          "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2" % "test",
+          "org.specs2" %% "specs2" % "1.12.3" % "test",
           "com.novocode" % "junit-interface" % "0.10-M2" % "test"),
         testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")
         //testListeners <<= (target, streams).map((t, s) => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath, s.log)))
