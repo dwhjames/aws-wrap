@@ -70,7 +70,7 @@ object ApplicationBuild extends Build {
     //lazy val cloudsearch = Project("cloud-search", file("cloudsearch"), settings = commonSettings).dependsOn(core)
 
     lazy val root = Project("root", file("."), settings = Project.defaultSettings ++ Unidoc.settings).aggregate(
-        core, simpledb, sns, dynamodb
+        core, simpledb, sns, dynamodb, s3
     )
 
 }
