@@ -9,7 +9,7 @@ import com.typesafe.sbtscalariform.ScalariformPlugin._
 object AWS {
     val scalaVersion = "2.10.0"
     val version = "0.1-SNAPSHOT"
-    val playVersion = "2.1-RC2"
+    val playVersion = "2.1.0"
     val repository = "AWS" at "http://pellucidanalytics.github.com/aws/repository/"
 
 }
@@ -38,7 +38,14 @@ object ApplicationBuild extends Build {
           "play" %% "play-java" % AWS.playVersion,
           "org.specs2" %% "specs2" % "1.12.3" % "test",
           "com.novocode" % "junit-interface" % "0.10-M2" % "test"),
-        testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")
+        testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
+        publishMavenStyle := true,
+        publishTo <<= version { (version: String) =>
+          val localPublishRepo = "../datomisca-repo/"
+          if(version.trim.endsWith("SNAPSHOT"))
+            Some(Resolver.file("snapshots", new File(localPublishRepo + "/snapshots")))
+          else Some(Resolver.file("releases", new File(localPublishRepo + "/releases")))
+        }
         //testListeners <<= (target, streams).map((t, s) => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath, s.log)))
     )
 
