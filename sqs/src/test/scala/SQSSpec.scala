@@ -79,5 +79,28 @@ object SQSSpec extends Specification {
       }
     }
 
+    "Send a message and get the message" in {
+
+      Await.result(SQS.createQueue("test-send-message"), Duration(30, SECONDS)) match {
+        case Result(_, queue) =>
+          val r = Await.result(SQS.addPermission(queue,"new-permission",
+                                                     Seq("056023575103"),
+                                                     Seq(ActionName.GetQueueUrl)
+                                                     ), Duration(30, SECONDS))
+          ensureSuccess(r)
+          val r2 = Await.result(SQS.sendMessage(queue,"Hello, World!"), Duration(30, SECONDS))
+          ensureSuccess(r2)
+
+          val r3 = Await.result(SQS.receiveMessage(queue), Duration(30, SECONDS))
+          ensureSuccess(r3)
+          val Result(_, List(MessageReceive(_, str, _, _, _))) = r3
+          str must be equalTo("Hello, World!")
+          val delRes = Await.result(SQS.deleteQueue(queue.url), Duration(30, SECONDS))
+          ensureSuccess(delRes)
+        case AWSError(_, _, message) => failure(message)
+        case _ => failure
+      }
+    }
+
   }
 }

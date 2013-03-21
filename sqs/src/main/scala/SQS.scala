@@ -60,7 +60,7 @@ trait SQSLayer{ self: AWS =>
       }).flatten
       def DelaySeconds(delay: Option[Long]) = delay.toSeq.map("DelaySeconds" -> _.toString)
       def MaxNumberOfMessages(n: Option[Long]) = n.toSeq.map("MaxNumberOfMessages" -> _.toString)
-      def Message(message: String) = ("Message" -> message)
+      def MessageBody(message: String) = ("MessageBody" -> message)
       def MessageAttributesP(messages: Seq[MessageAttribute]) = messages.size match {
         case 0 => Nil
         case 1 => Seq("AttributeName" -> messages(0).toString)
@@ -111,7 +111,7 @@ trait SQSLayer{ self: AWS =>
     }
   
     def sendMessage(queue: Queue, message: String, delaySeconds: Option[Long] = None): Future[Result[SQSMeta, SendMessageResult]] = {
-      val params = Seq(Action("SendMessage"), Message(message)) ++ DelaySeconds(delaySeconds)
+      val params = Seq(Action("SendMessage"), MessageBody(message)) ++ DelaySeconds(delaySeconds)
       SQS.get[SendMessageResult](queue.url, params: _*)
     }
 
