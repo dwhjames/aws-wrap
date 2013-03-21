@@ -23,8 +23,6 @@ import play.api.libs.ws.Response
 import aws.core._
 import aws.core.parsers._
 
-import aws.sqs.SQS.Queue
-
 object SQSParsers {
   import language.postfixOps
 

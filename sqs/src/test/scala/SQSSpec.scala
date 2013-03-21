@@ -6,7 +6,6 @@ import play.api.libs.ws._
 import play.api.libs.ws.WS._
 import aws.core._
 
-import SQS.ActionNames
 
 import org.specs2.mutable._
 
@@ -25,6 +24,9 @@ object SQSSpec extends Specification {
     case Result(_, _) => success
     case AWSError(_, _, message) => failure(message)
   }
+
+  object Cake extends AWS with SQSLayer
+  import Cake._
 
   "SQS API" should {
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -51,12 +53,12 @@ object SQSSpec extends Specification {
     "Add and remove permissions" in {
       Await.result(SQS.createQueue("test-permissions"), Duration(30, SECONDS)) match {
         case Result(_, queue) =>
-          val r = Await.result(queue.addPermission("new-permission",
+          val r = Await.result(SQS.addPermission(queue,"new-permission",
                                                      Seq("056023575103"),
-                                                     Seq(ActionNames.GetQueueUrl)
+                                                     Seq(ActionName.GetQueueUrl)
                                                      ), Duration(30, SECONDS))
           ensureSuccess(r)
-          val r2 = Await.result(queue.removePermission("new-permission"), Duration(30, SECONDS))
+          val r2 = Await.result(SQS.removePermission(queue,"new-permission"), Duration(30, SECONDS))
           ensureSuccess(r2)
           val delRes = Await.result(SQS.deleteQueue(queue.url), Duration(30, SECONDS))
           ensureSuccess(delRes)
@@ -68,7 +70,7 @@ object SQSSpec extends Specification {
     "Set and get attributes" in {
       Await.result(SQS.createQueue("test-attributes", MaximumMessageSize(20 * 1024)), Duration(30, SECONDS)) match {
         case Result(_, queue) =>
-          val r = Await.result(queue.setAttributes(Seq(MaximumMessageSize(10 * 1024))), Duration(30, SECONDS))
+          val r = Await.result(SQS.setAttributes(queue, Seq(MaximumMessageSize(10 * 1024))), Duration(30, SECONDS))
           ensureSuccess(r)
           val delRes = Await.result(SQS.deleteQueue(queue.url), Duration(30, SECONDS))
           ensureSuccess(delRes)
