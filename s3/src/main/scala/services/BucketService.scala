@@ -17,6 +17,14 @@
 package aws.s3
 package services
 
+// aws.s3 imports
+import S3._
+import S3Parsers._
+import ACLs.ACL
+import Permissions.Grant
+import models.Bucket
+
+
 import java.util.Date
 
 import scala.concurrent.Future
@@ -25,13 +33,6 @@ import scala.xml.Node
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-import aws.s3.S3._
-import aws.s3.S3Parsers._
-
-import aws.s3.ACLs.ACL
-import aws.s3.Permissions.Grant
-
-import aws.s3.models.Bucket
 
 trait BucketService {
 

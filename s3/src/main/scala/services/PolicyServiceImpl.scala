@@ -17,6 +17,9 @@
 package aws.s3
 package services
 
+import S3Parsers._
+import models.Policy
+
 import scala.concurrent.Future
 
 import play.api.libs.json.{Json, JsValue}
@@ -24,8 +27,6 @@ import play.api.libs.json.{Json, JsValue}
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-import aws.s3.S3Parsers._
-import aws.s3.models.Policy
 
 trait PolicyServiceImplLayer
   extends PolicyServiceLayer

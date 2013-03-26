@@ -17,6 +17,9 @@
 package aws.s3
 package services
 
+import S3.HTTPMethods._
+import signature.S3Sign
+
 import java.util.Date
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -28,8 +31,6 @@ import play.api.http.{ContentTypeOf, Writeable}
 import aws.core.Result
 import aws.core.parsers.Parser
 
-import aws.s3.S3.HTTPMethods._
-import aws.s3.signature.S3Sign
 
 private[services] trait HttpRequestLayer {
 

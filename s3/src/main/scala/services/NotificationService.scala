@@ -17,12 +17,13 @@
 package aws.s3
 package services
 
+import models.NotificationConfiguration
+
 import scala.concurrent.Future
 
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-import aws.s3.models.NotificationConfiguration
 
 trait NotificationService {
 

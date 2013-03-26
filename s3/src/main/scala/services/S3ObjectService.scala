@@ -17,15 +17,15 @@
 package aws.s3
 package services
 
+import S3.MFA
+import models.{BatchDeletion, S3Object, Versions}
+
 import java.io.File
 
 import scala.concurrent.Future
 
 import aws.core.Result
 import aws.core.Types.EmptyResult
-
-import aws.s3.S3.MFA
-import aws.s3.models.{BatchDeletion, S3Object, Versions}
 
 
 trait S3ObjectService {

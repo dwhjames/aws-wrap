@@ -17,14 +17,15 @@
 package aws.s3
 package services
 
+import S3Parsers._
+import models.NotificationConfiguration
+
 import scala.concurrent.Future
 import scala.xml.Node
 
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-import aws.s3.S3Parsers._
-import aws.s3.models.NotificationConfiguration
 
 trait NotificationServiceImplLayer
   extends NotificationServiceLayer

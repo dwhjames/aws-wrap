@@ -17,15 +17,16 @@
 package aws.s3
 package services
 
+import S3Parsers._
+import Permissions.Grantees
+import models.{LoggingStatus, LoggingPermisions}
+
 import scala.concurrent.Future
 import scala.xml.Node
 
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-import aws.s3.S3Parsers._
-import aws.s3.Permissions.Grantees
-import aws.s3.models.{LoggingStatus, LoggingPermisions}
 
 trait LoggingService {
 
