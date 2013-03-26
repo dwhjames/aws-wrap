@@ -23,53 +23,58 @@ import aws.s3.S3Parsers._
 
 case class Tag(name: String, value: String)
 
-object Tag {
+trait TagLayer extends HttpRequestLayer {
 
-  /**
-  * Removes a tag set from the specified bucket.
-  * @param bucketname Name of the tagged bucket
-  */
-  def delete(bucketname: String) =
-    Http.delete[Unit](
-      Some(bucketname),
-      subresource = Some("tagging")
-    )
+  object Tag {
 
-  /**
-  * Returns the tag set associated with the bucket.
-  * @param bucketname Name of the tagged bucket
-  */
-  def get(bucketname: String) =
-    Http.get[Seq[Tag]](
-      Some(bucketname),
-      subresource = Some("tagging")
-    )
+    /**
+    * Removes a tag set from the specified bucket.
+    * @param bucketname Name of the tagged bucket
+    */
+    def delete(bucketname: String) =
+      Http.delete[Unit](
+        Some(bucketname),
+        subresource = Some("tagging")
+      )
 
-  /**
-  * Adds a set of tags to an existing bucket.
-  * @param bucketname Name of the bucket to tag
-  * @param tags Tags to set on this Bucket
-  */
-  def create(bucketname: String, tags: Tag*) = {
-    val b =
-      <Tagging>
-        <TagSet>
-          {
-            for (t <- tags) yield
-            <Tag>
-              <Key>{ t.name }</Key>
-              <Value>{ t.value }</Value>
-            </Tag>
-          }
-        </TagSet>
-      </Tagging>
+    /**
+    * Returns the tag set associated with the bucket.
+    * @param bucketname Name of the tagged bucket
+    */
+    def get(bucketname: String) =
+      Http.get[Seq[Tag]](
+        Some(bucketname),
+        subresource = Some("tagging")
+      )
 
-    val ps = Seq(aws.s3.S3.Parameters.MD5(b.mkString))
-    Http.put[Node, Unit](
-      Some(bucketname),
-      body = b,
-      subresource = Some("tagging"),
-      parameters = ps
-    )
+    /**
+    * Adds a set of tags to an existing bucket.
+    * @param bucketname Name of the bucket to tag
+    * @param tags Tags to set on this Bucket
+    */
+    def create(bucketname: String, tags: Tag*) = {
+      val b =
+        <Tagging>
+          <TagSet>
+            {
+              for (t <- tags) yield
+              <Tag>
+                <Key>{ t.name }</Key>
+                <Value>{ t.value }</Value>
+              </Tag>
+            }
+          </TagSet>
+        </Tagging>
+
+      val ps = Seq(aws.s3.S3.Parameters.MD5(b.mkString))
+      Http.put[Node, Unit](
+        Some(bucketname),
+        body = b,
+        subresource = Some("tagging"),
+        parameters = ps
+      )
+    }
+
   }
+
 }

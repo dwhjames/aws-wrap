@@ -16,7 +16,7 @@
 
 package aws.s3
 
-import aws.s3.models.BucketServiceImpl
+import aws.s3.services.BucketServiceImplLayer
 
 
 object AWS extends  aws.core.AWS{}
@@ -33,7 +33,12 @@ object ACLs {
 
 object S3 {
 
-  object Bucket extends BucketServiceImpl
+  object Cake extends BucketServiceImplLayer {
+    override val httpRequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+  }
+
+  val Bucket = Cake.bucketService
+
 
   val ACCESS_KEY_ID = ""
   val SECRET_ACCESS_KEY = ""
