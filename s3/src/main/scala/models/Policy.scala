@@ -18,24 +18,9 @@ package aws.s3.models
 
 import java.util.Date
 
-import play.api.libs.ws._
+import play.api.libs.json.{Format, Json, JsValue}
 
-import scala.concurrent.Future
-import scala.xml.Elem
-
-import play.api.libs.json._
-
-import aws.core._
-import aws.core.Types._
-import aws.core.parsers.Parser
-
-import aws.s3.S3._
-import aws.s3.S3.HTTPMethods._
 import aws.s3.S3Parsers._
-
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import aws.s3.Permissions.Grantees._
 
 case class Statement(
   effect: Policy.Effects.Effect,
@@ -52,7 +37,6 @@ case class Policy(
   statements: Seq[Statement])
 
 object Policy {
-  import Http._
 
   import aws.s3.JsonFormats._
 
@@ -223,7 +207,11 @@ object Policy {
   */
   def create(bucketname: String, policy: Policy) = {
     val b = Json.toJson(policy)
-    put[JsValue, Unit](Some(bucketname), body = b, subresource = Some("policy"))
+    Http.put[JsValue, Unit](
+      Some(bucketname),
+      body = b,
+      subresource = Some("policy")
+    )
   }
 
   /**
@@ -231,12 +219,18 @@ object Policy {
   * @param bucketname The name of the bucket you want to get Policy on
   */
   def get(bucketname: String) =
-    Http.get[Policy](Some(bucketname), subresource = Some("policy"))
+    Http.get[Policy](
+      Some(bucketname),
+      subresource = Some("policy")
+    )
 
   /*
   * delete the policy on a specified bucket. To use the operation, you must have DeletePolicy permissions on the specified bucket and be the bucket owner.
   */
   def delete(bucketname: String) =
-    Http.delete[Unit](Some(bucketname), subresource = Some("policy"))
+    Http.delete[Unit](
+      Some(bucketname),
+      subresource = Some("policy")
+    )
 
 }

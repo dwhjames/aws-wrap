@@ -18,22 +18,15 @@ package aws.s3.models
 
 import java.util.Date
 
-import play.api.libs.ws._
-
 import scala.concurrent.Future
-import scala.xml._
+import scala.xml.Node
 
-import aws.core._
-import aws.core.Types._
-import aws.core.parsers.Parser
+import aws.core.Result
+import aws.core.Types.EmptyResult
 
-import aws.s3.S3._
-import aws.s3.S3.HTTPMethods._
+import aws.s3.S3.MFA
+import aws.s3.S3.HTTPMethods.PUT
 import aws.s3.S3Parsers._
-
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import aws.s3.Permissions.Grantees._
 
 case class Owner(id: String, name: Option[String])
 
@@ -113,7 +106,6 @@ object BatchDeletion {
 object S3Object {
 
   import java.io.File
-  import play.api.libs.iteratee._
 
   object StorageClasses extends Enumeration {
     type StorageClass = Value
@@ -131,7 +123,10 @@ object S3Object {
   * List metadata about all of the versions of objects in a bucket
   */
   def getVersions(bucketname: String): Future[Result[S3Metadata, Versions]] =
-    Http.get[Versions](Some(bucketname), subresource = Some("versions"))
+    Http.get[Versions](
+      Some(bucketname),
+      subresource = Some("versions")
+    )
 
   /**
   * Adds an object to a bucket. You must have WRITE permissions on a bucket to add an object to it.
@@ -143,7 +138,12 @@ object S3Object {
   // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
   // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
   def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]] =
-    Http.upload[Unit](PUT, bucketname, body.getName, body)
+    Http.upload[Unit](
+      PUT,
+      bucketname,
+      body.getName,
+      body
+    )
 
   /**
   * Removes the null version (if there is one) of an object and inserts a delete marker, which becomes the latest version of the object.
@@ -158,10 +158,12 @@ object S3Object {
        objectName: String,
        versionId: Option[String] = None,
        mfa: Option[MFA] = None): Future[EmptyResult[S3Metadata]] = {
-    Http.delete[Unit](Some(bucketname),
+    Http.delete[Unit](
+      Some(bucketname),
       Some(objectName),
-      parameters = mfa.map{ m => Parameters.X_AMZ_MFA(m) }.toSeq,
-      queryString = versionId.toSeq.map("versionId" -> _))
+      parameters = mfa.map{ m => aws.s3.S3.Parameters.X_AMZ_MFA(m) }.toSeq,
+      queryString = versionId.toSeq.map("versionId" -> _)
+    )
   }
 
   /**
@@ -183,13 +185,18 @@ object S3Object {
         }
       </Delete>
 
-    val ps = Seq(Parameters.MD5(b.mkString), aws.s3.AWS.Parameters.ContentLength(b.mkString.length)) ++
-      mfa.map(m => Parameters.X_AMZ_MFA(m)).toSeq
+    val ps = Seq(
+      aws.s3.S3.Parameters.MD5(b.mkString),
+      aws.s3.AWS.Parameters.ContentLength(b.mkString.length)
+    ) ++
+      mfa.map(m => aws.s3.S3.Parameters.X_AMZ_MFA(m)).toSeq
 
-    Http.post[Node, BatchDeletion](Some(bucketname),
+    Http.post[Node, BatchDeletion](
+      Some(bucketname),
       body = b,
       subresource = Some("delete"),
-      parameters = ps)
+      parameters = ps
+    )
   }
 
 

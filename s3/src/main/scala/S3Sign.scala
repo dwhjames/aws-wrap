@@ -18,8 +18,7 @@ package aws.s3.signature
 
 import java.util.Date
 
-import aws.core._
-import aws.core.utils._
+import aws.core.utils.Crypto
 
 object S3Sign {
 
@@ -64,7 +63,6 @@ object S3Sign {
            contentType: Option[String] = None,
            headers: Seq[(String, String)] = Nil): Seq[(String, String)] = {
 
-    import aws.s3.AWS.Parameters._
     import aws.core.SignerEncoder.encode
 
     val d = aws.s3.AWS.httpDateFormat(new Date)

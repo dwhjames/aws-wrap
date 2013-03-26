@@ -18,22 +18,12 @@ package aws.s3.models
 
 import java.util.Date
 
-import play.api.libs.ws._
-
 import scala.concurrent.Future
-import scala.xml._
+import scala.xml.Node
 
-import aws.core._
-import aws.core.Types._
-import aws.core.parsers.Parser
-
-import aws.s3.S3._
-import aws.s3.S3.HTTPMethods._
 import aws.s3.S3Parsers._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import aws.s3.Permissions.Grantees._
+import aws.s3.Permissions.Grantees.{Grantee, Email}
 
 case class LoggingStatus(bucket: String, prefix: String, grants: Seq[(Grantee, String)])
 object Logging {
@@ -42,8 +32,6 @@ object Logging {
      type LoggingPermision = Value
      val FULL_CONTROL, READ, WRITE = Value
    }
-
-  import Http._
 
   /**
   * Set the logging parameters for a bucket and specify permissions for who can view and modify the logging parameters.
@@ -72,7 +60,11 @@ object Logging {
         </LoggingEnabled>
       </BucketLoggingStatus>
 
-    put[Node, Unit](Some(loggedBucket), body = b, subresource = Some("logging"))
+    Http.put[Node, Unit](
+      Some(loggedBucket),
+      body = b,
+      subresource = Some("logging")
+    )
   }
 
   /**
@@ -80,5 +72,8 @@ object Logging {
   * @param bucketName The name of the bucket.
   */
   def get(bucketName: String) =
-    Http.get[Seq[LoggingStatus]](Some(bucketName), subresource = Some("logging"))
+    Http.get[Seq[LoggingStatus]](
+      Some(bucketName),
+      subresource = Some("logging")
+    )
 }

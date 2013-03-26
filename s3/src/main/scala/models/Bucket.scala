@@ -19,22 +19,19 @@ package aws.s3.models
 import java.util.Date
 
 import scala.concurrent.Future
-import scala.xml._
+import scala.xml.Node
 
-import aws.core._
-import aws.core.Types._
+import aws.core.Result
+import aws.core.Types.EmptyResult
 
 import aws.s3.S3Region
 import aws.s3.S3._
-import aws.s3.S3.HTTPMethods._
 import aws.s3.S3Parsers._
 
-import aws.s3.ACLs._
+import aws.s3.ACLs.ACL
 import aws.s3.Permissions.Grant
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-trait BucketService{
+trait BucketService {
 
   /**
    * Create a bucket
@@ -78,9 +75,6 @@ trait BucketService{
 case class Bucket(name: String, creationDate: Date)
 
 trait BucketServiceImpl extends BucketService {
-  import Http._
-  import Parameters._
-  import aws.s3.Permissions._
 
   /**
    * Create a bucket
@@ -98,8 +92,12 @@ trait BucketServiceImpl extends BucketService {
         <LocationConstraint>{ region.subdomain }</LocationConstraint>
       </CreateBucketConfiguration>
 
-    val ps = acls.map(X_AMZ_ACL(_)).toSeq ++ permissions
-    put[Node, Unit](Some(bucketname), body = b, parameters = ps)
+    val ps = acls.map(aws.s3.Permissions.X_AMZ_ACL(_)).toSeq ++ permissions
+    Http.put[Node, Unit](
+      Some(bucketname),
+      body = b,
+      parameters = ps
+    )
   }
 
   /**
@@ -122,10 +120,12 @@ trait BucketServiceImpl extends BucketService {
 
     val ps = Seq(aws.s3.AWS.Parameters.ContentLength(b.mkString.length)) ++ mfaDeleteState.map(m => Parameters.X_AMZ_MFA(m._2)).toSeq
 
-    put[Node, Unit](Some(bucketname),
+    Http.put[Node, Unit](
+      Some(bucketname),
       body = b,
       subresource = Some("versioning"),
-      parameters = ps)
+      parameters = ps
+    )
   }
 
   /**
@@ -141,5 +141,5 @@ trait BucketServiceImpl extends BucketService {
    * Anonymous users cannot list buckets, and you cannot list buckets that you did not create.
    */
   def list(): Future[Result[S3Metadata, Seq[Bucket]]] =
-    get[Seq[Bucket]]()
+    Http.get[Seq[Bucket]]()
 }

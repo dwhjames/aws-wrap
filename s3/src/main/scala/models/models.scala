@@ -18,29 +18,23 @@ package aws.s3.models
 
 import java.util.Date
 
-import play.api.libs.ws._
-
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.Elem
 
-import aws.core._
-import aws.core.Types._
+import play.api.libs.ws.{Response, WS}
+import play.api.http.{ContentTypeOf, Writeable}
+
+import aws.core.{Result, Metadata}
 import aws.core.parsers.Parser
 
-import aws.s3.S3._
 import aws.s3.S3.HTTPMethods._
-import aws.s3.S3Parsers._
+import aws.s3.signature.S3Sign
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import aws.s3.Permissions.Grantees._
 
 case class S3Metadata(requestId: String, id2: String, versionId: Option[String] = None, deleteMarker: Boolean = false) extends Metadata
 
 private[models] object Http {
-
-  import play.api.libs.iteratee._
-  import aws.s3.signature.S3Sign
 
   def ressource(bucketname: Option[String], uri: String, subresource: Option[String] = None) =
     "/%s\n%s\n?%s".format(bucketname.getOrElse(""), uri, subresource.getOrElse(""))
@@ -81,7 +75,6 @@ private[models] object Http {
       }).map(tryParse[T])
     }
 
-  import play.api.http._
   private object Writes {
     implicit def contentTypeOf_Nothing = ContentTypeOf[Unit](None)
     implicit def writeableOf_Nothing[Nothing] = Writeable[Unit] { content: Unit => Array[Byte]() }

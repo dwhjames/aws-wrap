@@ -16,19 +16,12 @@
 
 package aws.s3.models
 
-import java.util.Date
-
 import scala.concurrent.Future
-import scala.xml._
+import scala.xml.Node
 
-import aws.core._
-import aws.core.Types._
+import aws.core.Types.EmptyResult
 
-import aws.s3.S3._
-import aws.s3.S3.HTTPMethods._
 import aws.s3.S3Parsers._
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 object Events extends Enumeration {
   type Event = Value
@@ -36,11 +29,8 @@ object Events extends Enumeration {
 }
 
 case class NotificationConfiguration(topic: String, event: Events.Event)
+
 object NotificationConfiguration {
-  import Http._
-  import Parameters._
-  import aws.s3.Permissions._
-  import aws.s3.ACLs._
 
   /**
    * Enable notifications of specified events for a bucket. Currently, the s3:ReducedRedundancyLostObject event is the only event supported for notifications.
@@ -59,7 +49,11 @@ object NotificationConfiguration {
          </TopicConfiguration>
       </NotificationConfiguration>
 
-    put[Node, Unit](Some(bucketname), body = b, subresource = Some("notification"))
+    Http.put[Node, Unit](
+      Some(bucketname),
+      body = b,
+      subresource = Some("notification")
+    )
   }
 
   /**
@@ -68,7 +62,11 @@ object NotificationConfiguration {
    */
   def disable(bucketname: String) = {
     val b = <NotificationConfiguration />
-    put[Node, Unit](Some(bucketname), body = b, subresource = Some("notification"))
+    Http.put[Node, Unit](
+      Some(bucketname),
+      body = b,
+      subresource = Some("notification")
+    )
   }
 
   /**
@@ -76,5 +74,8 @@ object NotificationConfiguration {
    * @param bucketname The name of the bucket you want to get notifications for
    */
   def get(bucketname: String) =
-    Http.get[Seq[NotificationConfiguration]](Some(bucketname), subresource = Some("notification"))
+    Http.get[Seq[NotificationConfiguration]](
+      Some(bucketname),
+      subresource = Some("notification")
+    )
 }

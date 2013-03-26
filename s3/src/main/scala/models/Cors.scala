@@ -16,21 +16,10 @@
 
 package aws.s3.models
 
-import java.util.Date
+import scala.xml.Node
 
-import scala.concurrent.Future
-import scala.xml._
-
-import aws.core._
-import aws.core.Types._
-
-import aws.s3.S3._
-import aws.s3.S3.HTTPMethods._
+import aws.s3.S3.HTTPMethods.Method
 import aws.s3.S3Parsers._
-
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import aws.s3.S3.HTTPMethods._
 
 /**
  * Cross-Origin Resource Sharing rule
@@ -43,10 +32,6 @@ case class CORSRule(origins: Seq[String] = Nil,
                     exposeHeaders: Seq[String] = Nil)
 
 object CORSRule {
-  import Http._
-  import Parameters._
-  import aws.s3.Permissions._
-  import aws.s3.ACLs._
 
   /**
    * Sets the Cross-Origin Resource Sharing configuration for your bucket.
@@ -68,10 +53,12 @@ object CORSRule {
          </CORSRule> }
       </CORSConfiguration>
 
-    val ps = Seq(Parameters.MD5(b.mkString),
-      aws.s3.AWS.Parameters.ContentLength(b.mkString.length))
+    val ps = Seq(
+      aws.s3.S3.Parameters.MD5(b.mkString),
+      aws.s3.AWS.Parameters.ContentLength(b.mkString.length)
+    )
 
-    put[Node, Unit](Some(bucketName),
+    Http.put[Node, Unit](Some(bucketName),
       body = b,
       subresource = Some("cors"),
       parameters = ps)
@@ -83,7 +70,10 @@ object CORSRule {
    * @param bucketname The name of the bucket.
    */
   def get(bucketName: String) =
-    Http.get[Seq[CORSRule]](Some(bucketName), subresource = Some("cors"))
+    Http.get[Seq[CORSRule]](
+      Some(bucketName),
+      subresource = Some("cors")
+    )
 
   /**
    * Deletes the cors configuration information set for the bucket.
@@ -91,5 +81,8 @@ object CORSRule {
    * @param bucketname The name of the bucket you want to delete.
    */
   def delete(bucketName: String) =
-    Http.delete[Unit](Some(bucketName), subresource = Some("cors"))
+    Http.delete[Unit](
+      Some(bucketName),
+      subresource = Some("cors")
+    )
 }
