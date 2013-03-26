@@ -16,9 +16,7 @@ object Permissions {
     case class Uri(override val value: String) extends Grantee("uri", value)
   }
 
-    
-  import ACLs._
-  def X_AMZ_ACL(acl: ACL) = ("x-amz-acl" -> acl)
+  def X_AMZ_ACL(acl: CannedACL.Value) = ("x-amz-acl" -> acl.toString)
 
   import Grantees._
   private def s(gs: Seq[Grantee]) = gs.map { case Grantee(n, v) => "%s=\"%s\"".format(n, v) }.mkString(", ")

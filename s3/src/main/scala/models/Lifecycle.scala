@@ -14,28 +14,14 @@
  * limitations under the License.
  */
 
-package aws.s3.models
+package aws.s3
+package models
 
-import scala.concurrent.Future
 import scala.concurrent.duration.Duration
-import scala.xml.Node
-
-import aws.core.Result
-import aws.core.Types.EmptyResult
-
-import aws.s3.S3Parsers._
 
 case class LifecycleConf(
   id:       Option[String],
   prefix:   String,
-  status:   LifecycleConf.Statuses.Status,
+  status:   LifecycleStatus.Value,
   lifetime: Duration
 )
-
-object LifecycleConf {
-  object Statuses extends Enumeration {
-    type Status = Value
-    val ENABLED = Value("Enabled")
-    val DISABLED = Value("Disabled")
-  }
-}

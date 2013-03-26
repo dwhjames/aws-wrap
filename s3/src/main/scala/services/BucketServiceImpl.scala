@@ -18,9 +18,8 @@ package aws.s3
 package services
 
 // aws.s3 imports
-import S3._
+import S3.MFA
 import S3Parsers._
-import ACLs.ACL
 import Permissions.Grant
 import models.Bucket
 
@@ -51,7 +50,7 @@ trait BucketServiceImplLayer
      * @param permissions Explicit access permissions
      * @param region Physical location of the bucket
      */
-    def create(bucketname: String, acls: Option[ACL] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]] = {
+    def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]] = {
       val b =
         <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
           <LocationConstraint>{ region.subdomain }</LocationConstraint>
@@ -74,8 +73,8 @@ trait BucketServiceImplLayer
      */
     def setVersioningConfiguration(
         bucketname: String,
-        versionState: VersionStates.VersionState,
-        mfaDeleteState: Option[(MFADeleteStates.MFADeleteState, MFA)] = None): Future[EmptyResult[S3Metadata]] = {
+        versionState: VersionState.Value,
+        mfaDeleteState: Option[(MFADeleteState.Value, MFA)] = None): Future[EmptyResult[S3Metadata]] = {
 
       val b =
         <VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -83,7 +82,7 @@ trait BucketServiceImplLayer
           { for (m <- mfaDeleteState.toSeq) yield <MfaDelete>{ m._1 }</MfaDelete> }
         </VersioningConfiguration>
 
-      val ps = Seq(aws.s3.AWS.Parameters.ContentLength(b.mkString.length)) ++ mfaDeleteState.map(m => Parameters.X_AMZ_MFA(m._2)).toSeq
+      val ps = Seq(aws.s3.AWS.Parameters.ContentLength(b.mkString.length)) ++ mfaDeleteState.map(m => aws.s3.S3.Parameters.X_AMZ_MFA(m._2)).toSeq
 
       Http.put[Node, Unit](
         Some(bucketname),

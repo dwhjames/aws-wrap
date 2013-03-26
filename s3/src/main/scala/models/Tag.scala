@@ -16,4 +16,7 @@
 
 package aws.s3.models
 
-case class Tag(name: String, value: String)
+case class Tag(
+  name: String,
+  value: String
+)

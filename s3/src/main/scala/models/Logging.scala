@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package aws.s3.models
+package aws.s3
+package models
 
-import aws.s3.Permissions.Grantees.Grantee
+import Permissions.Grantees.Grantee
 
 case class LoggingStatus(
   bucket: String,
   prefix: String,
-  grants: Seq[(Grantee, String)]
+  grants: Seq[(Grantee, LoggingPermission.Value)]
 )
-
-object LoggingPermisions extends Enumeration {
-  type LoggingPermision = Value
-  val FULL_CONTROL, READ, WRITE = Value
-}

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package aws.s3.models
-
-import aws.s3.S3.HTTPMethods.Method
+package aws.s3
+package models
 
 /**
  * Cross-Origin Resource Sharing rule
@@ -24,7 +23,7 @@ import aws.s3.S3.HTTPMethods.Method
  */
 case class CORSRule(
   origins:       Seq[String]  = Nil,
-  methods:       Seq[Method]  = Nil,
+  methods:       Seq[HttpMethod.Value]  = Nil,
   headers:       Seq[String]  = Nil,
   maxAge:        Option[Long] = None,
   exposeHeaders: Seq[String]  = Nil

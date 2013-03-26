@@ -17,7 +17,6 @@
 package aws.s3
 package services
 
-import S3.HTTPMethods._
 import signature.S3Sign
 
 import java.util.Date
@@ -42,7 +41,7 @@ private[services] trait HttpRequestLayer {
       "/%s\n%s\n?%s".format(bucketname.getOrElse(""), uri, subresource.getOrElse(""))
 
     def upload[T](
-      method:     Method,
+      method:     HttpMethod.Value,
       bucketname: String,
       objectName: String,
       body:       java.io.File,
@@ -73,9 +72,9 @@ private[services] trait HttpRequestLayer {
                 .withHeaders((ps ++ sign): _*)
 
       (method match {
-        case PUT    => r.put(body)
-        case DELETE => r.delete()
-        case GET    => r.get()
+        case HttpMethod.PUT    => r.put(body)
+        case HttpMethod.DELETE => r.delete()
+        case HttpMethod.GET    => r.get()
         case _      => throw new RuntimeException("Unsuported method: " + method)
       }).map(tryParse[T])
       }
@@ -93,7 +92,7 @@ private[services] trait HttpRequestLayer {
       parameters:  Seq[(String, String)] = Nil
     )(implicit p: Parser[Result[S3Metadata, T]]) = {
       import Writes._
-      request[Nothing, T](GET, bucketname, objectName, subresource, queryString, None, parameters)
+      request[Nothing, T](HttpMethod.GET, bucketname, objectName, subresource, queryString, None, parameters)
     }
 
     def delete[T](
@@ -104,7 +103,7 @@ private[services] trait HttpRequestLayer {
       parameters:  Seq[(String, String)] = Nil
     )(implicit p: Parser[Result[S3Metadata, T]]) = {
       import Writes._
-      request[Nothing, T](DELETE, bucketname, objectName, subresource, queryString, None, parameters)
+      request[Nothing, T](HttpMethod.DELETE, bucketname, objectName, subresource, queryString, None, parameters)
     }
 
     def post[B, T](
@@ -117,7 +116,7 @@ private[services] trait HttpRequestLayer {
     )(implicit w:           Writeable[B],
                contentType: ContentTypeOf[B],
                p:           Parser[Result[S3Metadata, T]]) =
-      request[B, T](POST, bucketname, objectName, subresource, queryString, Some(body), parameters)
+      request[B, T](HttpMethod.POST, bucketname, objectName, subresource, queryString, Some(body), parameters)
 
 
     def put[B, T](
@@ -130,13 +129,13 @@ private[services] trait HttpRequestLayer {
     )(implicit w:           Writeable[B],
                contentType: ContentTypeOf[B],
                p:           Parser[Result[S3Metadata, T]]) =
-      request[B, T](PUT, bucketname, objectName, subresource, queryString, Some(body), parameters)
+      request[B, T](HttpMethod.PUT, bucketname, objectName, subresource, queryString, Some(body), parameters)
 
 
     // TODO; refactor
     // - contentType
     private def request[B, T](
-      method:      Method,
+      method:      HttpMethod.Value,
       bucketname:  Option[String],
       objectName:  Option[String],
       subresource: Option[String],
@@ -179,10 +178,10 @@ private[services] trait HttpRequestLayer {
                 .withHeaders((parameters ++ sign): _*)
 
       (method match {
-        case PUT    => r.put(body.get)
-        case POST   => r.post(body.get)
-        case DELETE => r.delete()
-        case GET    => r.get()
+        case HttpMethod.PUT    => r.put(body.get)
+        case HttpMethod.POST   => r.post(body.get)
+        case HttpMethod.DELETE => r.delete()
+        case HttpMethod.GET    => r.get()
         case _      => throw new RuntimeException("Unsuported method: " + method)
       }).map(tryParse[T])
     }

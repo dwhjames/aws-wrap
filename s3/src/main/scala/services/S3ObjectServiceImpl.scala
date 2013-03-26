@@ -18,7 +18,6 @@ package aws.s3
 package services
 
 import S3.MFA
-import S3.HTTPMethods.PUT
 import S3Parsers._
 import models.{BatchDeletion, S3Object, Versions}
 
@@ -67,7 +66,7 @@ trait S3ObjectServiceImplLayer
       // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
     def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]] =
       Http.upload[Unit](
-        PUT,
+        HttpMethod.PUT,
         bucketname,
         body.getName,
         body

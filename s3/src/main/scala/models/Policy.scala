@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package aws.s3.models
+package aws.s3
+package models
 
 import java.util.Date
 
 import play.api.libs.json.{Format, Json, JsValue}
 
 case class Statement(
-  effect:     Policy.Effects.Effect,
+  effect:     PolicyEffect.Value,
   sid:        Option[String],
   principal:  Option[(String, Seq[String])]       = None, // TODO: validate ?
   action:     Seq[String],
@@ -37,12 +38,6 @@ case class Policy(
 )
 
 object Policy {
-
-  object Effects extends Enumeration {
-    type Effect = Value
-    val ALLOW = Value("Allow")
-    val DENY = Value("Deny")
-  }
 
   object Conditions {
 

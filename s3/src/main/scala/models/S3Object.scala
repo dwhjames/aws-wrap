@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package aws.s3.models
+package aws.s3
+package models
+
+import S3.MFA
 
 import java.util.Date
-
-import aws.s3.S3.MFA
 
 case class Owner(
   id:   String,
@@ -34,17 +35,6 @@ case class S3Object(
   contents:    Seq[Content]
 )
 
-object S3Object {
-
-  object StorageClasses extends Enumeration {
-    type StorageClass = Value
-    val STANDARD = Value
-  }
-
-}
-
-import S3Object.StorageClasses.StorageClass
-
 trait Container {
   val id:           Option[String]
   val key:          String
@@ -52,7 +42,7 @@ trait Container {
   val lastModified: Date
   val etag:         String
   val size:         Option[Long]
-  val storageClass: Option[StorageClass]
+  val storageClass: Option[StorageClass.Value]
   val owner:        Owner
 }
 
@@ -63,7 +53,7 @@ case class DeleteMarker(
   lastModified: Date,
   etag:         String,
   size:         Option[Long],
-  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
+  storageClass: Option[StorageClass.Value] = Some(StorageClass.STANDARD),
   owner:        Owner
 ) extends Container
 
@@ -74,7 +64,7 @@ case class Version(
   lastModified: Date,
   etag:         String,
   size:         Option[Long],
-  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
+  storageClass: Option[StorageClass.Value] = Some(StorageClass.STANDARD),
   owner:        Owner
 ) extends Container
 
@@ -97,7 +87,7 @@ case class Content(
   lastModified: Date,
   etag:         String,
   size:         Option[Long],
-  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
+  storageClass: Option[StorageClass.Value] = Some(StorageClass.STANDARD),
   owner:        Owner
 ) extends Container
 

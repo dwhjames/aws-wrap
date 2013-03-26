@@ -19,7 +19,7 @@ package services
 
 import S3Parsers._
 import Permissions.Grantees
-import models.{LoggingStatus, LoggingPermisions}
+import models.LoggingStatus
 
 import scala.concurrent.Future
 import scala.xml.Node
@@ -42,7 +42,7 @@ trait LoggingService {
     def enable(
       loggedBucket: String,
       targetBucket: String,
-      grantees:     Seq[(Grantees.Email, LoggingPermisions.LoggingPermision)] = Nil
+      grantees:     Seq[(Grantees.Email, LoggingPermission.Value)] = Nil
     ): Future[EmptyResult[S3Metadata]]
 
     /**

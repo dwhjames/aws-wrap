@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package aws.s3.models
+package aws.s3
+package models
 
-import scala.concurrent.Future
-import scala.xml.Node
-
-import aws.core.Types.EmptyResult
-
-import aws.s3.S3Parsers._
-
-object Notification {
-  object Events extends Enumeration {
-    type Event = Value
-    val REDUCED_REDUNDANCY_LOST_OBJECT = Value("s3:ReducedRedundancyLostObject")
-  }
-}
-
-case class NotificationConfiguration(topic: String, event: Notification.Events.Event)
+case class NotificationConfiguration(
+  topic: String,
+  event: NotificationEvent.Value
+)

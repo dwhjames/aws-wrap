@@ -28,7 +28,6 @@ import aws.core._
 import aws.core.parsers._
 
 import aws.s3.models._
-import aws.s3.S3.HTTPMethods
 
 object S3Parsers {
   import language.postfixOps
@@ -57,7 +56,7 @@ object S3Parsers {
       val grants = (n \ "TargetGrants" \ "Grant").toSeq.map { g =>
         val mail = (g \ "Grantee" \ "EmailAddress").text
         val perm = (g \ "Permission").text
-        aws.s3.Permissions.Grantees.Email(mail) -> perm
+        aws.s3.Permissions.Grantees.Email(mail) -> LoggingPermission.withName(perm)
       }
       LoggingStatus((n \ "TargetBucket").text, (n \ "TargetPrefix").text, grants)
     })
@@ -73,7 +72,7 @@ object S3Parsers {
     Success((r.xml \\ "CORSRule").map { c =>
       CORSRule(
         origins = (c \ "AllowedOrigin").map(_.text),
-        methods = (c \ "AllowedMethod").map(n => HTTPMethods.withName(n.text)),
+        methods = (c \ "AllowedMethod").map(n => HttpMethod.withName(n.text)),
         headers = (c \ "AllowedHeader").map(_.text),
         maxAge = (c \ "MaxAgeSeconds").map(l => JLong.parseLong(l.text)).headOption,
         exposeHeaders = (c \ "ExposeHeader").map(_.text))
@@ -88,21 +87,20 @@ object S3Parsers {
       LifecycleConf(
         id = (l \ "ID").map(_.text).headOption,
         prefix = (l \ "Prefix").text,
-        status = (l \ "Status").map(n => LifecycleConf.Statuses.withName(n.text)).headOption.get,
+        status = (l \ "Status").map(n => LifecycleStatus.withName(n.text)).headOption.get,
         lifetime = (l \ "Expiration" \ "Days").map(v => Duration(java.lang.Integer.parseInt(v.text), DAYS)).headOption.get)
     })
   }
 
   //XXX: not really a Parser
-  import S3Object.StorageClasses
-  private def containerParser[T](node: Node, f: (Option[String], String, Boolean, Date, String, Option[Long], Option[StorageClasses.StorageClass], Owner) => T): T = {
+  private def containerParser[T](node: Node, f: (Option[String], String, Boolean, Date, String, Option[Long], Option[StorageClass.Value], Owner) => T): T = {
     f((node \ "VersionId").map(_.text).headOption,
       (node \ "Key").text,
       (node \ "IsLatest").map(n => JBool.parseBoolean(n.text)).headOption.get,
       (node \ "LastModified").map(n => new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(n.text)).headOption.get,
       (node \ "ETag").text,
       (node \ "Size").map(n => JLong.parseLong(n.text)).headOption,
-      (node \ "StorageClass").map(n => StorageClasses.withName(n.text)).headOption,
+      (node \ "StorageClass").map(n => StorageClass.withName(n.text)).headOption,
       (node \ "Owner").map(ownerParser).headOption.get)
   }
 
@@ -166,7 +164,7 @@ object S3Parsers {
       (r.xml \ "TopicConfiguration").map{ t =>
         NotificationConfiguration(
           (t \ "Topic").text,
-          Notification.Events.withName((t \ "Event").text))
+          NotificationEvent.withName((t \ "Event").text))
       })
   }
 

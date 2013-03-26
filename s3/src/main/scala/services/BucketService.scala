@@ -18,9 +18,8 @@ package aws.s3
 package services
 
 // aws.s3 imports
-import S3._
+import S3.MFA
 import S3Parsers._
-import ACLs.ACL
 import Permissions.Grant
 import models.Bucket
 
@@ -46,7 +45,7 @@ trait BucketService {
    * @param permissions Explicit access permissions
    * @param region Physical location of the bucket
    */
-  def create(bucketname: String, acls: Option[ACL] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]]
+  def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]]
 
   /**
    * Set the versioning state of an existing bucket
@@ -57,8 +56,8 @@ trait BucketService {
    */
   def setVersioningConfiguration(
       bucketname: String,
-      versionState: VersionStates.VersionState,
-      mfaDeleteState: Option[(MFADeleteStates.MFADeleteState, MFA)] = None): Future[EmptyResult[S3Metadata]]
+      versionState: VersionState.Value,
+      mfaDeleteState: Option[(MFADeleteState.Value, MFA)] = None): Future[EmptyResult[S3Metadata]]
 
   /**
    * Delete the bucket.

@@ -67,7 +67,7 @@ object JsonFormats {
   implicit val StatementFormat = Format[Statement](
     Reads[Statement]{(json: JsValue) =>
       JsSuccess(Statement(
-        effect = Policy.Effects.withName((json \ "Effect").as[String]),
+        effect = PolicyEffect.withName((json \ "Effect").as[String]),
         sid = (json \ "Sid").as[Option[String]],
         principal = (json \ "Principal").as[Map[String, Seq[String]]].toSeq.headOption,
         action = (json \ "Action").as[Option[Seq[String]]].getOrElse(Nil),

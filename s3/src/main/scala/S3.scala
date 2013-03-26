@@ -21,16 +21,6 @@ import aws.s3.services.BucketServiceImplLayer
 
 object AWS extends  aws.core.AWS{}
 
-object ACLs {
-  type ACL = String
-  val PRIVATE: ACL = "private"
-  val PUBLIC_READ: ACL = "public-read"
-  val PUBLIC_READ_WRITE: ACL = "public-read-write"
-  val AUTHENTICATED_READ: ACL = "authenticated-read"
-  val BUCKET_OWNER_READ: ACL = "bucket-owner_read"
-  val BUCKET_OWNER_FULL_CONTROL: ACL = "bucket-owner-full-control"
-}
-
 object S3 {
 
   object Cake extends BucketServiceImplLayer {
@@ -45,29 +35,6 @@ object S3 {
 
   case class MFA(serial: String, token: String)
 
-  object HTTPMethods extends Enumeration {
-    type Method = Value
-    val PUT, POST, DELETE, GET = Value
-  }
-  import HTTPMethods._
-
-  object StorageClasses extends Enumeration {
-    type StorageClass = Value
-    val STANDARD, REDUCED_REDUNDANCY = Value
-  }
-
-  object VersionStates extends Enumeration {
-    type VersionState = Value
-    val ENABLED = Value("Enabled")
-    val SUSPENDED = Value("Suspended")
-  }
-
-  object MFADeleteStates extends Enumeration {
-    type MFADeleteState = Value
-    val DISABLED = Value("Disabled")
-    val ENABLED = Value("Enabled")
-  }
-
   object Parameters {
     import AWS._
 
@@ -79,7 +46,7 @@ object S3 {
         throw new RuntimeException(s"Unsupported server side encoding: $s, the omly valid value is AES256")
       ("x-amz-server-side-encryption" -> s)
     }
-    def X_AMZ_STORAGE_CLASS(s: StorageClasses.StorageClass) = ("x-amz-storage-class" -> s.toString)
+    def X_AMZ_STORAGE_CLASS(s: StorageClass.Value) = ("x-amz-storage-class" -> s.toString)
     def X_AMZ_WEBSITE_REDIRECT_LOCATION(s: java.net.URI) = ("x-amz-website-redirect-location" -> s.toString)
     def X_AMZ_MFA(mfa: MFA) = ("x-amz-mfa" -> s"${mfa.serial} ${mfa.token}")
 
