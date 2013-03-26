@@ -17,7 +17,6 @@
 package aws.s3
 package services
 
-import S3.MFA
 import S3Parsers._
 import models.{BatchDeletion, S3Object, Versions}
 
@@ -91,7 +90,7 @@ trait S3ObjectServiceImplLayer
       Http.delete[Unit](
         Some(bucketname),
         Some(objectName),
-        parameters = mfa.map{ m => aws.s3.S3.Parameters.X_AMZ_MFA(m) }.toSeq,
+        parameters = mfa.map{ m => Parameters.X_AMZ_MFA(m) }.toSeq,
         queryString = versionId.toSeq.map("versionId" -> _)
       )
     }
@@ -121,10 +120,10 @@ trait S3ObjectServiceImplLayer
         </Delete>
 
       val ps = Seq(
-        aws.s3.S3.Parameters.MD5(b.mkString),
+        Parameters.MD5(b.mkString),
         aws.s3.AWS.Parameters.ContentLength(b.mkString.length)
       ) ++
-        mfa.map(m => aws.s3.S3.Parameters.X_AMZ_MFA(m)).toSeq
+        mfa.map(m => Parameters.X_AMZ_MFA(m)).toSeq
 
       Http.post[Node, BatchDeletion](
         Some(bucketname),

@@ -60,7 +60,7 @@ trait LifecycleServiceImplLayer
           }
         </LifecycleConfiguration>
 
-      val ps = Seq(aws.s3.S3.Parameters.MD5(b.mkString))
+      val ps = Seq(Parameters.MD5(b.mkString))
       Http.put[Node, Unit](
         Some(bucketname),
         body = b,

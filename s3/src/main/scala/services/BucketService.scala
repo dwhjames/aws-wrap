@@ -17,8 +17,6 @@
 package aws.s3
 package services
 
-// aws.s3 imports
-import S3.MFA
 import S3Parsers._
 import Permissions.Grant
 import models.Bucket

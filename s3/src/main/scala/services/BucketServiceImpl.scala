@@ -17,8 +17,6 @@
 package aws.s3
 package services
 
-// aws.s3 imports
-import S3.MFA
 import S3Parsers._
 import Permissions.Grant
 import models.Bucket
@@ -82,7 +80,7 @@ trait BucketServiceImplLayer
           { for (m <- mfaDeleteState.toSeq) yield <MfaDelete>{ m._1 }</MfaDelete> }
         </VersioningConfiguration>
 
-      val ps = Seq(aws.s3.AWS.Parameters.ContentLength(b.mkString.length)) ++ mfaDeleteState.map(m => aws.s3.S3.Parameters.X_AMZ_MFA(m._2)).toSeq
+      val ps = Seq(aws.s3.AWS.Parameters.ContentLength(b.mkString.length)) ++ mfaDeleteState.map(m => Parameters.X_AMZ_MFA(m._2)).toSeq
 
       Http.put[Node, Unit](
         Some(bucketname),

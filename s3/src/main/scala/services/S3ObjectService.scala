@@ -17,7 +17,6 @@
 package aws.s3
 package services
 
-import S3.MFA
 import models.{BatchDeletion, S3Object, Versions}
 
 import java.io.File

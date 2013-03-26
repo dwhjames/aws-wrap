@@ -17,8 +17,6 @@
 package aws.s3
 package models
 
-import S3.MFA
-
 import java.util.Date
 
 case class Owner(

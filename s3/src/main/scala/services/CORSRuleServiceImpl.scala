@@ -58,7 +58,7 @@ trait CORSRuleServiceImplLayer
         </CORSConfiguration>
 
       val ps = Seq(
-        aws.s3.S3.Parameters.MD5(b.mkString),
+        Parameters.MD5(b.mkString),
         aws.s3.AWS.Parameters.ContentLength(b.mkString.length)
       )
 
