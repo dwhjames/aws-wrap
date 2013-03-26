@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package aws.s3.services
+package aws.s3
+package services
 
 import scala.concurrent.Future
 
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-import aws.s3.models.{CORSRule, S3Metadata}
+import aws.s3.models.CORSRule
 
 trait CORSRuleService {
 

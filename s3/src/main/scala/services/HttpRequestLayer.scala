@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package aws.s3.services
+package aws.s3
+package services
 
 import java.util.Date
 
@@ -29,8 +30,6 @@ import aws.core.parsers.Parser
 
 import aws.s3.S3.HTTPMethods._
 import aws.s3.signature.S3Sign
-
-import aws.s3.models.S3Metadata
 
 private[services] trait HttpRequestLayer {
 

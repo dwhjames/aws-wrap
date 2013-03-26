@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package aws.s3.services
+package aws.s3
+package services
 
 import java.io.File
 
@@ -24,10 +25,11 @@ import scala.xml.Node
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
+import aws.s3.S3Metadata
 import aws.s3.S3.MFA
 import aws.s3.S3.HTTPMethods.PUT
 import aws.s3.S3Parsers._
-import aws.s3.models.{BatchDeletion, S3Metadata, S3Object, Versions}
+import aws.s3.models.{BatchDeletion, S3Object, Versions}
 
 
 trait S3ObjectServiceImplLayer
