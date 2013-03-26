@@ -166,7 +166,7 @@ object S3Parsers {
       (r.xml \ "TopicConfiguration").map{ t =>
         NotificationConfiguration(
           (t \ "Topic").text,
-          Events.withName((t \ "Event").text))
+          Notification.Events.withName((t \ "Event").text))
       })
   }
 

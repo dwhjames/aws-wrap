@@ -20,8 +20,6 @@ import java.util.Date
 
 import play.api.libs.json.{Format, Json, JsValue}
 
-import aws.s3.S3Parsers._
-
 case class Statement(
   effect:     Policy.Effects.Effect,
   sid:        Option[String],
@@ -180,66 +178,4 @@ object Policy {
       val NotLike = new ConditionBuilder[ARN]("ArnNotLike")
     }
   }
-}
-
-trait PolicyLayer extends HttpRequestLayer {
-
-  object Policy {
-
-    import aws.s3.JsonFormats._
-
-    /**
-    * Add to or replace a policy on a bucket. If the bucket already has a policy, the one in this request completely replaces it.
-    * To perform this operation, you must be the bucket owner or have PutPolicy permissions.
-    * @param bucketname The name of the bucket you want to enable Policy on
-    * @param policy policy configuration for this bucket
-    *
-    * {{{
-    * val policy = Policy(
-    *   id = Some("aaaa-bbbb-cccc-dddd"),
-    *   statements = Seq(
-    *     Statement(
-    *       effect = Policy.Effects.ALLOW,
-    *       sid = Some("1"),
-    *       principal = Some("AWS" -> Seq("*")),
-    *       action = Seq("s3:GetObject*"),
-    *       conditions = Seq(
-    *         Conditions.Strings.Equals(USER_AGENT -> Seq("foo")),
-    *         Conditions.Exists(KeyFor(REFERER) -> Seq(true))),
-    *       resource = Seq("arn:aws:s3:::bucketName/foobar")))) //  Make sure the bucketname is in lower case
-    *
-    * Policy.create(bucketName, policy)
-    * }}}
-    *
-    */
-    def create(bucketname: String, policy: Policy) = {
-      val b = Json.toJson(policy)
-      Http.put[JsValue, Unit](
-        Some(bucketname),
-        body = b,
-        subresource = Some("policy")
-      )
-    }
-
-    /**
-    * Return the policy of a specified bucket. To use this operation, you must have GetPolicy permissions on the specified bucket, and you must be the bucket owner.
-    * @param bucketname The name of the bucket you want to get Policy on
-    */
-    def get(bucketname: String) =
-      Http.get[Policy](
-        Some(bucketname),
-        subresource = Some("policy")
-      )
-
-    /*
-    * delete the policy on a specified bucket. To use the operation, you must have DeletePolicy permissions on the specified bucket and be the bucket owner.
-    */
-    def delete(bucketname: String) =
-      Http.delete[Unit](
-        Some(bucketname),
-        subresource = Some("policy")
-      )
-
-  }
-
 }

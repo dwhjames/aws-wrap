@@ -31,7 +31,7 @@ import aws.s3.S3Parsers._
 import aws.s3.ACLs.ACL
 import aws.s3.Permissions.Grant
 
-import aws.s3.models.{Bucket, HttpRequestLayer, S3Metadata}
+import aws.s3.models.{Bucket, S3Metadata}
 
 trait BucketServiceImplLayer
   extends BucketServiceLayer
