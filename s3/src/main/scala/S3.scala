@@ -18,7 +18,31 @@ package aws.s3
 
 import aws.s3.modules._
 
-trait AbstractS3Layer
+/*
+
+Example usage of this S3 library in a cake-pattern project
+
+// anything that intends to use S3 should mixin this layer
+trait S3ServiceLayer {
+  val S3: AbstractS3Cake
+}
+// i.e., trait MyServiceLayer extends S3ServiceLayer { an abstract S3: AbstractS3Cake is now in scope }
+
+// the project’s cake should mixin this concrete implementation of the layer
+trait S3ServiceImplLayer
+  extends S3ServiceLayer
+     with ExecutionContextLayer
+{
+
+  override object S3 extends S3Cake {
+    override lazy val s3HttpRequestExecutionContext = executionContext
+  }
+}
+// i.e., object MyCake extends MyServiceLayer with S3ServiceImplLayer with ConcreteExecutionContextLayer
+
+*/
+
+trait AbstractS3Cake
   extends AbstractBucketLayer
      with AbstractCORSRuleLayer
      with AbstractLifecycleLayer
@@ -28,7 +52,7 @@ trait AbstractS3Layer
      with AbstractS3ObjectLayer
      with AbstractTagLayer
 
-trait S3Layer extends AbstractS3Layer
+trait S3Cake extends AbstractS3Cake
   with BucketLayer
   with CORSRuleLayer
   with LifecycleLayer
@@ -39,7 +63,7 @@ trait S3Layer extends AbstractS3Layer
   with TagLayer
   with HttpRequestLayer
 
-object S3 extends S3Layer {
+object S3 extends S3Cake {
 
   /**
     * The current AWS key, read from the first line of `~/.awssecret`
