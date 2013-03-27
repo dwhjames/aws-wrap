@@ -15,17 +15,19 @@
  */
 
 package aws.s3
-package services
+package modules
 
+import S3Parsers._
 import models.Policy
 
 import scala.concurrent.Future
 
+import play.api.libs.json.{Json, JsValue}
+
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-
-trait PolicyService {
+trait PolicyModule {
 
   /**
     * Add to or replace a policy on a bucket. If the bucket already has a policy,
@@ -73,6 +75,33 @@ trait PolicyService {
 
 }
 
-trait PolicyServiceLayer {
-  val policyService: PolicyService
+trait PolicyModuleLayer extends HttpRequestLayer {
+
+  object Policy extends PolicyModule {
+
+    import aws.s3.JsonFormats._
+
+    def create(bucketname: String, policy: Policy): Future[EmptyResult[S3Metadata]] = {
+      val b = Json.toJson(policy)
+      Http.put[JsValue, Unit](
+        Some(bucketname),
+        body = b,
+        subresource = Some("policy")
+      )
+    }
+
+    def get(bucketname: String): Future[Result[S3Metadata, Policy]] =
+      Http.get[Policy](
+        Some(bucketname),
+        subresource = Some("policy")
+      )
+
+    def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
+      Http.delete[Unit](
+        Some(bucketname),
+        subresource = Some("policy")
+      )
+
+  }
+
 }

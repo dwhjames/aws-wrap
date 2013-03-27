@@ -15,7 +15,7 @@
  */
 
 package aws.s3
-package services
+package modules
 
 import S3Parsers._
 import models.{BatchDeletion, S3Object, Versions}
@@ -28,29 +28,18 @@ import scala.xml.Node
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-
-trait S3ObjectServiceImplLayer
-  extends S3ObjectServiceLayer
-     with HttpRequestLayer
-{
-
-  override object s3ObjectService extends S3ObjectService {
+trait S3ObjectModule {
 
     /**
       * Returns some or all (up to 1000) of the objects in a bucket.
       * To use this implementation of the operation, you must have READ access to the bucket.
       */
-    def content(bucketname: String): Future[Result[S3Metadata, S3Object]] =
-      Http.get[S3Object](Some(bucketname))
+    def content(bucketname: String): Future[Result[S3Metadata, S3Object]]
 
     /**
       * List metadata about all of the versions of objects in a bucket
       */
-    def getVersions(bucketname: String): Future[Result[S3Metadata, Versions]] =
-      Http.get[Versions](
-        Some(bucketname),
-        subresource = Some("versions")
-      )
+    def getVersions(bucketname: String): Future[Result[S3Metadata, Versions]]
 
     /**
       * Adds an object to a bucket.
@@ -59,17 +48,7 @@ trait S3ObjectServiceImplLayer
       * @param bucketname Name of the target bucket
       * @param body The File to upload to this Bucket
       */
-      // TODO: RRS
-      // TODO: ACL
-      // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
-      // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
-    def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]] =
-      Http.upload[Unit](
-        HttpMethod.PUT,
-        bucketname,
-        body.getName,
-        body
-      )
+    def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]]
 
     /**
       * Removes the null version (if there is one) of an object and inserts a delete marker,
@@ -86,6 +65,53 @@ trait S3ObjectServiceImplLayer
       objectName: String,
       versionId:  Option[String] = None,
       mfa:        Option[MFA]    = None
+    ): Future[EmptyResult[S3Metadata]]
+
+    /**
+      * Delete multiple objects from a bucket using a single HTTP request
+      *
+      * @param bucketname Name of the target bucket
+      * @param objects Seq of objectName -> objectVersion
+      * @param mfa Required to permanently delete a versioned object if versioning is configured with MFA Delete enabled.
+      */
+    def batchDelete(
+      bucketname: String,
+      objects:    Seq[(String, Option[String])],
+      mfa:        Option[MFA]                    = None
+    ): Future[Result[S3Metadata, BatchDeletion]]
+
+}
+
+trait S3ObjectModuleLayer extends HttpRequestLayer {
+
+  object S3Object extends S3ObjectModule {
+
+    def content(bucketname: String): Future[Result[S3Metadata, S3Object]] =
+      Http.get[S3Object](Some(bucketname))
+
+    def getVersions(bucketname: String): Future[Result[S3Metadata, Versions]] =
+      Http.get[Versions](
+        Some(bucketname),
+        subresource = Some("versions")
+      )
+
+      // TODO: RRS
+      // TODO: ACL
+      // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
+      // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
+    def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]] =
+      Http.upload[Unit](
+        HttpMethod.PUT,
+        bucketname,
+        body.getName,
+        body
+      )
+
+    def delete(
+      bucketname: String,
+      objectName: String,
+      versionId:  Option[String] = None,
+      mfa:        Option[MFA]    = None
     ): Future[EmptyResult[S3Metadata]] = {
       Http.delete[Unit](
         Some(bucketname),
@@ -95,13 +121,6 @@ trait S3ObjectServiceImplLayer
       )
     }
 
-    /**
-      * Delete multiple objects from a bucket using a single HTTP request
-      *
-      * @param bucketname Name of the target bucket
-      * @param objects Seq of objectName -> objectVersion
-      * @param mfa Required to permanently delete a versioned object if versioning is configured with MFA Delete enabled.
-      */
     def batchDelete(
       bucketname: String,
       objects:    Seq[(String, Option[String])],
@@ -121,7 +140,7 @@ trait S3ObjectServiceImplLayer
 
       val ps = Seq(
         Parameters.MD5(b.mkString),
-        aws.s3.AWS.Parameters.ContentLength(b.mkString.length)
+        aws.core.Parameters.ContentLength(b.mkString.length)
       ) ++
         mfa.map(m => Parameters.X_AMZ_MFA(m)).toSeq
 

@@ -15,7 +15,7 @@
  */
 
 package aws.s3
-package services
+package modules
 
 import S3Parsers._
 import models.LifecycleConf
@@ -26,8 +26,7 @@ import scala.xml.Node
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-
-trait LifecycleService {
+trait LifecycleModule {
 
   /**
     * Sets lifecycle configuration for your bucket. It lifecycle configuration exists, it replaces it.
@@ -53,6 +52,50 @@ trait LifecycleService {
 
 }
 
-trait LifecycleServiceLayer {
-  val lifecycleService: LifecycleService
+trait LifecycleModuleLayer extends HttpRequestLayer {
+
+  object Lifecycle extends LifecycleModule {
+
+    def create(bucketname: String, confs: LifecycleConf*): Future[EmptyResult[S3Metadata]] = {
+      val b =
+        <LifecycleConfiguration>
+          {
+            for (c <- confs) yield
+              <Rule>
+               {
+                 for (i <- c.id.toSeq)
+                   yield <ID>{ i }</ID>
+               }
+               <Prefix>{ c.prefix }</Prefix>
+               <Status>{ c.status }</Status>
+               <Expiration>
+                 <Days>{ c.lifetime.toDays }</Days>
+               </Expiration>
+              </Rule>
+          }
+        </LifecycleConfiguration>
+
+      val ps = Seq(Parameters.MD5(b.mkString))
+      Http.put[Node, Unit](
+        Some(bucketname),
+        body = b,
+        subresource = Some("lifecycle"),
+        parameters = ps
+      )
+    }
+
+    def get(bucketname: String): Future[Result[S3Metadata, Seq[LifecycleConf]]] =
+      Http.get[Seq[LifecycleConf]](
+        Some(bucketname),
+        subresource = Some("lifecycle")
+      )
+
+    def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
+      Http.delete[Unit](
+        Some(bucketname),
+        subresource = Some("lifecycle")
+      )
+
+  }
+
 }

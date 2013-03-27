@@ -15,9 +15,7 @@
  */
 
 package aws.s3
-package services
-
-import signature.S3Sign
+package modules
 
 import java.util.Date
 
@@ -31,7 +29,7 @@ import aws.core.Result
 import aws.core.parsers.Parser
 
 
-private[services] trait HttpRequestLayer {
+private[modules] trait HttpRequestLayer extends S3SignLayer {
 
   protected implicit val httpRequestExecutionContext: ExecutionContext
 

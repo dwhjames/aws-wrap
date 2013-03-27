@@ -15,7 +15,7 @@
  */
 
 package aws.s3
-package services
+package modules
 
 import S3Parsers._
 import models.NotificationConfiguration
@@ -26,13 +26,7 @@ import scala.xml.Node
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-
-trait NotificationServiceImplLayer
-  extends NotificationServiceLayer
-     with HttpRequestLayer
-{
-
-  override object notificationService extends NotificationService {
+trait NotificationModule {
 
     /**
       * Enable notifications of specified events for a bucket. Currently, the
@@ -48,6 +42,29 @@ trait NotificationServiceImplLayer
       * @param bucketname The name of the bucket you want to enable notifications on
       * @param notification Notification configuration for this bucket
       */
+    def create(bucketname: String, notification: NotificationConfiguration): Future[EmptyResult[S3Metadata]]
+
+    /**
+      * Disable notifications of specified events for a bucket.
+      *
+      * @param bucketname The name of the target bucket
+      */
+    def disable(bucketname: String): Future[EmptyResult[S3Metadata]]
+
+    /**
+      * return the notification configuration of a bucket.
+      *
+      * @param bucketname The name of the bucket you want to get notifications for
+      */
+    def get(bucketname: String): Future[Result[S3Metadata, Seq[NotificationConfiguration]]]
+
+}
+
+trait NotificationModuleLayer extends HttpRequestLayer
+{
+
+  object Notification extends NotificationModule {
+
     def create(bucketname: String, notification: NotificationConfiguration): Future[EmptyResult[S3Metadata]] = {
       val b =
         <NotificationConfiguration>
@@ -64,11 +81,6 @@ trait NotificationServiceImplLayer
       )
     }
 
-    /**
-      * Disable notifications of specified events for a bucket.
-      *
-      * @param bucketname The name of the target bucket
-      */
     def disable(bucketname: String): Future[EmptyResult[S3Metadata]] = {
       val b = <NotificationConfiguration />
       Http.put[Node, Unit](
@@ -78,11 +90,6 @@ trait NotificationServiceImplLayer
       )
     }
 
-    /**
-      * return the notification configuration of a bucket.
-      *
-      * @param bucketname The name of the bucket you want to get notifications for
-      */
     def get(bucketname: String): Future[Result[S3Metadata, Seq[NotificationConfiguration]]] =
       Http.get[Seq[NotificationConfiguration]](
         Some(bucketname),

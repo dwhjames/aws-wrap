@@ -15,7 +15,7 @@
  */
 
 package aws.s3
-package services
+package modules
 
 import S3Parsers._
 import Permissions.Grantees
@@ -27,13 +27,7 @@ import scala.xml.Node
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-
-trait LoggingServiceImplLayer
-  extends LoggingServiceLayer
-     with HttpRequestLayer
-{
-
-  override object loggingService extends LoggingService {
+trait LoggingModule {
 
     /**
       * Set the logging parameters for a bucket and specify permissions for who can view and modify the logging parameters.
@@ -44,6 +38,24 @@ trait LoggingServiceImplLayer
       * @param targetBucket The name of the bucket where Logs will be stored.
       * @param grantees Seq of Grantee allowed to access Logs
       */
+    def enable(
+      loggedBucket: String,
+      targetBucket: String,
+      grantees:     Seq[(Grantees.Email, LoggingPermission.Value)] = Nil
+    ): Future[EmptyResult[S3Metadata]]
+
+    /**
+      * return the logging status of a bucket and the permissions users have to view and modify that status. To use {{{get}}}, you must be the bucket owner.
+      * @param bucketName The name of the bucket.
+      */
+    def get(bucketName: String): Future[Result[S3Metadata, Seq[LoggingStatus]]]
+
+}
+
+trait LoggingModuleLayer extends HttpRequestLayer {
+
+  object Logging extends LoggingModule {
+
     def enable(
       loggedBucket: String,
       targetBucket: String,
@@ -74,10 +86,6 @@ trait LoggingServiceImplLayer
       )
     }
 
-    /**
-      * return the logging status of a bucket and the permissions users have to view and modify that status. To use {{{get}}}, you must be the bucket owner.
-      * @param bucketName The name of the bucket.
-      */
     def get(bucketName: String): Future[Result[S3Metadata, Seq[LoggingStatus]]] =
       Http.get[Seq[LoggingStatus]](
         Some(bucketName),

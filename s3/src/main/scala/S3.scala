@@ -16,21 +16,30 @@
 
 package aws.s3
 
-import aws.s3.services.BucketServiceImplLayer
+import aws.s3.modules._
 
+trait S3Layer
+  extends BucketModuleLayer
+     with CORSRuleModuleLayer
+     with LifecycleModuleLayer
+     with LoggingModuleLayer
+     with NotificationModuleLayer
+     with PolicyModuleLayer
+     with S3ObjectModuleLayer
+     with TagModuleLayer
+{
 
-object AWS extends  aws.core.AWS{}
+  /**
+    * The current AWS key, read from the first line of `~/.awssecret`
+    */
+  lazy val s3AwsKey: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(0)
 
-object S3 {
+  /**
+    * The current AWS secret, read from the second line of `~/.awssecret`
+    */
+  lazy val s3AwsSecret: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(1)
+}
 
-  object Cake extends BucketServiceImplLayer {
-    override val httpRequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  }
-
-  val Bucket = Cake.bucketService
-
-
-  val ACCESS_KEY_ID = ""
-  val SECRET_ACCESS_KEY = ""
-
+object S3 extends S3Layer {
+  override val httpRequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }

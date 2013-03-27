@@ -15,12 +15,11 @@
  */
 
 package aws.s3
-package services
+package modules
 
 import S3Parsers._
 import Permissions.Grant
 import models.Bucket
-
 
 import java.util.Date
 
@@ -30,8 +29,7 @@ import scala.xml.Node
 import aws.core.Result
 import aws.core.Types.EmptyResult
 
-
-trait BucketService {
+trait BucketModule {
 
   /**
    * Create a bucket
@@ -72,6 +70,50 @@ trait BucketService {
 
 }
 
-trait BucketServiceLayer {
-  val bucketService: BucketService
+trait BucketModuleLayer extends HttpRequestLayer {
+
+  object Bucket extends BucketModule {
+
+    def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]] = {
+      val b =
+        <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+          <LocationConstraint>{ region.subdomain }</LocationConstraint>
+        </CreateBucketConfiguration>
+
+      val ps = acls.map(aws.s3.Permissions.X_AMZ_ACL(_)).toSeq ++ permissions
+      Http.put[Node, Unit](
+        Some(bucketname),
+        body = b,
+        parameters = ps
+      )
+    }
+
+    def setVersioningConfiguration(
+        bucketname: String,
+        versionState: VersionState.Value,
+        mfaDeleteState: Option[(MFADeleteState.Value, MFA)] = None): Future[EmptyResult[S3Metadata]] = {
+
+      val b =
+        <VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+          <Status>{ versionState }</Status>
+          { for (m <- mfaDeleteState.toSeq) yield <MfaDelete>{ m._1 }</MfaDelete> }
+        </VersioningConfiguration>
+
+      val ps = Seq(aws.core.Parameters.ContentLength(b.mkString.length)) ++ mfaDeleteState.map(m => aws.s3.Parameters.X_AMZ_MFA(m._2)).toSeq
+
+      Http.put[Node, Unit](
+        Some(bucketname),
+        body = b,
+        subresource = Some("versioning"),
+        parameters = ps
+      )
+    }
+
+    def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
+      Http.delete[Unit](bucketname = Some(bucketname))
+
+    def list(): Future[Result[S3Metadata, Seq[Bucket]]] =
+      Http.get[Seq[Bucket]]()
+  }
+
 }
