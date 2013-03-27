@@ -17,7 +17,6 @@
 package aws.s3
 package modules
 
-import S3Parsers._
 import models.NotificationConfiguration
 
 import scala.concurrent.Future

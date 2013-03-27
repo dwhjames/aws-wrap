@@ -17,6 +17,10 @@
 package aws.s3
 package models
 
+import java.lang.{Long => JLong}
+
+import aws.core.parsers.{Parser, Success}
+
 /**
  * Cross-Origin Resource Sharing rule
  * @see http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html
@@ -28,3 +32,18 @@ case class CORSRule(
   maxAge:        Option[Long] = None,
   exposeHeaders: Seq[String]  = Nil
 )
+
+object CORSRule {
+
+  implicit def corsRulesParser = Parser[Seq[CORSRule]] { r =>
+    Success((r.xml \\ "CORSRule") map { c =>
+      CORSRule(
+        origins = (c \ "AllowedOrigin").map(_.text),
+        methods = (c \ "AllowedMethod").map(n => HttpMethod.withName(n.text)),
+        headers = (c \ "AllowedHeader").map(_.text),
+        maxAge  = (c \ "MaxAgeSeconds").map(l => JLong.parseLong(l.text)).headOption,
+        exposeHeaders = (c \ "ExposeHeader").map(_.text)
+      )
+    })
+  }
+}

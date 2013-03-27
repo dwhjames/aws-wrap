@@ -16,6 +16,27 @@
 
 package aws.s3.models
 
+import java.text.SimpleDateFormat
 import java.util.Date
 
-case class Bucket(name: String, creationDate: Date)
+import aws.core.parsers.{Parser, Success}
+
+case class Bucket(
+  name: String,
+  creationDate: Date
+)
+
+object Bucket {
+
+  def parseDate(d: String): Date =
+    new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'").parse(d)
+
+  implicit def bucketsParser = Parser[Seq[Bucket]] { r =>
+    Success((r.xml \\ "Bucket") map { n =>
+      Bucket(
+        (n \ "Name").text,
+        parseDate((n \ "CreationDate").text)
+      )
+    })
+  }
+}

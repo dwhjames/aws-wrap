@@ -17,7 +17,6 @@
 package aws.s3
 package modules
 
-import S3Parsers._
 import Permissions.Grant
 import models.Bucket
 

@@ -16,9 +16,11 @@
 
 package aws
 
-import core.Metadata
+import core.{Metadata, Result}
+import core.parsers.{Parser, Success}
 import core.utils.Crypto
 
+import java.lang.{Boolean => JBool}
 import java.net.URI
 
 /**
@@ -40,6 +42,23 @@ package object s3 {
     versionId:    Option[String] = None,
     deleteMarker: Boolean        = false
   ) extends Metadata
+
+  object S3Metadata {
+
+    implicit def s3MetadataParser = Parser[S3Metadata] { r =>
+      Success(
+        S3Metadata(
+          requestId    = r.header("x-amz-request-id").get,
+          id2          = r.header("x-amz-id-2").get,
+          versionId    = r.header("x-amz-version-id"),
+          deleteMarker = r.header("x-amz-delete-marker").map(JBool.parseBoolean).getOrElse(false)
+        )
+      )
+    }
+
+    implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[S3Metadata, T]] =
+      Parser.xmlErrorParser[S3Metadata].or(Parser.resultParser(s3MetadataParser, p))
+  }
 
   object Parameters {
 

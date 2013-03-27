@@ -16,7 +16,21 @@
 
 package aws.s3.models
 
+import aws.core.parsers.{Parser, Success}
+
 case class Tag(
-  name: String,
+  name:  String,
   value: String
 )
+
+object Tag {
+
+  implicit def tagsParser = Parser[Seq[Tag]] { r =>
+    Success((r.xml \\ "Tag") map { t =>
+      Tag(
+        (t \ "Key")  .text,
+        (t \ "Value").text
+      )
+    })
+  }
+}

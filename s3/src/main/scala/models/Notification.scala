@@ -17,7 +17,22 @@
 package aws.s3
 package models
 
+import aws.core.parsers.{Parser, Success}
+
 case class NotificationConfiguration(
   topic: String,
   event: NotificationEvent.Value
 )
+
+object NotificationConfiguration {
+
+  implicit def notificationParser = Parser[Seq[NotificationConfiguration]] { r =>
+    Success(
+      (r.xml \ "TopicConfiguration") map { t =>
+        NotificationConfiguration(
+          (t \ "Topic").text,
+          NotificationEvent.withName((t \ "Event").text)
+        )
+      })
+  }
+}

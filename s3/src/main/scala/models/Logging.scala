@@ -19,8 +19,28 @@ package models
 
 import Permissions.Grantees.Grantee
 
+import aws.core.parsers.{Parser, Success}
+
 case class LoggingStatus(
   bucket: String,
   prefix: String,
   grants: Seq[(Grantee, LoggingPermission.Value)]
 )
+
+object LoggingStatus {
+
+  implicit def loggingStatusParser = Parser[Seq[LoggingStatus]] { r =>
+    Success((r.xml \\ "LoggingEnabled") map { n =>
+      val grants = (n \ "TargetGrants" \ "Grant").toSeq map { g =>
+        val mail = (g \ "Grantee" \ "EmailAddress").text
+        val perm = (g \ "Permission").text
+        Permissions.Grantees.Email(mail) -> LoggingPermission.withName(perm)
+      }
+      LoggingStatus(
+        (n \ "TargetBucket").text,
+        (n \ "TargetPrefix").text,
+        grants
+      )
+    })
+  }
+}

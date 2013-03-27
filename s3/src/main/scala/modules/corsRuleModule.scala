@@ -17,7 +17,6 @@
 package aws.s3
 package modules
 
-import S3Parsers._
 import models.CORSRule
 
 import scala.concurrent.Future

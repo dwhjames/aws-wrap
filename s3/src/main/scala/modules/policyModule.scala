@@ -17,7 +17,6 @@
 package aws.s3
 package modules
 
-import S3Parsers._
 import models.Policy
 
 import scala.concurrent.Future
@@ -82,8 +81,6 @@ trait AbstractPolicyLayer {
 trait PolicyLayer extends AbstractPolicyLayer with AbstractHttpRequestLayer {
 
   override object Policy extends PolicyModule {
-
-    import aws.s3.JsonFormats._
 
     def create(bucketname: String, policy: Policy): Future[EmptyResult[S3Metadata]] = {
       val b = Json.toJson(policy)

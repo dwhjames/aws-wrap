@@ -17,7 +17,9 @@
 package aws.s3
 package models
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
+
+import aws.core.parsers.{Parser, Success}
 
 case class LifecycleConf(
   id:       Option[String],
@@ -25,3 +27,17 @@ case class LifecycleConf(
   status:   LifecycleStatus.Value,
   lifetime: Duration
 )
+
+object LifecycleConf {
+
+  implicit def lifecyclesParser = Parser[Seq[LifecycleConf]] { r =>
+    Success((r.xml \ "Rule") map { l =>
+      LifecycleConf(
+        id       = (l \ "ID").map(_.text).headOption,
+        prefix   = (l \ "Prefix").text,
+        status   = (l \ "Status").map(n => LifecycleStatus.withName(n.text)).headOption.get,
+        lifetime = (l \ "Expiration" \ "Days").map(v => Duration(java.lang.Integer.parseInt(v.text), DAYS)).headOption.get
+      )
+    })
+  }
+}
