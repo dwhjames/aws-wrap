@@ -21,9 +21,26 @@ import java.util.Date
 
 import aws.core.utils.Crypto
 
-private[modules] trait S3SignLayer extends S3CredentialsLayer {
+trait S3SignModule {
+  def sign(
+    method:      String,
+    bucketname:  Option[String],
+    objectName:  Option[String],
+    subresource: Option[String],
+    queryString: Seq[(String, String)],
+    md5:         Option[String]         = None,
+    contentType: Option[String]         = None,
+    headers:     Seq[(String, String)]  = Nil
+  ): Seq[(String, String)]
+}
 
-  object S3Sign {
+trait AbstractS3SignLayer {
+  val S3Sign: S3SignModule
+}
+
+trait S3SignLayer extends AbstractS3SignLayer with AbstractS3CredentialsLayer {
+
+  override object S3Sign extends S3SignModule {
 
     val VERSION = "2009-04-15"
     val SIGVERSION = "2"

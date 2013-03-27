@@ -61,9 +61,13 @@ trait CORSRuleModule {
 
 }
 
-trait CORSRuleModuleLayer extends HttpRequestLayer {
+trait AbstractCORSRuleLayer {
+  val CORSRule: CORSRuleModule
+}
 
-  object CORSRule extends CORSRuleModule {
+trait CORSRuleLayer extends AbstractCORSRuleLayer with AbstractHttpRequestLayer {
+
+  override object CORSRule extends CORSRuleModule {
 
     def create(bucketName: String, rules: CORSRule*): Future[EmptyResult[S3Metadata]] = {
       val b =

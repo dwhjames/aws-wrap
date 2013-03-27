@@ -28,14 +28,71 @@ import play.api.http.{ContentTypeOf, Writeable}
 import aws.core.Result
 import aws.core.parsers.Parser
 
+trait HttpRequestModule {
 
-private[modules] trait HttpRequestLayer extends S3SignLayer {
+  def upload[T](
+    method:     HttpMethod.Value,
+    bucketname: String,
+    objectName: String,
+    body:       java.io.File,
+    parameters: Seq[(String, String)] = Nil
+  )(implicit p: Parser[Result[S3Metadata, T]])
+  : Future[Result[S3Metadata, T]]
 
-  protected implicit val httpRequestExecutionContext: ExecutionContext
+  def get[T](
+    bucketname:  Option[String]        = None,
+    objectName:  Option[String]        = None,
+    subresource: Option[String]        = None,
+    queryString: Seq[(String, String)] = Nil,
+    parameters:  Seq[(String, String)] = Nil
+  )(implicit p: Parser[Result[S3Metadata, T]])
+  : Future[Result[S3Metadata, T]]
 
-  object Http {
+  def delete[T](
+    bucketname:  Option[String]        = None,
+    objectName:  Option[String]        = None,
+    subresource: Option[String]        = None,
+    queryString: Seq[(String, String)] = Nil,
+    parameters:  Seq[(String, String)] = Nil
+  )(implicit p: Parser[Result[S3Metadata, T]])
+  : Future[Result[S3Metadata, T]]
 
-    def resource(bucketname: Option[String], uri: String, subresource: Option[String] = None) =
+  def post[B, T](
+    bucketname:  Option[String]        = None,
+    objectName:  Option[String]        = None,
+    subresource: Option[String]        = None,
+    queryString: Seq[(String, String)] = Nil,
+    body:        B,
+    parameters:  Seq[(String, String)] = Nil
+  )(implicit w:           Writeable[B],
+             contentType: ContentTypeOf[B],
+             p:           Parser[Result[S3Metadata, T]])
+  : Future[Result[S3Metadata, T]]
+
+  def put[B, T](
+    bucketname:  Option[String]        = None,
+    objectName:  Option[String]        = None,
+    subresource: Option[String]        = None,
+    queryString: Seq[(String, String)] = Nil,
+    body:        B,
+    parameters:  Seq[(String, String)] = Nil
+  )(implicit w:           Writeable[B],
+             contentType: ContentTypeOf[B],
+             p:           Parser[Result[S3Metadata, T]])
+  : Future[Result[S3Metadata, T]]
+}
+
+trait AbstractHttpRequestLayer {
+  val Http: HttpRequestModule
+}
+
+trait HttpRequestLayer extends AbstractHttpRequestLayer with S3SignLayer {
+
+  protected implicit val s3HttpRequestExecutionContext: ExecutionContext
+
+  override object Http extends HttpRequestModule {
+
+    private def resource(bucketname: Option[String], uri: String, subresource: Option[String] = None) =
       "/%s\n%s\n?%s".format(bucketname.getOrElse(""), uri, subresource.getOrElse(""))
 
     def upload[T](

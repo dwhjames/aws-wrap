@@ -75,9 +75,13 @@ trait PolicyModule {
 
 }
 
-trait PolicyModuleLayer extends HttpRequestLayer {
+trait AbstractPolicyLayer {
+  val Policy: PolicyModule
+}
 
-  object Policy extends PolicyModule {
+trait PolicyLayer extends AbstractPolicyLayer with AbstractHttpRequestLayer {
+
+  override object Policy extends PolicyModule {
 
     import aws.s3.JsonFormats._
 

@@ -52,9 +52,13 @@ trait LoggingModule {
 
 }
 
-trait LoggingModuleLayer extends HttpRequestLayer {
+trait AbstractLoggingLayer {
+  val Logging: LoggingModule
+}
 
-  object Logging extends LoggingModule {
+trait LoggingLayer extends AbstractLoggingLayer with AbstractHttpRequestLayer {
+
+  override object Logging extends LoggingModule {
 
     def enable(
       loggedBucket: String,

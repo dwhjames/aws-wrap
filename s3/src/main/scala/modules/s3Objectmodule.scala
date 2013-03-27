@@ -82,9 +82,13 @@ trait S3ObjectModule {
 
 }
 
-trait S3ObjectModuleLayer extends HttpRequestLayer {
+trait AbstractS3ObjectLayer {
+  val S3Object: S3ObjectModule
+}
 
-  object S3Object extends S3ObjectModule {
+trait S3ObjectLayer extends AbstractS3ObjectLayer with AbstractHttpRequestLayer {
+
+  override object S3Object extends S3ObjectModule {
 
     def content(bucketname: String): Future[Result[S3Metadata, S3Object]] =
       Http.get[S3Object](Some(bucketname))

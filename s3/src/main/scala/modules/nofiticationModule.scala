@@ -60,10 +60,13 @@ trait NotificationModule {
 
 }
 
-trait NotificationModuleLayer extends HttpRequestLayer
-{
+trait AbstractNotificationLayer {
+  val Notification: NotificationModule
+}
 
-  object Notification extends NotificationModule {
+trait NotificationLayer extends AbstractNotificationLayer with AbstractHttpRequestLayer {
+
+  override object Notification extends NotificationModule {
 
     def create(bucketname: String, notification: NotificationConfiguration): Future[EmptyResult[S3Metadata]] = {
       val b =

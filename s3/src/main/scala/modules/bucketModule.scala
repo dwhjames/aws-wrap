@@ -70,9 +70,13 @@ trait BucketModule {
 
 }
 
-trait BucketModuleLayer extends HttpRequestLayer {
+trait AbstractBucketLayer {
+  val Bucket: BucketModule
+}
 
-  object Bucket extends BucketModule {
+trait BucketLayer extends AbstractBucketLayer with AbstractHttpRequestLayer {
+
+  override object Bucket extends BucketModule {
 
     def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]] = {
       val b =

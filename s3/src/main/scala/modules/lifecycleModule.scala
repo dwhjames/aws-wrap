@@ -52,9 +52,13 @@ trait LifecycleModule {
 
 }
 
-trait LifecycleModuleLayer extends HttpRequestLayer {
+trait AbstractLifecycleLayer {
+  val Lifecycle: LifecycleModule
+}
 
-  object Lifecycle extends LifecycleModule {
+trait LifecycleLayer extends AbstractLifecycleLayer with AbstractHttpRequestLayer {
+
+  override object Lifecycle extends LifecycleModule {
 
     def create(bucketname: String, confs: LifecycleConf*): Future[EmptyResult[S3Metadata]] = {
       val b =

@@ -17,7 +17,7 @@
 package aws.s3
 package modules
 
-trait S3CredentialsLayer {
+trait AbstractS3CredentialsLayer {
   val s3AwsKey:    String
   val s3AwsSecret: String
 }

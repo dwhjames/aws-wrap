@@ -52,9 +52,13 @@ trait TagModule {
 
 }
 
-trait TagModuleLayer extends HttpRequestLayer {
+trait AbstractTagLayer {
+  val Tag: TagModule
+}
 
-  object Tag extends TagModule {
+trait TagLayer extends AbstractTagLayer with AbstractHttpRequestLayer {
+
+  override object Tag extends TagModule {
 
     def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
       Http.delete[Unit](
