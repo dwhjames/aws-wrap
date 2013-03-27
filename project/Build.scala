@@ -8,7 +8,7 @@ import com.typesafe.sbtscalariform.ScalariformPlugin._
 
 object AWS {
     val scalaVersion = "2.10.0"
-    val version = "0.1-SNAPSHOT"
+    val version = "0.2-SNAPSHOT"
     val playVersion = "2.1.0"
     val repository = "AWS" at "http://pellucidanalytics.github.com/aws/repository/"
 
@@ -70,7 +70,7 @@ object ApplicationBuild extends Build {
     //lazy val cloudsearch = Project("cloud-search", file("cloudsearch"), settings = commonSettings).dependsOn(core)
 
     lazy val root = Project("root", file("."), settings = Project.defaultSettings ++ Unidoc.settings).aggregate(
-        core, simpledb, sns, dynamodb, s3
+        core, simpledb, sns, dynamodb, s3, sqs
     )
 
 }
