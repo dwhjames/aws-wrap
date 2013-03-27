@@ -11,7 +11,7 @@ import org.specs2.mutable._
 
 
 object TestUtils extends Specification { // Evil hack to access Failure
-  implicit val region = S3Region.DEFAULT
+  // implicit val loc = LocationConstraint.EU_WEST_1
 
   def checkResult[M <: Metadata, T](r: Result[M, T]) = r match {
     case AWSError(_, _, message) => failure(message)
@@ -426,7 +426,7 @@ object NotificationsSpec extends Specification {
       skipped("Needs a topic to be created")
       val bucketName = S3.s3AwsKey + "testBucketNotifCreate"
       val cr = waitFor(S3.Bucket.create(bucketName))
-      val res = waitFor(S3.Notification.create(bucketName, NotificationConfiguration(s"arn:aws:sns:${region.subdomain}:123456789012:myTopic", NotificationEvent.REDUCED_REDUNDANCY_LOST_OBJECT)))
+      val res = waitFor(S3.Notification.create(bucketName, NotificationConfiguration(s"arn:aws:sns:us-east-1:123456789012:myTopic", NotificationEvent.REDUCED_REDUNDANCY_LOST_OBJECT)))
 
       del(bucketName)
       checkResult(res)

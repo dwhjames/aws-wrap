@@ -60,3 +60,16 @@ object CannedACL extends Enumeration {
   val BUCKET_OWNER_READ         = Value("bucket-owner_read")
   val BUCKET_OWNER_FULL_CONTROL = Value("bucket-owner-full-control")
 }
+
+object LocationConstraint extends Enumeration {
+  val US_WEST_1      = Value("us-west-1")
+  val US_WEST_2      = Value("us-west-2")
+  val EU_WEST_1      = Value("eu-west-1")
+  val SA_EAST_1      = Value("sa-east-1")
+  val AP_SOUTHEAST_1 = Value("ap-southeast-1")
+  val AP_SOUTHEAST_2 = Value("ap-southeast-2")
+  val AP_NORTHEAST_1 = Value("ap-northeast-1")
+  val US_STANDARD    = Value("")
+
+  implicit val DEFAULT = US_STANDARD
+}

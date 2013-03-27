@@ -39,9 +39,9 @@ trait BucketModule {
    * @param bucketname The name of the bucket you want to create.
    * @param acls predefined grants for this Bucket
    * @param permissions Explicit access permissions
-   * @param region Physical location of the bucket
+   * @param loc Location constraint for this bucket
    */
-  def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]]
+  def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit loc: LocationConstraint.Value): Future[EmptyResult[S3Metadata]]
 
   /**
    * Set the versioning state of an existing bucket
@@ -78,10 +78,10 @@ trait BucketLayer extends AbstractBucketLayer with AbstractHttpRequestLayer {
 
   override object Bucket extends BucketModule {
 
-    def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit region: S3Region): Future[EmptyResult[S3Metadata]] = {
+    def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit loc: LocationConstraint.Value): Future[EmptyResult[S3Metadata]] = {
       val b =
         <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-          <LocationConstraint>{ region.subdomain }</LocationConstraint>
+          <LocationConstraint>{ loc.toString }</LocationConstraint>
         </CreateBucketConfiguration>
 
       val ps = acls.map(aws.s3.Permissions.X_AMZ_ACL(_)).toSeq ++ permissions
