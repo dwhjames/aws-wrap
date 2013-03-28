@@ -37,17 +37,18 @@ trait PolicyModule {
     * @param policy policy configuration for this bucket
     *
     * {{{
+    * import PolicyCondition.Key
     * val policy = Policy(
     *   id = Some("aaaa-bbbb-cccc-dddd"),
     *   statements = Seq(
-    *     Statement(
-    *       effect = Policy.Effects.ALLOW,
+    *     PolicyStatement(
+    *       effect = PolicyEffect.ALLOW,
     *       sid = Some("1"),
     *       principal = Some("AWS" -> Seq("*")),
     *       action = Seq("s3:GetObject*"),
     *       conditions = Seq(
-    *         Conditions.Strings.Equals(USER_AGENT -> Seq("foo")),
-    *         Conditions.Exists(KeyFor(REFERER) -> Seq(true))),
+    *         PolicyConditions.Strings.Equals(Key.USER_AGENT -> Seq("foo")),
+    *         PolicyConditions.Exists(Key.KeyFor(Key.REFERER) -> Seq(true))),
     *       resource = Seq("arn:aws:s3:::bucketName/foobar")))) //  Make sure the bucketname is in lower case
     *
     * Policy.create(bucketName, policy)

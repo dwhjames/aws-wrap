@@ -367,20 +367,19 @@ object PolicySpec extends Specification {
 
   "S3 Policy API" should {
 
-    import Policy.Conditions
-    import Conditions.Keys._
+    import PolicyCondition.Key
 
     def policy(bucketName: String) = Policy(
       id = Some("aaaa-bbbb-cccc-dddd"),
       statements = Seq(
-        Statement(
+        PolicyStatement(
           effect = PolicyEffect.ALLOW,
           sid = Some("1"),
           principal = Some("AWS" -> Seq("*")),
           action = Seq("s3:GetObject*"),
           conditions = Seq(
-            Conditions.Strings.Equals(USER_AGENT -> Seq("PAF")),
-            Conditions.Exists(KeyFor(REFERER) -> Seq(true))),
+            PolicyConditions.Strings.Equals(Key.USER_AGENT -> Seq("PAF")),
+            PolicyConditions.Exists(Key.KeyFor(Key.REFERER) -> Seq(true))),
           resource = Seq("arn:aws:s3:::%s/*".format(bucketName.toLowerCase)))))
 
     "create policy" in {
