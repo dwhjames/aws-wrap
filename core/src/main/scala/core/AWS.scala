@@ -45,49 +45,6 @@ trait AWS {
    */
   implicit val defaultExecutionContext: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
-  /**
-   * Format the date in ISO: `yyyy-MM-dd'T'HH:mm:ssZ`
-   */
-  def isoDateFormat(date: Date) = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(date)
-
-  /**
-   * Format the date in ISO basic, in GMT: `yyyyMMdd'T'HHmmss'Z`
-   */
-  def isoBasicFormat(date: Date) = {
-    val iso = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
-    iso.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
-    iso.format(date)
-  }
-
-  def canonicalQueryString(params: Seq[(String, String)]) =
-    params.sortBy(_._1).map { p => SignerEncoder.encode(p._1) + "=" + SignerEncoder.encode(p._2) }.mkString("&")
-
-  def httpDateFormat(date: Date) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(date)
-  def httpDateparse(date: String) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").parse(date)
-
-  object Parameters {
-    def TimeStamp(date: Date) = "Timestamp" -> isoDateFormat(date)
-    def Expires(seconds: Long) = "Expires" -> {
-      val now = new Date().getTime()
-      (now / 1000 + seconds).toString
-    }
-    def Action(a: String) = ("Action" -> a)
-    def AWSAccessKeyId(key: String) = ("AWSAccessKeyId" -> key)
-    def Version(v: String) = ("Version" -> v)
-    def SignatureVersion(v: String) = ("SignatureVersion" -> v)
-    def SignatureMethod(m: String) = ("SignatureMethod" -> m)
-
-    type MimeType = String
-
-    def CacheControl(s: String) = ("Cache-Control" -> s)
-    def ContentDisposition(s: String) = ("Content-Disposition" -> s)
-    def ContentEncoding(c: java.nio.charset.Charset) = ("Content-Encoding" -> c.name)
-    def ContentLength(l: Long) = ("Content-Length" -> l.toString)
-    def ContentType(s: MimeType) = ("Content-Type" -> s)
-    def Expect(s: MimeType) = ("Expect" -> s)
-    def Expires(d: java.util.Date) = ("Expires" -> httpDateFormat(d))
-  }
-
 
   case class V2[M <: Metadata](val version: String = "2009-04-15") {
 

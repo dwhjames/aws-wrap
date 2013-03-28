@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
-package aws.s3.models
+package aws.s3
+package modules
 
-import aws.core.parsers.{Parser, Success}
-
-case class Tag(
-  name:  String,
-  value: String
-)
-
-object Tag {
-
-  implicit def tagsParser = Parser[Seq[Tag]] { r =>
-    Success((r.xml \\ "Tag") map { t =>
-      Tag(
-        (t \ "Key")  .text,
-        (t \ "Value").text
-      )
-    })
-  }
+trait AbstractS3CredentialsLayer {
+  val s3AwsKey:    String
+  val s3AwsSecret: String
 }

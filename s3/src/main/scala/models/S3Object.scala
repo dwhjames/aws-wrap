@@ -14,183 +14,192 @@
  * limitations under the License.
  */
 
-package aws.s3.models
+package aws.s3
+package models
 
+import java.lang.{Boolean => JBool, Long => JLong }
 import java.util.Date
 
-import play.api.libs.ws._
+import scala.xml.Node
 
-import scala.concurrent.Future
-import scala.xml._
+import aws.core.parsers.{Parser, Success}
 
-import aws.core._
-import aws.core.Types._
-import aws.core.parsers.Parser
-
-import aws.s3.S3._
-import aws.s3.S3.HTTPMethods._
-import aws.s3.S3Parsers._
-
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import aws.s3.Permissions.Grantees._
-
-case class Owner(id: String, name: Option[String])
-
-import S3Object.StorageClasses.StorageClass
-
-trait Container {
-  val id: Option[String]
-  val key: String
-  val isLatest: Boolean
-  val lastModified: Date
-  val etag: String
-  val size: Option[Long]
-  val storageClass: Option[StorageClass]
-  val owner: Owner
-}
-
-case class DeleteMarker(
-  id: Option[String],
-  key: String,
-  isLatest: Boolean,
-  lastModified: Date,
-  etag: String,
-  size: Option[Long],
-  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
-  owner: Owner) extends Container
-
-case class Version(
-  id: Option[String],
-  key: String,
-  isLatest: Boolean,
-  lastModified: Date,
-  etag: String,
-  size: Option[Long],
-  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
-  owner: Owner) extends Container
-
-// TODO: Add content
-case class Versions(
-  name: String,
-  prefix: Option[String],
-  key: Option[String],
-  maxKeys: Long,
-  isTruncated: Boolean,
-  versions: Seq[Version],
-  deleteMarkers: Seq[DeleteMarker],
-  versionId: Option[String])
+case class Owner(
+  id:   String,
+  name: Option[String]
+)
 
 case class S3Object(
-  name: String,
-  prefix: Option[String],
-  marker: Option[String],
-  maxKeys: Long,
+  name:        String,
+  prefix:      Option[String],
+  marker:      Option[String],
+  maxKeys:     Long,
   isTruncated: Boolean,
-  contents: Seq[Content])
-
-case class Content(
-  id: Option[String],
-  key: String,
-  isLatest: Boolean,
-  lastModified: Date,
-  etag: String,
-  size: Option[Long],
-  storageClass: Option[StorageClass] = Some(S3Object.StorageClasses.STANDARD),
-  owner: Owner) extends Container
-
-case class BatchDeletion(successes: Seq[BatchDeletion.DeletionSuccess], failures: Seq[BatchDeletion.DeletionFailure])
-object BatchDeletion {
-  case class DeletionSuccess(
-    key: String,
-    versionId: Option[String],
-    deleteMarker: Option[String],
-    deleteMarkerVersionId: Option[String])
-
-  case class DeletionFailure(key: String, code: String, message: String)
-}
+  contents:    Seq[Content]
+)
 
 object S3Object {
 
-  import java.io.File
-  import play.api.libs.iteratee._
+  implicit def s3ObjectParser = Parser[S3Object] { r =>
+    val xml = r.xml
+    Success(
+      S3Object(
+        name        = (xml \ "Name").text,
+        prefix      = (xml \ "Prefix").headOption.filter(!_.text.isEmpty).map(_.text),
+        marker      = (xml \ "Marker").headOption.filter(!_.text.isEmpty).map(_.text),
+        maxKeys     = (xml \ "MaxKeys").headOption.map(n => JLong.parseLong(n.text)).get,
+        isTruncated = (xml \ "IsTruncated").headOption.map(n => JBool.parseBoolean(n.text)).get,
+        contents    = (xml \ "Contents").map(Container.parser(_, Content.apply))
+      )
+    )
+  }
+}
 
-  object StorageClasses extends Enumeration {
-    type StorageClass = Value
-    val STANDARD = Value
+trait Container {
+  val id:           Option[String]
+  val key:          String
+  val isLatest:     Boolean
+  val lastModified: Date
+  val etag:         String
+  val size:         Option[Long]
+  val storageClass: Option[StorageClass.Value]
+  val owner:        Owner
+}
+
+object Container {
+
+  private def ownerParser(node: Node): Owner = {
+    Owner(
+      id   = (node \ "ID").text,
+      name = (node \ "DisplayName").map(_.text).headOption
+    )
   }
 
-  /**
-  * Returns some or all (up to 1000) of the objects in a bucket.
-  * To use this implementation of the operation, you must have READ access to the bucket.
-  */
-  def content(bucketname: String): Future[Result[S3Metadata, S3Object]] =
-    Http.get[S3Object](Some(bucketname))
+  def parser[T](
+    node: Node,
+    f: (Option[String],
+        String,
+        Boolean,
+        Date,
+        String,
+        Option[Long],
+        Option[StorageClass.Value],
+        Owner
+       ) => T
+  ): T =
+    f(
+      (node \ "VersionId").map(_.text).headOption,
+      (node \ "Key").text,
+      (node \ "IsLatest").map(n => JBool.parseBoolean(n.text)).headOption.get,
+      (node \ "LastModified").map(n => new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(n.text)).headOption.get,
+      (node \ "ETag").text,
+      (node \ "Size").map(n => JLong.parseLong(n.text)).headOption,
+      (node \ "StorageClass").map(n => StorageClass.withName(n.text)).headOption,
+      (node \ "Owner").map(ownerParser).headOption.get
+    )
+}
 
-  /**
-  * List metadata about all of the versions of objects in a bucket
-  */
-  def getVersions(bucketname: String): Future[Result[S3Metadata, Versions]] =
-    Http.get[Versions](Some(bucketname), subresource = Some("versions"))
+case class DeleteMarker(
+  id:           Option[String],
+  key:          String,
+  isLatest:     Boolean,
+  lastModified: Date,
+  etag:         String,
+  size:         Option[Long],
+  storageClass: Option[StorageClass.Value] = Some(StorageClass.STANDARD),
+  owner:        Owner
+) extends Container
 
-  /**
-  * Adds an object to a bucket. You must have WRITE permissions on a bucket to add an object to it.
-  * @param bucketname Name of the target bucket
-  * @param body The File to upload to this Bucket
-  */
-  // TODO: RRS
-  // TODO: ACL
-  // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
-  // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
-  def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]] =
-    Http.upload[Unit](PUT, bucketname, body.getName, body)
+case class Version(
+  id:           Option[String],
+  key:          String,
+  isLatest:     Boolean,
+  lastModified: Date,
+  etag:         String,
+  size:         Option[Long],
+  storageClass: Option[StorageClass.Value] = Some(StorageClass.STANDARD),
+  owner:        Owner
+) extends Container
 
-  /**
-  * Removes the null version (if there is one) of an object and inserts a delete marker, which becomes the latest version of the object.
-  * If there isn't a null version, Amazon S3 does not remove any objects.
-  * @param bucketname Name of the target bucket
-  * @param objectName Name of the object to delete
-  * @param versionId specific object version to delete
-  * @param mfa Required to permanently delete a versioned object if versioning is configured with MFA Delete enabled.
-  */
-  def delete(
-       bucketname: String,
-       objectName: String,
-       versionId: Option[String] = None,
-       mfa: Option[MFA] = None): Future[EmptyResult[S3Metadata]] = {
-    Http.delete[Unit](Some(bucketname),
-      Some(objectName),
-      parameters = mfa.map{ m => Parameters.X_AMZ_MFA(m) }.toSeq,
-      queryString = versionId.toSeq.map("versionId" -> _))
+// TODO: Add content
+case class Versions(
+  name:          String,
+  prefix:        Option[String],
+  key:           Option[String],
+  maxKeys:       Long,
+  isTruncated:   Boolean,
+  versions:      Seq[Version],
+  deleteMarkers: Seq[DeleteMarker],
+  versionId:     Option[String]
+)
+
+object Versions {
+
+  implicit def versionsParser = Parser[Versions] { r =>
+    val xml = r.xml
+    Success(
+      Versions(
+        name          = (xml \ "Name").text,
+        prefix        = (xml \ "Prefix").filter(!_.text.isEmpty).map(_.text).headOption,
+        key           = (xml \ "KeyMarker").filter(!_.text.isEmpty).map(_.text).headOption,
+        versionId     = (xml \ "VersionIdMarker").filter(!_.text.isEmpty).map(_.text).headOption,
+        maxKeys       = (xml \ "MaxKeys").headOption.map(n => JLong.parseLong(n.text)).get,
+        isTruncated   = (xml \ "IsTruncated").headOption.map(n => JBool.parseBoolean(n.text)).get,
+        versions      = (xml \ "Version").map(Container.parser(_, Version.apply)),
+        deleteMarkers = (xml \ "DeleteMarker").map(Container.parser(_, DeleteMarker.apply))
+      )
+    )
+  }
+}
+
+case class Content(
+  id:           Option[String],
+  key:          String,
+  isLatest:     Boolean,
+  lastModified: Date,
+  etag:         String,
+  size:         Option[Long],
+  storageClass: Option[StorageClass.Value] = Some(StorageClass.STANDARD),
+  owner:        Owner
+) extends Container
+
+case class BatchDeletion(
+  successes: Seq[BatchDeletion.DeletionSuccess],
+  failures:  Seq[BatchDeletion.DeletionFailure]
+)
+
+object BatchDeletion {
+
+  implicit def deletionsParser = Parser[BatchDeletion] { r =>
+    val successes = (r.xml \ "Deleted") map { s =>
+      DeletionSuccess(
+        (s \ "Key").text,
+        (s \ "VersionId").headOption.map(_.text),
+        (s \ "DeleteMarker").headOption.map(_.text),
+        (s \ "DeleteMarkerVersionId").headOption.map(_.text)
+      )
+    }
+    val failures = (r.xml \ "Error") map { e =>
+       DeletionFailure(
+        (e \ "Key").text,
+        (e \ "Code").text,
+        (e \ "Message").text
+      )
+    }
+    Success(BatchDeletion(successes, failures))
   }
 
-  /**
-  * Delete multiple objects from a bucket using a single HTTP request
-  * @param bucketname Name of the target bucket
-  * @param objects Seq of objectName -> objectVersion
-  * @param mfa Required to permanently delete a versioned object if versioning is configured with MFA Delete enabled.
-  */
-  def batchDelete(bucketname: String, objects: Seq[(String, Option[String])], mfa: Option[MFA] = None) = {
-    val b =
-      <Delete>
-        <Quiet>false</Quiet>
-        {
-          for(o <- objects) yield
-          <Object>
-            <Key>{ o._1 }</Key>
-            { for(v <- o._2.toSeq) yield <VersionId>{ v }</VersionId> }
-          </Object>
-        }
-      </Delete>
+  case class DeletionSuccess(
+    key:                   String,
+    versionId:             Option[String],
+    deleteMarker:          Option[String],
+    deleteMarkerVersionId: Option[String]
+  )
 
-    val ps = Seq(Parameters.MD5(b.mkString), aws.s3.AWS.Parameters.ContentLength(b.mkString.length)) ++
-      mfa.map(m => Parameters.X_AMZ_MFA(m)).toSeq
-
-    Http.post[Node, BatchDeletion](Some(bucketname),
-      body = b,
-      subresource = Some("delete"),
-      parameters = ps)
-  }
-
+  case class DeletionFailure(
+    key:     String,
+    code:    String,
+    message: String
+  )
 
 }
