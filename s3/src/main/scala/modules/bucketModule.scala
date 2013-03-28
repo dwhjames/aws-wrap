@@ -23,7 +23,9 @@ import models.Bucket
 import java.util.Date
 
 import scala.concurrent.Future
-import scala.xml.Node
+import scala.xml.{Node, NodeSeq}
+
+import play.api.mvc.Results.EmptyContent
 
 import aws.core.Result
 import aws.core.Types.EmptyResult
@@ -79,12 +81,15 @@ trait BucketLayer extends AbstractBucketLayer with AbstractHttpRequestLayer {
 
     def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit loc: LocationConstraint.Value): Future[EmptyResult[S3Metadata]] = {
       val b =
-        <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-          <LocationConstraint>{ loc.toString }</LocationConstraint>
-        </CreateBucketConfiguration>
+        if (loc == LocationConstraint.US_STANDARD)
+          NodeSeq.Empty
+        else
+          <CreateBucketConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+            <LocationConstraint>{ loc.toString }</LocationConstraint>
+          </CreateBucketConfiguration>
 
       val ps = acls.map(aws.s3.Permissions.X_AMZ_ACL(_)).toSeq ++ permissions
-      Http.put[Node, Unit](
+      Http.put[NodeSeq, Unit](
         Some(bucketname),
         body = b,
         parameters = ps
