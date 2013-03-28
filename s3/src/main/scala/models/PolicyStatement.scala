@@ -26,7 +26,7 @@ case class PolicyStatement(
   action:     Seq[String],
   notAction:  Seq[String]                   = Nil,
   resource:   Seq[String],
-  conditions: Seq[PolicyCondition[_]]       = Nil
+  conditions: Seq[PolicyCondition]       = Nil
 )
 
 object PolicyStatement {
@@ -41,7 +41,7 @@ object PolicyStatement {
           action     = (json \ "Action")   .as[Option[Seq[String]]].getOrElse(Nil),
           notAction  = (json \ "NotAction").as[Option[Seq[String]]].getOrElse(Nil),
           resource   = (json \ "Resource") .as[Option[Seq[String]]].getOrElse(Nil),
-          conditions = (json \ "Condition").as[Seq[PolicyCondition[_]]]
+          conditions = (json \ "Condition").as[Seq[PolicyCondition]]
         )
       )
     },

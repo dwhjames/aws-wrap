@@ -3,6 +3,8 @@ package aws.s3
 import scala.concurrent._
 import scala.concurrent.duration._
 
+import play.api.libs.json.Json
+
 import aws.core._
 import aws.s3.models._
 
@@ -399,7 +401,7 @@ object PolicySpec extends Specification with TestUtils {
       checkResult(res)
 
       // XXX: toString == Evil workaround
-      res.body.toString must_== policy(bucketName).toString
+      Json.toJson(res.body) must_== Json.toJson(policy(bucketName))
     }
 
     "delete policy" in {

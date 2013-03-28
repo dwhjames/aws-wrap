@@ -21,15 +21,15 @@ import java.util.Date
 
 import play.api.libs.json._
 
-trait PolicyCondition[V] {
+trait PolicyCondition {
   parent =>
 
   import PolicyCondition.Key
 
   def name:   String
-  def values: Seq[(Key[V], Seq[V])]
+  def values: Seq[(Key, Seq[Any])]
 
-  def and(k: Key[V], u: V*): PolicyCondition[V] = new PolicyCondition[V] {
+  def and[V](k: Key, u: V*): PolicyCondition = new PolicyCondition {
     def name   = parent.name
     def values = parent.values :+ (k -> u)
   }
@@ -39,20 +39,19 @@ trait PolicyCondition[V] {
 
 object PolicyCondition {
 
-  implicit val policyConditionsReads: Reads[Seq[PolicyCondition[_]]] =
-    Reads[Seq[PolicyCondition[_]]] {
+  implicit val policyConditionsReads: Reads[Seq[PolicyCondition]] =
+    Reads[Seq[PolicyCondition]] {
       case JsObject(o) =>
         JsSuccess {
           o map { case (name, vs) =>
-            new PolicyConditions.PolicyConditionBuilder[Any](name)(
+            new PolicyConditions.PolicyConditionBuilder(name)(
               vs.as[Map[String, Seq[JsValue]]]
                 .toSeq
-                .map{ t =>
-                  val (k, vals) = t
-                  val key = Key.withName(k).asInstanceOf[Key[Any]]
+                .map { case (k, vals) =>
+                  val key = Key.withName(k)
                   // Handle Exist PolicyCondition
                   val rk = if(name == "Null") Key.KeyFor(key) else key
-                  key -> vals.map { v =>
+                  rk -> vals.map { v =>
                     rk.format.reads(v).get
                   }
                 } : _*
@@ -62,32 +61,36 @@ object PolicyCondition {
       case _ => JsError("Expected JsObject")
     }
 
-  implicit val policyConditionWrites: Writes[PolicyCondition[_]] =
-    Writes[PolicyCondition[_]] { c =>
+  implicit val policyConditionWrites: Writes[PolicyCondition] =
+    Writes[PolicyCondition] { c =>
       Json.obj(
         c.name -> Json.toJson(
-          c.values.map{ t =>
-            t._1.name -> t._2.map(t._1.format.writes)
+          c.values.map{ case (k, vals) =>
+            k.name -> vals.map(x => k.writeVal(x))
           }.toMap
         )
       )
     }
 
-  trait Key[T] {
+  trait Key {
+    type T
+
     val name:   String
     val format: Format[T]
+
+    def writeVal(x: Any): JsValue = format.writes(x.asInstanceOf[T])
     override def toString = s"Key($name)"
   }
 
   object Key {
 
-    def withName(s: String) =
+    def withName(s: String): Key =
       ALL find (_.name == s) getOrElse { throw new RuntimeException(s"Unknown Key name: $s") }
 
     type IP = String
     type ARN = String
 
-    val ALL = Seq[Key[_]](
+    val ALL = Seq[Key](
       CURRENT_TIME,
       MULTI_FACTOR_AUTH_AGE,
       SECURE_TRANSPORT,
@@ -97,35 +100,43 @@ object PolicyCondition {
       REFERER
     )
 
-    object CURRENT_TIME extends Key[Date] {
+    object CURRENT_TIME extends Key {
+      type T = Date
       val name   = "aws:CurrentTime"
       val format = implicitly[Format[Date]]
     }
-    object MULTI_FACTOR_AUTH_AGE extends Key[Long] {
+    object MULTI_FACTOR_AUTH_AGE extends Key {
+      type T = Long
       val name   = "aws:MultiFactorAuthAge"
       val format = implicitly[Format[Long]]
     }
-    object SECURE_TRANSPORT extends Key[Boolean] {
+    object SECURE_TRANSPORT extends Key {
+      type T = Boolean
       val name   = "aws:SecureTransport"
       val format = implicitly[Format[Boolean]]
     }
-    object SOURCE_IP extends Key[IP]{
+    object SOURCE_IP extends Key {
+      type T = IP
       val name   = "aws:SourceIp"
       val format = implicitly[Format[IP]]
     }
-    object USER_AGENT extends Key[String] {
+    object USER_AGENT extends Key {
+      type T = String
       val name   = "aws:UserAgent"
       val format = implicitly[Format[String]]
     }
-    object EPOCH_TIME extends Key[Long] {
+    object EPOCH_TIME extends Key {
+      type T = Long
       val name   = "aws:EpochTime"
       val format = implicitly[Format[Long]]
     }
-    object REFERER extends Key[String] {
+    object REFERER extends Key {
+      type T = String
       val name   = "aws:Referer"
       val format = implicitly[Format[String]]
     }
-    case class KeyFor[V](k: Key[V]) extends Key[Boolean] {
+    case class KeyFor(k: Key) extends Key {
+      type T = Boolean
       val name   = k.name
       val format = implicitly[Format[Boolean]]
     }
@@ -137,61 +148,61 @@ object PolicyConditions {
 
   import PolicyCondition.Key
 
-  case class Exists[V](values: (Key.KeyFor[V], Seq[Boolean])*) extends PolicyCondition[Boolean] {
+  case class Exists(values: (Key.KeyFor, Seq[Boolean])*) extends PolicyCondition {
     def name = "Null"
   }
 
-  class PolicyConditionBuilder[A](n: String) {
-    def apply(v: (Key[A], Seq[A])*): PolicyCondition[A] = new PolicyCondition[A] {
+  class PolicyConditionBuilder(n: String) {
+    def apply(v: (Key, Seq[_])*): PolicyCondition = new PolicyCondition {
       def name = n
       def values = v
     }
   }
 
   object Strings {
-    val Equals              = new PolicyConditionBuilder[String]("StringEquals")
-    val NotEquals           = new PolicyConditionBuilder[String]("StringNotEquals")
-    val EqualsIgnoreCase    = new PolicyConditionBuilder[String]("StringEqualsIgnoreCase")
-    val NotEqualsIgnoreCase = new PolicyConditionBuilder[String]("StringNotEqualsIgnoreCase")
-    val Like                = new PolicyConditionBuilder[String]("StringLike")
-    val NotLike             = new PolicyConditionBuilder[String]("StringNotLike")
+    val Equals              = new PolicyConditionBuilder("StringEquals")
+    val NotEquals           = new PolicyConditionBuilder("StringNotEquals")
+    val EqualsIgnoreCase    = new PolicyConditionBuilder("StringEqualsIgnoreCase")
+    val NotEqualsIgnoreCase = new PolicyConditionBuilder("StringNotEqualsIgnoreCase")
+    val Like                = new PolicyConditionBuilder("StringLike")
+    val NotLike             = new PolicyConditionBuilder("StringNotLike")
   }
 
 
   object Nums {
-    val Equals            = new PolicyConditionBuilder[Number]("NumericEquals")
-    val NotEquals         = new PolicyConditionBuilder[Number]("NumericNotEquals")
-    val LessThan          = new PolicyConditionBuilder[Number]("NumericLessThan")
-    val LessThanEquals    = new PolicyConditionBuilder[Number]("NumericLessThanEquals")
-    val GreaterThan       = new PolicyConditionBuilder[Number]("NumericGreaterThan")
-    val GreaterThanEquals = new PolicyConditionBuilder[Number]("NumericGreaterThanEquals")
+    val Equals            = new PolicyConditionBuilder("NumericEquals")
+    val NotEquals         = new PolicyConditionBuilder("NumericNotEquals")
+    val LessThan          = new PolicyConditionBuilder("NumericLessThan")
+    val LessThanEquals    = new PolicyConditionBuilder("NumericLessThanEquals")
+    val GreaterThan       = new PolicyConditionBuilder("NumericGreaterThan")
+    val GreaterThanEquals = new PolicyConditionBuilder("NumericGreaterThanEquals")
   }
 
 
   object Dates {
-    val Equals            = new PolicyConditionBuilder[Date]("DateEquals")
-    val NotEquals         = new PolicyConditionBuilder[Date]("DateNotEquals")
-    val LessThan          = new PolicyConditionBuilder[Date]("DateLessThan")
-    val LessThanEquals    = new PolicyConditionBuilder[Date]("DateLessThanEquals")
-    val GreaterThan       = new PolicyConditionBuilder[Date]("DateGreaterThan")
-    val GreaterThanEquals = new PolicyConditionBuilder[Date]("DateGreaterThanEquals")
+    val Equals            = new PolicyConditionBuilder("DateEquals")
+    val NotEquals         = new PolicyConditionBuilder("DateNotEquals")
+    val LessThan          = new PolicyConditionBuilder("DateLessThan")
+    val LessThanEquals    = new PolicyConditionBuilder("DateLessThanEquals")
+    val GreaterThan       = new PolicyConditionBuilder("DateGreaterThan")
+    val GreaterThanEquals = new PolicyConditionBuilder("DateGreaterThanEquals")
   }
 
   object Booleans {
-    val Equals = new PolicyConditionBuilder[Boolean]("Bool")
+    val Equals = new PolicyConditionBuilder("Bool")
   }
 
   object IPS {
     import Key.IP
-    val Equals    = new PolicyConditionBuilder[IP]("IpAddress")
-    val NotEquals = new PolicyConditionBuilder[IP]("NotIpAddress")
+    val Equals    = new PolicyConditionBuilder("IpAddress")
+    val NotEquals = new PolicyConditionBuilder("NotIpAddress")
   }
 
   object ARNS {
     import Key.ARN
-    val Equals    = new PolicyConditionBuilder[ARN]("ArnEquals")
-    val NotEquals = new PolicyConditionBuilder[ARN]("ArnNotEquals")
-    val Like      = new PolicyConditionBuilder[ARN]("ArnLike")
-    val NotLike   = new PolicyConditionBuilder[ARN]("ArnNotLike")
+    val Equals    = new PolicyConditionBuilder("ArnEquals")
+    val NotEquals = new PolicyConditionBuilder("ArnNotEquals")
+    val Like      = new PolicyConditionBuilder("ArnLike")
+    val NotLike   = new PolicyConditionBuilder("ArnNotLike")
   }
 }
