@@ -31,13 +31,6 @@ case class PolicyStatement(
 
 object PolicyStatement {
 
-  // This is necessary because AWS returns single element arrays, as single values
-  // {"foo": ["bar"]} is serialized as {"foo": "bar"}
-  private implicit def awsSeqReads[T](implicit r: Reads[T]) = Reads[Seq[T]] {
-    case JsArray(a) => JsSuccess(a.map(_.as[T]))
-    case json       => r.reads(json).map(Seq(_))
-  }
-
   implicit val policyStatementFormat: Format[PolicyStatement] = Format[PolicyStatement](
     Reads[PolicyStatement] { (json: JsValue) =>
       JsSuccess(

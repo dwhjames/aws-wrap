@@ -23,6 +23,8 @@ import core.utils.Crypto
 import java.lang.{Boolean => JBool}
 import java.net.URI
 
+import play.api.libs.json.{JsArray, JsSuccess, Reads}
+
 /**
  * Access to Amazon [[http://aws.amazon.com/documentation/s3 S3]].
  *
@@ -30,6 +32,17 @@ import java.net.URI
  *
  */
 package object s3 {
+
+  /**
+    * Override the reading of Json arrays
+    *
+    * This is necessary because AWS returns single element arrays, as single values
+    * {"foo": ["bar"]} is serialized as {"foo": "bar"}
+    */
+  implicit def awsSeqReads[T](implicit r: Reads[T]) = Reads[Seq[T]] {
+    case JsArray(a) => JsSuccess(a.map(_.as[T]))
+    case json       => r.reads(json).map(Seq(_))
+  }
 
   case class MFA(
     serial: String,
