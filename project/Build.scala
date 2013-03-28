@@ -25,10 +25,8 @@ object ApplicationBuild extends Build {
     lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ projectScalariformSettings ++ Seq(
         organization := "aws",
         scalaVersion := AWS.scalaVersion,
-        scalacOptions += "-feature",
+        scalacOptions ++= Seq("-feature", "-deprecation"),
         version := AWS.version,
-        compileOrder in Compile := CompileOrder.ScalaThenJava,
-        compileOrder in Test := CompileOrder.Mixed,
         resolvers ++= Seq(
           "typesafe" at "http://repo.typesafe.com/typesafe/releases",
           "sonatype" at "http://oss.sonatype.org/content/repositories/releases"
