@@ -5,7 +5,6 @@ import scala.concurrent.duration._
 
 import aws.core._
 import aws.s3.models._
-import aws.s3.Permissions._
 
 import org.specs2.mutable._
 
@@ -47,7 +46,7 @@ object BucketSpec extends Specification {
     }
 
     "Create a private bucket with explicit permisions" in {
-      import Grantees._
+      import Permissions._
       val bucketName = S3.s3AwsKey + "testBucketPerms"
       val perms =
         GRANT_READ(Email("erwan.loisant@pellucid.com"), Email("dustin.whitney@pellucid.com")) ::
@@ -93,7 +92,7 @@ object LoggingSpec extends Specification {
   "S3 Bucket Logging API" should {
 
     "Enable Logging" in {
-      import Grantees._
+      import Permissions._
       val ps =
         GRANT_WRITE(Uri("http://acs.amazonaws.com/groups/s3/LogDelivery")) ::
         GRANT_READ_ACP(Uri("http://acs.amazonaws.com/groups/s3/LogDelivery")) :: Nil

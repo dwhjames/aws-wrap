@@ -17,7 +17,7 @@
 package aws.s3
 package models
 
-import Permissions.Grantees.Grantee
+import Permissions.Grantee
 
 import aws.core.parsers.{Parser, Success}
 
@@ -34,7 +34,7 @@ object LoggingStatus {
       val grants = (n \ "TargetGrants" \ "Grant").toSeq map { g =>
         val mail = (g \ "Grantee" \ "EmailAddress").text
         val perm = (g \ "Permission").text
-        Permissions.Grantees.Email(mail) -> LoggingPermission.withName(perm)
+        Permissions.Email(mail) -> LoggingPermission.withName(perm)
       }
       LoggingStatus(
         (n \ "TargetBucket").text,

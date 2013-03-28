@@ -17,7 +17,6 @@
 package aws.s3
 package modules
 
-import Permissions.Grantees
 import models.LoggingStatus
 
 import scala.concurrent.Future
@@ -40,7 +39,7 @@ trait LoggingModule {
     def enable(
       loggedBucket: String,
       targetBucket: String,
-      grantees:     Seq[(Grantees.Email, LoggingPermission.Value)] = Nil
+      grantees:     Seq[(Permissions.Email, LoggingPermission.Value)] = Nil
     ): Future[EmptyResult[S3Metadata]]
 
     /**
@@ -62,7 +61,7 @@ trait LoggingLayer extends AbstractLoggingLayer with AbstractHttpRequestLayer {
     def enable(
       loggedBucket: String,
       targetBucket: String,
-      grantees:     Seq[(Grantees.Email, LoggingPermission.Value)] = Nil
+      grantees:     Seq[(Permissions.Email, LoggingPermission.Value)] = Nil
     ): Future[EmptyResult[S3Metadata]] = {
       val b =
         <BucketLoggingStatus xmlns="http://doc.s3.amazonaws.com/2006-03-01">
