@@ -55,7 +55,7 @@ object PolicyCondition {
                   key -> vals.map { v =>
                     rk.format.reads(v).get
                   }
-                }.head
+                } : _*
             )
           }
         }
