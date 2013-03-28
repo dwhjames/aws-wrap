@@ -16,68 +16,67 @@
 
 package aws.s3
 
-import aws.s3.models.BucketServiceImpl
+import aws.s3.modules._
 
+/*
 
-object AWS extends  aws.core.AWS{}
+Example usage of this S3 library in a cake-pattern project
 
-object ACLs {
-  type ACL = String
-  val PRIVATE: ACL = "private"
-  val PUBLIC_READ: ACL = "public-read"
-  val PUBLIC_READ_WRITE: ACL = "public-read-write"
-  val AUTHENTICATED_READ: ACL = "authenticated-read"
-  val BUCKET_OWNER_READ: ACL = "bucket-owner_read"
-  val BUCKET_OWNER_FULL_CONTROL: ACL = "bucket-owner-full-control"
+// anything that intends to use S3 should mixin this layer
+trait S3ServiceLayer {
+  val S3: AbstractS3Cake
 }
+// i.e., trait MyServiceLayer extends S3ServiceLayer { an abstract S3: AbstractS3Cake is now in scope }
 
-object S3 {
+// the project’s cake should mixin this concrete implementation of the layer
+trait S3ServiceImplLayer
+  extends S3ServiceLayer
+     with ExecutionContextLayer
+{
 
-  object Bucket extends BucketServiceImpl
-
-  val ACCESS_KEY_ID = ""
-  val SECRET_ACCESS_KEY = ""
-
-  case class MFA(serial: String, token: String)
-
-  object HTTPMethods extends Enumeration {
-    type Method = Value
-    val PUT, POST, DELETE, GET = Value
+  override object S3 extends S3Cake {
+    override lazy val s3HttpRequestExecutionContext = executionContext
   }
-  import HTTPMethods._
+}
+// i.e., object MyCake extends MyServiceLayer with S3ServiceImplLayer with ConcreteExecutionContextLayer
 
-  object StorageClasses extends Enumeration {
-    type StorageClass = Value
-    val STANDARD, REDUCED_REDUNDANCY = Value
-  }
+*/
 
-  object VersionStates extends Enumeration {
-    type VersionState = Value
-    val ENABLED = Value("Enabled")
-    val SUSPENDED = Value("Suspended")
-  }
+trait AbstractS3Cake
+  extends AbstractBucketLayer
+     with AbstractCORSRuleLayer
+     with AbstractLifecycleLayer
+     with AbstractLoggingLayer
+     with AbstractNotificationLayer
+     with AbstractPolicyLayer
+     with AbstractS3ObjectLayer
+     with AbstractTagLayer
 
-  object MFADeleteStates extends Enumeration {
-    type MFADeleteState = Value
-    val DISABLED = Value("Disabled")
-    val ENABLED = Value("Enabled")
-  }
+trait S3Cake extends AbstractS3Cake
+  with BucketLayer
+  with CORSRuleLayer
+  with LifecycleLayer
+  with LoggingLayer
+  with NotificationLayer
+  with PolicyLayer
+  with S3ObjectLayer
+  with TagLayer
+  with HttpRequestLayer
 
-  object Parameters {
-    import AWS._
+object S3 extends S3Cake {
 
-    def MD5(content: String) = ("Content-MD5" -> aws.core.utils.Crypto.base64(java.security.MessageDigest.getInstance("MD5").digest(content.getBytes)))
+  /**
+    * The current AWS key, read from the first line of `~/.awssecret`
+    */
+  override lazy val s3AwsKey: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(0)
 
-    def X_AMZ_META(name: String, value: String) = (s"x-amz-meta-$name" -> value)
-    def X_AMZ_SERVER_SIDE_ENCRYPTION(s: String) = {
-      if(s != "AES256")
-        throw new RuntimeException(s"Unsupported server side encoding: $s, the omly valid value is AES256")
-      ("x-amz-server-side-encryption" -> s)
-    }
-    def X_AMZ_STORAGE_CLASS(s: StorageClasses.StorageClass) = ("x-amz-storage-class" -> s.toString)
-    def X_AMZ_WEBSITE_REDIRECT_LOCATION(s: java.net.URI) = ("x-amz-website-redirect-location" -> s.toString)
-    def X_AMZ_MFA(mfa: MFA) = ("x-amz-mfa" -> s"${mfa.serial} ${mfa.token}")
+  /**
+    * The current AWS secret, read from the second line of `~/.awssecret`
+    */
+  override lazy val s3AwsSecret: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(1)
 
-  }
-
+  /**
+    * The execution context for executing the Http requests
+    */
+  override lazy val s3HttpRequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }
