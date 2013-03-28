@@ -57,7 +57,7 @@ trait SNSLayer{ self: AWS =>
       def Subject(subject: Option[String]) = subject.toSeq.map("Subject" -> _)
     }
 
-    import self.Parameters._
+    import aws.core.Parameters.Action
     import Parameters._
 
     /**

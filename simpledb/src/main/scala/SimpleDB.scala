@@ -62,7 +62,7 @@ trait SimpleDBLayer{ self: AWS =>
       def SelectExpression(expression: String) = ("SelectExpression" -> expression)
     }
 
-    import self.Parameters._
+    import aws.core.Parameters.Action
     import Parameters._
 
     /**

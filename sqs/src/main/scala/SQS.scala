@@ -87,7 +87,7 @@ trait SQSLayer{ self: AWS =>
       def VisibilityTimeout(n: Option[Long]) = n.toSeq.map("VisibilityTimeout" -> _.toString)
     }
 
-    import self.Parameters._
+    import aws.core.Parameters.Action
     import Parameters._
 
     def createQueue(name: String, attributes: CreateAttributeValue*)(implicit region: SQSRegion): Future[Result[SQSMeta, Queue]] = {
