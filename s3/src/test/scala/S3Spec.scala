@@ -9,7 +9,7 @@ import aws.s3.models._
 import org.specs2.mutable._
 
 
-object TestUtils extends Specification { // Evil hack to access Failure
+trait TestUtils { self: Specification =>
   // implicit val loc = LocationConstraint.EU_WEST_1
 
   def checkResult[M <: Metadata, T](r: Result[M, T]) = r match {
@@ -25,9 +25,7 @@ object TestUtils extends Specification { // Evil hack to access Failure
   }
 }
 
-import TestUtils._
-
-object BucketSpec extends Specification {
+object BucketSpec extends Specification with TestUtils {
 
   "S3 Bucket API" should {
 
@@ -88,7 +86,7 @@ object BucketSpec extends Specification {
   }
 }
 
-object LoggingSpec extends Specification {
+object LoggingSpec extends Specification with TestUtils {
   "S3 Bucket Logging API" should {
 
     "Enable Logging" in {
@@ -122,7 +120,7 @@ object LoggingSpec extends Specification {
   }
 }
 
-object TagSpec extends Specification {
+object TagSpec extends Specification with TestUtils {
   "S3 Bucket Tagging API" should {
     "create tags" in {
       val tagged = S3.s3AwsKey + "testBucketLoggingTagged"
@@ -161,7 +159,7 @@ object TagSpec extends Specification {
   }
 }
 
-object CORSSpec extends Specification {
+object CORSSpec extends Specification with TestUtils {
 
   import HttpMethod._
 
@@ -220,7 +218,7 @@ object CORSSpec extends Specification {
   }
 }
 
-object LifecycleSpec extends Specification {
+object LifecycleSpec extends Specification with TestUtils {
 
   "S3 Bucket lifecycle API" should {
     "create lifecycle" in {
@@ -259,7 +257,7 @@ object LifecycleSpec extends Specification {
   }
 }
 
-object S3ObjectSpec extends Specification {
+object S3ObjectSpec extends Specification with TestUtils {
 
   "S3 Object API" should {
 
@@ -362,7 +360,7 @@ object S3ObjectSpec extends Specification {
   }
 }
 
-object PolicySpec extends Specification {
+object PolicySpec extends Specification with TestUtils {
 
   "S3 Policy API" should {
 
@@ -417,7 +415,7 @@ object PolicySpec extends Specification {
 }
 
 
-object NotificationsSpec extends Specification {
+object NotificationsSpec extends Specification with TestUtils {
   "S3 Notification API" should {
 
     "create notification conf" in {
