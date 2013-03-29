@@ -16,20 +16,25 @@
 
 package aws.sqs
 
-import scala.concurrent.{ Future, ExecutionContext }
+import scala.concurrent.Future
 
 import play.api.libs.iteratee.{ Iteratee, Input, Step, Done, Error => IterateeError, Enumerator }
 
-import aws.core._
+import aws.core.{AWSError, Result, EmptyResult, Metadata}
+import aws.core.modules.{V2RequestLayer, V2SignLayer, UserHomeCredentialsLayer}
 
 case class SQSMeta(requestId: String) extends Metadata
 
 case class Queue(url: String)
 
 
-trait SQSLayer{ self: AWS => 
+trait SQSLayer extends V2RequestLayer[SQSMeta] with V2SignLayer with UserHomeCredentialsLayer {
 
-  object SQS extends V2[SQSMeta](version = "2012-11-05") {
+  override val v2SignVersion = "2012-11-05"
+
+  override protected implicit lazy val v2RequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
+  object SQS  {
 
     import SQSParsers._
 
@@ -91,27 +96,27 @@ trait SQSLayer{ self: AWS =>
 
     def createQueue(name: String, attributes: CreateAttributeValue*)(implicit region: SQSRegion): Future[Result[SQSMeta, Queue]] = {
       val params = Seq(Action("CreateQueue"), QueueName(name)) ++ QueueAttributes(attributes)
-      get[Queue](params: _*)
+      V2Request.get[Queue](params: _*)
     }
 
     def listQueues(queueNamePrefix: String = "")(implicit region: SQSRegion): Future[Result[SQSMeta, Seq[Queue]]] = {
       val params = Seq(Action("ListQueues")) ++ QueueNamePrefix(queueNamePrefix)
-      get[Seq[Queue]](params: _*)
+      V2Request.get[Seq[Queue]](params: _*)
     }
 
     def deleteQueue(queueURL: String): Future[EmptyResult[SQSMeta]] = {
       val params = Seq(Action("DeleteQueue"))
-      get[Unit](queueURL, params: _*)
+      V2Request.get[Unit](queueURL, params: _*)
     }
 
     def getQueue(name: String, queueOwnerAWSAccountId: Option[String] = None)(implicit region: SQSRegion): Future[Result[SQSMeta, Queue]] = {
       val params = Seq(Action("GetQueueUrl"), QueueName(name)) ++ QueueOwnerAWSAccountId(queueOwnerAWSAccountId)
-      get[Queue](params: _*)
+      V2Request.get[Queue](params: _*)
     }
   
     def sendMessage(queue: Queue, message: String, delaySeconds: Option[Long] = None): Future[Result[SQSMeta, SendMessageResult]] = {
       val params = Seq(Action("SendMessage"), MessageBody(message)) ++ DelaySeconds(delaySeconds)
-      SQS.get[SendMessageResult](queue.url, params: _*)
+      V2Request.get[SendMessageResult](queue.url, params: _*)
     }
 
     def receiveMessage(queue: Queue, attributes: Seq[MessageAttribute] = Seq(MessageAttribute.All),
@@ -123,7 +128,7 @@ trait SQSLayer{ self: AWS =>
         MaxNumberOfMessages(maxNumber) ++
         VisibilityTimeout(visibilityTimeout) ++
         waitTimeSeconds.toSeq.map("WaitTimeSeconds" -> _.toString)
-      get[Seq[MessageReceive]](queue.url, params: _*)
+      V2Request.get[Seq[MessageReceive]](queue.url, params: _*)
     }
 
     def messageEnumerator(queue: Queue, attributes: Seq[MessageAttribute] = Seq(MessageAttribute.All),
@@ -146,42 +151,42 @@ trait SQSLayer{ self: AWS =>
     def getAttributes(queue: Queue, attributes: QueueAttribute*): Future[Result[SQSMeta, Seq[QueueAttributeValue]]] = {
       val params = Seq(Action("GetQueueAttributes")) ++
         QueueAttributeNames(attributes)
-      SQS.get[Seq[QueueAttributeValue]](queue.url, params: _*)
+      V2Request.get[Seq[QueueAttributeValue]](queue.url, params: _*)
     }
 
     def setAttributes(queue: Queue, attributes: Seq[QueueAttributeValue]): Future[EmptyResult[SQSMeta]] = {
       val params = Seq(Action("SetQueueAttributes")) ++
         QueueAttributes(attributes)
-      SQS.get[Unit](queue.url, params: _*)
+      V2Request.get[Unit](queue.url, params: _*)
     }
 
     def addPermission(queue: Queue, label: String, accountIds: Seq[String], actionNames: Seq[ActionName]): Future[EmptyResult[SQSMeta]] = {
       val params = Seq(Action("AddPermission"), "Label" -> label) ++
         AccountIds(accountIds) ++
         AWSActionNames(actionNames)
-      SQS.get[Unit](queue.url, params: _*)
+      V2Request.get[Unit](queue.url, params: _*)
     }
 
     def removePermission(queue: Queue, label: String): Future[EmptyResult[SQSMeta]] = {
-      SQS.get[Unit](queue.url, Action("RemovePermission"), "Label" -> label)
+      V2Request.get[Unit](queue.url, Action("RemovePermission"), "Label" -> label)
     }
 
     def deleteMessage(queue: Queue, receiptHandle: String): Future[EmptyResult[SQSMeta]] = {
-      SQS.get[Unit](queue.url, Action("DeleteMessage"), "ReceiptHandle" -> receiptHandle)
+      V2Request.get[Unit](queue.url, Action("DeleteMessage"), "ReceiptHandle" -> receiptHandle)
     }
 
     def sendMessageBatch(queue: Queue, messages: MessageSend*): Future[Result[SQSMeta, Seq[MessageResponse]]] = {
       val params = Seq(Action("SendMessageBatch")) ++ BatchSendEntry(messages)
-      SQS.get[Seq[MessageResponse]](queue.url, params: _*)
+      V2Request.get[Seq[MessageResponse]](queue.url, params: _*)
     }
 
     def deleteMessageBatch(queue: Queue, messages: MessageDelete*): Future[Result[SQSMeta, Seq[String]]] = {
       val params = Seq(Action("DeleteMessageBatch")) ++ BatchDeleteEntry(messages)
-      SQS.get[Seq[String]](queue.url, params: _*)
+      V2Request.get[Seq[String]](queue.url, params: _*)
     }
 
     def changeMessageVisibility(queue: Queue, receiptHandle: String, visibilityTimeout: Long): Future[EmptyResult[SQSMeta]] = {
-      SQS.get[Unit](queue.url,
+      V2Request.get[Unit](queue.url,
         Action("ChangeMessageVisibility"),
         "ReceiptHandle" -> receiptHandle,
         "VisibilityTimeout" -> visibilityTimeout.toString)
@@ -189,7 +194,7 @@ trait SQSLayer{ self: AWS =>
 
     def changeMessageVisibilityBatch(queue: Queue, messages: MessageVisibility*): Future[Result[SQSMeta, Seq[String]]] = {
       val params = Seq(Action("ChangeMessageVisibilityBatch")) ++ BatchMessageVisibility(messages)
-      SQS.get[Seq[String]](queue.url, params: _*)
+      V2Request.get[Seq[String]](queue.url, params: _*)
     }
 
   }

@@ -1,21 +1,17 @@
 package aws.sns
 
-import scala.concurrent.Future
-import play.api.libs.ws._
-import play.api.libs.ws.WS._
+import scala.concurrent._
+import scala.concurrent.duration._
+
 import aws.core._
 
 import org.specs2.mutable._
 
 object SNSSpec extends Specification {
 
-  import scala.concurrent._
-  import scala.concurrent.duration.Duration
-  import java.util.concurrent.TimeUnit._
-
   implicit val region = SNSRegion.EU_WEST_1
 
-  object TestCake extends AWS with SNSLayer
+  object TestCake extends SNSLayer
   import TestCake._
 
   "SNS API" should {
@@ -79,6 +75,8 @@ object SNSSpec extends Specification {
     }
 
     "Add and remove permissions" in {
+      pending
+
       val accounts = Seq("foobar@example.com")
       val actions = Seq(Action.ListTopics)
       val topicArn = Await.result(SNS.createTopic("test-permissions"), Duration(30, SECONDS)) match {

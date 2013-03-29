@@ -1,22 +1,16 @@
 package aws.simpledb
 
-import aws.simpledb._
+import scala.concurrent._
+import scala.concurrent.duration._
 
-import scala.concurrent.Future
-import play.api.libs.ws._
-import play.api.libs.ws.WS._
-import aws.core._
+import aws.core.{AWSError, Result}
 
 import org.specs2.mutable._
 
 object SimpleDBSpec extends Specification {
 
-  object TestCake extends AWS with SimpleDBLayer
+  object TestCake extends SimpleDBLayer
   import TestCake._
-
-  import scala.concurrent._
-  import scala.concurrent.duration.Duration
-  import java.util.concurrent.TimeUnit._
 
   implicit val region = SDBRegion.EU_WEST_1
 
@@ -40,7 +34,14 @@ object SimpleDBSpec extends Specification {
     }
 
     "List domains" in {
-      val r = Await.result(SimpleDB.listDomains(), Duration(30, SECONDS))
+      val r = Await.result(
+        for {
+          _ <- SimpleDB.createDomain("test-domain-list")
+          r <- SimpleDB.listDomains()
+          _ <- SimpleDB.deleteDomain("test-domain-list")
+        } yield r, 
+        Duration(30, SECONDS)
+      )
       checkResult(r)
       for(body <- r)
         body must not be empty

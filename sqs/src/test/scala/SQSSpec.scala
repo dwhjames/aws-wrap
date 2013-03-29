@@ -1,20 +1,13 @@
 package aws.sqs
 
-import scala.util.{Try, Success, Failure}
-import scala.concurrent.Future
-import play.api.libs.ws._
-import play.api.libs.ws.WS._
-import aws.core._
+import scala.concurrent._
+import scala.concurrent.duration._
 
+import aws.core.{AWSError, Result}
 
 import org.specs2.mutable._
 
 object SQSSpec extends Specification {
-
-  import scala.concurrent._
-  import scala.concurrent.duration.Duration
-  import java.util.concurrent.TimeUnit._
-
 
   implicit val region = SQSRegion.EU_WEST_1
 
@@ -23,11 +16,10 @@ object SQSSpec extends Specification {
     case AWSError(_, _, message) => failure(message)
   }
 
-  object Cake extends AWS with SQSLayer
-  import Cake._
+  object TestCake extends SQSLayer
+  import TestCake._
 
   "SQS API" should {
-    import scala.concurrent.ExecutionContext.Implicits.global
 
     "List queues" in {
       val r = Await.result(SQS.listQueues(), Duration(30, SECONDS))

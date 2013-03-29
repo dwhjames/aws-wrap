@@ -16,22 +16,20 @@
 
 package aws.simpledb
 
-import java.util.Date
-
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import play.api.libs.ws._
 
 import aws.core._
-import aws.core.parsers._
+import aws.core.modules.{V2RequestLayer, V2SignLayer, UserHomeCredentialsLayer}
 
 import aws.simpledb.SDBParsers._
 
 case class SimpleDBMeta(requestId: String, boxUsage: String) extends Metadata
 
-trait SimpleDBLayer{ self: AWS => 
+trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with UserHomeCredentialsLayer {
 
-  object SimpleDB extends V2[SimpleDBMeta] {
+  override protected implicit lazy val v2RequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
+  object SimpleDB {
 
     private object Parameters {
       def DomainName(a: String) = ("DomainName" -> a)
@@ -76,7 +74,7 @@ trait SimpleDBLayer{ self: AWS =>
      * @param domainName
      */
     def createDomain(domainName: String)(implicit region: SDBRegion): Future[EmptyResult[SimpleDBMeta]] =
-      get[Unit](Action("CreateDomain"), DomainName(domainName))
+      V2Request.get[Unit](Action("CreateDomain"), DomainName(domainName))
 
     /**
      * Deletes the given domain. Any items (and their attributes) in the domain are deleted as well.
@@ -88,7 +86,7 @@ trait SimpleDBLayer{ self: AWS =>
      * @param domainName
      */
     def deleteDomain(domainName: String)(implicit region: SDBRegion): Future[EmptyResult[SimpleDBMeta]] =
-      get[Unit](Action("DeleteDomain"), DomainName(domainName))
+      V2Request.get[Unit](Action("DeleteDomain"), DomainName(domainName))
 
     /**
      * Lists all domains associated with the Access Key ID.
@@ -103,7 +101,7 @@ trait SimpleDBLayer{ self: AWS =>
         Action("ListDomains"),
         MaxNumberOfDomains(maxNumberOfDomains)) ++ nextToken.map(NextToken(_)).toSeq
 
-      get[Seq[SDBDomain]](params: _*)
+      V2Request.get[Seq[SDBDomain]](params: _*)
     }
 
     /**
@@ -129,7 +127,7 @@ trait SimpleDBLayer{ self: AWS =>
         DomainName(domainName),
         ItemName(itemName)) ++ Attributes(attributes) ++ Expected(expected)
 
-      get[Unit](params: _*)
+      V2Request.get[Unit](params: _*)
     }
 
     /**
@@ -162,7 +160,7 @@ trait SimpleDBLayer{ self: AWS =>
         DomainName(domainName),
         ItemName(itemName)) ++ Attributes(attributes) ++ Expected(expected)
 
-      get[Unit](params: _*)
+      V2Request.get[Unit](params: _*)
     }
 
     /**
@@ -187,14 +185,14 @@ trait SimpleDBLayer{ self: AWS =>
         ItemName(itemName),
         ConsistentRead(consistentRead)) ++ attributeName.map(AttributeName(_)).toSeq
 
-      get[Seq[SDBAttribute]](params: _*)
+      V2Request.get[Seq[SDBAttribute]](params: _*)
     }
 
     /**
      * Get detailed information about a domain
      */
     def domainMetadata(domainName: String)(implicit region: SDBRegion): Future[Result[SimpleDBMeta, SDBDomainMetadata]] =
-      get[SDBDomainMetadata](Action("DomainMetadata"), DomainName(domainName))
+      V2Request.get[SDBDomainMetadata](Action("DomainMetadata"), DomainName(domainName))
 
     /**
      * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
@@ -205,7 +203,7 @@ trait SimpleDBLayer{ self: AWS =>
         SelectExpression(expression),
         ConsistentRead(consistentRead)) ++ nextToken.map(NextToken(_)).toSeq
 
-      get[Seq[SDBItem]](params: _*)
+      V2Request.get[Seq[SDBItem]](params: _*)
     }
 
     /**
@@ -215,7 +213,7 @@ trait SimpleDBLayer{ self: AWS =>
       val params = Seq(
         Action("BatchPutAttributes"),
         DomainName(domainName)) ++ Items(items)
-      get[Unit](params: _*)
+      V2Request.get[Unit](params: _*)
     }
 
     /**
@@ -225,7 +223,7 @@ trait SimpleDBLayer{ self: AWS =>
       val params = Seq(
         Action("BatchDeleteAttributes"),
         DomainName(domainName)) ++ Items(items)
-      get[Unit](params: _*)
+      V2Request.get[Unit](params: _*)
     }
 
   }
