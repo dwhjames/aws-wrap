@@ -21,20 +21,20 @@ import utils.Crypto
 
 import java.util.Date
 
-trait V2SignModule {
+trait SigV2Module {
 
   def signUrl(method: String, url: String, params: Seq[(String, String)]): String
 }
 
-trait AbstractV2SignLayer {
-  val V2Sign: V2SignModule
+trait AbstractSigV2Layer {
+  val SigV2: SigV2Module
 }
 
-trait V2SignLayer extends AbstractV2SignLayer with AbstractCredentialsLayer {
+trait SigV2Layer extends AbstractSigV2Layer with AbstractCredentialsLayer {
 
-  val v2SignVersion: String = "2009-04-15"
+  val apiVersionDateString: String = "2009-04-15"
 
-  override object V2Sign extends V2SignModule {
+  override object SigV2 extends SigV2Module {
 
     private val SIGVERSION = "2"
     private val SIGMETHOD  = "HmacSHA1"
@@ -53,7 +53,7 @@ trait V2SignLayer extends AbstractV2SignLayer with AbstractCredentialsLayer {
       val ps = Seq(
         Parameters.TimeStamp(new Date),
         Parameters.AWSAccessKeyId(awsKey),
-        Parameters.Version(v2SignVersion),
+        Parameters.Version(apiVersionDateString),
         Parameters.SignatureVersion(SIGVERSION),
         Parameters.SignatureMethod(SIGMETHOD)
       )

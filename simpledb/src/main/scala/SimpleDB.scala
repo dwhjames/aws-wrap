@@ -19,13 +19,13 @@ package aws.simpledb
 import scala.concurrent.Future
 
 import aws.core._
-import aws.core.modules.{V2RequestLayer, V2SignLayer, UserHomeCredentialsLayer}
+import aws.core.modules.{HttpRequestV2Layer, SigV2Layer, UserHomeCredentialsLayer}
 
 import aws.simpledb.SDBParsers._
 
 case class SimpleDBMeta(requestId: String, boxUsage: String) extends Metadata
 
-trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with UserHomeCredentialsLayer {
+trait SimpleDBLayer extends HttpRequestV2Layer[SimpleDBMeta] with SigV2Layer with UserHomeCredentialsLayer {
 
   override protected implicit lazy val v2RequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
@@ -74,7 +74,7 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
      * @param domainName
      */
     def createDomain(domainName: String)(implicit region: SDBRegion): Future[EmptyResult[SimpleDBMeta]] =
-      V2Request.get[Unit](Action("CreateDomain"), DomainName(domainName))
+      Http.get[Unit](Action("CreateDomain"), DomainName(domainName))
 
     /**
      * Deletes the given domain. Any items (and their attributes) in the domain are deleted as well.
@@ -86,7 +86,7 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
      * @param domainName
      */
     def deleteDomain(domainName: String)(implicit region: SDBRegion): Future[EmptyResult[SimpleDBMeta]] =
-      V2Request.get[Unit](Action("DeleteDomain"), DomainName(domainName))
+      Http.get[Unit](Action("DeleteDomain"), DomainName(domainName))
 
     /**
      * Lists all domains associated with the Access Key ID.
@@ -101,7 +101,7 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
         Action("ListDomains"),
         MaxNumberOfDomains(maxNumberOfDomains)) ++ nextToken.map(NextToken(_)).toSeq
 
-      V2Request.get[Seq[SDBDomain]](params: _*)
+      Http.get[Seq[SDBDomain]](params: _*)
     }
 
     /**
@@ -127,7 +127,7 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
         DomainName(domainName),
         ItemName(itemName)) ++ Attributes(attributes) ++ Expected(expected)
 
-      V2Request.get[Unit](params: _*)
+      Http.get[Unit](params: _*)
     }
 
     /**
@@ -160,7 +160,7 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
         DomainName(domainName),
         ItemName(itemName)) ++ Attributes(attributes) ++ Expected(expected)
 
-      V2Request.get[Unit](params: _*)
+      Http.get[Unit](params: _*)
     }
 
     /**
@@ -185,14 +185,14 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
         ItemName(itemName),
         ConsistentRead(consistentRead)) ++ attributeName.map(AttributeName(_)).toSeq
 
-      V2Request.get[Seq[SDBAttribute]](params: _*)
+      Http.get[Seq[SDBAttribute]](params: _*)
     }
 
     /**
      * Get detailed information about a domain
      */
     def domainMetadata(domainName: String)(implicit region: SDBRegion): Future[Result[SimpleDBMeta, SDBDomainMetadata]] =
-      V2Request.get[SDBDomainMetadata](Action("DomainMetadata"), DomainName(domainName))
+      Http.get[SDBDomainMetadata](Action("DomainMetadata"), DomainName(domainName))
 
     /**
      * Returns a set of Attributes for ItemNames that match the select expression (similar to SQL)
@@ -203,7 +203,7 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
         SelectExpression(expression),
         ConsistentRead(consistentRead)) ++ nextToken.map(NextToken(_)).toSeq
 
-      V2Request.get[Seq[SDBItem]](params: _*)
+      Http.get[Seq[SDBItem]](params: _*)
     }
 
     /**
@@ -213,7 +213,7 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
       val params = Seq(
         Action("BatchPutAttributes"),
         DomainName(domainName)) ++ Items(items)
-      V2Request.get[Unit](params: _*)
+      Http.get[Unit](params: _*)
     }
 
     /**
@@ -223,7 +223,7 @@ trait SimpleDBLayer extends V2RequestLayer[SimpleDBMeta] with V2SignLayer with U
       val params = Seq(
         Action("BatchDeleteAttributes"),
         DomainName(domainName)) ++ Items(items)
-      V2Request.get[Unit](params: _*)
+      Http.get[Unit](params: _*)
     }
 
   }

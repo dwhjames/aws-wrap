@@ -23,7 +23,7 @@
 
  import play.api.libs.ws.{Response, WS}
 
- trait V2RequestModule[M <: Metadata] {
+ trait HttpRequestV2Module[M <: Metadata] {
 
   def get[T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]]
 
@@ -31,18 +31,18 @@
 
  }
 
- trait AbstractV2RequestLayer[M <: Metadata] {
-  val V2Request: V2RequestModule[M]
+ trait AbstractHttpRequestV2Layer[M <: Metadata] {
+  val Http: HttpRequestV2Module[M]
  }
 
- trait V2RequestLayer[M <: Metadata] extends AbstractV2RequestLayer[M] with AbstractV2SignLayer {
+ trait HttpRequestV2Layer[M <: Metadata] extends AbstractHttpRequestV2Layer[M] with AbstractSigV2Layer {
 
   protected implicit val v2RequestExecutionContext: ExecutionContext
 
-  override object V2Request extends V2RequestModule[M] {
+  override object Http extends HttpRequestV2Module[M] {
 
     private def request(resource: String, parameters: Seq[(String, String)]): Future[Response] =
-      WS.url(s"""${resource}?${V2Sign.signUrl("GET", resource, parameters)}""").get()
+      WS.url(s"""${resource}?${SigV2.signUrl("GET", resource, parameters)}""").get()
 
     private def tryParse[T](resp: Response)(implicit p: Parser[Result[M, T]]): Result[M, T] =
       Parser.parse[Result[M, T]](resp).fold(

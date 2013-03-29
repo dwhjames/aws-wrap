@@ -21,15 +21,15 @@ import scala.concurrent.Future
 import play.api.libs.json.JsValue
 
 import aws.core.{Result, EmptyResult, Metadata}
-import aws.core.modules.{V2RequestLayer, V2SignLayer, UserHomeCredentialsLayer}
+import aws.core.modules.{HttpRequestV2Layer, SigV2Layer, UserHomeCredentialsLayer}
 
 import aws.sns.SNSParsers._
 
 case class SNSMeta(requestId: String) extends Metadata
 
-trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCredentialsLayer {
+trait SNSLayer extends HttpRequestV2Layer[SNSMeta] with SigV2Layer with UserHomeCredentialsLayer {
 
-  override val v2SignVersion = "2010-03-31"
+  override val apiVersionDateString = "2010-03-31"
 
   override protected implicit lazy val v2RequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
@@ -76,7 +76,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
         Action("AddPermission"),
         TopicArn(topicArn),
         Label(label)) ++ AWSAccounts(awsAccounts) ++ ActionList(actions)
-      V2Request.get[Unit](params: _*)
+      Http.get[Unit](params: _*)
     }
 
     /**
@@ -91,7 +91,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      *        then only the topic owner and the subscription owner can unsubscribe the endpoint.
      */
     def confirmSubscription(topicArn: String, token: String, authenticateOnUnsubscribe: Boolean = false)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
-      V2Request.get[String](
+      Http.get[String](
         Action("ConfirmSubscription"),
         TopicArn(topicArn),
         AuthenticateOnUnsubscribe(authenticateOnUnsubscribe))(region, subscribeResultParser)
@@ -108,7 +108,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      * @param name The name of the topic you want to create.
      */
     def createTopic(name: String)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
-      V2Request.get[String](Action("CreateTopic"), Name(name))(region, createTopicsResultParser)
+      Http.get[String](Action("CreateTopic"), Name(name))(region, createTopicsResultParser)
     }
 
     /**
@@ -119,7 +119,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      * @param topicArn The ARN of the topic you want to delete.
      */
     def deleteTopic(topicArn: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      V2Request.get[Unit](
+      Http.get[Unit](
         Action("DeleteTopic"),
         TopicArn(topicArn))
     }
@@ -130,7 +130,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      * @param subscriptionArn The ARN of the subscription whose properties you want to get.
      */
     def getSubscriptionAttributes(subscriptionArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionAttributes]] = {
-      V2Request.get[SubscriptionAttributes](
+      Http.get[SubscriptionAttributes](
         Action("SubscriptionAttributesResult"),
         SubscriptionArn(subscriptionArn))
     }
@@ -142,7 +142,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      * @param topicArn The ARN of the topic whose properties you want to get.
      */
     def getTopicAttributes(topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, TopicAttributes]] = {
-      V2Request.get[TopicAttributes](Action("GetTopicAttributes"), TopicArn(topicArn))
+      Http.get[TopicAttributes](Action("GetTopicAttributes"), TopicArn(topicArn))
     }
 
     /**
@@ -155,7 +155,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      */
     def listSubscriptions(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionList]] = {
       val params = Seq(Action("ListSubscriptions")) ++ NextToken(nextToken)
-      V2Request.get[SubscriptionList](params: _*)
+      Http.get[SubscriptionList](params: _*)
     }
 
     /**
@@ -171,7 +171,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
       val params = Seq(
         Action("ListSubscriptionsByTopic"),
         TopicArn(topicArn)) ++ NextToken(nextToken)
-      V2Request.get[SubscriptionList](params: _*)
+      Http.get[SubscriptionList](params: _*)
     }
 
     /**
@@ -183,7 +183,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      */
     def listTopics(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, ListTopics]] = {
       val params = Seq(Action("ListTopics")) ++ NextToken(nextToken)
-      V2Request.get[ListTopics](params: _*)
+      Http.get[ListTopics](params: _*)
     }
 
     /**
@@ -202,7 +202,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
                 message: Message,
                 subject: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
       val params = Seq(Action("Publish"), TopicArn(topicArn)) ++ MessageParameters(message) ++ Subject(subject)
-      V2Request.get[String](params: _*)(region, publishResultParser)
+      Http.get[String](params: _*)(region, publishResultParser)
     }
 
     /**
@@ -213,7 +213,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      *
      */
     def removePermission(topicArn: String, label: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      V2Request.get[Unit](
+      Http.get[Unit](
         Action("RemovePermission"),
         TopicArn(topicArn),
         Label(label))
@@ -222,7 +222,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
     private def setSubscriptionAttributes(subscriptionArn: String,
                                           attributeName: String,
                                           attributeValue: JsValue)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      V2Request.get[Unit](
+      Http.get[Unit](
         Action("SetSubscriptionAttributes"),
         SubscriptionArn(subscriptionArn),
         AttributeName(attributeName),
@@ -236,7 +236,7 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
     private def setTopicAttributes(topicArn: String,
                                    attributeName: String,
                                    attributeValue: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      V2Request.get[Unit](
+      Http.get[Unit](
         Action("SetTopicAttributes"),
         TopicArn(topicArn),
         AttributeName(attributeName),
@@ -262,11 +262,11 @@ trait SNSLayer extends V2RequestLayer[SNSMeta] with V2SignLayer with UserHomeCre
      */
     def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
       val params = Seq(Action("Subscribe"), TopicArn(topicArn)) ++ EndpointProtocol(endpoint)
-      V2Request.get[String](params: _*)(region, subscribeResultParser)
+      Http.get[String](params: _*)(region, subscribeResultParser)
     }
 
     def unsubscribe(subscriptionArn: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      V2Request.get[Unit](Action("Unsubscribe"), SubscriptionArn(subscriptionArn))
+      Http.get[Unit](Action("Unsubscribe"), SubscriptionArn(subscriptionArn))
     }
 
   }
