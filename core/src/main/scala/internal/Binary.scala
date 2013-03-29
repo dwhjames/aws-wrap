@@ -16,35 +16,27 @@
 
 package aws.core.utils
 
+import org.apache.commons.codec.binary.Hex
+
 object Binary {
 
   /**
    * Converts byte data to a Hex-encoded string.
    *
-   * @param data
-   *            data to hex encode.
-   *
+   * @param bytes byte array to hex encode.
    * @return hex-encoded string.
    */
-  def toHex(data: Array[Byte]): String = {
-    data.toSeq.map { byte =>
-      Integer.toHexString(byte) match {
-        case hex if hex.length == 1 => "0" + hex
-        case hex if hex.length == 8 => hex.drop(6)
-        case hex => hex
-      }
-    }.mkString("").toLowerCase
-  }
+  def toHex(bytes: Array[Byte]): String =
+    Hex.encodeHexString(bytes)
 
   /**
    * Converts a Hex-encoded data string to the original byte data.
    *
-   * @param hexData
+   * @param hexStr
    *            hex-encoded data to decode.
    * @return decoded data from the hex string.
    */
-  def fromHex(hexData: String): Array[Byte] = {
-    hexData.grouped(2).map(Integer.parseInt(_, 16).asInstanceOf[Byte]).toArray
-  }
+  def fromHex(hexStr: String): Array[Byte] =
+    Hex.decodeHex(hexStr.toCharArray())
 
 }
