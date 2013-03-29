@@ -21,9 +21,6 @@ object DynamoDBSpec extends Specification {
   import scala.concurrent.ExecutionContext.Implicits.global
 
 
-  import aws.core._
-  import aws.core.Types._
-
   implicit val region = DDBRegion.EU_WEST_1
 
   def ensureSuccess[T](r: SimpleResult[T]) = r match {

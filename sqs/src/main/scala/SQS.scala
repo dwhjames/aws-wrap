@@ -21,7 +21,6 @@ import scala.concurrent.{ Future, ExecutionContext }
 import play.api.libs.iteratee.{ Iteratee, Input, Step, Done, Error => IterateeError, Enumerator }
 
 import aws.core._
-import aws.core.Types._
 
 case class SQSMeta(requestId: String) extends Metadata
 

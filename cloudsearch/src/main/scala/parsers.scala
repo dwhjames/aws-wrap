@@ -11,7 +11,6 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
 import aws.core._
-import aws.core.Types._
 import aws.core.parsers._
 
 object CloudSearchParsers {

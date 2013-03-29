@@ -3,7 +3,7 @@ package models
 import scala.concurrent.Future
 
 import aws.core._
-import aws.core.Types._
+
 import aws.dynamodb._
 import aws.dynamodb.models._
 import aws.dynamodb.DDBAttribute._

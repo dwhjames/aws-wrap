@@ -22,7 +22,6 @@ import play.api.libs.json.Reads._
 import play.api.libs.json.Writes._
 
 import aws.core._
-import aws.core.Types._
 import aws.core.parsers._
 import aws.dynamodb.JsonFormats._
 

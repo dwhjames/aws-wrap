@@ -23,7 +23,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.ws._
 
 import aws.core._
-import aws.core.Types._
 import aws.core.parsers._
 
 import aws.simpledb.SDBParsers._

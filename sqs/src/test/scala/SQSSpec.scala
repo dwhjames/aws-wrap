@@ -15,8 +15,6 @@ object SQSSpec extends Specification {
   import scala.concurrent.duration.Duration
   import java.util.concurrent.TimeUnit._
 
-  import aws.core._
-  import aws.core.Types._
 
   implicit val region = SQSRegion.EU_WEST_1
 

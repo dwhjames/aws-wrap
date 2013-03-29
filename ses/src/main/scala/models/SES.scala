@@ -24,7 +24,6 @@ import play.api.libs.ws._
 import play.api.libs.ws.WS._
 
 import aws.core._
-import aws.core.Types._
 import aws.core.parsers._
 import aws.core.utils._
 

@@ -23,8 +23,7 @@ import scala.concurrent.Future
 
 import play.api.libs.json.{Json, JsValue}
 
-import aws.core.Result
-import aws.core.Types.EmptyResult
+import aws.core.{Result, EmptyResult}
 
 trait PolicyModule {
 

@@ -21,20 +21,6 @@ import play.api.libs.ws.{ Response => WSResponse }
 import aws.core.parsers._
 import aws.core.parsers.Parser._
 
-object Types {
-  /**
-   * A [[Result]] with no body, for calls not returning any body (example: deleting a resource)
-   */
-  type EmptyResult[M <: Metadata] = Result[M, Unit]
-  /**
-   * A [[Result]] with no metadata, for services that don't return query metadata.
-   */
-  type SimpleResult[T] = Result[EmptyMeta.type, T]
-  /**
-   * A [[Result]] with neither metadata nor body
-   */
-  type EmptySimpleResult = Result[EmptyMeta.type, Unit]
-}
 
 /**
  * Metadata returned in a response wether the result was an error or not. Usually related to the request.

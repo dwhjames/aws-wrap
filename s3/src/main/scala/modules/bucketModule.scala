@@ -27,8 +27,7 @@ import scala.xml.{Node, NodeSeq}
 
 import play.api.mvc.Results.EmptyContent
 
-import aws.core.Result
-import aws.core.Types.EmptyResult
+import aws.core.{Result, EmptyResult}
 
 trait BucketModule {
 

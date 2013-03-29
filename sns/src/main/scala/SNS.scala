@@ -24,7 +24,6 @@ import play.api.libs.ws._
 import play.api.libs.json._
 
 import aws.core._
-import aws.core.Types._
 import aws.core.parsers._
 
 import aws.sns.SNSParsers._

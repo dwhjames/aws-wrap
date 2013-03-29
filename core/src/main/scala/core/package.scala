@@ -29,6 +29,21 @@ import java.text.SimpleDateFormat
 package object core {
 
   /**
+    * A [[Result]] with no body, for calls not returning any body (example: deleting a resource)
+    */
+  type EmptyResult[M <: Metadata] = Result[M, Unit]
+
+  /**
+    * A [[Result]] with no metadata, for services that don't return query metadata.
+    */
+  type SimpleResult[T] = Result[EmptyMeta.type, T]
+
+  /**
+    * A [[Result]] with neither metadata nor body
+    */
+  type EmptySimpleResult = Result[EmptyMeta.type, Unit]
+
+  /**
    * Format the date in ISO: `yyyy-MM-dd'T'HH:mm:ssZ`
    */
   def isoDateFormat(date: Date) = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(date)

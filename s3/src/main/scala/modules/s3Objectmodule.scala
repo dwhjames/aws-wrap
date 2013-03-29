@@ -24,8 +24,7 @@ import java.io.File
 import scala.concurrent.Future
 import scala.xml.Node
 
-import aws.core.Result
-import aws.core.Types.EmptyResult
+import aws.core.{Result, EmptyResult}
 
 trait S3ObjectModule {
 

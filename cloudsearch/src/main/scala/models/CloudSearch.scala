@@ -27,7 +27,6 @@ package aws.cloudsearch {
   import play.api.libs.json._
 
   import aws.core._
-  import aws.core.Types._
   import aws.core.parsers._
   import aws.core.utils._
 
