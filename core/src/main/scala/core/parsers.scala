@@ -89,23 +89,3 @@ package aws.core.parsers {
 
   }
 }
-
-/**
-* Java API
-*/
-package com.pellucid.aws.core.parsers {
-  import aws.core.parsers.{ Parser => SParser, ParseResult => SParseResult, Success => SSuccess, Failure => SFailure }
-
-  trait Parser[To] extends SParser[To]
-  sealed trait ParseResult[To] extends SParseResult[To]
-  class Success[To](value: To) extends SSuccess[To](value) with ParseResult[To]
-  class Failure(failure: String) extends SFailure(failure) with ParseResult[Nothing]
-
-  abstract class BaseParser[To] extends Parser[To] {
-    import play.libs.WS.{ Response => JResponse }
-    import play.api.libs.ws.Response
-
-    def apply(r: Response): SParseResult[To] = this.apply(new JResponse(r.ahcResponse))
-    def apply(r: JResponse): ParseResult[To]
-  }
-}
