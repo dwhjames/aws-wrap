@@ -23,8 +23,6 @@ import scala.concurrent.Future
 
 import play.api.libs.json.{Json, JsValue}
 
-import aws.core.{Result, EmptyResult}
-
 trait PolicyModule {
 
   /**
@@ -54,7 +52,7 @@ trait PolicyModule {
     * }}}
     *
     */
-  def create(bucketname: String, policy: Policy): Future[EmptyResult[S3Metadata]]
+  def create(bucketname: String, policy: Policy): Future[EmptyS3Result]
 
   /**
     * Return the policy of a specified bucket. To use this operation,
@@ -63,14 +61,14 @@ trait PolicyModule {
     *
     * @param bucketname The name of the bucket you want to get Policy on
     */
-  def get(bucketname: String): Future[Result[S3Metadata, Policy]]
+  def get(bucketname: String): Future[S3Result[Policy]]
 
   /**
     * delete the policy on a specified bucket. To use the operation,
     * you must have DeletePolicy permissions on the specified bucket
     * and be the bucket owner.
     */
-  def delete(bucketname: String): Future[EmptyResult[S3Metadata]]
+  def delete(bucketname: String): Future[EmptyS3Result]
 
 }
 
@@ -82,7 +80,7 @@ trait PolicyLayer extends AbstractPolicyLayer with AbstractHttpRequestLayer {
 
   override object Policy extends PolicyModule {
 
-    def create(bucketname: String, policy: Policy): Future[EmptyResult[S3Metadata]] = {
+    def create(bucketname: String, policy: Policy): Future[EmptyS3Result] = {
       val b = Json.toJson(policy)
       Http.put[JsValue, Unit](
         Some(bucketname),
@@ -91,13 +89,13 @@ trait PolicyLayer extends AbstractPolicyLayer with AbstractHttpRequestLayer {
       )
     }
 
-    def get(bucketname: String): Future[Result[S3Metadata, Policy]] =
+    def get(bucketname: String): Future[S3Result[Policy]] =
       Http.get[Policy](
         Some(bucketname),
         subresource = Some("policy")
       )
 
-    def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
+    def delete(bucketname: String): Future[EmptyS3Result] =
       Http.delete[Unit](
         Some(bucketname),
         subresource = Some("policy")

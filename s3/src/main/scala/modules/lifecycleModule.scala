@@ -22,8 +22,6 @@ import models.LifecycleConf
 import scala.concurrent.Future
 import scala.xml.Node
 
-import aws.core.{Result, EmptyResult}
-
 trait LifecycleModule {
 
   /**
@@ -33,20 +31,20 @@ trait LifecycleModule {
     * @param bucketname The name of the bucket you want to set LifecycleConf on.
     * @param confs List of LifecycleConf to apply
     */
-  def create(bucketname: String, confs: LifecycleConf*): Future[EmptyResult[S3Metadata]]
+  def create(bucketname: String, confs: LifecycleConf*): Future[EmptyS3Result]
 
   /**
     * Returns the lifecycle configuration information set on the bucket.
     * To use this operation, you must have permission to perform the s3:GetLifecycleConfiguration action
     * @param bucketname The name of the bucket.
     */
-  def get(bucketname: String): Future[Result[S3Metadata, Seq[LifecycleConf]]]
+  def get(bucketname: String): Future[S3Result[Seq[LifecycleConf]]]
 
   /**
     * Deletes the lifecycle configuration from the specified bucket.
     * @param bucketname The name of the bucket.
     */
-  def delete(bucketname: String): Future[EmptyResult[S3Metadata]]
+  def delete(bucketname: String): Future[EmptyS3Result]
 
 }
 
@@ -58,7 +56,7 @@ trait LifecycleLayer extends AbstractLifecycleLayer with AbstractHttpRequestLaye
 
   override object Lifecycle extends LifecycleModule {
 
-    def create(bucketname: String, confs: LifecycleConf*): Future[EmptyResult[S3Metadata]] = {
+    def create(bucketname: String, confs: LifecycleConf*): Future[EmptyS3Result] = {
       val b =
         <LifecycleConfiguration>
           {
@@ -86,13 +84,13 @@ trait LifecycleLayer extends AbstractLifecycleLayer with AbstractHttpRequestLaye
       )
     }
 
-    def get(bucketname: String): Future[Result[S3Metadata, Seq[LifecycleConf]]] =
+    def get(bucketname: String): Future[S3Result[Seq[LifecycleConf]]] =
       Http.get[Seq[LifecycleConf]](
         Some(bucketname),
         subresource = Some("lifecycle")
       )
 
-    def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
+    def delete(bucketname: String): Future[EmptyS3Result] =
       Http.delete[Unit](
         Some(bucketname),
         subresource = Some("lifecycle")

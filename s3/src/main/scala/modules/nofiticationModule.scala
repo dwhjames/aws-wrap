@@ -22,8 +22,6 @@ import models.NotificationConfiguration
 import scala.concurrent.Future
 import scala.xml.Node
 
-import aws.core.{Result, EmptyResult}
-
 trait NotificationModule {
 
     /**
@@ -40,21 +38,21 @@ trait NotificationModule {
       * @param bucketname The name of the bucket you want to enable notifications on
       * @param notification Notification configuration for this bucket
       */
-    def create(bucketname: String, notification: NotificationConfiguration): Future[EmptyResult[S3Metadata]]
+    def create(bucketname: String, notification: NotificationConfiguration): Future[EmptyS3Result]
 
     /**
       * Disable notifications of specified events for a bucket.
       *
       * @param bucketname The name of the target bucket
       */
-    def disable(bucketname: String): Future[EmptyResult[S3Metadata]]
+    def disable(bucketname: String): Future[EmptyS3Result]
 
     /**
       * return the notification configuration of a bucket.
       *
       * @param bucketname The name of the bucket you want to get notifications for
       */
-    def get(bucketname: String): Future[Result[S3Metadata, Seq[NotificationConfiguration]]]
+    def get(bucketname: String): Future[S3Result[Seq[NotificationConfiguration]]]
 
 }
 
@@ -66,7 +64,7 @@ trait NotificationLayer extends AbstractNotificationLayer with AbstractHttpReque
 
   override object Notification extends NotificationModule {
 
-    def create(bucketname: String, notification: NotificationConfiguration): Future[EmptyResult[S3Metadata]] = {
+    def create(bucketname: String, notification: NotificationConfiguration): Future[EmptyS3Result] = {
       val b =
         <NotificationConfiguration>
            <TopicConfiguration>
@@ -82,7 +80,7 @@ trait NotificationLayer extends AbstractNotificationLayer with AbstractHttpReque
       )
     }
 
-    def disable(bucketname: String): Future[EmptyResult[S3Metadata]] = {
+    def disable(bucketname: String): Future[EmptyS3Result] = {
       val b = <NotificationConfiguration />
       Http.put[Node, Unit](
         Some(bucketname),
@@ -91,7 +89,7 @@ trait NotificationLayer extends AbstractNotificationLayer with AbstractHttpReque
       )
     }
 
-    def get(bucketname: String): Future[Result[S3Metadata, Seq[NotificationConfiguration]]] =
+    def get(bucketname: String): Future[S3Result[Seq[NotificationConfiguration]]] =
       Http.get[Seq[NotificationConfiguration]](
         Some(bucketname),
         subresource = Some("notification")

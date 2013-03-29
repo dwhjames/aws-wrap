@@ -27,8 +27,6 @@ import scala.xml.{Node, NodeSeq}
 
 import play.api.mvc.Results.EmptyContent
 
-import aws.core.{Result, EmptyResult}
-
 trait BucketModule {
 
   /**
@@ -41,7 +39,7 @@ trait BucketModule {
    * @param permissions Explicit access permissions
    * @param loc Location constraint for this bucket
    */
-  def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit loc: LocationConstraint.Value): Future[EmptyResult[S3Metadata]]
+  def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit loc: LocationConstraint.Value): Future[EmptyS3Result]
 
   /**
    * Set the versioning state of an existing bucket
@@ -53,20 +51,20 @@ trait BucketModule {
   def setVersioningConfiguration(
       bucketname: String,
       versionState: VersionState.Value,
-      mfaDeleteState: Option[(MFADeleteState.Value, MFA)] = None): Future[EmptyResult[S3Metadata]]
+      mfaDeleteState: Option[(MFADeleteState.Value, MFA)] = None): Future[EmptyS3Result]
 
   /**
    * Delete the bucket.
    * All objects (including all object versions and Delete Markers) in the bucket must be deleted before the bucket itself can be deleted.
    * @param bucketname The name of the bucket you want to delete.
    */
-  def delete(bucketname: String): Future[EmptyResult[S3Metadata]]
+  def delete(bucketname: String): Future[EmptyS3Result]
 
   /**
    * Returns a list of all buckets owned by the authenticated sender of the request.
    * Anonymous users cannot list buckets, and you cannot list buckets that you did not create.
    */
-  def list(): Future[Result[S3Metadata, Seq[Bucket]]]
+  def list(): Future[S3Result[Seq[Bucket]]]
 
 }
 
@@ -78,7 +76,7 @@ trait BucketLayer extends AbstractBucketLayer with AbstractHttpRequestLayer {
 
   override object Bucket extends BucketModule {
 
-    def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit loc: LocationConstraint.Value): Future[EmptyResult[S3Metadata]] = {
+    def create(bucketname: String, acls: Option[CannedACL.Value] = None, permissions: Seq[Grant] = Nil)(implicit loc: LocationConstraint.Value): Future[EmptyS3Result] = {
       val b =
         if (loc == LocationConstraint.US_STANDARD)
           NodeSeq.Empty
@@ -98,7 +96,7 @@ trait BucketLayer extends AbstractBucketLayer with AbstractHttpRequestLayer {
     def setVersioningConfiguration(
         bucketname: String,
         versionState: VersionState.Value,
-        mfaDeleteState: Option[(MFADeleteState.Value, MFA)] = None): Future[EmptyResult[S3Metadata]] = {
+        mfaDeleteState: Option[(MFADeleteState.Value, MFA)] = None): Future[EmptyS3Result] = {
 
       val b =
         <VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -116,10 +114,10 @@ trait BucketLayer extends AbstractBucketLayer with AbstractHttpRequestLayer {
       )
     }
 
-    def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
+    def delete(bucketname: String): Future[EmptyS3Result] =
       Http.delete[Unit](bucketname = Some(bucketname))
 
-    def list(): Future[Result[S3Metadata, Seq[Bucket]]] =
+    def list(): Future[S3Result[Seq[Bucket]]] =
       Http.get[Seq[Bucket]]()
   }
 

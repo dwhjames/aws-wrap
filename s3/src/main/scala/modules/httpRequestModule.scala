@@ -25,7 +25,6 @@ import scala.xml.Elem
 import play.api.libs.ws.{Response, WS}
 import play.api.http.{ContentTypeOf, Writeable}
 
-import aws.core.Result
 import aws.core.parsers.Parser
 
 trait HttpRequestModule {
@@ -36,8 +35,8 @@ trait HttpRequestModule {
     objectName: String,
     body:       java.io.File,
     parameters: Seq[(String, String)] = Nil
-  )(implicit p: Parser[Result[S3Metadata, T]])
-  : Future[Result[S3Metadata, T]]
+  )(implicit p: Parser[S3Result[T]])
+  : Future[S3Result[T]]
 
   def get[T](
     bucketname:  Option[String]        = None,
@@ -45,8 +44,8 @@ trait HttpRequestModule {
     subresource: Option[String]        = None,
     queryString: Seq[(String, String)] = Nil,
     parameters:  Seq[(String, String)] = Nil
-  )(implicit p: Parser[Result[S3Metadata, T]])
-  : Future[Result[S3Metadata, T]]
+  )(implicit p: Parser[S3Result[T]])
+  : Future[S3Result[T]]
 
   def delete[T](
     bucketname:  Option[String]        = None,
@@ -54,8 +53,8 @@ trait HttpRequestModule {
     subresource: Option[String]        = None,
     queryString: Seq[(String, String)] = Nil,
     parameters:  Seq[(String, String)] = Nil
-  )(implicit p: Parser[Result[S3Metadata, T]])
-  : Future[Result[S3Metadata, T]]
+  )(implicit p: Parser[S3Result[T]])
+  : Future[S3Result[T]]
 
   def post[B, T](
     bucketname:  Option[String]        = None,
@@ -66,8 +65,8 @@ trait HttpRequestModule {
     parameters:  Seq[(String, String)] = Nil
   )(implicit w:           Writeable[B],
              contentType: ContentTypeOf[B],
-             p:           Parser[Result[S3Metadata, T]])
-  : Future[Result[S3Metadata, T]]
+             p:           Parser[S3Result[T]])
+  : Future[S3Result[T]]
 
   def put[B, T](
     bucketname:  Option[String]        = None,
@@ -78,8 +77,8 @@ trait HttpRequestModule {
     parameters:  Seq[(String, String)] = Nil
   )(implicit w:           Writeable[B],
              contentType: ContentTypeOf[B],
-             p:           Parser[Result[S3Metadata, T]])
-  : Future[Result[S3Metadata, T]]
+             p:           Parser[S3Result[T]])
+  : Future[S3Result[T]]
 }
 
 trait AbstractHttpRequestLayer {
@@ -101,8 +100,8 @@ trait HttpRequestLayer extends AbstractHttpRequestLayer with S3SignLayer {
       objectName: String,
       body:       java.io.File,
       parameters: Seq[(String, String)] = Nil
-    )(implicit p: Parser[Result[S3Metadata, T]])
-    : Future[Result[S3Metadata, T]] = {
+    )(implicit p: Parser[S3Result[T]])
+    : Future[S3Result[T]] = {
 
       val uri = s"https://$bucketname.s3.amazonaws.com/" + objectName
       val res = resource(Some(bucketname), uri)
@@ -145,7 +144,7 @@ trait HttpRequestLayer extends AbstractHttpRequestLayer with S3SignLayer {
       subresource: Option[String]        = None,
       queryString: Seq[(String, String)] = Nil,
       parameters:  Seq[(String, String)] = Nil
-    )(implicit p: Parser[Result[S3Metadata, T]]) = {
+    )(implicit p: Parser[S3Result[T]]) = {
       import Writes._
       request[Nothing, T](HttpMethod.GET, bucketname, objectName, subresource, queryString, None, parameters)
     }
@@ -156,7 +155,7 @@ trait HttpRequestLayer extends AbstractHttpRequestLayer with S3SignLayer {
       subresource: Option[String]        = None,
       queryString: Seq[(String, String)] = Nil,
       parameters:  Seq[(String, String)] = Nil
-    )(implicit p: Parser[Result[S3Metadata, T]]) = {
+    )(implicit p: Parser[S3Result[T]]) = {
       import Writes._
       request[Nothing, T](HttpMethod.DELETE, bucketname, objectName, subresource, queryString, None, parameters)
     }
@@ -170,7 +169,7 @@ trait HttpRequestLayer extends AbstractHttpRequestLayer with S3SignLayer {
       parameters:  Seq[(String, String)] = Nil
     )(implicit w:           Writeable[B],
                contentType: ContentTypeOf[B],
-               p:           Parser[Result[S3Metadata, T]]) =
+               p:           Parser[S3Result[T]]) =
       request[B, T](HttpMethod.POST, bucketname, objectName, subresource, queryString, Some(body), parameters)
 
 
@@ -183,7 +182,7 @@ trait HttpRequestLayer extends AbstractHttpRequestLayer with S3SignLayer {
       parameters:  Seq[(String, String)] = Nil
     )(implicit w:           Writeable[B],
                contentType: ContentTypeOf[B],
-               p:           Parser[Result[S3Metadata, T]]) =
+               p:           Parser[S3Result[T]]) =
       request[B, T](HttpMethod.PUT, bucketname, objectName, subresource, queryString, Some(body), parameters)
 
 
@@ -199,8 +198,8 @@ trait HttpRequestLayer extends AbstractHttpRequestLayer with S3SignLayer {
       parameters:  Seq[(String, String)]
     )(implicit w:           Writeable[B],
                contentType: ContentTypeOf[B],
-               p:           Parser[Result[S3Metadata, T]])
-    : Future[Result[S3Metadata, T]] = {
+               p:           Parser[S3Result[T]])
+    : Future[S3Result[T]] = {
 
       val uri = Seq(
         bucketname.map("https://" + _ + ".s3.amazonaws.com")
@@ -241,8 +240,8 @@ trait HttpRequestLayer extends AbstractHttpRequestLayer with S3SignLayer {
       }).map(tryParse[T])
     }
 
-    private def tryParse[T](resp: Response)(implicit p: Parser[Result[S3Metadata, T]]) =
-      Parser.parse[Result[S3Metadata, T]](resp).fold(e => throw new RuntimeException(e), identity)
+    private def tryParse[T](resp: Response)(implicit p: Parser[S3Result[T]]) =
+      Parser.parse[S3Result[T]](resp).fold(e => throw new RuntimeException(e), identity)
 
   }
 }

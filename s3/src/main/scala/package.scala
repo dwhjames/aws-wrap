@@ -34,6 +34,16 @@ import play.api.libs.json.{JsArray, JsSuccess, Reads}
 package object s3 {
 
   /**
+    * A [[Result]] with no body, for calls not returning any body, but with S3Metadata.
+    */
+  type EmptyS3Result = Result[S3Metadata, Unit]
+
+  /**
+    * A [[Result]] with S3Metadata.
+    */
+  type S3Result[T] = Result[S3Metadata, T]
+
+  /**
     * Override the reading of Json arrays
     *
     * This is necessary because AWS returns single element arrays, as single values
@@ -69,7 +79,7 @@ package object s3 {
       )
     }
 
-    implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[S3Metadata, T]] =
+    implicit def safeResultParser[T](implicit p: Parser[T]): Parser[S3Result[T]] =
       Parser.xmlErrorParser[S3Metadata].or(Parser.resultParser(s3MetadataParser, p))
   }
 

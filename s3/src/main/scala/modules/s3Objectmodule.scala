@@ -24,20 +24,18 @@ import java.io.File
 import scala.concurrent.Future
 import scala.xml.Node
 
-import aws.core.{Result, EmptyResult}
-
 trait S3ObjectModule {
 
     /**
       * Returns some or all (up to 1000) of the objects in a bucket.
       * To use this implementation of the operation, you must have READ access to the bucket.
       */
-    def content(bucketname: String): Future[Result[S3Metadata, S3Object]]
+    def content(bucketname: String): Future[S3Result[S3Object]]
 
     /**
       * List metadata about all of the versions of objects in a bucket
       */
-    def getVersions(bucketname: String): Future[Result[S3Metadata, Versions]]
+    def getVersions(bucketname: String): Future[S3Result[Versions]]
 
     /**
       * Adds an object to a bucket.
@@ -46,7 +44,7 @@ trait S3ObjectModule {
       * @param bucketname Name of the target bucket
       * @param body The File to upload to this Bucket
       */
-    def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]]
+    def put(bucketname: String, body: File): Future[EmptyS3Result]
 
     /**
       * Removes the null version (if there is one) of an object and inserts a delete marker,
@@ -63,7 +61,7 @@ trait S3ObjectModule {
       objectName: String,
       versionId:  Option[String] = None,
       mfa:        Option[MFA]    = None
-    ): Future[EmptyResult[S3Metadata]]
+    ): Future[EmptyS3Result]
 
     /**
       * Delete multiple objects from a bucket using a single HTTP request
@@ -76,7 +74,7 @@ trait S3ObjectModule {
       bucketname: String,
       objects:    Seq[(String, Option[String])],
       mfa:        Option[MFA]                    = None
-    ): Future[Result[S3Metadata, BatchDeletion]]
+    ): Future[S3Result[BatchDeletion]]
 
 }
 
@@ -88,10 +86,10 @@ trait S3ObjectLayer extends AbstractS3ObjectLayer with AbstractHttpRequestLayer 
 
   override object S3Object extends S3ObjectModule {
 
-    def content(bucketname: String): Future[Result[S3Metadata, S3Object]] =
+    def content(bucketname: String): Future[S3Result[S3Object]] =
       Http.get[S3Object](Some(bucketname))
 
-    def getVersions(bucketname: String): Future[Result[S3Metadata, Versions]] =
+    def getVersions(bucketname: String): Future[S3Result[Versions]] =
       Http.get[Versions](
         Some(bucketname),
         subresource = Some("versions")
@@ -101,7 +99,7 @@ trait S3ObjectLayer extends AbstractS3ObjectLayer with AbstractHttpRequestLayer 
       // TODO: ACL
       // http://aws.amazon.com/articles/1109?_encoding=UTF8&jiveRedirect=1
       // Transfer-Encoding: chunked is not supported. The PUT operation must include a Content-Length header.
-    def put(bucketname: String, body: File): Future[EmptyResult[S3Metadata]] =
+    def put(bucketname: String, body: File): Future[EmptyS3Result] =
       Http.upload[Unit](
         HttpMethod.PUT,
         bucketname,
@@ -114,7 +112,7 @@ trait S3ObjectLayer extends AbstractS3ObjectLayer with AbstractHttpRequestLayer 
       objectName: String,
       versionId:  Option[String] = None,
       mfa:        Option[MFA]    = None
-    ): Future[EmptyResult[S3Metadata]] = {
+    ): Future[EmptyS3Result] = {
       Http.delete[Unit](
         Some(bucketname),
         Some(objectName),
@@ -127,7 +125,7 @@ trait S3ObjectLayer extends AbstractS3ObjectLayer with AbstractHttpRequestLayer 
       bucketname: String,
       objects:    Seq[(String, Option[String])],
       mfa:        Option[MFA]                    = None
-    ): Future[Result[S3Metadata, BatchDeletion]] = {
+    ): Future[S3Result[BatchDeletion]] = {
       val b =
         <Delete>
           <Quiet>false</Quiet>
