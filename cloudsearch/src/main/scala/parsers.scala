@@ -62,7 +62,7 @@ object CloudSearchParsers {
 
   implicit def safeSimpleResultParser[T](implicit p: Parser[T]): Parser[SimpleResult[T]] = {
     val resultParser = Parser.resultParser(Parser.emptyMetadataParser, p)
-    Parser.xmlErrorParser[EmptyMeta.type].or(resultParser)
+    Parser.xmlErrorParser[NoMetadata.type].or(resultParser)
   }
 
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[CloudSearchMetadata, T]] =

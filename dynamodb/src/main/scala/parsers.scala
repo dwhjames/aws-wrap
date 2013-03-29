@@ -49,21 +49,21 @@ object DDBParsers {
     }
   }
 
-  implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[EmptyMeta.type, T]] =
+  implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[NoMetadata.type, T]] =
     jsonErrorsParser.or(Parser.resultParser(Parser.emptyMetadataParser, p))
 
-  implicit val awsErrorFormat = Reads[AWSError[EmptyMeta.type]](js => {
+  implicit val awsErrorFormat = Reads[AWSError[NoMetadata.type]](js => {
     (js \ "__type", js \ "Message", js \ "message") match {
-      case (JsString(t), JsString(m), _) => JsSuccess(AWSError(EmptyMeta, errorCode(t), m))
-      case (JsString(t), _, JsString(m)) => JsSuccess(AWSError(EmptyMeta, errorCode(t), m))
+      case (JsString(t), JsString(m), _) => JsSuccess(AWSError(NoMetadata, errorCode(t), m))
+      case (JsString(t), _, JsString(m)) => JsSuccess(AWSError(NoMetadata, errorCode(t), m))
       case _ => JsError("JsObject expected")
     }
   })
 
-  val jsonErrorsParser = Parser[AWSError[EmptyMeta.type]] { r =>
+  val jsonErrorsParser = Parser[AWSError[NoMetadata.type]] { r =>
     r.status match {
       case 200 => Failure("Not an error")
-      case _ => Success(r.json.as[AWSError[EmptyMeta.type]])
+      case _ => Success(r.json.as[AWSError[NoMetadata.type]])
     }
   }
 

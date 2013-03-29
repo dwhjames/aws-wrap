@@ -36,12 +36,12 @@ package object core {
   /**
     * A [[Result]] with no metadata, for services that don't return query metadata.
     */
-  type SimpleResult[T] = Result[EmptyMeta.type, T]
+  type SimpleResult[T] = Result[NoMetadata.type, T]
 
   /**
     * A [[Result]] with neither metadata nor body
     */
-  type EmptySimpleResult = Result[EmptyMeta.type, Unit]
+  type EmptySimpleResult = Result[NoMetadata.type, Unit]
 
   /**
    * Format the date in ISO: `yyyy-MM-dd'T'HH:mm:ssZ`
