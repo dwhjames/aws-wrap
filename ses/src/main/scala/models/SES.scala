@@ -121,7 +121,7 @@ object SES {
       date,
       Parameters.X_AMZN_AUTHORIZATION(AWS.key, "HmacSHA1", signature))
 
-    val ps = (params :+ AWS.Parameters.Action(action) :+ AWS.Parameters.TimeStamp(new Date))
+    val ps = (params :+ AWS.Parameters.Action(action) :+ AWS.Parameters.TimeStamp())
       .toMap.mapValues(Seq(_))
 
     WS.url(s"https://email.${region.subdomain}.amazonaws.com")

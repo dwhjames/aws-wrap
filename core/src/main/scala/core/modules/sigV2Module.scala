@@ -51,7 +51,7 @@ trait SigV2Layer extends AbstractSigV2Layer with AbstractCredentialsLayer {
     override def signUrl(method: String, url: String, params: Seq[(String, String)]): String = {
 
       val ps = Seq(
-        Parameters.TimeStamp(new Date),
+        Parameters.TimeStamp(),
         Parameters.AWSAccessKeyId(awsKey),
         Parameters.Version(apiVersionDateString),
         Parameters.SignatureVersion(SIGVERSION),
