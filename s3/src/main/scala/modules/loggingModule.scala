@@ -22,9 +22,6 @@ import models.LoggingStatus
 import scala.concurrent.Future
 import scala.xml.Node
 
-import aws.core.Result
-import aws.core.Types.EmptyResult
-
 trait LoggingModule {
 
     /**
@@ -40,13 +37,13 @@ trait LoggingModule {
       loggedBucket: String,
       targetBucket: String,
       grantees:     Seq[(Permissions.Email, LoggingPermission.Value)] = Nil
-    ): Future[EmptyResult[S3Metadata]]
+    ): Future[EmptyS3Result]
 
     /**
       * return the logging status of a bucket and the permissions users have to view and modify that status. To use {{{get}}}, you must be the bucket owner.
       * @param bucketName The name of the bucket.
       */
-    def get(bucketName: String): Future[Result[S3Metadata, Seq[LoggingStatus]]]
+    def get(bucketName: String): Future[S3Result[Seq[LoggingStatus]]]
 
 }
 
@@ -62,7 +59,7 @@ trait LoggingLayer extends AbstractLoggingLayer with AbstractHttpRequestLayer {
       loggedBucket: String,
       targetBucket: String,
       grantees:     Seq[(Permissions.Email, LoggingPermission.Value)] = Nil
-    ): Future[EmptyResult[S3Metadata]] = {
+    ): Future[EmptyS3Result] = {
       val b =
         <BucketLoggingStatus xmlns="http://doc.s3.amazonaws.com/2006-03-01">
           <LoggingEnabled>
@@ -88,7 +85,7 @@ trait LoggingLayer extends AbstractLoggingLayer with AbstractHttpRequestLayer {
       )
     }
 
-    def get(bucketName: String): Future[Result[S3Metadata, Seq[LoggingStatus]]] =
+    def get(bucketName: String): Future[S3Result[Seq[LoggingStatus]]] =
       Http.get[Seq[LoggingStatus]](
         Some(bucketName),
         subresource = Some("logging")

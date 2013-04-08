@@ -22,9 +22,6 @@ import models.Tag
 import scala.concurrent.Future
 import scala.xml.Node
 
-import aws.core.Result
-import aws.core.Types.EmptyResult
-
 trait TagModule {
 
     /**
@@ -32,14 +29,14 @@ trait TagModule {
       *
       * @param bucketname Name of the tagged bucket
       */
-    def delete(bucketname: String): Future[EmptyResult[S3Metadata]]
+    def delete(bucketname: String): Future[EmptyS3Result]
 
     /**
       * Returns the tag set associated with the bucket.
       *
       * @param bucketname Name of the tagged bucket
       */
-    def get(bucketname: String): Future[Result[S3Metadata, Seq[Tag]]]
+    def get(bucketname: String): Future[S3Result[Seq[Tag]]]
 
     /**
       * Adds a set of tags to an existing bucket.
@@ -47,7 +44,7 @@ trait TagModule {
       * @param bucketname Name of the bucket to tag
       * @param tags Tags to set on this Bucket
       */
-    def create(bucketname: String, tags: Tag*): Future[EmptyResult[S3Metadata]]
+    def create(bucketname: String, tags: Tag*): Future[EmptyS3Result]
 
 }
 
@@ -59,19 +56,19 @@ trait TagLayer extends AbstractTagLayer with AbstractHttpRequestLayer {
 
   override object Tag extends TagModule {
 
-    def delete(bucketname: String): Future[EmptyResult[S3Metadata]] =
+    def delete(bucketname: String): Future[EmptyS3Result] =
       Http.delete[Unit](
         Some(bucketname),
         subresource = Some("tagging")
       )
 
-    def get(bucketname: String): Future[Result[S3Metadata, Seq[Tag]]] =
+    def get(bucketname: String): Future[S3Result[Seq[Tag]]] =
       Http.get[Seq[Tag]](
         Some(bucketname),
         subresource = Some("tagging")
       )
 
-    def create(bucketname: String, tags: Tag*): Future[EmptyResult[S3Metadata]] = {
+    def create(bucketname: String, tags: Tag*): Future[EmptyS3Result] = {
       val b =
         <Tagging>
           <TagSet>

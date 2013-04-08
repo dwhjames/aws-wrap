@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-package aws.core.utils
+package aws.core.modules
 
-import org.apache.commons.codec.binary.Hex
+trait AbstractCredentialsLayer {
+  val awsKey:    String
+  val awsSecret: String
+}
 
-object Binary {
-
-  /**
-   * Converts byte data to a Hex-encoded string.
-   *
-   * @param bytes byte array to hex encode.
-   * @return hex-encoded string.
-   */
-  def toHex(bytes: Array[Byte]): String =
-    Hex.encodeHexString(bytes)
+trait UserHomeCredentialsLayer {
 
   /**
-   * Converts a Hex-encoded data string to the original byte data.
-   *
-   * @param hexStr
-   *            hex-encoded data to decode.
-   * @return decoded data from the hex string.
+   * The current AWS key, read from the first line of `~/.awssecret`
    */
-  def fromHex(hexStr: String): Array[Byte] =
-    Hex.decodeHex(hexStr.toCharArray())
+  lazy val awsKey: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(0)
+
+  /**
+   * The current AWS secret, read from the second line of `~/.awssecret`
+   */
+  lazy val awsSecret: String = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList(1)
 
 }

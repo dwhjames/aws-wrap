@@ -74,7 +74,7 @@ package aws.core.parsers {
 
     implicit val unitParser: Parser[Unit] = Parser.pure(())
 
-    implicit val emptyMetadataParser: Parser[EmptyMeta.type] = Parser.pure(EmptyMeta)
+    implicit val emptyMetadataParser: Parser[NoMetadata.type] = Parser.pure(NoMetadata)
 
     def xmlErrorParser[M <: Metadata](implicit mp: Parser[M]) = mp.flatMap(meta => Parser[AWSError[M]] { r =>
       (r.status match {

@@ -16,7 +16,7 @@
 
 package aws
 
-import java.util.Date
+import java.util.{Date, TimeZone}
 import java.text.SimpleDateFormat
 
 /**
@@ -27,6 +27,21 @@ import java.text.SimpleDateFormat
  *
  */
 package object core {
+
+  /**
+    * A [[Result]] with no body, for calls not returning any body (example: deleting a resource)
+    */
+  type EmptyResult[M <: Metadata] = Result[M, Unit]
+
+  /**
+    * A [[Result]] with no metadata, for services that don't return query metadata.
+    */
+  type SimpleResult[T] = Result[NoMetadata.type, T]
+
+  /**
+    * A [[Result]] with neither metadata nor body
+    */
+  type EmptySimpleResult = Result[NoMetadata.type, Unit]
 
   /**
    * Format the date in ISO: `yyyy-MM-dd'T'HH:mm:ssZ`
@@ -42,6 +57,12 @@ package object core {
     iso.format(date)
   }
 
+  def iso8601Timestamp(date: Date): String = {
+    val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    df.setTimeZone(TimeZone.getTimeZone("UTC"))
+    df.format(date)
+  }
+
   def canonicalQueryString(params: Seq[(String, String)]) =
     params.sortBy(_._1).map { p => SignerEncoder.encode(p._1) + "=" + SignerEncoder.encode(p._2) }.mkString("&")
 
@@ -49,7 +70,7 @@ package object core {
   def httpDateparse(date: String) = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").parse(date)
 
   object Parameters {
-    def TimeStamp(date: Date) = "Timestamp" -> isoDateFormat(date)
+    def TimeStamp(date: Option[Date] = None) = "Timestamp" -> iso8601Timestamp(date getOrElse {new Date()})
     def Expires(seconds: Long) = "Expires" -> {
       val now = new Date().getTime()
       (now / 1000 + seconds).toString

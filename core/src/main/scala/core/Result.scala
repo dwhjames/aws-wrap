@@ -21,32 +21,18 @@ import play.api.libs.ws.{ Response => WSResponse }
 import aws.core.parsers._
 import aws.core.parsers.Parser._
 
-object Types {
-  /**
-   * A [[Result]] with no body, for calls not returning any body (example: deleting a resource)
-   */
-  type EmptyResult[M <: Metadata] = Result[M, Unit]
-  /**
-   * A [[Result]] with no metadata, for services that don't return query metadata.
-   */
-  type SimpleResult[T] = Result[EmptyMeta.type, T]
-  /**
-   * A [[Result]] with neither metadata nor body
-   */
-  type EmptySimpleResult = Result[EmptyMeta.type, Unit]
-}
 
 /**
  * Metadata returned in a response wether the result was an error or not. Usually related to the request.
  */
 trait Metadata
-case object EmptyMeta extends Metadata
+case object NoMetadata extends Metadata
 
 /**
  * An AWS Result, that can be a success on a error. M represents the metadata (some information always there
  * whether the result is a success or an error) and T represents the type of the body in case of a success.
  *
- * Some services don't have any metadata with responses, in this case `EmptyMeta` will be returned.
+ * Some services don't have any metadata with responses, in this case `NoMetadata` will be returned.
  *
  * To consume it, you can use pattern matching:
  * {{{
@@ -58,7 +44,7 @@ case object EmptyMeta extends Metadata
  */
 sealed trait Result[M <: Metadata, +T] {
   /**
-   * The metadata, `EmptyMeta` if the service doesn't support metadata.
+   * The metadata, `NoMetadata` if the service doesn't support metadata.
    */
   def metadata: M
   /**
@@ -73,7 +59,7 @@ sealed trait Result[M <: Metadata, +T] {
 }
 
 object Result {
-  def apply[M <: Metadata, T](m: M = EmptyMeta, b: T): Result[M, T] = new Result[M, T] {
+  def apply[M <: Metadata, T](m: M = NoMetadata, b: T): Result[M, T] = new Result[M, T] {
     override def toEither = Right(this)
     override def metadata = m
     override def body = b
@@ -89,7 +75,7 @@ object Result {
 }
 
 object EmptyResult {
-  def apply[M <: Metadata](m: M = EmptyMeta) = Result.apply(m, ())
+  def apply[M <: Metadata](m: M = NoMetadata) = Result.apply(m, ())
 }
 
 class AWSError[M <: Metadata](val metadata: M, val code: String, val message: String) extends Result[M, Nothing] {
@@ -102,7 +88,7 @@ class AWSError[M <: Metadata](val metadata: M, val code: String, val message: St
 }
 
 object AWSError {
-  def apply[M <: Metadata](metadata: M = EmptyMeta, code: String, message: String) = new AWSError(metadata, code, message)
+  def apply[M <: Metadata](metadata: M = NoMetadata, code: String, message: String) = new AWSError(metadata, code, message)
   def unapply[M <: Metadata](e: AWSError[M]): Option[(M, String, String)] = Some((e.metadata, e.code, e.message))
 }
 // TODO: AWS sometimes returns a 200 when there is an error (example: NoSuchDomain error for DomainMetadata)

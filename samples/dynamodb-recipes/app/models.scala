@@ -3,7 +3,7 @@ package models
 import scala.concurrent.Future
 
 import aws.core._
-import aws.core.Types._
+
 import aws.dynamodb._
 import aws.dynamodb.models._
 import aws.dynamodb.DDBAttribute._
@@ -48,9 +48,9 @@ object Recipe {
     DynamoDB.getItem(TABLE_NAME, KeyValue(id)).map { response =>
       response.flatMap(itemResponse => {
         fromAWS(itemResponse.item).map { recipe =>
-          Result(EmptyMeta, recipe)
+          Result(NoMetadata, recipe)
         }.getOrElse(
-          AWSError(EmptyMeta, DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, "")
+          AWSError(NoMetadata, DDBErrors.RESOURCE_NOT_FOUND_EXCEPTION, "")
         )
       })
     }

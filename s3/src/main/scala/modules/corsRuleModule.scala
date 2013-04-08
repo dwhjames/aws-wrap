@@ -22,9 +22,6 @@ import models.CORSRule
 import scala.concurrent.Future
 import scala.xml.Node
 
-import aws.core.Result
-import aws.core.Types.EmptyResult
-
 trait CORSRuleModule {
 
   /**
@@ -38,7 +35,7 @@ trait CORSRuleModule {
     * @param bucketname The name of the bucket you want to set cors on.
     * @param rules List of CORSRule to apply on this Bucket
     */
-  def create(bucketName: String, rules: CORSRule*): Future[EmptyResult[S3Metadata]]
+  def create(bucketName: String, rules: CORSRule*): Future[EmptyS3Result]
 
   /**
     * Returns the cors configuration information set for the bucket.
@@ -48,7 +45,7 @@ trait CORSRuleModule {
     *
     * @param bucketname The name of the bucket.
     */
-  def get(bucketName: String): Future[Result[S3Metadata, Seq[CORSRule]]]
+  def get(bucketName: String): Future[S3Result[Seq[CORSRule]]]
 
 
   /**
@@ -56,7 +53,7 @@ trait CORSRuleModule {
     * To use this operation, you must have permission to perform the s3:PutCORSConfiguration action. The bucket owner has this permission by default and can grant this permission to others.
     * @param bucketname The name of the bucket you want to delete.
     */
-  def delete(bucketName: String): Future[EmptyResult[S3Metadata]]
+  def delete(bucketName: String): Future[EmptyS3Result]
 
 }
 
@@ -68,7 +65,7 @@ trait CORSRuleLayer extends AbstractCORSRuleLayer with AbstractHttpRequestLayer 
 
   override object CORSRule extends CORSRuleModule {
 
-    def create(bucketName: String, rules: CORSRule*): Future[EmptyResult[S3Metadata]] = {
+    def create(bucketName: String, rules: CORSRule*): Future[EmptyS3Result] = {
       val b =
         <CORSConfiguration>
           { for (r <- rules) yield <CORSRule>
@@ -91,13 +88,13 @@ trait CORSRuleLayer extends AbstractCORSRuleLayer with AbstractHttpRequestLayer 
         parameters = ps)
     }
 
-    def get(bucketName: String): Future[Result[S3Metadata, Seq[CORSRule]]] =
+    def get(bucketName: String): Future[S3Result[Seq[CORSRule]]] =
       Http.get[Seq[CORSRule]](
         Some(bucketName),
         subresource = Some("cors")
       )
 
-    def delete(bucketName: String): Future[EmptyResult[S3Metadata]] =
+    def delete(bucketName: String): Future[EmptyS3Result] =
       Http.delete[Unit](
         Some(bucketName),
         subresource = Some("cors")

@@ -46,52 +46,6 @@ trait AWS {
   implicit val defaultExecutionContext: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
 
-  case class V2[M <: Metadata](val version: String = "2009-04-15") {
-
-    private val SIGVERSION = "2"
-    private val SIGMETHOD = "HmacSHA1"
-
-    protected def request(resource: String, parameters: Seq[(String, String)]): Future[Response] = {
-      WS.url(resource + "?" + signedUrl("GET", resource, parameters)).get()
-    }
-
-    private def tryParse[T](resp: Response)(implicit p: Parser[Result[M, T]]) = Parser.parse[Result[M, T]](resp).fold(
-      e => throw new RuntimeException(e),
-      identity)
-
-    protected def get[T](parameters: (String, String)*)(implicit region: AWSRegion, p: Parser[Result[M, T]]): Future[Result[M, T]] =
-      get[T]("https://" + region.host + "/", parameters: _*)
-
-    protected def get[T](resource: String, parameters: (String, String)*)(implicit p: Parser[Result[M, T]]): Future[Result[M, T]] =
-      request(resource, parameters).map(tryParse[T])
-
-    protected def signedUrl(method: String, url: String, params: Seq[(String, String)]): String = {
-
-      import aws.core.SignerEncoder.encode
-      import Parameters._
-
-      val ps = Seq(
-        TimeStamp(new java.util.Date()),
-        AWSAccessKeyId(awsKey),
-        Version(version),
-        SignatureVersion(SIGVERSION),
-        SignatureMethod(SIGMETHOD))
-
-      val queryString = canonicalQueryString(params ++ ps)
-
-      val toSign = "%s\n%s\n%s\n%s".format(method, host(url), path(url), queryString)
-
-      "Signature=" + encode(signature(toSign)) + "&" + queryString
-    }
-
-    private def signature(data: String) = Crypto.base64(Crypto.hmacSHA1(data.getBytes(), awsSecret))
-
-    private def path(url: String) = "/" + url.split("/").drop(3).mkString("/")
-
-    private def host(url: String) = url.split("/").drop(2).head
-
-  }
-
   object V4 {
 
     val VERSION = "20111205"

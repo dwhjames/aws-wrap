@@ -24,7 +24,6 @@ import play.api.libs.ws._
 import play.api.libs.ws.WS._
 
 import aws.core._
-import aws.core.Types._
 import aws.core.parsers._
 import aws.core.utils._
 
@@ -122,7 +121,7 @@ object SES {
       date,
       Parameters.X_AMZN_AUTHORIZATION(AWS.key, "HmacSHA1", signature))
 
-    val ps = (params :+ AWS.Parameters.Action(action) :+ AWS.Parameters.TimeStamp(new Date))
+    val ps = (params :+ AWS.Parameters.Action(action) :+ AWS.Parameters.TimeStamp())
       .toMap.mapValues(Seq(_))
 
     WS.url(s"https://email.${region.subdomain}.amazonaws.com")

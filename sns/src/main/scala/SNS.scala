@@ -16,23 +16,24 @@
 
 package aws.sns
 
-import java.util.Date
-
 import scala.concurrent.Future
 
-import play.api.libs.ws._
-import play.api.libs.json._
+import play.api.libs.json.JsValue
 
-import aws.core._
-import aws.core.Types._
-import aws.core.parsers._
+import aws.core.{Result, EmptyResult, Metadata}
+import aws.core.modules.{HttpRequestV2Layer, SigV2Layer, UserHomeCredentialsLayer}
 
 import aws.sns.SNSParsers._
 
 case class SNSMeta(requestId: String) extends Metadata
 
-trait SNSLayer{ self: AWS => 
-  object SNS extends V2[SNSMeta](version = "2010-03-31") {
+trait SNSLayer extends HttpRequestV2Layer[SNSMeta] with SigV2Layer with UserHomeCredentialsLayer {
+
+  override val apiVersionDateString = "2010-03-31"
+
+  override protected implicit lazy val v2RequestExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
+  object SNS {
 
     object Parameters {
       def NextToken(nextToken: Option[String]): Seq[(String, String)] = nextToken.toSeq.map("NextToken" -> _)
@@ -75,7 +76,7 @@ trait SNSLayer{ self: AWS =>
         Action("AddPermission"),
         TopicArn(topicArn),
         Label(label)) ++ AWSAccounts(awsAccounts) ++ ActionList(actions)
-      get[Unit](params: _*)
+      Http.get[Unit](params: _*)
     }
 
     /**
@@ -90,7 +91,7 @@ trait SNSLayer{ self: AWS =>
      *        then only the topic owner and the subscription owner can unsubscribe the endpoint.
      */
     def confirmSubscription(topicArn: String, token: String, authenticateOnUnsubscribe: Boolean = false)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
-      get[String](
+      Http.get[String](
         Action("ConfirmSubscription"),
         TopicArn(topicArn),
         AuthenticateOnUnsubscribe(authenticateOnUnsubscribe))(region, subscribeResultParser)
@@ -107,7 +108,7 @@ trait SNSLayer{ self: AWS =>
      * @param name The name of the topic you want to create.
      */
     def createTopic(name: String)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
-      get[String](Action("CreateTopic"), Name(name))(region, createTopicsResultParser)
+      Http.get[String](Action("CreateTopic"), Name(name))(region, createTopicsResultParser)
     }
 
     /**
@@ -118,7 +119,7 @@ trait SNSLayer{ self: AWS =>
      * @param topicArn The ARN of the topic you want to delete.
      */
     def deleteTopic(topicArn: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      get[Unit](
+      Http.get[Unit](
         Action("DeleteTopic"),
         TopicArn(topicArn))
     }
@@ -129,7 +130,7 @@ trait SNSLayer{ self: AWS =>
      * @param subscriptionArn The ARN of the subscription whose properties you want to get.
      */
     def getSubscriptionAttributes(subscriptionArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionAttributes]] = {
-      get[SubscriptionAttributes](
+      Http.get[SubscriptionAttributes](
         Action("SubscriptionAttributesResult"),
         SubscriptionArn(subscriptionArn))
     }
@@ -141,7 +142,7 @@ trait SNSLayer{ self: AWS =>
      * @param topicArn The ARN of the topic whose properties you want to get.
      */
     def getTopicAttributes(topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, TopicAttributes]] = {
-      get[TopicAttributes](Action("GetTopicAttributes"), TopicArn(topicArn))
+      Http.get[TopicAttributes](Action("GetTopicAttributes"), TopicArn(topicArn))
     }
 
     /**
@@ -154,7 +155,7 @@ trait SNSLayer{ self: AWS =>
      */
     def listSubscriptions(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, SubscriptionList]] = {
       val params = Seq(Action("ListSubscriptions")) ++ NextToken(nextToken)
-      get[SubscriptionList](params: _*)
+      Http.get[SubscriptionList](params: _*)
     }
 
     /**
@@ -170,7 +171,7 @@ trait SNSLayer{ self: AWS =>
       val params = Seq(
         Action("ListSubscriptionsByTopic"),
         TopicArn(topicArn)) ++ NextToken(nextToken)
-      get[SubscriptionList](params: _*)
+      Http.get[SubscriptionList](params: _*)
     }
 
     /**
@@ -182,7 +183,7 @@ trait SNSLayer{ self: AWS =>
      */
     def listTopics(nextToken: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, ListTopics]] = {
       val params = Seq(Action("ListTopics")) ++ NextToken(nextToken)
-      get[ListTopics](params: _*)
+      Http.get[ListTopics](params: _*)
     }
 
     /**
@@ -201,7 +202,7 @@ trait SNSLayer{ self: AWS =>
                 message: Message,
                 subject: Option[String] = None)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
       val params = Seq(Action("Publish"), TopicArn(topicArn)) ++ MessageParameters(message) ++ Subject(subject)
-      get[String](params: _*)(region, publishResultParser)
+      Http.get[String](params: _*)(region, publishResultParser)
     }
 
     /**
@@ -212,7 +213,7 @@ trait SNSLayer{ self: AWS =>
      *
      */
     def removePermission(topicArn: String, label: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      get[Unit](
+      Http.get[Unit](
         Action("RemovePermission"),
         TopicArn(topicArn),
         Label(label))
@@ -221,7 +222,7 @@ trait SNSLayer{ self: AWS =>
     private def setSubscriptionAttributes(subscriptionArn: String,
                                           attributeName: String,
                                           attributeValue: JsValue)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      get[Unit](
+      Http.get[Unit](
         Action("SetSubscriptionAttributes"),
         SubscriptionArn(subscriptionArn),
         AttributeName(attributeName),
@@ -235,7 +236,7 @@ trait SNSLayer{ self: AWS =>
     private def setTopicAttributes(topicArn: String,
                                    attributeName: String,
                                    attributeValue: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      get[Unit](
+      Http.get[Unit](
         Action("SetTopicAttributes"),
         TopicArn(topicArn),
         AttributeName(attributeName),
@@ -261,11 +262,11 @@ trait SNSLayer{ self: AWS =>
      */
     def subscribe(endpoint: Endpoint, topicArn: String)(implicit region: SNSRegion): Future[Result[SNSMeta, String]] = {
       val params = Seq(Action("Subscribe"), TopicArn(topicArn)) ++ EndpointProtocol(endpoint)
-      get[String](params: _*)(region, subscribeResultParser)
+      Http.get[String](params: _*)(region, subscribeResultParser)
     }
 
     def unsubscribe(subscriptionArn: String)(implicit region: SNSRegion): Future[EmptyResult[SNSMeta]] = {
-      get[Unit](Action("Unsubscribe"), SubscriptionArn(subscriptionArn))
+      Http.get[Unit](Action("Unsubscribe"), SubscriptionArn(subscriptionArn))
     }
 
   }

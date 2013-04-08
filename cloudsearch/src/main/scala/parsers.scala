@@ -11,7 +11,6 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
 import aws.core._
-import aws.core.Types._
 import aws.core.parsers._
 
 object CloudSearchParsers {
@@ -63,7 +62,7 @@ object CloudSearchParsers {
 
   implicit def safeSimpleResultParser[T](implicit p: Parser[T]): Parser[SimpleResult[T]] = {
     val resultParser = Parser.resultParser(Parser.emptyMetadataParser, p)
-    Parser.xmlErrorParser[EmptyMeta.type].or(resultParser)
+    Parser.xmlErrorParser[NoMetadata.type].or(resultParser)
   }
 
   implicit def safeResultParser[T](implicit p: Parser[T]): Parser[Result[CloudSearchMetadata, T]] =

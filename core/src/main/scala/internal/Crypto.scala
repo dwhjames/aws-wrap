@@ -19,6 +19,8 @@ package aws.core.utils
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
+import org.apache.commons.codec.binary.Base64
+
 object Crypto {
   val HMAC_SHA1_ALGORITHM = "HmacSHA1";
   val HMAC_SHA256_ALGORITHM = "HmacSHA256";
@@ -36,8 +38,10 @@ object Crypto {
     mac.doFinal(data)
   }
 
-  def base64(data: Array[Byte]) = new sun.misc.BASE64Encoder().encode(data)
+  def base64(data: Array[Byte]): String =
+    Base64.encodeBase64String(data)
 
-  def decodeBase64(b64: String) = new sun.misc.BASE64Decoder().decodeBuffer(b64)
+  def decodeBase64(b64: String): Array[Byte] =
+    Base64.decodeBase64(b64)
 
 }

@@ -34,7 +34,9 @@ object ApplicationBuild extends Build {
         libraryDependencies ++= Seq(
           "play" %% "play" % AWS.playVersion,
           "org.specs2" %% "specs2" % "1.12.3" % "test",
-          "com.novocode" % "junit-interface" % "0.10-M2" % "test"),
+          "com.novocode" % "junit-interface" % "0.10-M2" % "test",
+          "commons-codec" % "commons-codec" % "1.7"
+        ),
         testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
         publishMavenStyle := true,
         publishTo <<= version { (version: String) =>
