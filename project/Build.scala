@@ -66,6 +66,12 @@ object ApplicationBuild extends Build {
     //REVIST THIS AND MAKE IT WORK WITH NEW WAY OF DOING CREDENTIALS
     //lazy val cloudsearch = Project("cloud-search", file("cloudsearch"), settings = commonSettings).dependsOn(core)
 
+    lazy val wrap = Project("wrap", file("wrap"), settings = commonSettings ++ Seq(
+        libraryDependencies ++= Seq(
+            "com.amazonaws" % "aws-java-sdk" % "1.4.1"
+        )
+    ))
+
     lazy val root = Project("root", file("."), settings = Project.defaultSettings ++ Unidoc.settings).aggregate(
         core, simpledb, sns, dynamodb, s3, sqs
     )
