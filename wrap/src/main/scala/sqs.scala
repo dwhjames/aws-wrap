@@ -13,20 +13,59 @@ trait AmazonSQSScalaClient {
 
   val client: AmazonSQSAsyncClient
 
+  protected implicit val execCtx: ExecutionContext
+
   def addPermission(
     addPermissionRequest: AddPermissionRequest
   ): Future[Unit] =
     wrapVoidAsyncMethod(client.addPermissionAsync, addPermissionRequest)
+
+  def addPermission(
+    queueUrl:       String,
+    label:          String,
+    accountActions: Map[String, String]
+  ): Future[Unit] = {
+    val (accounts, actions) = accountActions.unzip
+    addPermission(
+      new AddPermissionRequest(
+        queueUrl,
+        label,
+        accounts.toSeq.asJava,
+        actions.toSeq.asJava
+      )
+    )
+  }
 
   def changeMessageVisibility(
     changeMessageVisibilityRequest: ChangeMessageVisibilityRequest
   ): Future[Unit] =
     wrapVoidAsyncMethod(client.changeMessageVisibilityAsync, changeMessageVisibilityRequest)
 
+  def changeMessageVisibility(
+    queueUrl:          String,
+    receiptHandle:     String,
+    visibilityTimeout: Int
+  ): Future[Unit] =
+    changeMessageVisibility(new ChangeMessageVisibilityRequest(queueUrl, receiptHandle, visibilityTimeout))
+
   def changeMessageVisibilityBatch(
     changeMessageVisibilityBatchRequest: ChangeMessageVisibilityBatchRequest
   ): Future[ChangeMessageVisibilityBatchResult] =
     wrapAsyncMethod(client.changeMessageVisibilityBatchAsync, changeMessageVisibilityBatchRequest)
+
+  def changeMessageVisibilityBatch(
+    queueUrl:            String,
+    messageVisibilities: Seq[(String, String, Int)]
+  ): Future[ChangeMessageVisibilityBatchResult] =
+    changeMessageVisibilityBatch(
+      new ChangeMessageVisibilityBatchRequest(
+        queueUrl,
+        messageVisibilities.map { case (id, receiptHandle, visibilityTimeout) =>
+          new ChangeMessageVisibilityBatchRequestEntry(id, receiptHandle)
+          .withVisibilityTimeout(visibilityTimeout)
+        } .asJava
+      )
+    )
 
   def createQueue(
     createQueueRequest: CreateQueueRequest
@@ -34,9 +73,17 @@ trait AmazonSQSScalaClient {
     wrapAsyncMethod(client.createQueueAsync, createQueueRequest)
 
   def createQueue(
-    queueName: String
+    queueName: String,
+    attributes: Map[QueueAttributeName, Any] = Map.empty
   ): Future[CreateQueueResult] =
-    createQueue(new CreateQueueRequest(queueName))
+    createQueue(
+      new CreateQueueRequest(queueName)
+      .withAttributes(
+        attributes.map{ case (n, v) =>
+          (n.toString, v.toString)
+        }.asJava
+      )
+    )
 
   def deleteMessage(
     deleteMessageRequest: DeleteMessageRequest
@@ -80,13 +127,19 @@ trait AmazonSQSScalaClient {
   def getExecutorService(): ExecutorService =
     client.getExecutorService()
 
-  def getExecutionContext(): ExecutionContext =
-    ExecutionContext.fromExecutorService(client.getExecutorService())
-
   def getQueueAttributes(
     getQueueAttributesRequest: GetQueueAttributesRequest
   ): Future[GetQueueAttributesResult] =
     wrapAsyncMethod(client.getQueueAttributesAsync, getQueueAttributesRequest)
+
+  def getQueueAttributes(
+    queueUrl: String,
+    attributeNames: Seq[String]
+  ): Future[Map[String, String]] =
+    getQueueAttributes(
+      new GetQueueAttributesRequest(queueUrl)
+      .withAttributeNames(attributeNames: _*)
+    ).map(_.getAttributes.asScala.toMap)
 
   def getQueueUrl(
     getQueueUrlRequest: GetQueueUrlRequest
@@ -95,8 +148,8 @@ trait AmazonSQSScalaClient {
 
   def getQueueUrl(
     queueName: String
-  ): Future[GetQueueUrlResult] =
-    getQueueUrl(new GetQueueUrlRequest(queueName))
+  ): Future[String] =
+    getQueueUrl(new GetQueueUrlRequest(queueName)).map(_.getQueueUrl)
 
   def listQueues(
     listQueuesRequest: ListQueuesRequest
@@ -105,8 +158,8 @@ trait AmazonSQSScalaClient {
 
   def listQueues(
     queueNamePrefix: String = null
-  ): Future[ListQueuesResult] =
-    listQueues(new ListQueuesRequest(queueNamePrefix))
+  ): Future[Seq[String]] =
+    listQueues(new ListQueuesRequest(queueNamePrefix)).map(_.getQueueUrls.asScala.toSeq)
 
   def receiveMessage(
     receiveMessageRequest: ReceiveMessageRequest
@@ -115,13 +168,28 @@ trait AmazonSQSScalaClient {
 
   def receiveMessage(
     queueUrl: String
-  ): Future[ReceiveMessageResult] =
-    receiveMessage(new ReceiveMessageRequest(queueUrl))
+  ): Future[Message] =
+    receiveMessage(new ReceiveMessageRequest(queueUrl)).map(_.getMessages.get(0))
+
+  def receiveMessage(
+    queueUrl:            String,
+    maxNumberOfMessages: Int
+  ): Future[Seq[Message]] =
+    receiveMessage(
+      new ReceiveMessageRequest(queueUrl)
+      .withMaxNumberOfMessages(maxNumberOfMessages)
+    ).map(_.getMessages.asScala.toSeq)
 
   def removePermission(
     removePermissionRequest: RemovePermissionRequest
   ): Future[Unit] =
     wrapVoidAsyncMethod(client.removePermissionAsync, removePermissionRequest)
+
+  def removePermission(
+    queueUrl: String,
+    label:    String
+  ): Future[Unit] =
+    removePermission(new RemovePermissionRequest(queueUrl, label))
 
   def sendMessage(
     sendMessageRequest: SendMessageRequest
@@ -157,6 +225,12 @@ trait AmazonSQSScalaClient {
   ): Future[Unit] =
     wrapVoidAsyncMethod(client.setQueueAttributesAsync, setQueueAttributesRequest)
 
+  def setQueueAttributes(
+    queueUrl:   String,
+    attributes: Map[String, String]
+  ): Future[Unit] =
+    setQueueAttributes(new SetQueueAttributesRequest(queueUrl, attributes.asJava))
+
   def shutdown(): Unit =
     client.shutdown()
 
@@ -164,8 +238,11 @@ trait AmazonSQSScalaClient {
 
 object AmazonSQSScalaClient {
 
-  private class AmazonSQSScalaClientImpl(override val client: AmazonSQSAsyncClient) extends AmazonSQSScalaClient
+  private class AmazonSQSScalaClientImpl(
+    override val client:  AmazonSQSAsyncClient,
+    override val execCtx: ExecutionContext
+  ) extends AmazonSQSScalaClient
 
-  def fromAsyncClient(client: AmazonSQSAsyncClient): AmazonSQSScalaClient =
-    new AmazonSQSScalaClientImpl(client)
+  def fromAsyncClient(client: AmazonSQSAsyncClient, execCtx: ExecutionContext): AmazonSQSScalaClient =
+    new AmazonSQSScalaClientImpl(client, execCtx)
 }
