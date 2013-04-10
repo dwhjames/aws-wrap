@@ -196,6 +196,7 @@ object FutureTransfer {
             } catch {
               case (ex: InterruptedException) =>
             }
+          case _ =>
         }
       }
     })
