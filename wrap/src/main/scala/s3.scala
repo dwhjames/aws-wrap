@@ -19,7 +19,7 @@ trait AmazonS3ScalaClient {
   val client: AmazonS3AsyncClient
 
   @inline
-  private def wrapMethod[Request <: AmazonWebServiceRequest, Result](
+  private def wrapMethod[Request, Result](
     f:       Request => Result,
     request: Request
   ): Future[Result] = {
@@ -35,95 +35,169 @@ trait AmazonS3ScalaClient {
     p.future
   }
 
-  def copyObject(copyObjectRequest: CopyObjectRequest): Future[CopyObjectResult] =
+  def copyObject(
+    copyObjectRequest: CopyObjectRequest
+  ): Future[CopyObjectResult] =
     wrapMethod(client.copyObject, copyObjectRequest)
 
-  def copyObject(sourceBucketName: String, sourceKey: String, destinationBucketName: String, destinationKey: String): Future[CopyObjectResult] =
+  def copyObject(
+    sourceBucketName:      String,
+    sourceKey:             String,
+    destinationBucketName: String,
+    destinationKey:        String
+  ): Future[CopyObjectResult] =
     copyObject(new CopyObjectRequest(sourceBucketName, sourceKey, destinationBucketName, destinationKey))
 
-  def createBucket(createBucketRequest: CreateBucketRequest): Future[Bucket] =
+  def createBucket(
+    createBucketRequest: CreateBucketRequest
+  ): Future[Bucket] =
     wrapMethod[CreateBucketRequest, Bucket](client.createBucket, createBucketRequest)
 
-  def createBucket(bucketName: String): Future[Bucket] =
+  def createBucket(
+    bucketName: String
+  ): Future[Bucket] =
     createBucket(new CreateBucketRequest(bucketName))
 
-  def createBucket(bucketName: String, region: Region): Future[Bucket] =
+  def createBucket(
+    bucketName: String,
+    region:     Region
+  ): Future[Bucket] =
     createBucket(new CreateBucketRequest(bucketName, region))
 
-  def createBucket(bucketName: String, region: String): Future[Bucket] =
+  def createBucket(
+    bucketName: String,
+    region:     String
+  ): Future[Bucket] =
     createBucket(new CreateBucketRequest(bucketName, region))
 
-  def deleteBucket(deleteBucketRequest: DeleteBucketRequest): Future[Unit] =
+  def deleteBucket(
+    deleteBucketRequest: DeleteBucketRequest
+  ): Future[Unit] =
     wrapMethod[DeleteBucketRequest, Unit](client.deleteBucket, deleteBucketRequest)
 
-  def deleteBucket(bucketName: String): Future[Unit] =
+  def deleteBucket(
+    bucketName: String
+  ): Future[Unit] =
     deleteBucket(new DeleteBucketRequest(bucketName))
 
-  def deleteObject(deleteObjectRequest: DeleteObjectRequest): Future[Unit] =
+  def deleteObject(
+    deleteObjectRequest: DeleteObjectRequest
+  ): Future[Unit] =
     wrapMethod(client.deleteObject, deleteObjectRequest)
 
-  def deleteObject(bucketName: String, key: String): Future[Unit] =
+  def deleteObject(
+    bucketName: String,
+    key:        String
+  ): Future[Unit] =
     deleteObject(new DeleteObjectRequest(bucketName, key))
 
-  def deleteObjects(deleteObjectsRequest: DeleteObjectsRequest): Future[DeleteObjectsResult] =
-    wrapMethod(client.deleteObjects, deleteObjectsRequest)
+  def deleteObjects(
+    deleteObjectsRequest: DeleteObjectsRequest
+  ): Future[Seq[DeleteObjectsResult.DeletedObject]] =
+    wrapMethod((req: DeleteObjectsRequest) => client.deleteObjects(req).getDeletedObjects.asScala.toSeq, deleteObjectsRequest)
 
-  def deleteVersion(deleteVersionRequest: DeleteVersionRequest): Future[Unit] =
+  def deleteVersion(
+    deleteVersionRequest: DeleteVersionRequest
+  ): Future[Unit] =
     wrapMethod(client.deleteVersion, deleteVersionRequest)
 
-  def deleteVersion(bucketName: String, key: String, versionId: String): Future[Unit] =
+  def deleteVersion(
+    bucketName: String,
+    key:        String,
+    versionId:  String
+  ): Future[Unit] =
     deleteVersion(new DeleteVersionRequest(bucketName, key, versionId))
 
-  def doesBucketExist(bucketName: String): Future[Boolean] = {
-    val p = Promise[Boolean]
-    client.executorService.execute(new Runnable {
-      override def run() =
-        p complete {
-          Try {
-            client.doesBucketExist(bucketName)
-          }
-        }
-    })
-    p.future
-  }
+  def doesBucketExist(
+    bucketName: String
+  ): Future[Boolean] =
+    wrapMethod(client.doesBucketExist, bucketName)
 
-  def getBucketLocation(getBucketLocationRequest: GetBucketLocationRequest): Future[String] =
+  def getBucketLocation(
+    getBucketLocationRequest: GetBucketLocationRequest
+  ): Future[String] =
     wrapMethod[GetBucketLocationRequest, String](client.getBucketLocation, getBucketLocationRequest)
 
-  def getBucketLocation(bucketName: String): Future[String] =
+  def getBucketLocation(
+    bucketName: String
+  ): Future[String] =
     getBucketLocation(new GetBucketLocationRequest(bucketName))
 
-  def getObjectMetadata(getObjectMetadataRequest: GetObjectMetadataRequest): Future[ObjectMetadata] =
+  def getObjectMetadata(
+    getObjectMetadataRequest: GetObjectMetadataRequest
+  ): Future[ObjectMetadata] =
     wrapMethod(client.getObjectMetadata, getObjectMetadataRequest)
 
-  def getObjectMetadata(bucketName: String, key: String): Future[ObjectMetadata] =
+  def getObjectMetadata(
+    bucketName: String,
+    key:        String
+  ): Future[ObjectMetadata] =
     getObjectMetadata(new GetObjectMetadataRequest(bucketName, key))
 
-  def listBuckets(listBucketsRequest: ListBucketsRequest): Future[Seq[Bucket]] =
+  def listBuckets(
+    listBucketsRequest: ListBucketsRequest
+  ): Future[Seq[Bucket]] =
     wrapMethod((req: ListBucketsRequest) => client.listBuckets(req).asScala.toSeq, listBucketsRequest)
 
   def listBuckets(): Future[Seq[Bucket]] =
     listBuckets(new ListBucketsRequest())
 
-  def listObjects(listObjectsRequest: ListObjectsRequest): Future[ObjectListing] =
+  def listObjects(
+    listObjectsRequest: ListObjectsRequest
+  ): Future[ObjectListing] =
     wrapMethod[ListObjectsRequest, ObjectListing](client.listObjects, listObjectsRequest)
 
-  def listObjects(bucketName: String): Future[ObjectListing] =
+  def listObjects(
+    bucketName: String
+  ): Future[ObjectListing] =
     listObjects(
       new ListObjectsRequest()
       .withBucketName(bucketName)
     )
 
-  def listObjects(bucketName: String, prefix: String): Future[ObjectListing] =
+  def listObjects(
+    bucketName: String,
+    prefix:     String
+  ): Future[ObjectListing] =
     listObjects(
       new ListObjectsRequest()
       .withBucketName(bucketName)
       .withPrefix(prefix)
     )
 
-  def listVersions(listVersionsRequest: ListVersionsRequest): Future[VersionListing] =
+  def listVersions(
+    listVersionsRequest: ListVersionsRequest
+  ): Future[VersionListing] =
       wrapMethod(client.listVersions, listVersionsRequest)
 
+  def listVersions(
+    bucketName: String,
+    prefix:     String
+  ): Future[VersionListing] =
+    listVersions(
+      new ListVersionsRequest()
+      .withBucketName(bucketName)
+      .withPrefix(prefix)
+    )
+
+  def listVersions(
+    bucketName:      String,
+    prefix:          String,
+    keyMarker:       String,
+    versionIdMarker: String,
+    delimiter:       String,
+    maxKeys:         Int
+  ): Future[VersionListing] =
+    listVersions(new ListVersionsRequest(bucketName, prefix, keyMarker, versionIdMarker, delimiter, maxKeys))
+
+}
+
+object AmazonS3ScalaClient {
+
+  private class AmazonS3ScalaClientImpl(override val client: AmazonS3AsyncClient) extends AmazonS3ScalaClient
+
+  def fromAsyncClient(client: AmazonS3AsyncClient): AmazonS3ScalaClient =
+    new AmazonS3ScalaClientImpl(client)
 }
 
 class AmazonS3AsyncClient(
