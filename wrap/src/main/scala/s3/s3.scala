@@ -1,5 +1,6 @@
 
 package aws.wrap
+package s3
 
 import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future, Promise}

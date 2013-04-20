@@ -1,6 +1,8 @@
 
 package aws.wrap
 
+import simpledb.AmazonSimpleDBScalaClient
+
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._

@@ -1,5 +1,6 @@
 
 package aws.wrap
+package dynamodb
 
 import scala.concurrent.{Future, ExecutionContext}
 import scala.collection.JavaConverters._
