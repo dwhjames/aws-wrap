@@ -70,7 +70,7 @@ object ApplicationBuild extends Build {
 
     lazy val wrap = Project("wrap", file("wrap"), settings = commonSettings ++ Seq(
         libraryDependencies ++= Seq(
-            "com.amazonaws" % "aws-java-sdk" % "1.4.1"
+            "com.amazonaws" % "aws-java-sdk" % "1.4.2"
         )
     ))
 
