@@ -10,49 +10,35 @@ import java.util.{Map => JMap}
 
 import com.amazonaws.services.dynamodbv2.model._
 
-trait DynamoDBObject[T] {
+trait DynamoDBSerializer[T] {
+  def tableName: String
+  def hashAttributeName: String
+  def rangeAttributeName: Option[String] = None
 
-  val companion: DynamoDBObjectCompanion[T]
-
-  def toAttributeMap: Map[String, AttributeValue]
-
-  def primaryKey: Map[String, AttributeValue] = {
-    val attributes = toAttributeMap
-    if (companion.rangeAttributeName.isEmpty)
-      Map(
-        companion.hashAttributeName -> attributes(companion.hashAttributeName)
-      )
+  def fromAttributeMap(item: mutable.Map[String, AttributeValue]): T
+  def toAttributeMap(obj: T): Map[String, AttributeValue]
+  def primaryKeyOf(obj: T): Map[String, AttributeValue] = {
+    val attributes = toAttributeMap(obj)
+    if (rangeAttributeName.isEmpty)
+      Map(hashAttributeName -> attributes(hashAttributeName))
     else
       Map(
-        companion.hashAttributeName      -> attributes(companion.hashAttributeName),
-        companion.rangeAttributeName.get -> attributes(companion.rangeAttributeName.get)
+        hashAttributeName      -> attributes(hashAttributeName),
+        rangeAttributeName.get -> attributes(rangeAttributeName.get)
       )
   }
 
-}
-
-trait DynamoDBObjectCompanion[T] {
-
-  val tableName: String
-
-  val hashAttributeName: String
-
-  val rangeAttributeName: Option[String] = None
-
-  def fromAttributeMap(item: mutable.Map[String, AttributeValue]): T
-
   def makeKey(hashKey: Any): Map[String, AttributeValue] =
     Map(hashAttributeName -> any2AttributeValue(hashKey))
-
   def makeKey(hashKey: Any, rangeKey: Any): Map[String, AttributeValue] =
     Map(
       hashAttributeName -> any2AttributeValue(hashKey),
       (rangeAttributeName getOrElse {
-        throw new UnsupportedOperationException(s"DynamoDBObjectCompanion.makeKey: table $tableName does not have a range key")
+         throw new UnsupportedOperationException(s"DynamoDBObjectCompanion.makeKey: table $tableName does not have a range key")
        } ) -> any2AttributeValue(rangeKey)
     )
-  
 }
+
 
 trait AmazonDynamoDBScalaMapper {
 
@@ -60,88 +46,81 @@ trait AmazonDynamoDBScalaMapper {
 
   protected implicit val execCtx: ExecutionContext
 
-  def delete[T](
-    companion: DynamoDBObjectCompanion[T],
-    hashKey:   Any
-  ): Future[T] =
+  def deleteByKey[T](hashKey: Any)(implicit serializer: DynamoDBSerializer[T]): Future[T] =
     client.deleteItem(
       new DeleteItemRequest()
-      .withTableName(companion.tableName)
-      .withKey(companion.makeKey(hashKey).asJava)
+      .withTableName(serializer.tableName)
+      .withKey(serializer.makeKey(hashKey).asJava)
       .withReturnValues(ReturnValue.ALL_OLD)
     ) map { result =>
-      companion.fromAttributeMap(result.getAttributes.asScala)
+      serializer.fromAttributeMap(result.getAttributes.asScala)
     }
 
-  def delete[T](
-    companion: DynamoDBObjectCompanion[T],
+  def deleteByKey[T](
     hashKey:   Any,
     rangeKey:  Any
-  ): Future[T] =
+  )(implicit serializer: DynamoDBSerializer[T]): Future[T] =
     client.deleteItem(
       new DeleteItemRequest()
-      .withTableName(companion.tableName)
-      .withKey(companion.makeKey(hashKey, rangeKey).asJava)
+      .withTableName(serializer.tableName)
+      .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
       .withReturnValues(ReturnValue.ALL_OLD)
     ) map { result =>
-      companion.fromAttributeMap(result.getAttributes.asScala)
+      serializer.fromAttributeMap(result.getAttributes.asScala)
     }
 
   def delete[T](
-    obj: DynamoDBObject[T]
-  ): Future[Unit] =
+    obj: T
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
     client.deleteItem(
-      tableName = obj.companion.tableName,
-      key       = obj.primaryKey
+      tableName = serializer.tableName,
+      key       = serializer.primaryKeyOf(obj)
     ) map { _ => () }
 
   def dump[T](
-    obj: DynamoDBObject[T]
-  ): Future[Unit] =
+    obj: T
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
     client.putItem(
-      tableName = obj.companion.tableName,
-      item      = obj.toAttributeMap
+      tableName = serializer.tableName,
+      item      = serializer.toAttributeMap(obj)
     ) map { _ => () }
 
-  def load[T](
-    companion: DynamoDBObjectCompanion[T],
+  def loadByKey[T](
     hashKey:   Any
-  ): Future[T] =
+  )(implicit serializer: DynamoDBSerializer[T]): Future[T] =
     client.getItem(
-      tableName = companion.tableName,
-      key       = companion.makeKey(hashKey)
+      tableName = serializer.tableName,
+      key       = serializer.makeKey(hashKey)
     ) map { result =>
-      companion.fromAttributeMap(result.getItem.asScala)
+      serializer.fromAttributeMap(result.getItem.asScala)
     }
 
-  def load[T](
-    companion: DynamoDBObjectCompanion[T],
+  def loadByKey[T](
     hashKey:   Any,
     rangeKey:  Any
-  ): Future[T] =
+  )(implicit serializer: DynamoDBSerializer[T]): Future[T] =
     client.getItem(
-      tableName = companion.tableName,
-      key       = companion.makeKey(hashKey, rangeKey)
+      tableName = serializer.tableName,
+      key       = serializer.makeKey(hashKey, rangeKey)
     ) map { result =>
-      companion.fromAttributeMap(result.getItem.asScala)
+      serializer.fromAttributeMap(result.getItem.asScala)
     }
 
   def scan[T](
-    companion:  DynamoDBObjectCompanion[T],
     scanFilter: Map[String, Condition] = Map.empty
-  ): Future[Seq[T]] = {
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
     val jScanFilter = scanFilter.asJava
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] =
       client.scan(
         new ScanRequest()
-        .withTableName(companion.tableName)
+        .withTableName(serializer.tableName)
         .withScanFilter(jScanFilter)
         .withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
         builder ++= result.getItems.asScala.view map { item =>
-          companion.fromAttributeMap(item.asScala)
+          serializer.fromAttributeMap(item.asScala)
         }
         Option { result.getLastEvaluatedKey } match {
           case None   => Future.successful(())
@@ -153,21 +132,20 @@ trait AmazonDynamoDBScalaMapper {
   }
 
   def query[T](
-    companion: DynamoDBObjectCompanion[T],
     keyConditions: Map[String, Condition]
-  ): Future[Seq[T]] = {
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
     val jKeyConditions = keyConditions.asJava
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] =
       client.query(
         new QueryRequest()
-        .withTableName(companion.tableName)
+        .withTableName(serializer.tableName)
         .withKeyConditions(jKeyConditions)
         .withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
         builder ++= result.getItems.asScala.view map { item =>
-          companion.fromAttributeMap(item.asScala)
+          serializer.fromAttributeMap(item.asScala)
         }
         Option { result.getLastEvaluatedKey } match {
           case None   => Future.successful(())
@@ -179,11 +157,10 @@ trait AmazonDynamoDBScalaMapper {
   }
 
 
-  def batchLoad[T](
-    companion: DynamoDBObjectCompanion[T],
+  def batchLoadByKeys[T](
     hashKeys:  Seq[Any],
     rangeKeys: Seq[Any] = Seq.empty
-  ): Future[Seq[T]] =
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] =
     if (hashKeys.isEmpty) {
       throw new IllegalArgumentException("AmazonDynamoDBScalaMapper.batchLoad: no hash keys given")
     } else if (!rangeKeys.isEmpty && (hashKeys.length != rangeKeys.length)) {
@@ -191,11 +168,11 @@ trait AmazonDynamoDBScalaMapper {
     } else {
       val keys: Seq[JMap[String, AttributeValue]] = if (rangeKeys.isEmpty) {
         hashKeys.map { hashKey =>
-          companion.makeKey(hashKey).asJava
+          serializer.makeKey(hashKey).asJava
         }
       } else {
         (hashKeys, rangeKeys).zipped.map { case (hashKey, rangeKey) =>
-          companion.makeKey(hashKey, rangeKey).asJava
+          serializer.makeKey(hashKey, rangeKey).asJava
         }
       }
       val builder = Seq.newBuilder[T]
@@ -203,15 +180,15 @@ trait AmazonDynamoDBScalaMapper {
       def local(keys: (Seq[JMap[String, AttributeValue]], Seq[JMap[String, AttributeValue]])): Future[Unit] =
         client.batchGetItem(
           Map(
-            companion.tableName ->
+            serializer.tableName ->
               new KeysAndAttributes()
               .withKeys(
                 keys._1.asJavaCollection
               )
           )
         ) flatMap { result =>
-          builder ++= result.getResponses.get(companion.tableName).asScala.view map { item =>
-            companion.fromAttributeMap(item.asScala)
+          builder ++= result.getResponses.get(serializer.tableName).asScala.view map { item =>
+            serializer.fromAttributeMap(item.asScala)
           }
           if (keys._2.isEmpty)
             Future.successful(())
@@ -236,12 +213,10 @@ trait AmazonDynamoDBScalaMapper {
       }
   }
 
-  def batchDump[T](
-    objs: Seq[DynamoDBObject[T]]
-  ): Future[Unit] = {
-    val tableName = objs.head.companion.tableName
+  def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
+    val tableName = serializer.tableName
 
-    def local(objsP: (Seq[DynamoDBObject[T]], Seq[DynamoDBObject[T]])): Future[Unit] =
+    def local(objsP: (Seq[T], Seq[T])): Future[Unit] =
       client.batchWriteItem(
         new BatchWriteItemRequest()
         .withRequestItems(
@@ -250,7 +225,7 @@ trait AmazonDynamoDBScalaMapper {
               new WriteRequest()
               .withPutRequest(
                 new PutRequest()
-                .withItem(obj.toAttributeMap.asJava)
+                .withItem(serializer.toAttributeMap(obj).asJava)
               )
             } .asJava
           ).asJava
@@ -267,6 +242,7 @@ trait AmazonDynamoDBScalaMapper {
     local(objs.splitAt(25))
   }
 
+  /* Deprecated for now due to implicit rewrite.
   def batchDumpAny(
     objs: Seq[DynamoDBObject[_]]
   ): Future[Unit] = {
@@ -297,6 +273,5 @@ trait AmazonDynamoDBScalaMapper {
       }
 
     local(objs.splitAt(25))
-  }
-
+  } */
 }
