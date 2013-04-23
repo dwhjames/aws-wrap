@@ -179,7 +179,7 @@ trait AmazonDynamoDBScalaMapper {
       .withScanFilter(scanFilter.asJava)
     val builder = Seq.newBuilder[T]
 
-    def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] =
+    def local(lastKey: Option[JMap[String, AttributeValue]] = None): Future[Unit] =
       client.scan(
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
@@ -192,7 +192,39 @@ trait AmazonDynamoDBScalaMapper {
         }
       }
 
-    local(None) map { _ => builder.result }
+    local() map { _ => builder.result }
+  }
+
+  /**
+    * Scan a table and return a count.
+    *
+    * This method will internally make repeated scan calls
+    * until the full result of the scan has been retrieved.
+    *
+    * @param scanFilter
+    *     the optional filter conditions for the scan
+    * @return the total number of scanned items in a future
+    */
+  def countScan[T](
+    scanFilter: Map[String, Condition] = Map.empty
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Long] = {
+    val scanRequest =
+      new ScanRequest()
+      .withTableName(serializer.tableName)
+      .withScanFilter(scanFilter.asJava)
+      .withSelect(Select.COUNT)
+
+    def local(count: Long = 0L, lastKey: Option[JMap[String, AttributeValue]] = None): Future[Long] =
+      client.scan(
+        scanRequest.withExclusiveStartKey(lastKey.orNull)
+      ) flatMap { result =>
+        Option { result.getLastEvaluatedKey } match {
+          case None   => Future.successful(count)
+          case optKey => local(count + result.getCount, optKey)
+        }
+      }
+
+    local()
   }
 
   /**
@@ -214,7 +246,7 @@ trait AmazonDynamoDBScalaMapper {
       .withKeyConditions(keyConditions.asJava)
     val builder = Seq.newBuilder[T]
 
-    def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] =
+    def local(lastKey: Option[JMap[String, AttributeValue]] = None): Future[Unit] =
       client.query(
         queryRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
@@ -227,7 +259,39 @@ trait AmazonDynamoDBScalaMapper {
         }
       }
 
-    local(None) map { _ => builder.result }
+    local() map { _ => builder.result }
+  }
+
+  /**
+    * Query a table and return a count.
+    *
+    * This method will internally make repeated query calls
+    * until the full result of the query has been retrieved.
+    *
+    * @param keyConditions
+    *     the query conditions on the keys
+    * @return the total number of queried items in a future
+    */
+  def countQuery[T](
+    keyConditions: Map[String, Condition]
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Long] = {
+    val queryRequest =
+      new QueryRequest()
+      .withTableName(serializer.tableName)
+      .withKeyConditions(keyConditions.asJava)
+      .withSelect(Select.COUNT)
+
+    def local(count: Long = 0L, lastKey: Option[JMap[String, AttributeValue]] = None): Future[Long] =
+      client.query(
+        queryRequest.withExclusiveStartKey(lastKey.orNull)
+      ) flatMap { result =>
+        Option { result.getLastEvaluatedKey } match {
+          case None   => Future.successful(count)
+          case optKey => local(count + result.getCount, optKey)
+        }
+      }
+
+    local()
   }
 
   /**
