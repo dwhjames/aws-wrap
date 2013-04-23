@@ -1,6 +1,7 @@
-
 package aws.wrap
 package dynamodb
+
+import Model._
 
 import scala.concurrent.{Future, ExecutionContext}
 import scala.collection.JavaConverters._
@@ -10,13 +11,17 @@ import java.util.{Map => JMap}
 
 import com.amazonaws.services.dynamodbv2.model._
 
+// maybe just a method to define the hashing mechanism? ensure that it gets hashed???
+// make it easier to understand????
 trait DynamoDBSerializer[T] {
   def tableName: String
   def hashAttributeName: String
   def rangeAttributeName: Option[String] = None
 
   def fromAttributeMap(item: mutable.Map[String, AttributeValue]): T
-  def toAttributeMap(obj: T): Map[String, AttributeValue]
+  def toAnyMap(obj: T): Map[String, Any]
+
+  def toAttributeMap(obj: T): Map[String, AttributeValue] = anyMapToAttributeMap(toAnyMap(obj))
   def primaryKeyOf(obj: T): Map[String, AttributeValue] = {
     val attributes = toAttributeMap(obj)
     if (rangeAttributeName.isEmpty)
@@ -27,6 +32,9 @@ trait DynamoDBSerializer[T] {
         rangeAttributeName.get -> attributes(rangeAttributeName.get)
       )
   }
+
+  def anyMapToAttributeMap(anyMap: Map[String, Any]): Map[String, AttributeValue] =
+    anyMap.map { case (key, value) => (key, any2AttributeValue(value)) }
 
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
     Map(hashAttributeName -> conv(hashKey))
@@ -252,12 +260,22 @@ trait AmazonDynamoDBScalaMapper {
     * @return sequence of queries objects in a future
     */
   def query[T](
-    keyConditions: Map[String, Condition]
+    query: Query
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
     val queryRequest =
       new QueryRequest()
       .withTableName(tableName)
-      .withKeyConditions(keyConditions.asJava)
+      .withKeyConditions(
+        if (serializer.rangeAttributeName.isDefined)
+          Map(
+            serializer.hashAttributeName      -> EqualTo(query.hashKeyValue).toCondition,
+            serializer.rangeAttributeName.get -> query.rangeKeyCondition.get.toCondition
+          ).asJava
+        else
+          Map(
+            serializer.hashAttributeName -> EqualTo(query.hashKeyValue).toCondition
+          ).asJava
+      )
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[JMap[String, AttributeValue]] = None): Future[Unit] =
