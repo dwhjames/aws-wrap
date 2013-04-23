@@ -173,15 +173,15 @@ trait AmazonDynamoDBScalaMapper {
   def scan[T](
     scanFilter: Map[String, Condition] = Map.empty
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
-    val jScanFilter = scanFilter.asJava
+    val scanRequest =
+      new ScanRequest()
+      .withTableName(serializer.tableName)
+      .withScanFilter(scanFilter.asJava)
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] =
       client.scan(
-        new ScanRequest()
-        .withTableName(serializer.tableName)
-        .withScanFilter(jScanFilter)
-        .withExclusiveStartKey(lastKey.orNull)
+        scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
         builder ++= result.getItems.asScala.view map { item =>
           serializer.fromAttributeMap(item.asScala)
@@ -208,15 +208,15 @@ trait AmazonDynamoDBScalaMapper {
   def query[T](
     keyConditions: Map[String, Condition]
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
-    val jKeyConditions = keyConditions.asJava
+    val queryRequest =
+      new QueryRequest()
+      .withTableName(serializer.tableName)
+      .withKeyConditions(keyConditions.asJava)
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] =
       client.query(
-        new QueryRequest()
-        .withTableName(serializer.tableName)
-        .withKeyConditions(jKeyConditions)
-        .withExclusiveStartKey(lastKey.orNull)
+        queryRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
         builder ++= result.getItems.asScala.view map { item =>
           serializer.fromAttributeMap(item.asScala)
