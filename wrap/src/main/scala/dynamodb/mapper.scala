@@ -15,8 +15,13 @@ trait DynamoDBSerializer[T] {
   def hashAttributeName: String
   def rangeAttributeName: Option[String] = None
 
+  // maybe just a method to define the hashing mechanism? ensure that it gets hashed???
+  // make it easier to understand????
+
   def fromAttributeMap(item: mutable.Map[String, AttributeValue]): T
-  def toAttributeMap(obj: T): Map[String, AttributeValue]
+  def toAnyMap(obj: T): Map[String, AttributeValue]
+
+  def toAttributeMap(obj: T): Map[String, AttributeValue] = anyMapToAttributeMap(toAnyMap(obj))
   def primaryKeyOf(obj: T): Map[String, AttributeValue] = {
     val attributes = toAttributeMap(obj)
     if (rangeAttributeName.isEmpty)
@@ -27,6 +32,11 @@ trait DynamoDBSerializer[T] {
         rangeAttributeName.get -> attributes(rangeAttributeName.get)
       )
   }
+
+
+  def anyMapToAttributeMap(anyMap: Map[String, Any]): Map[String, AttributeValue] =
+    anyMap.map { case (key, value) => (key, any2AttributeValue(value)) }
+
 
   def makeKey(hashKey: Any): Map[String, AttributeValue] =
     Map(hashAttributeName -> any2AttributeValue(hashKey))
