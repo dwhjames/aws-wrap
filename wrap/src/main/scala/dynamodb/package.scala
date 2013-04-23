@@ -35,6 +35,21 @@ package object dynamodb {
     .withAttributeName(attributeName)
     .withKeyType(KeyType.RANGE)
 
+  // string attribute value
+  implicit val stringKeyValue = (x: String) => new AttributeValue().withS(x)
+
+  // numeric attribute value
+  implicit val doubleKeyValue = (x: Double) => new AttributeValue().withN(x.toString)
+  implicit val floatKeyValue  = (x: Float)  => new AttributeValue().withN(x.toString)
+  implicit val longKeyValue   = (x: Long)   => new AttributeValue().withN(x.toString)
+  implicit val intKeyValue    = (x: Int)    => new AttributeValue().withN(x.toString)
+  implicit val charKeyValue   = (x: Char)   => new AttributeValue().withN(x.toString)
+  implicit val shortKeyValue  = (x: Short)  => new AttributeValue().withN(x.toString)
+  implicit val byteKeyValue   = (x: Byte)   => new AttributeValue().withN(x.toString)
+
+  // binary attribute value
+  implicit val byteArrayKeyValue = (x: Array[Byte]) => new AttributeValue().withB(java.nio.ByteBuffer.wrap(x))
+
   private[dynamodb] def any2AttributeValue(x: Any): AttributeValue =
     x match {
       case x: String =>

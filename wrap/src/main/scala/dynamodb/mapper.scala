@@ -28,16 +28,25 @@ trait DynamoDBSerializer[T] {
       )
   }
 
-  def makeKey(hashKey: Any): Map[String, AttributeValue] =
-    Map(hashAttributeName -> any2AttributeValue(hashKey))
-  def makeKey(hashKey: Any, rangeKey: Any): Map[String, AttributeValue] =
+  def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
+    Map(hashAttributeName -> conv(hashKey))
+
+  def makeKey[K1, K2](
+    hashKey: K1,
+    rangeKey: K2
+  )(implicit
+    conv1: K1 => AttributeValue,
+    conv2: K2 => AttributeValue
+  ): Map[String, AttributeValue] =
     Map(
-      hashAttributeName -> any2AttributeValue(hashKey),
+      hashAttributeName -> conv1(hashKey),
       (rangeAttributeName getOrElse {
          throw new UnsupportedOperationException(s"DynamoDBObjectCompanion.makeKey: table $tableName does not have a range key")
-       } ) -> any2AttributeValue(rangeKey)
+       } ) -> conv2(rangeKey)
     )
 }
+
+
 
 
 trait AmazonDynamoDBScalaMapper {
@@ -45,26 +54,6 @@ trait AmazonDynamoDBScalaMapper {
   val client: AmazonDynamoDBScalaClient
 
   protected implicit val execCtx: ExecutionContext
-
-  /**
-    * Delete a DynamoDB item by a hash key.
-    *
-    * The object that was deleted is returned.
-    *
-    * @param hashKey
-    *     A string, number, or byte array that is the hash value of the
-    *     item to be deleted
-    * @return the object that was deleted in a future
-    */
-  def deleteByKey[T](hashKey: Any)(implicit serializer: DynamoDBSerializer[T]): Future[T] =
-    client.deleteItem(
-      new DeleteItemRequest()
-      .withTableName(serializer.tableName)
-      .withKey(serializer.makeKey(hashKey).asJava)
-      .withReturnValues(ReturnValue.ALL_OLD)
-    ) map { result =>
-      serializer.fromAttributeMap(result.getAttributes.asScala)
-    }
 
   /**
     * Delete a DynamoDB item by a hash key and range key.
@@ -79,18 +68,33 @@ trait AmazonDynamoDBScalaMapper {
     *     item to be deleted
     * @return object that was deleted in a future
     */
-  def deleteByKey[T](
-    hashKey:   Any,
-    rangeKey:  Any
-  )(implicit serializer: DynamoDBSerializer[T]): Future[T] =
-    client.deleteItem(
-      new DeleteItemRequest()
-      .withTableName(serializer.tableName)
-      .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
-      .withReturnValues(ReturnValue.ALL_OLD)
-    ) map { result =>
-      serializer.fromAttributeMap(result.getAttributes.asScala)
-    }
+  def deleteByKey[T] = new {
+    def apply[K <% AttributeValue]
+             (hashKey: K)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[T] =
+      client.deleteItem(
+        new DeleteItemRequest()
+        .withTableName(serializer.tableName)
+        .withKey(serializer.makeKey(hashKey).asJava)
+        .withReturnValues(ReturnValue.ALL_OLD)
+      ) map { result =>
+        serializer.fromAttributeMap(result.getAttributes.asScala)
+      }
+
+    def apply[K1 <% AttributeValue, K2 <% AttributeValue]
+             (hashKey: K1, rangeKey: K2)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[T] =
+      client.deleteItem(
+        new DeleteItemRequest()
+        .withTableName(serializer.tableName)
+        .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
+        .withReturnValues(ReturnValue.ALL_OLD)
+      ) map { result =>
+        serializer.fromAttributeMap(result.getAttributes.asScala)
+      }
+  }
 
   /**
     * Delete the DynamoDB item that corresponds to the given object
@@ -124,23 +128,6 @@ trait AmazonDynamoDBScalaMapper {
     ) map { _ => () }
 
   /**
-    * Load an object by its hash key
-    *
-    * @param hashKey
-    *     the hash key of the object to retrieve
-    * @return the retreived object in a future
-    */
-  def loadByKey[T](
-    hashKey:   Any
-  )(implicit serializer: DynamoDBSerializer[T]): Future[T] =
-    client.getItem(
-      tableName = serializer.tableName,
-      key       = serializer.makeKey(hashKey)
-    ) map { result =>
-      serializer.fromAttributeMap(result.getItem.asScala)
-    }
-
-  /**
     * Load an object by its hash key and range key
     *
     * @param hashKey
@@ -149,16 +136,29 @@ trait AmazonDynamoDBScalaMapper {
     *     the range key of the object to retrieve
     * @return the retreived object in a future
     */
-  def loadByKey[T](
-    hashKey:   Any,
-    rangeKey:  Any
-  )(implicit serializer: DynamoDBSerializer[T]): Future[T] =
-    client.getItem(
-      tableName = serializer.tableName,
-      key       = serializer.makeKey(hashKey, rangeKey)
-    ) map { result =>
-      serializer.fromAttributeMap(result.getItem.asScala)
-    }
+  def loadByKey[T] = new {
+    def apply[K <% AttributeValue]
+             (hashKey: K)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[T] =
+      client.getItem(
+        tableName = serializer.tableName,
+        key       = serializer.makeKey(hashKey)
+      ) map { result =>
+        serializer.fromAttributeMap(result.getItem.asScala)
+      }
+
+    def apply[K1 <% AttributeValue, K2 <% AttributeValue]
+             (hashKey: K1, rangeKey: K2)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[T] =
+      client.getItem(
+        tableName = serializer.tableName,
+        key       = serializer.makeKey(hashKey, rangeKey)
+      ) map { result =>
+        serializer.fromAttributeMap(result.getItem.asScala)
+      }
+  }
 
   /**
     * Scan a table.
@@ -243,47 +243,49 @@ trait AmazonDynamoDBScalaMapper {
     *     the range keys of the objects to retrieve
     * @return sequence of retrieved objects in a future
     */
-  def batchLoadByKeys[T](
-    hashKeys:  Seq[Any],
-    rangeKeys: Seq[Any] = Seq.empty
-  )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] =
-    if (hashKeys.isEmpty) {
-      throw new IllegalArgumentException("AmazonDynamoDBScalaMapper.batchLoad: no hash keys given")
-    } else if (!rangeKeys.isEmpty && (hashKeys.length != rangeKeys.length)) {
-      throw new IllegalArgumentException("AmazonDynamoDBScalaMapper.batchLoad: the number of hash and range keys don't match")
-    } else {
-      val keys: Seq[JMap[String, AttributeValue]] = if (rangeKeys.isEmpty) {
-        hashKeys.map { hashKey =>
-          serializer.makeKey(hashKey).asJava
-        }
+  def batchLoadByKeys[T] = new {
+    def apply[K1 <% AttributeValue, K2 <% AttributeValue]
+             (hashKeys:  Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      if (hashKeys.isEmpty) {
+        throw new IllegalArgumentException("AmazonDynamoDBScalaMapper.batchLoad: no hash keys given")
+      } else if (!rangeKeys.isEmpty && (hashKeys.length != rangeKeys.length)) {
+        throw new IllegalArgumentException("AmazonDynamoDBScalaMapper.batchLoad: the number of hash and range keys don't match")
       } else {
-        (hashKeys, rangeKeys).zipped.map { case (hashKey, rangeKey) =>
-          serializer.makeKey(hashKey, rangeKey).asJava
-        }
-      }
-      val builder = Seq.newBuilder[T]
-
-      def local(keys: (Seq[JMap[String, AttributeValue]], Seq[JMap[String, AttributeValue]])): Future[Unit] =
-        client.batchGetItem(
-          Map(
-            serializer.tableName ->
-              new KeysAndAttributes()
-              .withKeys(
-                keys._1.asJavaCollection
-              )
-          )
-        ) flatMap { result =>
-          builder ++= result.getResponses.get(serializer.tableName).asScala.view map { item =>
-            serializer.fromAttributeMap(item.asScala)
+        val keys: Seq[JMap[String, AttributeValue]] = if (rangeKeys.isEmpty) {
+          hashKeys.map { hashKey =>
+            serializer.makeKey(hashKey).asJava
           }
-          if (keys._2.isEmpty)
-            Future.successful(())
-          else
-            local(keys._2.splitAt(100))
+        } else {
+          (hashKeys, rangeKeys).zipped.map { case (hashKey, rangeKey) =>
+            serializer.makeKey(hashKey, rangeKey).asJava
+          }
         }
+        val builder = Seq.newBuilder[T]
 
-      local(keys.splitAt(100)) map { _ => builder.result }
-    }
+        def local(keys: (Seq[JMap[String, AttributeValue]], Seq[JMap[String, AttributeValue]])): Future[Unit] =
+          client.batchGetItem(
+            Map(
+              serializer.tableName ->
+                new KeysAndAttributes()
+                .withKeys(
+                  keys._1.asJavaCollection
+                )
+            )
+          ) flatMap { result =>
+            builder ++= result.getResponses.get(serializer.tableName).asScala.view map { item =>
+              serializer.fromAttributeMap(item.asScala)
+            }
+            if (keys._2.isEmpty)
+              Future.successful(())
+            else
+              local(keys._2.splitAt(100))
+          }
+
+        local(keys.splitAt(100)) map { _ => builder.result }
+      }
+  }
 
   private def checkRetryBatchWrite(lastResult: BatchWriteItemResult): Future[Unit] = {
     val retryItems = lastResult.getUnprocessedItems
