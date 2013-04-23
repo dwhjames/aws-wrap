@@ -42,12 +42,12 @@ object Model {
 
   case class Query(
     hashKeyValue: Any,
+    rangeKeyCondition: Option[(String, KeyCondition)] = None,
     tableName: String = "",
     attributesToGet: Option[Seq[String]] = None,
     limit: Option[Long] = None,
     consistentRead: Boolean = false,
     count: Boolean = false,
-    conditions: Option[Map[String, KeyCondition]] = None,
     scanIndexForward: Boolean = true,
     exclusiveStartKey: Option[PrimaryKey] = None)
 }
