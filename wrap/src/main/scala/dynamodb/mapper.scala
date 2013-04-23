@@ -1,6 +1,7 @@
-
 package aws.wrap
 package dynamodb
+
+import Model._
 
 import scala.concurrent.{Future, ExecutionContext}
 import scala.collection.JavaConverters._
@@ -10,13 +11,12 @@ import java.util.{Map => JMap}
 
 import com.amazonaws.services.dynamodbv2.model._
 
+// maybe just a method to define the hashing mechanism? ensure that it gets hashed???
+// make it easier to understand????
 trait DynamoDBSerializer[T] {
   def tableName: String
   def hashAttributeName: String
   def rangeAttributeName: Option[String] = None
-
-  // maybe just a method to define the hashing mechanism? ensure that it gets hashed???
-  // make it easier to understand????
 
   def fromAttributeMap(item: mutable.Map[String, AttributeValue]): T
   def toAnyMap(obj: T): Map[String, AttributeValue]
@@ -33,10 +33,8 @@ trait DynamoDBSerializer[T] {
       )
   }
 
-
   def anyMapToAttributeMap(anyMap: Map[String, Any]): Map[String, AttributeValue] =
     anyMap.map { case (key, value) => (key, any2AttributeValue(value)) }
-
 
   def makeKey(hashKey: Any): Map[String, AttributeValue] =
     Map(hashAttributeName -> any2AttributeValue(hashKey))
@@ -142,18 +140,23 @@ trait AmazonDynamoDBScalaMapper {
   }
 
   def query[T](
-    keyConditions: Map[String, Condition]
+    queryRequest: Query
+    //keyConditions: Map[String, Condition]
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
-    val jKeyConditions = keyConditions.asJava
+    val jKeyConditions =
+      queryRequest.conditions.map { case (field, condition) => (field, condition.toJava) }.asJava
     val builder = Seq.newBuilder[T]
 
-    def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] =
-      client.query(
-        new QueryRequest()
+    def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] = {
+      var javaQuery = new QueryRequest()
         .withTableName(serializer.tableName)
         .withKeyConditions(jKeyConditions)
         .withExclusiveStartKey(lastKey.orNull)
-      ) flatMap { result =>
+
+      if (queryRequest.attributesToGet.isDefined) query = query.withAttributesToGet(queryRequest.attributesToGet.get)
+
+      client.query(javaQuery) flatMap {
+        result =>
         builder ++= result.getItems.asScala.view map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
@@ -162,6 +165,7 @@ trait AmazonDynamoDBScalaMapper {
           case optKey => local(optKey)
         }
       }
+    }
 
     local(None) map { _ => builder.result }
   }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2012 Pellucid and Zenexity
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,12 +61,13 @@ case class Between(lowerBound: DDBAttribute, upperBound: DDBAttribute) extends K
  *                          from that point.
  *
  */
-case class Query(tableName: String,
-                 hashKeyValue: DDBAttribute,
-                 attributesToGet: Seq[String] = Nil,
-                 limit: Option[Long] = None,
-                 consistentRead: Boolean = false,
-                 count: Boolean = false,
-                 rangeKeyCondition: Option[KeyCondition] = None,
-                 scanIndexForward: Boolean = true,
-                 exclusiveStartKey: Option[PrimaryKey] = None)
+case class Query(
+  tableName: String,
+  hashKeyValue: DDBAttribute,
+  attributesToGet: Seq[String] = Nil,
+  limit: Option[Long] = None,
+  consistentRead: Boolean = false,
+  count: Boolean = false,
+  rangeKeyCondition: Option[KeyCondition] = None,
+  scanIndexForward: Boolean = true,
+  exclusiveStartKey: Option[PrimaryKey] = None)

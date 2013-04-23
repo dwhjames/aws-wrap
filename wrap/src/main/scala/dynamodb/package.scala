@@ -7,33 +7,33 @@ package object dynamodb {
 
   def defineDynamoDBProvisionedThroughput(readCapacityUnits: Long, writeCapacityUnits: Long) =
     new ProvisionedThroughput()
-    .withReadCapacityUnits(readCapacityUnits)
-    .withWriteCapacityUnits(writeCapacityUnits)
+      .withReadCapacityUnits(readCapacityUnits)
+      .withWriteCapacityUnits(writeCapacityUnits)
 
   def defineDynamoDBStringAttribute(attributeName: String): AttributeDefinition =
     new AttributeDefinition()
-    .withAttributeName(attributeName)
-    .withAttributeType(ScalarAttributeType.S)
+      .withAttributeName(attributeName)
+      .withAttributeType(ScalarAttributeType.S)
 
   def defineDynamoDBNumberAttribute(attributeName: String): AttributeDefinition =
     new AttributeDefinition()
-    .withAttributeName(attributeName)
-    .withAttributeType(ScalarAttributeType.N)
+      .withAttributeName(attributeName)
+      .withAttributeType(ScalarAttributeType.N)
 
   def defineDynamoDBBinaryAttribute(attributeName: String): AttributeDefinition =
     new AttributeDefinition()
-    .withAttributeName(attributeName)
-    .withAttributeType(ScalarAttributeType.B)
+      .withAttributeName(attributeName)
+      .withAttributeType(ScalarAttributeType.B)
 
   def defineDynamoDBHashKeySchemaElement(attributeName: String): KeySchemaElement =
     new KeySchemaElement()
-    .withAttributeName(attributeName)
-    .withKeyType(KeyType.HASH)
+      .withAttributeName(attributeName)
+      .withKeyType(KeyType.HASH)
 
   def defineDynamoDBRangeKeySchemaElement(attributeName: String): KeySchemaElement =
     new KeySchemaElement()
-    .withAttributeName(attributeName)
-    .withKeyType(KeyType.RANGE)
+      .withAttributeName(attributeName)
+      .withKeyType(KeyType.RANGE)
 
   private[dynamodb] def any2AttributeValue(x: Any): AttributeValue =
     x match {
