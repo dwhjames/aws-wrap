@@ -46,7 +46,15 @@ trait DynamoDBSerializer[T] {
     )
 }
 
+trait AmazonDynamoDBScalaMapperConfig {
+  def transformTableName(tableName: String): String
+}
 
+object AmazonDynamoDBScalaMapperConfig {
+  object Default extends AmazonDynamoDBScalaMapperConfig {
+    override def transformTableName(tableName: String) = tableName
+  }
+}
 
 
 trait AmazonDynamoDBScalaMapper {
@@ -54,6 +62,12 @@ trait AmazonDynamoDBScalaMapper {
   val client: AmazonDynamoDBScalaClient
 
   protected implicit val execCtx: ExecutionContext
+
+  protected val config: AmazonDynamoDBScalaMapperConfig =
+    AmazonDynamoDBScalaMapperConfig.Default
+
+  protected def tableName[T](implicit serializer: DynamoDBSerializer[T]): String =
+    config.transformTableName(serializer.tableName)
 
   /**
     * Delete a DynamoDB item by a hash key and range key.
@@ -75,7 +89,7 @@ trait AmazonDynamoDBScalaMapper {
              : Future[T] =
       client.deleteItem(
         new DeleteItemRequest()
-        .withTableName(serializer.tableName)
+        .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey).asJava)
         .withReturnValues(ReturnValue.ALL_OLD)
       ) map { result =>
@@ -88,7 +102,7 @@ trait AmazonDynamoDBScalaMapper {
              : Future[T] =
       client.deleteItem(
         new DeleteItemRequest()
-        .withTableName(serializer.tableName)
+        .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
         .withReturnValues(ReturnValue.ALL_OLD)
       ) map { result =>
@@ -106,7 +120,7 @@ trait AmazonDynamoDBScalaMapper {
     obj: T
   )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
     client.deleteItem(
-      tableName = serializer.tableName,
+      tableName = tableName,
       key       = serializer.primaryKeyOf(obj)
     ) map { _ => () }
 
@@ -123,7 +137,7 @@ trait AmazonDynamoDBScalaMapper {
     obj: T
   )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
     client.putItem(
-      tableName = serializer.tableName,
+      tableName = tableName,
       item      = serializer.toAttributeMap(obj)
     ) map { _ => () }
 
@@ -142,7 +156,7 @@ trait AmazonDynamoDBScalaMapper {
              (implicit serializer: DynamoDBSerializer[T])
              : Future[T] =
       client.getItem(
-        tableName = serializer.tableName,
+        tableName = tableName,
         key       = serializer.makeKey(hashKey)
       ) map { result =>
         serializer.fromAttributeMap(result.getItem.asScala)
@@ -153,7 +167,7 @@ trait AmazonDynamoDBScalaMapper {
              (implicit serializer: DynamoDBSerializer[T])
              : Future[T] =
       client.getItem(
-        tableName = serializer.tableName,
+        tableName = tableName,
         key       = serializer.makeKey(hashKey, rangeKey)
       ) map { result =>
         serializer.fromAttributeMap(result.getItem.asScala)
@@ -175,7 +189,7 @@ trait AmazonDynamoDBScalaMapper {
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
     val scanRequest =
       new ScanRequest()
-      .withTableName(serializer.tableName)
+      .withTableName(tableName)
       .withScanFilter(scanFilter.asJava)
     val builder = Seq.newBuilder[T]
 
@@ -210,7 +224,7 @@ trait AmazonDynamoDBScalaMapper {
   )(implicit serializer: DynamoDBSerializer[T]): Future[Long] = {
     val scanRequest =
       new ScanRequest()
-      .withTableName(serializer.tableName)
+      .withTableName(tableName)
       .withScanFilter(scanFilter.asJava)
       .withSelect(Select.COUNT)
 
@@ -242,7 +256,7 @@ trait AmazonDynamoDBScalaMapper {
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
     val queryRequest =
       new QueryRequest()
-      .withTableName(serializer.tableName)
+      .withTableName(tableName)
       .withKeyConditions(keyConditions.asJava)
     val builder = Seq.newBuilder[T]
 
@@ -277,7 +291,7 @@ trait AmazonDynamoDBScalaMapper {
   )(implicit serializer: DynamoDBSerializer[T]): Future[Long] = {
     val queryRequest =
       new QueryRequest()
-      .withTableName(serializer.tableName)
+      .withTableName(tableName)
       .withKeyConditions(keyConditions.asJava)
       .withSelect(Select.COUNT)
 
@@ -331,14 +345,14 @@ trait AmazonDynamoDBScalaMapper {
         def local(keys: (Seq[JMap[String, AttributeValue]], Seq[JMap[String, AttributeValue]])): Future[Unit] =
           client.batchGetItem(
             Map(
-              serializer.tableName ->
+              tableName ->
                 new KeysAndAttributes()
                 .withKeys(
                   keys._1.asJavaCollection
                 )
             )
           ) flatMap { result =>
-            builder ++= result.getResponses.get(serializer.tableName).asScala.view map { item =>
+            builder ++= result.getResponses.get(tableName).asScala.view map { item =>
               serializer.fromAttributeMap(item.asScala)
             }
             if (keys._2.isEmpty)
@@ -381,8 +395,6 @@ trait AmazonDynamoDBScalaMapper {
     *     the sequence of objects to write to DynamoDB
     */
   def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
-    val tableName = serializer.tableName
-
     def local(objsP: (Seq[T], Seq[T])): Future[Unit] =
       client.batchWriteItem(
         new BatchWriteItemRequest()
