@@ -1,10 +1,15 @@
 
 package aws.wrap
 
+import scala.collection.JavaConverters._
+
 import com.amazonaws.services.dynamodbv2.model._
 
 package object dynamodb {
 
+  /*
+   * Table definition helpers
+   */
   def defineDynamoDBProvisionedThroughput(readCapacityUnits: Long, writeCapacityUnits: Long) =
     new ProvisionedThroughput()
       .withReadCapacityUnits(readCapacityUnits)
@@ -35,6 +40,48 @@ package object dynamodb {
       .withAttributeName(attributeName)
       .withKeyType(KeyType.RANGE)
 
+  /*
+   * Query construction helpers
+   */
+  def mkHashKeyQuery[K <% AttributeValue](hashAttr: (String, K)): QueryRequest =
+    new QueryRequest()
+    .withKeyConditions(
+      Map(
+        hashAttr._1 -> QueryCondition.equals(hashAttr._2)
+      ).asJava
+    )
+
+  def mkHashKeyQuery[T, K <% AttributeValue]
+                    (hashValue: K)
+                    (implicit serializer: DynamoDBSerializer[T])
+                    : QueryRequest =
+    mkHashKeyQuery(serializer.hashAttributeName -> hashValue)
+
+  def mkHashAndRangeKeyQuery[K <% AttributeValue]
+                            (hashAttr: (String, K), rangeAttr: (String, Condition))
+                            : QueryRequest =
+    new QueryRequest()
+    .withKeyConditions(
+      Map(
+        hashAttr._1  -> QueryCondition.equals(hashAttr._2),
+        rangeAttr._1 -> rangeAttr._2
+      ).asJava
+    )
+
+  def mkHashAndRangeKeyQuery[T, K <% AttributeValue]
+                            (hashValue: K, rangeCondition: Condition)
+                            (implicit serializer: DynamoDBSerializer[T])
+                            : QueryRequest =
+    mkHashAndRangeKeyQuery(
+      serializer.hashAttributeName -> hashValue,
+      serializer.rangeAttributeName.getOrElse {
+        throw new UnsupportedOperationException(s"mkHashAndRangeKeyQuery: table ${serializer.tableName} does not have a range key")
+      } -> rangeCondition
+    )
+
+  /*
+   * Attribute value helpers
+   */
   // string attribute value
   implicit val stringKeyValue = (x: String) => new AttributeValue().withS(x)
 
@@ -50,6 +97,7 @@ package object dynamodb {
   // binary attribute value
   implicit val byteArrayKeyValue = (x: Array[Byte]) => new AttributeValue().withB(java.nio.ByteBuffer.wrap(x))
 
+/*
   private[dynamodb] def any2AttributeValue(x: Any): AttributeValue =
     x match {
       case x: String =>
@@ -73,4 +121,5 @@ package object dynamodb {
       case _ =>
         throw new IllegalArgumentException(s"The value $x is not a supported DynamoDB AttributeValue")
     }
+*/
 }

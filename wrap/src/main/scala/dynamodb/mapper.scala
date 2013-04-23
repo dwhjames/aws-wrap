@@ -1,8 +1,6 @@
 package aws.wrap
 package dynamodb
 
-import Model._
-
 import scala.concurrent.{Future, ExecutionContext}
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -19,9 +17,21 @@ trait DynamoDBSerializer[T] {
   def rangeAttributeName: Option[String] = None
 
   def fromAttributeMap(item: mutable.Map[String, AttributeValue]): T
-  def toAnyMap(obj: T): Map[String, Any]
 
-  def toAttributeMap(obj: T): Map[String, AttributeValue] = anyMapToAttributeMap(toAnyMap(obj))
+  def toAttributeMap(obj: T): Map[String, AttributeValue]
+
+  /*
+   * A helper for implementing toAttributeMap
+   *
+   * override def toAttributeMap(obj: Foo): Map[String, AttributeValue] =
+   *   Map(
+   *     mkAtrribute("company", obj.company),
+   *     ...
+   *   )
+   */
+  protected def mkAttribute[K](name: String, value: K)(implicit conv: K => AttributeValue): (String, AttributeValue) =
+    (name, conv(value))
+
   def primaryKeyOf(obj: T): Map[String, AttributeValue] = {
     val attributes = toAttributeMap(obj)
     if (rangeAttributeName.isEmpty)
@@ -32,9 +42,6 @@ trait DynamoDBSerializer[T] {
         rangeAttributeName.get -> attributes(rangeAttributeName.get)
       )
   }
-
-  def anyMapToAttributeMap(anyMap: Map[String, Any]): Map[String, AttributeValue] =
-    anyMap.map { case (key, value) => (key, any2AttributeValue(value)) }
 
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
     Map(hashAttributeName -> conv(hashKey))
@@ -49,7 +56,7 @@ trait DynamoDBSerializer[T] {
     Map(
       hashAttributeName -> conv1(hashKey),
       (rangeAttributeName getOrElse {
-         throw new UnsupportedOperationException(s"DynamoDBObjectCompanion.makeKey: table $tableName does not have a range key")
+         throw new UnsupportedOperationException(s"DynamoDBSerializer.makeKey: table $tableName does not have a range key")
        } ) -> conv2(rangeKey)
     )
 }
@@ -255,43 +262,46 @@ trait AmazonDynamoDBScalaMapper {
     * This method will internally make repeated query calls
     * until the full result of the query has been retrieved.
     *
-    * @param keyConditions
-    *     the query conditions on the keys
+    * @param queryRequest
+    *     the query parameters
     * @return sequence of queries objects in a future
     */
-  def query[T](
-    query: Query
-  )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
-    val queryRequest =
-      new QueryRequest()
-      .withTableName(tableName)
-      .withKeyConditions(
-        if (serializer.rangeAttributeName.isDefined)
-          Map(
-            serializer.hashAttributeName      -> EqualTo(query.hashKeyValue).toCondition,
-            serializer.rangeAttributeName.get -> query.rangeKeyCondition.get.toCondition
-          ).asJava
-        else
-          Map(
-            serializer.hashAttributeName -> EqualTo(query.hashKeyValue).toCondition
-          ).asJava
-      )
-    val builder = Seq.newBuilder[T]
+  def query[T] = new {
+    def apply(queryRequest: QueryRequest)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      val request =
+        queryRequest
+        .withTableName(tableName)
+      val builder = Seq.newBuilder[T]
 
-    def local(lastKey: Option[JMap[String, AttributeValue]] = None): Future[Unit] =
-      client.query(
-        queryRequest.withExclusiveStartKey(lastKey.orNull)
-      ) flatMap { result =>
-        builder ++= result.getItems.asScala.view map { item =>
-          serializer.fromAttributeMap(item.asScala)
+      def local(lastKey: Option[JMap[String, AttributeValue]] = None): Future[Unit] =
+        client.query(
+          queryRequest.withExclusiveStartKey(lastKey.orNull)
+        ) flatMap { result =>
+          builder ++= result.getItems.asScala.view map { item =>
+            serializer.fromAttributeMap(item.asScala)
+          }
+          Option { result.getLastEvaluatedKey } match {
+            case None   => Future.successful(())
+            case optKey => local(optKey)
+          }
         }
-        Option { result.getLastEvaluatedKey } match {
-          case None   => Future.successful(())
-          case optKey => local(optKey)
-        }
-      }
 
-    local() map { _ => builder.result }
+      local() map { _ => builder.result }
+    }
+
+    def apply[K <% AttributeValue]
+             (hashValue: K)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      apply(mkHashKeyQuery(hashValue))
+
+    def apply[K <% AttributeValue]
+             (hashValue: K, rangeCondition: Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition))
   }
 
   /**
