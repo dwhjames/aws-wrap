@@ -143,20 +143,25 @@ trait AmazonDynamoDBScalaMapper {
     queryRequest: Query
     //keyConditions: Map[String, Condition]
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
-    val jKeyConditions =
-      queryRequest.conditions.map { case (field, condition) => (field, condition.toJava) }.asJava
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[JMap[String, AttributeValue]]): Future[Unit] = {
-      var javaQuery = new QueryRequest()
+      client.query(
+        new QueryRequest()
         .withTableName(serializer.tableName)
-        .withKeyConditions(jKeyConditions)
+        .withKeyConditions(
+          if (serializer.rangeAttributeName.isDefined)
+            Map(
+              serializer.hashAttributeName      -> EqualTo(queryRequest.hashKeyValue).toCondition,
+              serializer.rangeAttributeName.get -> queryRequest.rangeKeyCondition.get.toCondition
+            ).asJava
+          else
+            Map(
+              serializer.hashAttributeName -> EqualTo(queryRequest.hashKeyValue).toCondition
+            ).asJava
+        )
         .withExclusiveStartKey(lastKey.orNull)
-
-      if (queryRequest.attributesToGet.isDefined) query = query.withAttributesToGet(queryRequest.attributesToGet.get)
-
-      client.query(javaQuery) flatMap {
-        result =>
+      ) flatMap { result =>
         builder ++= result.getItems.asScala.view map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
