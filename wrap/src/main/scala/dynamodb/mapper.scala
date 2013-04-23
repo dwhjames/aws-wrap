@@ -46,6 +46,16 @@ trait AmazonDynamoDBScalaMapper {
 
   protected implicit val execCtx: ExecutionContext
 
+  /**
+    * Delete a DynamoDB item by a hash key.
+    *
+    * The object that was deleted is returned.
+    *
+    * @param hashKey
+    *     A string, number, or byte array that is the hash value of the
+    *     item to be deleted
+    * @return the object that was deleted in a future
+    */
   def deleteByKey[T](hashKey: Any)(implicit serializer: DynamoDBSerializer[T]): Future[T] =
     client.deleteItem(
       new DeleteItemRequest()
@@ -56,6 +66,19 @@ trait AmazonDynamoDBScalaMapper {
       serializer.fromAttributeMap(result.getAttributes.asScala)
     }
 
+  /**
+    * Delete a DynamoDB item by a hash key and range key.
+    *
+    * The object that was deleted is returned.
+    *
+    * @param hashKey
+    *     A string, number, or byte array that is the hash key value of the
+    *     item to be deleted
+    * @param rangeKey
+    *     A string, number, or byte array that is the range key value of the
+    *     item to be deleted
+    * @return object that was deleted in a future
+    */
   def deleteByKey[T](
     hashKey:   Any,
     rangeKey:  Any
@@ -69,6 +92,12 @@ trait AmazonDynamoDBScalaMapper {
       serializer.fromAttributeMap(result.getAttributes.asScala)
     }
 
+  /**
+    * Delete the DynamoDB item that corresponds to the given object
+    *
+    * @param obj
+    *     The object to delete
+    */
   def delete[T](
     obj: T
   )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
@@ -77,6 +106,15 @@ trait AmazonDynamoDBScalaMapper {
       key       = serializer.primaryKeyOf(obj)
     ) map { _ => () }
 
+  /**
+    * Dumps an object into DynamoDB
+    *
+    * If the object is new, then this creates the item in DynamoDB,
+    * otherwise it overwrites the exisiting item.
+    *
+    * @param obj
+    *     the object to put
+    */
   def dump[T](
     obj: T
   )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
@@ -85,6 +123,13 @@ trait AmazonDynamoDBScalaMapper {
       item      = serializer.toAttributeMap(obj)
     ) map { _ => () }
 
+  /**
+    * Load an object by its hash key
+    *
+    * @param hashKey
+    *     the hash key of the object to retrieve
+    * @return the retreived object in a future
+    */
   def loadByKey[T](
     hashKey:   Any
   )(implicit serializer: DynamoDBSerializer[T]): Future[T] =
@@ -95,6 +140,15 @@ trait AmazonDynamoDBScalaMapper {
       serializer.fromAttributeMap(result.getItem.asScala)
     }
 
+  /**
+    * Load an object by its hash key and range key
+    *
+    * @param hashKey
+    *     the hash key of the object to retrieve
+    * @param rangeKey
+    *     the range key of the object to retrieve
+    * @return the retreived object in a future
+    */
   def loadByKey[T](
     hashKey:   Any,
     rangeKey:  Any
@@ -106,6 +160,16 @@ trait AmazonDynamoDBScalaMapper {
       serializer.fromAttributeMap(result.getItem.asScala)
     }
 
+  /**
+    * Scan a table.
+    *
+    * This method will internally make repeated scan calls
+    * until the full result of the scan has been retrieved.
+    *
+    * @param scanFilter
+    *     the optional filter conditions for the scan
+    * @return sequence of scanned objects in a future
+    */
   def scan[T](
     scanFilter: Map[String, Condition] = Map.empty
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
@@ -131,6 +195,16 @@ trait AmazonDynamoDBScalaMapper {
     local(None) map { _ => builder.result }
   }
 
+  /**
+    * Query a table
+    *
+    * This method will internally make repeated query calls
+    * until the full result of the query has been retrieved.
+    *
+    * @param keyConditions
+    *     the query conditions on the keys
+    * @return sequence of queries objects in a future
+    */
   def query[T](
     keyConditions: Map[String, Condition]
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
@@ -156,7 +230,19 @@ trait AmazonDynamoDBScalaMapper {
     local(None) map { _ => builder.result }
   }
 
-
+  /**
+    * Load a sequence of objects by a sequence of keys.
+    *
+    * This method will internally make repeated batchGetItem
+    * calls, with up to 25 keys at a time, until all of the
+    * given keys have been requested.
+    *
+    * @param hashKeys
+    *     the hash keys of the objects to retrieve
+    * @param rangeKeys
+    *     the range keys of the objects to retrieve
+    * @return sequence of retrieved objects in a future
+    */
   def batchLoadByKeys[T](
     hashKeys:  Seq[Any],
     rangeKeys: Seq[Any] = Seq.empty
@@ -213,6 +299,21 @@ trait AmazonDynamoDBScalaMapper {
       }
   }
 
+  /**
+    * Dump a sequence of objects into DynamoDB
+    *
+    * This method will internally make repeated batchWriteItem
+    * calls, with up to 25 objects at a time, until all the input
+    * objects have been written. If any objects fail to be written,
+    * they will be retried once, and an exception will be thrown
+    * on their second failure.
+    *
+    * Objects that are new will create new items in DynamoDB,
+    * otherwise they will overwrite exisiting items.
+    *
+    * @param objs
+    *     the sequence of objects to write to DynamoDB
+    */
   def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
     val tableName = serializer.tableName
 
