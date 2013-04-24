@@ -83,19 +83,36 @@ package object dynamodb {
    * Attribute value helpers
    */
   // string attribute value
-  implicit val stringKeyValue = (x: String) => new AttributeValue().withS(x)
+  implicit val stringToAttributeValue = (x: String) => new AttributeValue().withS(x)
 
   // numeric attribute value
-  implicit val doubleKeyValue = (x: Double) => new AttributeValue().withN(x.toString)
-  implicit val floatKeyValue  = (x: Float)  => new AttributeValue().withN(x.toString)
-  implicit val longKeyValue   = (x: Long)   => new AttributeValue().withN(x.toString)
-  implicit val intKeyValue    = (x: Int)    => new AttributeValue().withN(x.toString)
-  implicit val charKeyValue   = (x: Char)   => new AttributeValue().withN(x.toString)
-  implicit val shortKeyValue  = (x: Short)  => new AttributeValue().withN(x.toString)
-  implicit val byteKeyValue   = (x: Byte)   => new AttributeValue().withN(x.toString)
+  implicit val doubleToAttributeValue = (x: Double) => new AttributeValue().withN(x.toString)
+  implicit val floatToAttributeValue  = (x: Float)  => new AttributeValue().withN(x.toString)
+  implicit val longToAttributeValue   = (x: Long)   => new AttributeValue().withN(x.toString)
+  implicit val intToAttributeValue    = (x: Int)    => new AttributeValue().withN(x.toString)
+  implicit val shortToAttributeValue  = (x: Short)  => new AttributeValue().withN(x.toString)
+  implicit val byteToAttributeValue   = (x: Byte)   => new AttributeValue().withN(x.toString)
 
   // binary attribute value
-  implicit val byteArrayKeyValue = (x: Array[Byte]) => new AttributeValue().withB(java.nio.ByteBuffer.wrap(x))
+  implicit val byteArrayToAttributeValue = (x: Array[Byte]) => new AttributeValue().withB(java.nio.ByteBuffer.wrap(x))
+
+  /*
+   * Enrich AttributeValue
+   */
+  implicit class RichAttributeValue(attrVal: AttributeValue) {
+    def as[T](implicit conv: AttributeValue => T): T = conv(attrVal)
+  }
+
+  implicit val attributeValueToString = (x: AttributeValue) => x.getS
+
+  implicit val attributeValueToDouble = (x: AttributeValue) => x.getN.toDouble
+  implicit val attributeValueToFloat  = (x: AttributeValue) => x.getN.toFloat
+  implicit val attributeValueToLong   = (x: AttributeValue) => x.getN.toLong
+  implicit val attributeValueToInt    = (x: AttributeValue) => x.getN.toInt
+  implicit val attributeValueToShort  = (x: AttributeValue) => x.getN.toShort
+  implicit val attributeValueToByte   = (x: AttributeValue) => x.getN.toByte
+
+  implicit val attributeValueToByteArray = (x: AttributeValue) => x.getB.array
 
 /*
   private[dynamodb] def any2AttributeValue(x: Any): AttributeValue =
