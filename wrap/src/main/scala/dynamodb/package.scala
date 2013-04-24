@@ -14,7 +14,7 @@ package object dynamodb {
     new QueryRequest()
     .withKeyConditions(
       Map(
-        hashAttr._1 -> QueryCondition.equals(hashAttr._2)
+        hashAttr._1 -> QueryCondition.equalTo(hashAttr._2)
       ).asJava
     )
 
@@ -30,7 +30,7 @@ package object dynamodb {
     new QueryRequest()
     .withKeyConditions(
       Map(
-        hashAttr._1  -> QueryCondition.equals(hashAttr._2),
+        hashAttr._1  -> QueryCondition.equalTo(hashAttr._2),
         rangeAttr._1 -> rangeAttr._2
       ).asJava
     )
