@@ -8,39 +8,6 @@ import com.amazonaws.services.dynamodbv2.model._
 package object dynamodb {
 
   /*
-   * Table definition helpers
-   */
-  def defineDynamoDBProvisionedThroughput(readCapacityUnits: Long, writeCapacityUnits: Long) =
-    new ProvisionedThroughput()
-      .withReadCapacityUnits(readCapacityUnits)
-      .withWriteCapacityUnits(writeCapacityUnits)
-
-  def defineDynamoDBStringAttribute(attributeName: String): AttributeDefinition =
-    new AttributeDefinition()
-      .withAttributeName(attributeName)
-      .withAttributeType(ScalarAttributeType.S)
-
-  def defineDynamoDBNumberAttribute(attributeName: String): AttributeDefinition =
-    new AttributeDefinition()
-      .withAttributeName(attributeName)
-      .withAttributeType(ScalarAttributeType.N)
-
-  def defineDynamoDBBinaryAttribute(attributeName: String): AttributeDefinition =
-    new AttributeDefinition()
-      .withAttributeName(attributeName)
-      .withAttributeType(ScalarAttributeType.B)
-
-  def defineDynamoDBHashKeySchemaElement(attributeName: String): KeySchemaElement =
-    new KeySchemaElement()
-      .withAttributeName(attributeName)
-      .withKeyType(KeyType.HASH)
-
-  def defineDynamoDBRangeKeySchemaElement(attributeName: String): KeySchemaElement =
-    new KeySchemaElement()
-      .withAttributeName(attributeName)
-      .withKeyType(KeyType.RANGE)
-
-  /*
    * Query construction helpers
    */
   def mkHashKeyQuery[K <% AttributeValue](hashAttr: (String, K)): QueryRequest =

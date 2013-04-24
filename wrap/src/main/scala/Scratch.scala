@@ -48,22 +48,22 @@ object Scratch {
     Await.result(
       client.createTable(
         tableName = tableName,
-        provisionedThroughput = defineDynamoDBProvisionedThroughput(10L, 10L),
+        provisionedThroughput = Schema.provisionedThroughput(10L, 10L),
         attributeDefinitions = Seq(
-          defineDynamoDBStringAttribute("ForumName"),
-          defineDynamoDBStringAttribute("Subject"),
-          defineDynamoDBStringAttribute("LastPostDateTime")
+          Schema.stringAttribute("ForumName"),
+          Schema.stringAttribute("Subject"),
+          Schema.stringAttribute("LastPostDateTime")
         ),
         keySchema = Seq(
-          defineDynamoDBHashKeySchemaElement("ForumName"),
-          defineDynamoDBRangeKeySchemaElement("Subject")
+          Schema.hashKey("ForumName"),
+          Schema.rangeKey("Subject")
         ),
         localSecondaryIndexes = Seq(
           new LocalSecondaryIndex()
             .withIndexName("LastPostIndex")
             .withKeySchema(
-              defineDynamoDBHashKeySchemaElement("ForumName"),
-              defineDynamoDBRangeKeySchemaElement("LastPostDateTime")
+              Schema.hashKey("ForumName"),
+              Schema.rangeKey("LastPostDateTime")
             )
             .withProjection(
               new Projection()
