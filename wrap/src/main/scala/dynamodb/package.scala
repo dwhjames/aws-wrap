@@ -67,7 +67,15 @@ package object dynamodb {
    * Enrich AttributeValue
    */
   implicit class RichAttributeValue(attrVal: AttributeValue) {
-    def as[T](implicit conv: AttributeValue => T): T = conv(attrVal)
+    def as[T](implicit conv: AttributeValue => T): T =
+      try {
+        conv(attrVal)
+      } catch {
+        case ex: NullPointerException =>
+          throw new Exception("RichAttributeValue.as: AttributeValue was not of the expected sort.")
+        case ex: NumberFormatException =>
+          throw new Exception("RichAttributeValue.as: the numeric string can't be parsed as the expected numeric type.")
+      }
   }
 
   implicit val attributeValueToString = (x: AttributeValue) => x.getS
