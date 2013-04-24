@@ -7,8 +7,8 @@ import scala.collection.JavaConverters._
 
 import java.util.concurrent.ExecutorService
 
-import com.amazonaws.services.dynamodb._
-import com.amazonaws.services.dynamodb.model._
+import com.amazonaws.services.dynamodbv2._
+import com.amazonaws.services.dynamodbv2.model._
 
 trait AmazonDynamoDBScalaClient {
 
@@ -47,12 +47,18 @@ trait AmazonDynamoDBScalaClient {
 
   def createTable(
     tableName:             String,
-    keySchema:             KeySchema,
-    provisionedThroughput: ProvisionedThroughput
+    provisionedThroughput: ProvisionedThroughput,
+    attributeDefinitions:  Seq[AttributeDefinition],
+    keySchema:             Seq[KeySchemaElement],
+    localSecondaryIndexes: Seq[LocalSecondaryIndex] = Seq.empty
   ): Future[CreateTableResult] =
     createTable(
-      new CreateTableRequest(tableName, keySchema)
+      new CreateTableRequest()
+      .withTableName(tableName)
       .withProvisionedThroughput(provisionedThroughput)
+      .withAttributeDefinitions(attributeDefinitions.asJavaCollection)
+      .withKeySchema(keySchema.asJavaCollection)
+      .withLocalSecondaryIndexes(localSecondaryIndexes.asJavaCollection)
     )
 
   def deleteItem(
@@ -62,9 +68,9 @@ trait AmazonDynamoDBScalaClient {
 
   def deleteItem(
     tableName: String,
-    key:       Key
+    key:       Map[String, AttributeValue]
   ): Future[DeleteItemResult] =
-    deleteItem(new DeleteItemRequest(tableName, key))
+    deleteItem(new DeleteItemRequest(tableName, key.asJava))
 
   def deleteTable(
     deleteTableRequest: DeleteTableRequest
@@ -102,12 +108,12 @@ trait AmazonDynamoDBScalaClient {
 
   def getItem(
     tableName:       String,
-    key:             Key,
+    key:             Map[String, AttributeValue],
     attributesToGet: Iterable[String] = Iterable.empty,
     consistentRead:  Boolean          = false
   ): Future[GetItemResult] =
     getItem(
-      new GetItemRequest(tableName, key)
+      new GetItemRequest(tableName, key.asJava)
       .withAttributesToGet(attributesToGet.asJavaCollection)
       .withConsistentRead(consistentRead)
     )
@@ -137,10 +143,14 @@ trait AmazonDynamoDBScalaClient {
     wrapAsyncMethod(client.queryAsync, queryRequest)
 
   def query(
-    tableName:    String,
-    hashKeyValue: AttributeValue
+    tableName:     String,
+    keyConditions: Map[String, Condition]
   ): Future[QueryResult] =
-    query(new QueryRequest(tableName, hashKeyValue))
+    query(
+      new QueryRequest()
+      .withTableName(tableName)
+      .withKeyConditions(keyConditions.asJava)
+    )
 
   def scan(
     scanRequest: ScanRequest
@@ -148,9 +158,13 @@ trait AmazonDynamoDBScalaClient {
     wrapAsyncMethod(client.scanAsync, scanRequest)
 
   def scan(
-    tableName: String
+    tableName:  String,
+    scanFilter: Map[String, Condition] = Map.empty
   ): Future[ScanResult] =
-    scan(new ScanRequest(tableName))
+    scan(
+      new ScanRequest(tableName)
+      .withScanFilter(scanFilter.asJava)
+    )
 
   def shutdown(): Unit =
     client.shutdown()
@@ -162,10 +176,10 @@ trait AmazonDynamoDBScalaClient {
 
   def updateItem(
     tableName:        String,
-    key:              Key,
+    key:              Map[String, AttributeValue],
     attributeUpdates: Map[String, AttributeValueUpdate]
   ): Future[UpdateItemResult] =
-    updateItem(new UpdateItemRequest(tableName, key, attributeUpdates.asJava))
+    updateItem(new UpdateItemRequest(tableName, key.asJava, attributeUpdates.asJava))
 
   def updateTable(
     updateTableRequest: UpdateTableRequest
