@@ -1,6 +1,9 @@
 package aws.wrap.dynamodb
 
-import com.amazonaws.services.dynamodbv2.model._
+import com.amazonaws.services.dynamodbv2.model.{
+  AttributeDefinition, KeySchemaElement, KeyType,
+  ProvisionedThroughput, ScalarAttributeType
+}
 
 object Schema {
 

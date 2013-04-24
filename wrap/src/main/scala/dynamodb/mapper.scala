@@ -9,8 +9,6 @@ import java.util.{Map => JMap}
 
 import com.amazonaws.services.dynamodbv2.model._
 
-// maybe just a method to define the hashing mechanism? ensure that it gets hashed???
-// make it easier to understand????
 trait DynamoDBSerializer[T] {
   def tableName: String
   def hashAttributeName: String
@@ -449,36 +447,4 @@ trait AmazonDynamoDBScalaMapper {
     local(objs.splitAt(25))
   }
 
-  /* Deprecated for now due to implicit rewrite.
-  def batchDumpAny(
-    objs: Seq[DynamoDBObject[_]]
-  ): Future[Unit] = {
-    def local(objsP: (Seq[DynamoDBObject[_]], Seq[DynamoDBObject[_]])): Future[Unit] =
-      client.batchWriteItem(
-        new BatchWriteItemRequest()
-        .withRequestItems(
-          objsP._1.groupBy(_.companion.tableName).map { case (tableName, objs) =>
-            (
-              tableName,
-              objs.view.map { obj =>
-                new WriteRequest()
-                .withPutRequest(
-                  new PutRequest()
-                  .withItem(obj.toAttributeMap.asJava)
-                )
-              } .asJava
-            )
-          } .asJava
-        )
-      ) flatMap { result =>
-        checkRetryBatchWrite(result) flatMap { _ =>
-          if (objsP._2.isEmpty)
-            Future.successful(())
-          else
-            local(objsP._2.splitAt(25))
-        }
-      }
-
-    local(objs.splitAt(25))
-  } */
 }

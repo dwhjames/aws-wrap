@@ -81,29 +81,4 @@ package object dynamodb {
 
   implicit val attributeValueToByteArray = (x: AttributeValue) => x.getB.array
 
-/*
-  private[dynamodb] def any2AttributeValue(x: Any): AttributeValue =
-    x match {
-      case x: String =>
-        new AttributeValue().withS(x)
-      case x: Array[Byte] =>
-        new AttributeValue().withB(java.nio.ByteBuffer.wrap(x))
-      case x: Double =>
-        new AttributeValue().withN(x.toString)
-      case x: Float =>
-        new AttributeValue().withN(x.toString)
-      case x: Long =>
-        new AttributeValue().withN(x.toString)
-      case x: Int =>
-        new AttributeValue().withN(x.toString)
-      case x: Char =>
-        new AttributeValue().withN(x.toString)
-      case x: Short =>
-        new AttributeValue().withN(x.toString)
-      case x: Byte =>
-        new AttributeValue().withN(x.toString)
-      case _ =>
-        throw new IllegalArgumentException(s"The value $x is not a supported DynamoDB AttributeValue")
-    }
-*/
 }
