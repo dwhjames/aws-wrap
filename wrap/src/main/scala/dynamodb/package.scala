@@ -7,6 +7,8 @@ import com.amazonaws.services.dynamodbv2.model._
 
 package object dynamodb {
 
+  type AttributeValue = com.amazonaws.services.dynamodbv2.model.AttributeValue
+
   /*
    * Query construction helpers
    */

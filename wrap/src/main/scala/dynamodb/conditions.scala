@@ -2,7 +2,7 @@ package aws.wrap.dynamodb
 
 import scala.collection.JavaConverters._
 
-import com.amazonaws.services.dynamodbv2.model.{AttributeValue, ComparisonOperator, Condition}
+import com.amazonaws.services.dynamodbv2.model.{ComparisonOperator, Condition}
 
 private[dynamodb] trait AttributeConditions {
 
