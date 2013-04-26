@@ -54,6 +54,9 @@ package object dynamodb {
   // string attribute value
   implicit val stringToAttributeValue = (x: String) => new AttributeValue().withS(x)
 
+  implicit val stringIterableToAttributeValue = (x: Iterable[String]) => new AttributeValue().withSS(x.asJavaCollection)
+
+
   // numeric attribute value
   implicit val doubleToAttributeValue = (x: Double) => new AttributeValue().withN(x.toString)
   implicit val floatToAttributeValue  = (x: Float)  => new AttributeValue().withN(x.toString)
@@ -62,8 +65,31 @@ package object dynamodb {
   implicit val shortToAttributeValue  = (x: Short)  => new AttributeValue().withN(x.toString)
   implicit val byteToAttributeValue   = (x: Byte)   => new AttributeValue().withN(x.toString)
 
+  implicit val doubleIterableToAttributeValue = (x: Iterable[Double]) => new AttributeValue().withNS(x.map(_.toString).asJavaCollection)
+  implicit val floatIterableToAttributeValue  = (x: Iterable[Float])  => new AttributeValue().withNS(x.map(_.toString).asJavaCollection)
+  implicit val longIterableToAttributeValue   = (x: Iterable[Long])   => new AttributeValue().withNS(x.map(_.toString).asJavaCollection)
+  implicit val intIterableToAttributeValue    = (x: Iterable[Int])    => new AttributeValue().withNS(x.map(_.toString).asJavaCollection)
+  implicit val shortIterableToAttributeValue  = (x: Iterable[Short])  => new AttributeValue().withNS(x.map(_.toString).asJavaCollection)
+  implicit val byteIterableToAttributeValue   = (x: Iterable[Byte])   => new AttributeValue().withNS(x.map(_.toString).asJavaCollection)
+
+
   // binary attribute value
   implicit val byteArrayToAttributeValue = (x: Array[Byte]) => new AttributeValue().withB(java.nio.ByteBuffer.wrap(x))
+
+  implicit val byteArrayIterableToAttributeValue = (x: Iterable[Array[Byte]]) => new AttributeValue().withBS(x.map(java.nio.ByteBuffer.wrap(_)).asJavaCollection)
+
+
+  // extras
+  implicit val booleanToAttributeValue = (x: Boolean) => new AttributeValue().withS(x.toString)
+
+  implicit val booleanIterableToAttributeValue = (x: Iterable[Boolean]) => new AttributeValue().withSS(x.map(_.toString).asJavaCollection)
+
+
+  implicit val bigIntToAttributeValue     = (x: BigInt)     => new AttributeValue().withS(x.toString)
+  implicit val bigDecimalToAttributeValue = (x: BigDecimal) => new AttributeValue().withS(x.toString)
+
+  implicit val bigIntIterableToAttributeValue     = (x: Iterable[BigInt])     => new AttributeValue().withSS(x.map(_.toString).asJavaCollection)
+  implicit val bigDecimalIterableToAttributeValue = (x: Iterable[BigDecimal]) => new AttributeValue().withSS(x.map(_.toString).asJavaCollection)
 
   /*
    * Enrich AttributeValue
@@ -80,7 +106,11 @@ package object dynamodb {
       }
   }
 
+
   implicit val attributeValueToString = (x: AttributeValue) => x.getS
+
+  implicit val attributeValueToStringSet = (x: AttributeValue) => x.getSS.asScala.toSet
+
 
   implicit val attributeValueToDouble = (x: AttributeValue) => x.getN.toDouble
   implicit val attributeValueToFloat  = (x: AttributeValue) => x.getN.toFloat
@@ -89,6 +119,28 @@ package object dynamodb {
   implicit val attributeValueToShort  = (x: AttributeValue) => x.getN.toShort
   implicit val attributeValueToByte   = (x: AttributeValue) => x.getN.toByte
 
+  implicit val attributeValueToDoubleSet = (x: AttributeValue) => x.getNS.asScala.map(_.toDouble).toSet
+  implicit val attributeValueToFloatSet  = (x: AttributeValue) => x.getNS.asScala.map(_.toFloat).toSet
+  implicit val attributeValueToLongSet   = (x: AttributeValue) => x.getNS.asScala.map(_.toLong).toSet
+  implicit val attributeValueToIntSet    = (x: AttributeValue) => x.getNS.asScala.map(_.toInt).toSet
+  implicit val attributeValueToShortSet  = (x: AttributeValue) => x.getNS.asScala.map(_.toShort).toSet
+  implicit val attributeValueToByteSet   = (x: AttributeValue) => x.getNS.asScala.map(_.toByte).toSet
+
+
   implicit val attributeValueToByteArray = (x: AttributeValue) => x.getB.array
+
+  implicit val attributeValueToByteArraySet = (x: AttributeValue) => x.getBS.asScala.map(_.array).toSet
+
+
+  implicit val attributeValueToBoolean = (x: AttributeValue) => x.getS.toBoolean
+
+  implicit val attributeValueToBooleanSet = (x: AttributeValue) => x.getSS.asScala.map(_.toBoolean).toSet
+
+
+  implicit val attributeValueToBigInt     = (x: AttributeValue) => BigInt(x.getS)
+  implicit val attributeValueToBigDecimal = (x: AttributeValue) => BigDecimal(x.getS)
+
+  implicit val attributeValueToBigIntSet     = (x: AttributeValue) => x.getSS.asScala.map(BigInt(_)).toSet
+  implicit val attributeValueToBigDecimalSet = (x: AttributeValue) => x.getSS.asScala.map(BigDecimal(_)).toSet
 
 }
