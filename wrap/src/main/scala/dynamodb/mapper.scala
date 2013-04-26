@@ -404,7 +404,7 @@ trait AmazonDynamoDBScalaMapper {
         .withRequestItems(retryItems)
       ) map { result =>
         if (!result.getUnprocessedItems.isEmpty)
-          throw new Exception("AmazonDynamoDBScalaMapper: batch write retry failed")
+          throw new BatchDumpException("AmazonDynamoDBScalaMapper: batch write retry failed", result.getUnprocessedItems)
       }
   }
 

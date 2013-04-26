@@ -96,51 +96,53 @@ package object dynamodb {
    */
   implicit class RichAttributeValue(attrVal: AttributeValue) {
     def as[T](implicit conv: AttributeValue => T): T =
-      try {
-        conv(attrVal)
-      } catch {
-        case ex: NullPointerException =>
-          throw new Exception("RichAttributeValue.as: AttributeValue was not of the expected sort.")
-        case ex: NumberFormatException =>
-          throw new Exception("RichAttributeValue.as: the numeric string can't be parsed as the expected numeric type.")
-      }
+      catchAndRethrowConversion(conv(attrVal))
   }
 
+  private def catchAndRethrowConversion[T](x: => T): T =
+    try {
+      x
+    } catch {
+      case ex: NullPointerException =>
+          throw new AttributeValueConversionException("RichAttributeValue.as: AttributeValue was not of the expected sort.")
+      case ex: NumberFormatException =>
+        throw new AttributeValueConversionException("RichAttributeValue.as: the numeric string can't be parsed as the expected numeric type.")
+    }
 
-  implicit val attributeValueToString = (x: AttributeValue) => x.getS
+  implicit val attributeValueToString = (x: AttributeValue) => catchAndRethrowConversion { x.getS }
 
-  implicit val attributeValueToStringSet = (x: AttributeValue) => x.getSS.asScala.toSet
-
-
-  implicit val attributeValueToDouble = (x: AttributeValue) => x.getN.toDouble
-  implicit val attributeValueToFloat  = (x: AttributeValue) => x.getN.toFloat
-  implicit val attributeValueToLong   = (x: AttributeValue) => x.getN.toLong
-  implicit val attributeValueToInt    = (x: AttributeValue) => x.getN.toInt
-  implicit val attributeValueToShort  = (x: AttributeValue) => x.getN.toShort
-  implicit val attributeValueToByte   = (x: AttributeValue) => x.getN.toByte
-
-  implicit val attributeValueToDoubleSet = (x: AttributeValue) => x.getNS.asScala.map(_.toDouble).toSet
-  implicit val attributeValueToFloatSet  = (x: AttributeValue) => x.getNS.asScala.map(_.toFloat).toSet
-  implicit val attributeValueToLongSet   = (x: AttributeValue) => x.getNS.asScala.map(_.toLong).toSet
-  implicit val attributeValueToIntSet    = (x: AttributeValue) => x.getNS.asScala.map(_.toInt).toSet
-  implicit val attributeValueToShortSet  = (x: AttributeValue) => x.getNS.asScala.map(_.toShort).toSet
-  implicit val attributeValueToByteSet   = (x: AttributeValue) => x.getNS.asScala.map(_.toByte).toSet
+  implicit val attributeValueToStringSet = (x: AttributeValue) => catchAndRethrowConversion { x.getSS.asScala.toSet }
 
 
-  implicit val attributeValueToByteArray = (x: AttributeValue) => x.getB.array
+  implicit val attributeValueToDouble = (x: AttributeValue) => catchAndRethrowConversion { x.getN.toDouble }
+  implicit val attributeValueToFloat  = (x: AttributeValue) => catchAndRethrowConversion { x.getN.toFloat }
+  implicit val attributeValueToLong   = (x: AttributeValue) => catchAndRethrowConversion { x.getN.toLong }
+  implicit val attributeValueToInt    = (x: AttributeValue) => catchAndRethrowConversion { x.getN.toInt }
+  implicit val attributeValueToShort  = (x: AttributeValue) => catchAndRethrowConversion { x.getN.toShort }
+  implicit val attributeValueToByte   = (x: AttributeValue) => catchAndRethrowConversion { x.getN.toByte }
 
-  implicit val attributeValueToByteArraySet = (x: AttributeValue) => x.getBS.asScala.map(_.array).toSet
+  implicit val attributeValueToDoubleSet = (x: AttributeValue) => catchAndRethrowConversion { x.getNS.asScala.map(_.toDouble).toSet }
+  implicit val attributeValueToFloatSet  = (x: AttributeValue) => catchAndRethrowConversion { x.getNS.asScala.map(_.toFloat).toSet }
+  implicit val attributeValueToLongSet   = (x: AttributeValue) => catchAndRethrowConversion { x.getNS.asScala.map(_.toLong).toSet }
+  implicit val attributeValueToIntSet    = (x: AttributeValue) => catchAndRethrowConversion { x.getNS.asScala.map(_.toInt).toSet }
+  implicit val attributeValueToShortSet  = (x: AttributeValue) => catchAndRethrowConversion { x.getNS.asScala.map(_.toShort).toSet }
+  implicit val attributeValueToByteSet   = (x: AttributeValue) => catchAndRethrowConversion { x.getNS.asScala.map(_.toByte).toSet }
 
 
-  implicit val attributeValueToBoolean = (x: AttributeValue) => x.getS.toBoolean
+  implicit val attributeValueToByteArray = (x: AttributeValue) => catchAndRethrowConversion { x.getB.array }
 
-  implicit val attributeValueToBooleanSet = (x: AttributeValue) => x.getSS.asScala.map(_.toBoolean).toSet
+  implicit val attributeValueToByteArraySet = (x: AttributeValue) => catchAndRethrowConversion { x.getBS.asScala.map(_.array).toSet }
 
 
-  implicit val attributeValueToBigInt     = (x: AttributeValue) => BigInt(x.getS)
-  implicit val attributeValueToBigDecimal = (x: AttributeValue) => BigDecimal(x.getS)
+  implicit val attributeValueToBoolean = (x: AttributeValue) => catchAndRethrowConversion { x.getS.toBoolean }
 
-  implicit val attributeValueToBigIntSet     = (x: AttributeValue) => x.getSS.asScala.map(BigInt(_)).toSet
-  implicit val attributeValueToBigDecimalSet = (x: AttributeValue) => x.getSS.asScala.map(BigDecimal(_)).toSet
+  implicit val attributeValueToBooleanSet = (x: AttributeValue) => catchAndRethrowConversion { x.getSS.asScala.map(_.toBoolean).toSet }
+
+
+  implicit val attributeValueToBigInt     = (x: AttributeValue) => catchAndRethrowConversion { BigInt(x.getS) }
+  implicit val attributeValueToBigDecimal = (x: AttributeValue) => catchAndRethrowConversion { BigDecimal(x.getS) }
+
+  implicit val attributeValueToBigIntSet     = (x: AttributeValue) => catchAndRethrowConversion { x.getSS.asScala.map(BigInt(_)).toSet }
+  implicit val attributeValueToBigDecimalSet = (x: AttributeValue) => catchAndRethrowConversion { x.getSS.asScala.map(BigDecimal(_)).toSet }
 
 }
