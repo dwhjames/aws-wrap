@@ -31,7 +31,7 @@ trait DynamoDBSerializer[T] {
     (name, conv(value))
 
   protected def mkAttribute[K](pair: (String, K))(implicit conv: K => AttributeValue): (String, AttributeValue) =
-    (p._1, conv(p._2))
+    (pair._1, conv(pair._2))
 
   def primaryKeyOf(obj: T): Map[String, AttributeValue] = {
     val attributes = toAttributeMap(obj)
