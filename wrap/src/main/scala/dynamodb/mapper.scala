@@ -35,13 +35,11 @@ trait DynamoDBSerializer[T] {
 
   def primaryKeyOf(obj: T): Map[String, AttributeValue] = {
     val attributes = toAttributeMap(obj)
-    if (rangeAttributeName.isEmpty)
-      Map(hashAttributeName -> attributes(hashAttributeName))
-    else
-      Map(
-        hashAttributeName      -> attributes(hashAttributeName),
-        rangeAttributeName.get -> attributes(rangeAttributeName.get)
-      )
+    val builder = Map.newBuilder[String, AttributeValue]
+    builder += (hashAttributeName -> attributes(hashAttributeName))
+    if (rangeAttributeName.isDefined)
+      builder += (rangeAttributeName.get -> attributes(rangeAttributeName.get))
+    builder.result
   }
 
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
