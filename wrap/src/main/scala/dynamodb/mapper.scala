@@ -9,6 +9,9 @@ import java.util.{Map => JMap}
 
 import com.amazonaws.services.dynamodbv2.model._
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 trait DynamoDBSerializer[T] {
   def tableName: String
   def hashAttributeName: String
@@ -82,6 +85,8 @@ trait AmazonDynamoDBScalaMapper {
 
   protected def tableName[T](implicit serializer: DynamoDBSerializer[T]): String =
     config.transformTableName(serializer.tableName)
+
+  private val logger: Logger = LoggerFactory.getLogger(classOf[AmazonDynamoDBScalaMapper])
 
   /**
     * Delete a DynamoDB item by a hash key and range key.
@@ -399,8 +404,10 @@ trait AmazonDynamoDBScalaMapper {
     else
       client.batchWriteItem(
         new BatchWriteItemRequest()
+        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(retryItems)
       ) map { result =>
+        logger.debug(result.getConsumedCapacity().toString)
         if (!result.getUnprocessedItems.isEmpty)
           throw new BatchDumpException("AmazonDynamoDBScalaMapper: batch write retry failed", result.getUnprocessedItems)
       }
@@ -425,6 +432,7 @@ trait AmazonDynamoDBScalaMapper {
     def local(objsP: (Seq[T], Seq[T])): Future[Unit] =
       client.batchWriteItem(
         new BatchWriteItemRequest()
+        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(
           Map(
             tableName -> objsP._1.view.map { obj =>
@@ -437,6 +445,7 @@ trait AmazonDynamoDBScalaMapper {
           ).asJava
         )
       ) flatMap { result =>
+        logger.debug(result.getConsumedCapacity().toString)
         checkRetryBatchWrite(result) flatMap { _ =>
           if (objsP._2.isEmpty)
             Future.successful(())

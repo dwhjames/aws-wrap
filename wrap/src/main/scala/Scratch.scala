@@ -12,6 +12,9 @@ import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, BasicAWSCrede
 import com.amazonaws.services.dynamodbv2._
 import com.amazonaws.services.dynamodbv2.model._
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 object UserHomeCredentialsProvider extends AWSCredentialsProvider {
 
   override lazy val getCredentials: AWSCredentials =
@@ -28,6 +31,8 @@ object UserHomeCredentialsProvider extends AWSCredentialsProvider {
 
 object Scratch {
 
+  private val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
   def main(args: Array[String]) {
     val client = AmazonDynamoDBScalaClient.fromAsyncClient(new AmazonDynamoDBAsyncClient(UserHomeCredentialsProvider))
 
@@ -35,17 +40,23 @@ object Scratch {
 
     def awaitTableCreation(): TableDescription = {
       val result = Await.result(
-        client.describeTable(tableName),
+      {
+        logger.debug("Asking for table description")
+        client.describeTable(tableName)
+      },
         Duration(10, SECONDS)
       )
       val description = result.getTable
       if (description.getTableStatus != "ACTIVE") {
+        logger.debug("Sleeping, while waiting for table creation")
         Thread.sleep(1000)
         awaitTableCreation()
       } else description
     }
 
     Await.result(
+    {
+      logger.debug("Creating table")
       client.createTable(
         tableName = tableName,
         provisionedThroughput = Schema.provisionedThroughput(10L, 10L),
@@ -70,7 +81,8 @@ object Scratch {
                 .withProjectionType(ProjectionType.KEYS_ONLY)
             )
         )
-      ),
+      )
+    },
       Duration(10, SECONDS)
     )
 
