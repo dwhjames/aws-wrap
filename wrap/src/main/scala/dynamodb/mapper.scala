@@ -12,30 +12,92 @@ import com.amazonaws.services.dynamodbv2.model._
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+  * A trait for serializers that convert Scala objects
+  * to and from DynamoDB items.
+  *
+  * @tparam T the object type of this serializer
+  */
 trait DynamoDBSerializer[T] {
+
+  /**
+    * The DynamoDB table that this serializer operates on.
+    */
   def tableName: String
+
+  /**
+    * The name of the attribute that forms the
+    * primary hash key.
+    */
   def hashAttributeName: String
+
+  /**
+    * The name of the attribute that forms the
+    * primary range key.
+    *
+    * This is optional, as a table may not have
+    * a range key.
+    */
   def rangeAttributeName: Option[String] = None
 
+  /**
+    * Converts a DynamoDB item into a Scala object.
+    *
+    * @param item
+    *     A map from attribute names to attribute values.
+    * @return the deserialized object of type T.
+    */
   def fromAttributeMap(item: mutable.Map[String, AttributeValue]): T
 
+  /**
+    * Converts a Scala object into a DynamoDB item.
+    *
+    * @param obj
+    *     An object of type T.
+    * @return a map from attribute names to attribute values.
+    */
   def toAttributeMap(obj: T): Map[String, AttributeValue]
 
   /*
-   * A helper for implementing toAttributeMap
+   * A helper for implementing toAttributeMap.
    *
+   * {{{
    * override def toAttributeMap(obj: Foo): Map[String, AttributeValue] =
    *   Map(
    *     mkAtrribute("company", obj.company),
    *     ...
    *   )
+   * }}}
    */
   protected def mkAttribute[K](name: String, value: K)(implicit conv: K => AttributeValue): (String, AttributeValue) =
     (name, conv(value))
 
+  /*
+   * A helper for implementing toAttributeMap.
+   *
+   * {{{
+   * override def toAttributeMap(obj: Foo): Map[String, AttributeValue] =
+   *   Map(
+   *     mkAtrribute("company" -> obj.company),
+   *     ...
+   *   )
+   * }}}
+   */
   protected def mkAttribute[K](pair: (String, K))(implicit conv: K => AttributeValue): (String, AttributeValue) =
     (pair._1, conv(pair._2))
 
+  /**
+    * Converts a Scala object into a DynamoDB key.
+    *
+    * The key is represented as a map. The concrete implementation
+    * of a serializer may want to override this method for
+    * efficiency reasons, as the default implementation uses
+    * [[DynamoDBSerializer.toAttributeMap]].
+    *
+    * @param obj
+    *     An object of type T.
+    * @return a map from attribute names to attribute values.
+    */
   def primaryKeyOf(obj: T): Map[String, AttributeValue] = {
     val attributes = toAttributeMap(obj)
     val builder = Map.newBuilder[String, AttributeValue]
@@ -45,9 +107,29 @@ trait DynamoDBSerializer[T] {
     builder.result
   }
 
+  /**
+    * Converts a hash key value into a DynamoDB key.
+    *
+    * The key is represented as a map.
+    *
+    * @param hashKey
+    *     An value that is convertable to an [[AttributeValue]].
+    * @return a map from attribute names to attribute values.
+    */
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
     Map(hashAttributeName -> conv(hashKey))
 
+  /**
+    * Converts hash and range key values into a DynamoDB key.
+    *
+    * The key is represented as a map.
+    *
+    * @param hashKey
+    *     An value that is convertable to an [[AttributeValue]].
+    * @param rangeKey
+    *     An value that is convertable to an [[AttributeValue]].
+    * @return a map from attribute names to attribute values.
+    */
   def makeKey[K1, K2](
     hashKey: K1,
     rangeKey: K2
@@ -63,26 +145,83 @@ trait DynamoDBSerializer[T] {
     )
 }
 
+/**
+  * A trait for configuring [[AmazonDynamoDBScalaMapper]].
+  */
 trait AmazonDynamoDBScalaMapperConfig {
+
+  /**
+    * Transform a table name.
+    *
+    * Concrete implementations will rewrite
+    * tables names, given an input table name.
+    *
+    * @param tableName
+    *     the table name to transform.
+    * @return the transformed table name.
+    */
   def transformTableName(tableName: String): String
 }
 
 object AmazonDynamoDBScalaMapperConfig {
+
+  /**
+    * A default [[AmazonDynamoDBScalaMapperConfig]].
+    *
+    * Provides a default configuration for
+    * [[AmazonDynamoDBScalaMapper]].
+    */
   object Default extends AmazonDynamoDBScalaMapperConfig {
+    /**
+      * Returns a table name untransformed.
+      *
+      * The default transformation on table names is
+      * the identity transformation.
+      *
+      * @param table
+      *     the table name to transform.
+      * @return the same table name.
+      */
     override def transformTableName(tableName: String) = tableName
   }
 }
 
-
+/**
+  * An object mapping for DynamoDB items.
+  *
+  * This trait provides the interface to an object mapper for DynamoDB.
+  * It depends on a concrete implementation of [[AmazonDynamoDBScalaClient]].
+  */
 trait AmazonDynamoDBScalaMapper {
 
+  /**
+    * An abstract [[AmazonDynamoDBScalaClient]].
+    */
   val client: AmazonDynamoDBScalaClient
 
+  /**
+    * An abstract ExecutionContext.
+    */
   protected implicit val execCtx: ExecutionContext
 
+  /**
+    * The mapping configuration.
+    *
+    * [[AmazonDynamoDBScalaMapperConfig.Default]] is used by default.
+    */
   protected val config: AmazonDynamoDBScalaMapperConfig =
     AmazonDynamoDBScalaMapperConfig.Default
 
+  /**
+    * Returns the table name.
+    *
+    * Determines the table name, by transforming the table name
+    * of the implict serializer using the mapper's configuration.
+    *
+    * @param serializer
+    *     the object serializer.
+    * @return the transformed table name.
+    */
   protected def tableName[T](implicit serializer: DynamoDBSerializer[T]): String =
     config.transformTableName(serializer.tableName)
 
@@ -460,6 +599,7 @@ trait AmazonDynamoDBScalaMapper {
     *
     * @param objs
     *     the sequence of objects to write to DynamoDB
+    * @throws BatchDumpException if a write to DynamoDB fails twice
     */
   def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
     def local(objsP: (Seq[T], Seq[T])): Future[Unit] =
