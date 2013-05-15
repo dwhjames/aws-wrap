@@ -161,6 +161,13 @@ trait AmazonDynamoDBScalaMapperConfig {
     * @return the transformed table name.
     */
   def transformTableName(tableName: String): String
+
+  /**
+    * Choose the read consistency behavior.
+    *
+    * `true` configures the mapper for consistent reads.
+    */
+  val consistentReads: Boolean
 }
 
 object AmazonDynamoDBScalaMapperConfig {
@@ -172,6 +179,7 @@ object AmazonDynamoDBScalaMapperConfig {
     * [[AmazonDynamoDBScalaMapper]].
     */
   object Default extends AmazonDynamoDBScalaMapperConfig {
+
     /**
       * Returns a table name untransformed.
       *
@@ -183,6 +191,11 @@ object AmazonDynamoDBScalaMapperConfig {
       * @return the same table name.
       */
     override def transformTableName(tableName: String) = tableName
+
+    /**
+      * The default is eventual consistency.
+      */
+    override val consistentReads = false
   }
 }
 
@@ -332,6 +345,7 @@ trait AmazonDynamoDBScalaMapper {
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey).asJava)
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+        .withConsistentRead(config.consistentReads)
       ) map { result =>
         logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
         serializer.fromAttributeMap(result.getItem.asScala)
@@ -346,6 +360,7 @@ trait AmazonDynamoDBScalaMapper {
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+        .withConsistentRead(config.consistentReads)
       ) map { result =>
         logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
         serializer.fromAttributeMap(result.getItem.asScala)
@@ -441,6 +456,7 @@ trait AmazonDynamoDBScalaMapper {
         queryRequest
         .withTableName(tableName)
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+        .withConsistentRead(config.consistentReads)
       val builder = Seq.newBuilder[T]
 
       def local(lastKey: Option[JMap[String, AttributeValue]] = None): Future[Unit] =
@@ -492,6 +508,7 @@ trait AmazonDynamoDBScalaMapper {
       .withKeyConditions(keyConditions.asJava)
       .withSelect(Select.COUNT)
       .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+      .withConsistentRead(config.consistentReads)
 
     def local(count: Long = 0L, lastKey: Option[JMap[String, AttributeValue]] = None): Future[Long] =
       client.query(
@@ -552,6 +569,7 @@ trait AmazonDynamoDBScalaMapper {
                   .withKeys(
                     keys._1.asJavaCollection
                   )
+                  .withConsistentRead(config.consistentReads)
               ).asJava
             )
           ) flatMap { result =>
