@@ -170,7 +170,28 @@ trait AmazonDynamoDBScalaMapperConfig {
   val consistentReads: Boolean
 }
 
+/**
+  * A factory for [[AmazonDynamoDBScalaMapperConfig]].
+  */
 object AmazonDynamoDBScalaMapperConfig {
+
+  /**
+    * Construct a mapper configuration.
+    *
+    * @param nameFunction
+    *     the transformation to apply to the table name.
+    * @param consistent
+    *     set the consistency of reads.
+    * @return a new configuration
+    */
+  def apply(
+    nameFunction: String => String = identity,
+    consistent:   Boolean          = false
+  ): AmazonDynamoDBScalaMapperConfig = new AmazonDynamoDBScalaMapperConfig {
+    override def transformTableName(tableName: String) =
+      nameFunction(tableName)
+    override val consistentReads = consistent
+  }
 
   /**
     * A default [[AmazonDynamoDBScalaMapperConfig]].
