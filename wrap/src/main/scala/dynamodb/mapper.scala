@@ -327,19 +327,24 @@ trait AmazonDynamoDBScalaMapper {
     }
 
   /**
-    * Load an object by its hash key and range key
+    * Load an object by its hash key (and range key).
+    *
+    * If the item is not found in the DynamoDB table,
+    * then None is returned.
     *
     * @param hashKey
     *     the hash key of the object to retrieve
     * @param rangeKey
     *     the range key of the object to retrieve
-    * @return the retreived object in a future
+    * @param serializer
+    *     an implicit object serializer
+    * @return the retreived object, or None, in a future
     */
   def loadByKey[T] = new {
     def apply[K <% AttributeValue]
              (hashKey: K)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[T] =
+             : Future[Option[T]] =
       client.getItem(
         new GetItemRequest()
         .withTableName(tableName)
@@ -348,13 +353,15 @@ trait AmazonDynamoDBScalaMapper {
         .withConsistentRead(config.consistentReads)
       ) map { result =>
         logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        serializer.fromAttributeMap(result.getItem.asScala)
+        Option { result.getItem } map { item =>
+          serializer.fromAttributeMap(item.asScala)
+        }
       }
 
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKey: K1, rangeKey: K2)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[T] =
+             : Future[Option[T]] =
       client.getItem(
         new GetItemRequest()
         .withTableName(tableName)
@@ -363,7 +370,9 @@ trait AmazonDynamoDBScalaMapper {
         .withConsistentRead(config.consistentReads)
       ) map { result =>
         logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        serializer.fromAttributeMap(result.getItem.asScala)
+        Option { result.getItem } map { item =>
+          serializer.fromAttributeMap(item.asScala)
+        }
       }
   }
 
