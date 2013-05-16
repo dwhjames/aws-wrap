@@ -207,6 +207,8 @@ object AmazonDynamoDBScalaMapperConfig {
   */
 trait AmazonDynamoDBScalaMapper {
 
+  private type DynamoDBKey = JMap[String, AttributeValue]
+
   /**
     * An abstract [[AmazonDynamoDBScalaClient]].
     */
@@ -396,7 +398,7 @@ trait AmazonDynamoDBScalaMapper {
       .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
     val builder = Seq.newBuilder[T]
 
-    def local(lastKey: Option[JMap[String, AttributeValue]] = None): Future[Unit] =
+    def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
       client.scan(
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
@@ -433,7 +435,7 @@ trait AmazonDynamoDBScalaMapper {
       .withSelect(Select.COUNT)
       .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
-    def local(count: Long = 0L, lastKey: Option[JMap[String, AttributeValue]] = None): Future[Long] =
+    def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
       client.scan(
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
@@ -468,7 +470,7 @@ trait AmazonDynamoDBScalaMapper {
         .withConsistentRead(config.consistentReads)
       val builder = Seq.newBuilder[T]
 
-      def local(lastKey: Option[JMap[String, AttributeValue]] = None): Future[Unit] =
+      def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
         client.query(
           queryRequest.withExclusiveStartKey(lastKey.orNull)
         ) flatMap { result =>
@@ -519,7 +521,7 @@ trait AmazonDynamoDBScalaMapper {
       .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
       .withConsistentRead(config.consistentReads)
 
-    def local(count: Long = 0L, lastKey: Option[JMap[String, AttributeValue]] = None): Future[Long] =
+    def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
       client.query(
         queryRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
@@ -532,6 +534,46 @@ trait AmazonDynamoDBScalaMapper {
 
     local()
   }
+
+  /**
+    * Helper method to build seqences of keys
+    *
+    * Turn a sequence of hash values, into a sequence of hash keys;
+    * or turn a sequence of hash values and a sequence of range values,
+    * into a sequence of hash+range keys.
+    *
+    * @tparam T
+    *     the type object for the serializer
+    * @tparam K1
+    *     a type that is viewable as an AttributeValue
+    * @tparam K2
+    *     a type that is viewable as an AttributeValue
+    * @param hashKeys
+    *     a sequence of hash key values.
+    * @param rangeKeys
+    *     an optional sequence of range key values.
+    * @param serializer
+    *     an object serializer
+    * @return a sequence of DynamoDB keys (a map of strings to values)
+    */
+  private def zipKeySeqs[T, K1 <% AttributeValue, K2 <% AttributeValue]
+                        (hashKeys:  Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
+                        (implicit serializer: DynamoDBSerializer[T])
+                        : Seq[DynamoDBKey] =
+    if (hashKeys.isEmpty) {
+      throw new IllegalArgumentException("AmazonDynamoDBScalaMapper: no hash keys given")
+    } else if (!rangeKeys.isEmpty && (hashKeys.length != rangeKeys.length)) {
+      throw new IllegalArgumentException("AmazonDynamoDBScalaMapper: the number of hash and range keys don't match")
+    } else if (rangeKeys.isEmpty) {
+      hashKeys map { hashKey =>
+        serializer.makeKey(hashKey).asJava
+      }
+    } else {
+      (hashKeys, rangeKeys).zipped map { case (hashKey, rangeKey) =>
+        serializer.makeKey(hashKey, rangeKey).asJava
+      }
+    }
+
 
   /**
     * Load a sequence of objects by a sequence of keys.
@@ -550,52 +592,50 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKeys:  Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      if (hashKeys.isEmpty) {
-        throw new IllegalArgumentException("AmazonDynamoDBScalaMapper.batchLoad: no hash keys given")
-      } else if (!rangeKeys.isEmpty && (hashKeys.length != rangeKeys.length)) {
-        throw new IllegalArgumentException("AmazonDynamoDBScalaMapper.batchLoad: the number of hash and range keys don't match")
-      } else {
-        val keys: Seq[JMap[String, AttributeValue]] = if (rangeKeys.isEmpty) {
-          hashKeys.map { hashKey =>
-            serializer.makeKey(hashKey).asJava
+             : Future[Seq[T]] = {
+      val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
+      val builder = Seq.newBuilder[T]
+
+      def local(keys: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] =
+        client.batchGetItem(
+          new BatchGetItemRequest()
+          .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+          .withRequestItems(
+            Map(
+              tableName ->
+                new KeysAndAttributes()
+                .withKeys(
+                  keys._1.asJavaCollection
+                )
+                .withConsistentRead(config.consistentReads)
+            ).asJava
+          )
+        ) flatMap { result =>
+          logger.debug(s"batchLoadByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          builder ++= result.getResponses.get(tableName).asScala.view map { item =>
+            serializer.fromAttributeMap(item.asScala)
           }
-        } else {
-          (hashKeys, rangeKeys).zipped.map { case (hashKey, rangeKey) =>
-            serializer.makeKey(hashKey, rangeKey).asJava
-          }
+          if (keys._2.isEmpty)
+            Future.successful(())
+          else
+            local(keys._2.splitAt(100))
         }
-        val builder = Seq.newBuilder[T]
 
-        def local(keys: (Seq[JMap[String, AttributeValue]], Seq[JMap[String, AttributeValue]])): Future[Unit] =
-          client.batchGetItem(
-            new BatchGetItemRequest()
-            .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-            .withRequestItems(
-              Map(
-                tableName ->
-                  new KeysAndAttributes()
-                  .withKeys(
-                    keys._1.asJavaCollection
-                  )
-                  .withConsistentRead(config.consistentReads)
-              ).asJava
-            )
-          ) flatMap { result =>
-            logger.debug(s"batchLoadByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
-            builder ++= result.getResponses.get(tableName).asScala.view map { item =>
-              serializer.fromAttributeMap(item.asScala)
-            }
-            if (keys._2.isEmpty)
-              Future.successful(())
-            else
-              local(keys._2.splitAt(100))
-          }
-
-        local(keys.splitAt(100)) map { _ => builder.result }
-      }
+      local(keys.splitAt(100)) map { _ => builder.result }
+    }
   }
 
+  /**
+    * A helper method to check for and retry any unprocessed items in
+    * a batch write result.
+    *
+    * This method will attempt to retry any portion of a failed batch write.
+    * If this retry fails, then an exception will be thrown.
+    *
+    * @param lastResult
+    *     the result object from a batchWrite operation.
+    * @throws BatchDumpException if the retry fails.
+    */
   private def checkRetryBatchWrite(lastResult: BatchWriteItemResult): Future[Unit] = {
     val retryItems = lastResult.getUnprocessedItems
     if (retryItems.isEmpty)
@@ -629,13 +669,13 @@ trait AmazonDynamoDBScalaMapper {
     * @throws BatchDumpException if a write to DynamoDB fails twice
     */
   def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
-    def local(objsP: (Seq[T], Seq[T])): Future[Unit] =
+    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] =
       client.batchWriteItem(
         new BatchWriteItemRequest()
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(
           Map(
-            tableName -> objsP._1.view.map { obj =>
+            tableName -> objsPair._1.view.map { obj =>
               new WriteRequest()
               .withPutRequest(
                 new PutRequest()
@@ -647,14 +687,111 @@ trait AmazonDynamoDBScalaMapper {
       ) flatMap { result =>
         logger.debug(s"batchDump() ConsumedCapacity = ${result.getConsumedCapacity()}")
         checkRetryBatchWrite(result) flatMap { _ =>
-          if (objsP._2.isEmpty)
+          if (objsPair._2.isEmpty)
             Future.successful(())
           else
-            local(objsP._2.splitAt(25))
+            local(objsPair._2.splitAt(25))
         }
       }
 
     local(objs.splitAt(25))
+  }
+
+  /**
+    * Delete a sequence of objects.
+    *
+    * This method will internally make repeated batchWriteItem
+    * calls, with up to 25 objects at a time, until all the input
+    * objects have been deleted. If any objects fail to be deleted,
+    * they will be retried once, and an exception will be thrown
+    * on their second failure.
+    *
+    * @tparam T
+    *     the type of objects to delete.
+    * @param objs
+    *     a sequence of objects to delete.
+    * @param serializer
+    *     an implicit object serializer.
+    * @throws BatchDumpException if a write to DynamoDB fails twice.
+    */
+  def batchDelete[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
+    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] =
+      client.batchWriteItem(
+        new BatchWriteItemRequest()
+        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+        .withRequestItems(
+          Map(
+            tableName -> objsPair._1.view.map { obj =>
+              new WriteRequest()
+              .withDeleteRequest(
+                new DeleteRequest()
+                .withKey(serializer.primaryKeyOf(obj).asJava)
+              )
+            } .asJava
+          ).asJava
+        )
+      ) flatMap { result =>
+        logger.debug(s"batchDelete() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        checkRetryBatchWrite(result) flatMap { _ =>
+          if (objsPair._2.isEmpty)
+            Future.successful(())
+          else
+            local(objsPair._2.splitAt(25))
+        }
+      }
+
+    local(objs.splitAt(25))
+  }
+
+  /**
+    * Delete items by a sequence of keys.
+    *
+    * This method will internally make repeated batchWriteItem
+    * calls, with up to 25 keys at a time, until all the input
+    * keys have been deleted. If any keys fail to be deleted,
+    * they will be retried once, and an exception will be thrown
+    * on their second failure.
+    *
+    * @param hashKeys
+    *     the hash keys of the items to delete.
+    * @param rangeKeys
+    *     the (optional) range keys of the items to delete.
+    * @throws BatchDumpException if a write to DynamoDB fails twice.
+    */
+  def batchDeleteByKeys[T] = new {
+    def apply[K1 <% AttributeValue, K2 <% AttributeValue]
+             (hashKeys:  Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Unit] = {
+      val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
+
+      def local(keysPair: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] =
+        client.batchWriteItem(
+          new BatchWriteItemRequest()
+          .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+          .withRequestItems(
+            Map(
+              tableName -> keysPair._1.view.map { key =>
+                new WriteRequest()
+                .withDeleteRequest(
+                  new DeleteRequest()
+                  .withKey(key)
+                )
+              } .asJava
+            ).asJava
+          )
+        ) flatMap { result =>
+          logger.debug(s"batchDeleteByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          checkRetryBatchWrite(result) flatMap { _ =>
+            if (keysPair._2.isEmpty)
+              Future.successful(())
+            else
+              local(keysPair._2.splitAt(25))
+          }
+        }
+
+      local(keys.splitAt(25))
+    }
   }
 
 }
