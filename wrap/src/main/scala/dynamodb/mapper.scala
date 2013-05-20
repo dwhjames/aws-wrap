@@ -461,9 +461,10 @@ trait AmazonDynamoDBScalaMapper {
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
         logger.debug(s"countScan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        val newCount = count + result.getCount
         Option { result.getLastEvaluatedKey } match {
-          case None   => Future.successful(count)
-          case optKey => local(count + result.getCount, optKey)
+          case None   => Future.successful(newCount)
+          case optKey => local(newCount, optKey)
         }
       }
 
@@ -547,9 +548,10 @@ trait AmazonDynamoDBScalaMapper {
         queryRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
         logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        val newCount = count + result.getCount
         Option { result.getLastEvaluatedKey } match {
-          case None   => Future.successful(count)
-          case optKey => local(count + result.getCount, optKey)
+          case None   => Future.successful(newCount)
+          case optKey => local(newCount, optKey)
         }
       }
 
