@@ -109,7 +109,7 @@ object ScanCondition extends AttributeConditions {
     * @see [[http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Condition.html DynamoDB API Reference]]
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/Condition.html AWS Java SDK]]
     */
-  val null: Condition =
+  val isNull: Condition =
     new Condition()
     .withComparisonOperator(ComparisonOperator.NULL)
 
