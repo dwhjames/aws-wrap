@@ -818,3 +818,34 @@ trait AmazonDynamoDBScalaMapper {
   }
 
 }
+
+
+
+/**
+  * A factory for [[AmazonDynamoDBScalaMapper]].
+  */
+object AmazonDynamoDBScalaMapper {
+
+  /**
+    * A factory method for [[AmazonDynamoDBScalaMapper]].
+    *
+    * Build a new mapper from a client, a config, and
+    * an execution context.
+    *
+    * @param dynamoClient
+    *     the DynamoDB client to use.
+    * @param mapperConfig
+    *     the mapping configuration to use.
+    * @param exec
+    *     the execution context to use.
+    * @return a new mapper.
+    */
+  def apply(
+    dynamoClient: AmazonDynamoDBScalaClient,
+    mapperConfig: AmazonDynamoDBScalaMapperConfig = AmazonDynamoDBScalaMapperConfig.Default
+  )(implicit exec: ExecutionContext) = new AmazonDynamoDBScalaMapper {
+    override val client = dynamoClient
+    override protected val execCtx = exec
+    override protected val config = mapperConfig
+  }
+}
