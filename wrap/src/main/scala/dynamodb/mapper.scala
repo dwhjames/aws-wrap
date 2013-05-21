@@ -280,7 +280,7 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K <% AttributeValue]
              (hashKey: K)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[T] =
+             : Future[Option[T]] =
       client.deleteItem(
         new DeleteItemRequest()
         .withTableName(tableName)
@@ -289,13 +289,15 @@ trait AmazonDynamoDBScalaMapper {
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
       ) map { result =>
         logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        serializer.fromAttributeMap(result.getAttributes.asScala)
+        Option { result.getAttributes } map { item =>
+          serializer.fromAttributeMap(item.asScala)
+        }
       }
 
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKey: K1, rangeKey: K2)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[T] =
+             : Future[Option[T]] =
       client.deleteItem(
         new DeleteItemRequest()
         .withTableName(tableName)
@@ -304,7 +306,9 @@ trait AmazonDynamoDBScalaMapper {
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
       ) map { result =>
         logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        serializer.fromAttributeMap(result.getAttributes.asScala)
+        Option { result.getAttributes } map { item =>
+          serializer.fromAttributeMap(item.asScala)
+        }
       }
   }
 
