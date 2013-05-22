@@ -852,7 +852,35 @@ trait AmazonDynamoDBScalaMapper {
   class BatchLoadByKeys[T] {
 
     /**
-      * Load a sequence of objects by a sequence of keys.
+      * Load a sequence of objects by a sequence of hash key values.
+      *
+      * This method will internally make repeated batchGetItem
+      * calls, with up to 25 keys at a time, until all of the
+      * given keys have been requested.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKeys
+      *     the hash key values of the objects to retrieve.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return sequence of retrieved objects in a future.
+      * @see [[batchLoadByKeys]]
+      */
+    def apply[K <% AttributeValue]
+             (hashKeys:  Seq[K])
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      apply(hashKeys, Seq.empty[String])
+      /*
+       * Seq.empty[String] ensures that a valid view is inferred
+       * otherwise we will get an implicit error if Seq.empty
+       * is given type Seq[Nothing].
+       */
+
+    /**
+      * Load a sequence of objects by a sequence of hash key
+      * values and a sequences of range key values.
       *
       * This method will internally make repeated batchGetItem
       * calls, with up to 25 keys at a time, until all of the
@@ -863,9 +891,9 @@ trait AmazonDynamoDBScalaMapper {
       * @tparam K2
       *     a type that is viewable as an [[AttributeValue]].
       * @param hashKeys
-      *     the hash keys of the objects to retrieve.
+      *     the hash key values of the objects to retrieve.
       * @param rangeKeys
-      *     the range keys of the objects to retrieve.
+      *     the range key values of the objects to retrieve.
       * @param serializer
       *     an implicit object serializer.
       * @return sequence of retrieved objects in a future.
@@ -1058,7 +1086,37 @@ trait AmazonDynamoDBScalaMapper {
   class BatchDeleteByKeys[T] {
 
     /**
-      * Delete items by a sequence of keys.
+      * Delete items by a sequence of hash key values.
+      *
+      * This method will internally make repeated batchWriteItem
+      * calls, with up to 25 keys at a time, until all the input
+      * keys have been deleted. If any keys fail to be deleted,
+      * they will be retried once, and an exception will be thrown
+      * on their second failure.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKeys
+      *     the hash key values of the items to delete.
+      * @param serializer
+      *     an implicit object serializer.
+      * @throws BatchDumpException if a write to DynamoDB fails twice.
+      * @see [[batchDeleteByKeys]]
+      */
+    def apply[K <% AttributeValue]
+             (hashKeys: Seq[K])
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Unit] =
+      apply(hashKeys, Seq.empty[String])
+      /*
+       * Seq.empty[String] ensures that a valid view is inferred
+       * otherwise we will get an implicit error if Seq.empty
+       * is given type Seq[Nothing].
+       */
+
+    /**
+      * Delete items by a sequence of hash key values and a
+      * sequence of range key values.
       *
       * This method will internally make repeated batchWriteItem
       * calls, with up to 25 keys at a time, until all the input
@@ -1073,7 +1131,7 @@ trait AmazonDynamoDBScalaMapper {
       * @param hashKeys
       *     the hash key values of the items to delete.
       * @param rangeKeys
-      *     the (optional) range key values of the items to delete.
+      *     the range key values of the items to delete.
       * @param serializer
       *     an implicit object serializer.
       * @throws BatchDumpException if a write to DynamoDB fails twice.

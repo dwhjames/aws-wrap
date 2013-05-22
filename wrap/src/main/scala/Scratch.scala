@@ -530,12 +530,20 @@ object Scratch {
       for {
         Some(forum)  <- mapper.loadByKey[Forum](firstForum.name)
         Some(thread) <- mapper.loadByKey[ForumThread](firstThread.forumName, firstThread.subject)
+        forums  <- mapper.batchLoadByKeys[Forum](sampleForums.map(_.name))
+        threads <- mapper.batchLoadByKeys[ForumThread](sampleThreads.map(_.forumName), sampleThreads.map(_.subject))
       } yield {
         assert {
           forum == firstForum
         }
         assert {
           thread == firstThread
+        }
+        assert {
+          forums.size == sampleForums.size
+        }
+        assert {
+          threads.size == sampleThreads.size
         }
       },
       10.seconds
@@ -604,16 +612,26 @@ object Scratch {
     logger.info("Batch delete by keys then batch dump")
     Await.result(
       for {
+        _ <- mapper.batchDeleteByKeys[Forum](sampleForums.map(_.name))
         _ <- mapper.batchDeleteByKeys[ForumThread](sampleThreads.map(_.forumName), sampleThreads.map(_.subject))
-        emptyCount <- mapper.countScan[ForumThread]()
+        emptyForumCount  <- mapper.countScan[Forum]()
+        emptyThreadCount <- mapper.countScan[ForumThread]()
+        _ <- mapper.batchDump(sampleForums)
         _ <- mapper.batchDump(sampleThreads)
-        replyCount <- mapper.countScan[ForumThread]()
+        forumCount  <- mapper.countScan[Forum]()
+        threadCount <- mapper.countScan[ForumThread]()
       } yield {
         assert {
-          emptyCount == 0
+          emptyForumCount == 0
         }
         assert {
-          replyCount == sampleThreads.size
+          emptyThreadCount == 0
+        }
+        assert {
+          forumCount == sampleForums.size
+        }
+        assert {
+          threadCount == sampleThreads.size
         }
       },
       10.seconds
