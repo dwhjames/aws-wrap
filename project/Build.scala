@@ -42,12 +42,15 @@ object Dependencies {
 
     val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % "1.4.3"
 
+    val jodaTime    = "joda-time" % "joda-time"    % "2.2"
+    val jodaConvert = "org.joda"  % "joda-convert" % "1.3.1"
+
     val logback    = "ch.qos.logback" % "logback-classic" % "1.0.1"
   }
 
   import Compile._
 
-  val wrap = Seq(awsJavaSDK, logback)
+  val wrap = Seq(awsJavaSDK, jodaTime, jodaConvert, logback)
 
 }
 
