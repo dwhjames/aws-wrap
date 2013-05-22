@@ -524,6 +524,22 @@ trait AmazonDynamoDBScalaMapper {
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
       apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition))
+
+    def apply[K <% AttributeValue]
+             (indexName: String, hashValue: K, rangeAttributeName: String, rangeCondition: Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      apply(
+        new QueryRequest()
+          .withIndexName(indexName)
+          .withKeyConditions(
+            Map(
+              serializer.hashAttributeName -> QueryCondition.equalTo(hashValue),
+              rangeAttributeName           -> rangeCondition
+            ).asJava
+          )
+          .withSelect(Select.ALL_ATTRIBUTES)
+      )
   }
 
   /**
