@@ -504,8 +504,16 @@ object Scratch {
     Await.result(
       for {
         res1 <- mapper.query[ForumThread]("Amazon S3")
+        c1   <- mapper.countQuery[ForumThread]("Amazon S3")
         res2 <- mapper.query[ForumThread]("Amazon S3", QueryCondition.beginsWith("S3"))
+        c2   <- mapper.countQuery[ForumThread]("Amazon S3", QueryCondition.beginsWith("S3"))
         res3 <- mapper.query[ForumThread](
+                  ForumThread.secondaryIndexName,
+                  "Amazon S3",
+                  ForumThread.Attributes.lastPostedDateTime,
+                  QueryCondition.greaterThan("2000-01-01")
+                )
+        c3   <- mapper.countQuery[ForumThread](
                   ForumThread.secondaryIndexName,
                   "Amazon S3",
                   ForumThread.Attributes.lastPostedDateTime,
@@ -517,6 +525,15 @@ object Scratch {
         }
         assert {
           res2 == res3
+        }
+        assert {
+          c1 == 1
+        }
+        assert {
+          c2 == 1
+        }
+        assert {
+          c3 == 1
         }
       },
       10.seconds

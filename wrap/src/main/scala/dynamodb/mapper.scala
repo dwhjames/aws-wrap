@@ -603,7 +603,7 @@ trait AmazonDynamoDBScalaMapper {
     /**
       * Query a table.
       *
-      * This is the most primitive overload, which take a raw
+      * This is the most primitive overload, which takess a raw
       * query request object.
       *
       * This method will internally make repeated query calls
@@ -620,8 +620,8 @@ trait AmazonDynamoDBScalaMapper {
     def apply(queryRequest: QueryRequest)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] = {
-      val request =
-        queryRequest
+      // note this mutates the query request
+      queryRequest
         .withTableName(tableName)
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
@@ -759,41 +759,167 @@ trait AmazonDynamoDBScalaMapper {
 
 
   /**
-    * Query a table and return a count.
+    * A method overloading container for [[countQuery]].
+    *
+    * This class contains the overloaded implementations of [[countQuery]].
+    *
+    * @tparam T
+    *     the type of object queried.
+    * @see [[countQuery]]
+    */
+  class CountQuery[T] {
+
+    /**
+      * Query a table, counting the results.
+      *
+      * This is the most primitive overload, which takes a raw
+      * query request object.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @param queryRequest
+      *     the query request object.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the total number items that match the query in a future.
+      * @see [[countQuery]]
+      * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
+      */
+    def apply(queryRequest: QueryRequest)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Long] = {
+      // note this mutates the query request
+      queryRequest
+        .withTableName(tableName)
+        .withSelect(Select.COUNT)
+        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+        .withConsistentRead(config.consistentReads)
+
+      def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
+        client.query(
+          queryRequest.withExclusiveStartKey(lastKey.orNull)
+        ) flatMap { result =>
+          logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          val newCount = count + result.getCount
+          Option { result.getLastEvaluatedKey } match {
+            case None   => Future.successful(newCount)
+            case optKey => local(newCount, optKey)
+          }
+        }
+
+      local()
+    }
+
+    /**
+      * Query a table by a hash key value, counting the results.
+      *
+      * The result will be the count of all items with the
+      * same hash key value, but varying range keys.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the total number items that match the query in a future.
+      * @see [[countQuery]]
+      */
+    def apply[K <% AttributeValue]
+             (hashValue: K)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Long] =
+      apply(mkHashKeyQuery(hashValue))
+
+    /**
+      * Query a table by a hash value and range condition,
+      * counting the results.
+      *
+      * The result will be the count of all items with
+      * the same hash key value, and range keys that
+      * match the range condition.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the total number items that match the query in a future.
+      * @see [[countQuery]]
+      */
+    def apply[K <% AttributeValue]
+             (hashValue: K, rangeCondition: Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Long] =
+      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition))
+
+    /**
+      * Query a secondary index by a hash value and range
+      * condition, counting the results.
+      *
+      * This query targets a named secondary index. The index
+      * being used must be named, as well well at the name of
+      * the attribute used as a range key in the index.
+      * The result will be all the count of all items with the
+      * same hash key value, and range keys that match the
+      * range condition.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param indexName
+      *     the name of the secondary index to query.
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeAttributeName
+      *     the name of the range key attribute used by the index.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the total number items that match the query in a future.
+      * @see [[countQuery]]
+      */
+    def apply[K <% AttributeValue]
+             (indexName: String, hashValue: K, rangeAttributeName: String, rangeCondition: Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Long] =
+      apply(
+        new QueryRequest()
+          .withIndexName(indexName)
+          .withKeyConditions(
+            Map(
+              serializer.hashAttributeName -> QueryCondition.equalTo(hashValue),
+              rangeAttributeName           -> rangeCondition
+            ).asJava
+          )
+      )
+  }
+
+  /**
+    * Query a table, counting the results.
     *
     * This method will internally make repeated query calls
     * until the full result of the query has been retrieved.
     *
-    * @param keyConditions
-    *     the query conditions on the keys.
-    * @return the total number of queried items in a future.
+    * @tparam T
+    *     the type of object queried.
+    * @see [[CountQuery]]
     * @see [[query]]
     */
-  def countQuery[T](
-    keyConditions: Map[String, Condition]
-  )(implicit serializer: DynamoDBSerializer[T]): Future[Long] = {
-    val queryRequest =
-      new QueryRequest()
-      .withTableName(tableName)
-      .withKeyConditions(keyConditions.asJava)
-      .withSelect(Select.COUNT)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-      .withConsistentRead(config.consistentReads)
-
-    def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
-      client.query(
-        queryRequest.withExclusiveStartKey(lastKey.orNull)
-      ) flatMap { result =>
-        logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        val newCount = count + result.getCount
-        Option { result.getLastEvaluatedKey } match {
-          case None   => Future.successful(newCount)
-          case optKey => local(newCount, optKey)
-        }
-      }
-
-    local()
-  }
+  def countQuery[T] = new CountQuery[T]
 
 
 
