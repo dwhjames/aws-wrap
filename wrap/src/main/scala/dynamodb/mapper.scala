@@ -92,7 +92,7 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map. The concrete implementation
     * of a serializer may want to override this method for
     * efficiency reasons, as the default implementation uses
-    * [[DynamoDBSerializer.toAttributeMap]].
+    * [[toAttributeMap]].
     *
     * @param obj
     *     An object of type T.
@@ -113,7 +113,7 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[AttributeValue]].
+    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
@@ -125,9 +125,9 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[AttributeValue]].
+    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
     * @param rangeKey
-    *     An value that is convertable to an [[AttributeValue]].
+    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K1, K2](
@@ -284,7 +284,7 @@ trait AmazonDynamoDBScalaMapper {
       * deleted object returned, otherwise none.
       *
       * @tparam K
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param hashKey
       *     a string, number, or byte array that is the hash key value of the
       *     item to be deleted.
@@ -317,9 +317,9 @@ trait AmazonDynamoDBScalaMapper {
       * deleted object returned, otherwise none.
       *
       * @tparam K1
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @tparam K2
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param hashKey
       *     a string, number, or byte array that is the hash key value of the
       *     item to be deleted.
@@ -435,7 +435,7 @@ trait AmazonDynamoDBScalaMapper {
       * then None is returned.
       *
       * @tparam K
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param hashKey
       *     the hash key of the object to retrieve.
       * @param serializer
@@ -467,9 +467,9 @@ trait AmazonDynamoDBScalaMapper {
       * then None is returned.
       *
       * @tparam K1
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @tparam K2
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param hashKey
       *     the hash key of the object to retrieve.
       * @param rangeKey
@@ -654,7 +654,7 @@ trait AmazonDynamoDBScalaMapper {
       * until the full result of the query has been retrieved.
       *
       * @tparam K
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param hashValue
       *     the hash key value to match.
       * @param serializer
@@ -678,7 +678,7 @@ trait AmazonDynamoDBScalaMapper {
       * until the full result of the query has been retrieved.
       *
       * @tparam K
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param hashValue
       *     the hash key value to match.
       * @param rangeCondition
@@ -712,7 +712,7 @@ trait AmazonDynamoDBScalaMapper {
       * are projected into the index.
       *
       * @tparam K
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param indexName
       *     the name of the secondary index to query.
       * @param hashValue
@@ -807,9 +807,9 @@ trait AmazonDynamoDBScalaMapper {
     * @tparam T
     *     the type object for the serializer.
     * @tparam K1
-    *     a type that is viewable as an AttributeValue.
+    *     a type that is viewable as an [[AttributeValue]].
     * @tparam K2
-    *     a type that is viewable as an AttributeValue.
+    *     a type that is viewable as an [[AttributeValue]].
     * @param hashKeys
     *     a sequence of hash key values.
     * @param rangeKeys
@@ -859,9 +859,9 @@ trait AmazonDynamoDBScalaMapper {
       * given keys have been requested.
       *
       * @tparam K1
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @tparam K2
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param hashKeys
       *     the hash keys of the objects to retrieve.
       * @param rangeKeys
@@ -1067,9 +1067,9 @@ trait AmazonDynamoDBScalaMapper {
       * on their second failure.
       *
       * @tparam K1
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @tparam K2
-      *     a type that is viewable as an AttributeValue.
+      *     a type that is viewable as an [[AttributeValue]].
       * @param hashKeys
       *     the hash key values of the items to delete.
       * @param rangeKeys
