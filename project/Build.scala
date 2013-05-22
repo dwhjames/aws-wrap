@@ -1,50 +1,72 @@
 
 import sbt._
-import sbt.Default._
 import sbt.Keys._
+import sbt.Project.Initialize
 
-import scalariform.formatter.preferences._
-import com.typesafe.sbtscalariform.ScalariformPlugin._
+object AWSBuild extends Build {
 
-object AWS {
-    val scalaVersion = "2.10.0"
-    val version = "0.4-SNAPSHOT"
-    val repository = "AWS" at "http://pellucidanalytics.github.com/aws/repository/"
+  lazy val buildSettings = Seq(
+    organization := "aws",
+    version      := "0.4-SNAPSHOT",
+    scalaVersion := "2.10.1",
+    scalacOptions ++= Seq("-feature", "-deprecation")
+  )
 
-}
-
-object ApplicationBuild extends Build {
-
-    lazy val projectScalariformSettings = defaultScalariformSettings ++ Seq(
-        ScalariformKeys.preferences := FormattingPreferences()
-            .setPreference(AlignParameters, true)
-            .setPreference(FormatXml, false)
+  override lazy val settings =
+    super.settings ++
+    buildSettings ++
+    Seq(
+      shellPrompt := { s => Project.extract(s).currentProject.id + " > " }
     )
 
-    lazy val commonSettings: Seq[Setting[_]] = Project.defaultSettings ++ projectScalariformSettings ++ Seq(
-        organization := "aws",
-        scalaVersion := AWS.scalaVersion,
-        scalacOptions ++= Seq("-feature", "-deprecation"),
-        version := AWS.version,
+  lazy val wrap = Project(
+    id       = "wrap",
+    base     = file("wrap"),
+    settings =
+      Defaults.defaultSettings ++
+      Publish.settings ++
+      Seq(
         resolvers ++= Seq(
           "typesafe" at "http://repo.typesafe.com/typesafe/releases",
           "sonatype" at "http://oss.sonatype.org/content/repositories/releases"
         ),
-        publishMavenStyle := true,
-        publishTo <<= version { (version: String) =>
-          val localPublishRepo = "../datomisca-repo/"
-          if(version.trim.endsWith("SNAPSHOT"))
-            Some(Resolver.file("snapshots", new File(localPublishRepo + "/snapshots")))
-          else Some(Resolver.file("releases", new File(localPublishRepo + "/releases")))
-        }
-    )
-
-    lazy val wrap = Project("wrap", file("wrap"), settings = commonSettings ++ Seq(
-        libraryDependencies ++= Seq(
-            "com.amazonaws" % "aws-java-sdk" % "1.4.3",
-            "ch.qos.logback" % "logback-classic" % "1.0.1"
-        )
-    ))
+        libraryDependencies ++= Dependencies.wrap
+      )
+  )
 
 }
 
+object Dependencies {
+
+  object Compile {
+
+    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % "1.4.3"
+
+    val logback    = "ch.qos.logback" % "logback-classic" % "1.0.1"
+  }
+
+  import Compile._
+
+  val wrap = Seq(awsJavaSDK, logback)
+
+}
+
+object Publish {
+
+  lazy val settings = Seq(
+    publishMavenStyle := true,
+    publishTo <<= localPublishTo
+  )
+
+  // "AWS" at "http://pellucidanalytics.github.com/aws/repository/"
+  def localPublishTo: Initialize[Option[Resolver]] = {
+    version { v: String =>
+      val localPublishRepo = "../datomisca-repo/"
+      if (v.trim endsWith "SNAPSHOT")
+        Some("snapshots" at localPublishRepo + "/snapshots")
+      else
+        Some("releases"  at localPublishRepo + "/releases")
+    }
+  }
+
+}
