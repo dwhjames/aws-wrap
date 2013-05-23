@@ -15,9 +15,149 @@ import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.model._
 import com.amazonaws.services.s3.transfer.Transfer
 
-trait AmazonS3ScalaClient {
+/**
+  * A lightweight wrapper for [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html AmazonS3Client]]
+  *
+  * The AWS Java SDK does not provide an asynchronous S3 client,
+  * so this class follows the approach of the asynchronous clients
+  * that are provided by the SDK. Namely, to make the synchronous
+  * calls within an executor service. The methods in this class
+  * all return Scala futures.
+  *
+  * @constructor make a client from a credentials provider,
+  *     a config, and an executor service.
+  * @param awsCredentialsProvider
+  *     a provider of AWS credentials.
+  * @param clientConfiguration
+  *     a client configuration.
+  * @param executorService
+  *     an executor service for synchronous calls to the underlying AmazonS3Client.
+  * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html AmazonS3Client]]
+  * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/AWSCredentialsProvider.html AWSCredentialsProvider]]
+  * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/ClientConfiguration.html ClientConfiguration]]
+  * @see java.util.concurrent.ExecutorService
+  */
+class AmazonS3ScalaClient(
+    awsCredentialsProvider: AWSCredentialsProvider,
+    clientConfiguration:    ClientConfiguration,
 
-  val client: AmazonS3AsyncClient
+    private[s3] val executorService: ExecutorService
+) {
+
+  /**
+    * The underlying S3 client.
+    *
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html AmazonS3Client]]
+    */
+  val client = new AmazonS3Client(awsCredentialsProvider, clientConfiguration)
+
+  /**
+    * make a client from a credentials provider, a config, and a default executor service.
+    *
+    * @param awsCredentialsProvider
+    *     a provider of AWS credentials.
+    * @param clientConfiguration
+    *     a client configuration.
+    */
+  def this(awsCredentialsProvider: AWSCredentialsProvider, clientConfiguration: ClientConfiguration) {
+    this(awsCredentialsProvider, clientConfiguration, Executors.newCachedThreadPool())
+  }
+
+  /**
+    * make a client from a default credentials provider, a config, and a default executor service.
+    *
+    * @param clientConfiguration
+    *     a client configuration.
+    */
+  def this(clientConfiguration: ClientConfiguration) {
+    this(new DefaultAWSCredentialsProviderChain(), clientConfiguration, Executors.newCachedThreadPool())
+  }
+
+  /**
+    * make a client from credentials, a config, and an executor service.
+    *
+    * @param awsCredentials
+    *     AWS credentials.
+    * @param clientConfiguration
+    *     a client configuration.
+    * @param executorService
+    *     an executor service for synchronous calls to the underlying AmazonS3Client.
+    */
+  def this(awsCredentials: AWSCredentials, clientConfiguration: ClientConfiguration, executorService: ExecutorService) {
+    this(new StaticCredentialsProvider(awsCredentials), clientConfiguration, executorService)
+  }
+
+  /**
+    * make a client from credentials, a default config, and an executor service.
+    *
+    * @param awsCredentials
+    *     AWS credentials.
+    * @param clientConfiguration
+    *     a client configuration.
+    * @param executorService
+    *     an executor service for synchronous calls to the underlying AmazonS3Client.
+    */
+  def this(awsCredentials: AWSCredentials, executorService: ExecutorService) {
+    this(awsCredentials, new ClientConfiguration(), executorService)
+  }
+
+  /**
+    * make a client from credentials, a default config, and a default executor service.
+    *
+    * @param awsCredentials
+    *     AWS credentials.
+    */
+  def this(awsCredentials: AWSCredentials) {
+    this(awsCredentials, Executors.newCachedThreadPool())
+  }
+
+  /**
+    * make a client from a credentials provider, a default config, and an executor service.
+    *
+    * @param awsCredentialsProvider
+    *     a provider of AWS credentials.
+    * @param executorService
+    *     an executor service for synchronous calls to the underlying AmazonS3Client.
+    */
+  def this(awsCredentialsProvider: AWSCredentialsProvider, executorService: ExecutorService) {
+    this(awsCredentialsProvider, new ClientConfiguration(), executorService)
+  }
+
+  /**
+    * make a client from a credentials provider, a default config, and a default executor service.
+    *
+    * @param awsCredentialsProvider
+    *     a provider of AWS credentials.
+    */
+  def this(awsCredentialsProvider: AWSCredentialsProvider) {
+    this(awsCredentialsProvider, Executors.newCachedThreadPool())
+  }
+
+  /**
+    * make a client from a default credentials provider, a default config, and a default executor service.
+    */
+  def this() {
+    this(new DefaultAWSCredentialsProviderChain())
+  }
+
+  /**
+    * Return the underlying executor service, through which all client
+    * API calls are made.
+    *
+    * @return the underlying executor service
+    */
+  def getExecutorsService(): ExecutorService = executorService
+
+  /**
+    * Shutdown the executor service.
+    *
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/AmazonWebServiceClient.html#shutdown() AmazonWebServiceClient.shutdown()]]
+    */
+  def shutdown() {
+    client.shutdown()
+    executorService.shutdownNow()
+  }
+
 
   @inline
   private def wrapMethod[Request, Result](
@@ -25,7 +165,7 @@ trait AmazonS3ScalaClient {
     request: Request
   ): Future[Result] = {
     val p = Promise[Result]
-    client.executorService.execute(new Runnable {
+    executorService.execute(new Runnable {
       override def run() =
         p complete {
           Try {
@@ -36,11 +176,17 @@ trait AmazonS3ScalaClient {
     p.future
   }
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#copyObject(com.amazonaws.services.s3.model.CopyObjectRequest) AWS Java SDK]]
+    */
   def copyObject(
     copyObjectRequest: CopyObjectRequest
   ): Future[CopyObjectResult] =
     wrapMethod(client.copyObject, copyObjectRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#copyObject(com.amazonaws.services.s3.model.CopyObjectRequest) AWS Java SDK]]
+    */
   def copyObject(
     sourceBucketName:      String,
     sourceKey:             String,
@@ -49,59 +195,92 @@ trait AmazonS3ScalaClient {
   ): Future[CopyObjectResult] =
     copyObject(new CopyObjectRequest(sourceBucketName, sourceKey, destinationBucketName, destinationKey))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#createBucket(com.amazonaws.services.s3.model.CreateBucketRequest) AWS Java SDK]]
+    */
   def createBucket(
     createBucketRequest: CreateBucketRequest
   ): Future[Bucket] =
     wrapMethod[CreateBucketRequest, Bucket](client.createBucket, createBucketRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#createBucket(com.amazonaws.services.s3.model.CreateBucketRequest) AWS Java SDK]]
+    */
   def createBucket(
     bucketName: String
   ): Future[Bucket] =
     createBucket(new CreateBucketRequest(bucketName))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#createBucket(com.amazonaws.services.s3.model.CreateBucketRequest) AWS Java SDK]]
+    */
   def createBucket(
     bucketName: String,
     region:     Region
   ): Future[Bucket] =
     createBucket(new CreateBucketRequest(bucketName, region))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#createBucket(com.amazonaws.services.s3.model.CreateBucketRequest) AWS Java SDK]]
+    */
   def createBucket(
     bucketName: String,
     region:     String
   ): Future[Bucket] =
     createBucket(new CreateBucketRequest(bucketName, region))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#deleteBucket(com.amazonaws.services.s3.model.DeleteBucketRequest) AWS Java SDK]]
+    */
   def deleteBucket(
     deleteBucketRequest: DeleteBucketRequest
   ): Future[Unit] =
     wrapMethod[DeleteBucketRequest, Unit](client.deleteBucket, deleteBucketRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#deleteBucket(com.amazonaws.services.s3.model.DeleteBucketRequest) AWS Java SDK]]
+    */
   def deleteBucket(
     bucketName: String
   ): Future[Unit] =
     deleteBucket(new DeleteBucketRequest(bucketName))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#deleteObject(com.amazonaws.services.s3.model.DeleteObjectRequest) AWS Java SDK]]
+    */
   def deleteObject(
     deleteObjectRequest: DeleteObjectRequest
   ): Future[Unit] =
     wrapMethod(client.deleteObject, deleteObjectRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#deleteObject(com.amazonaws.services.s3.model.DeleteObjectRequest) AWS Java SDK]]
+    */
   def deleteObject(
     bucketName: String,
     key:        String
   ): Future[Unit] =
     deleteObject(new DeleteObjectRequest(bucketName, key))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#deleteObjects(com.amazonaws.services.s3.model.DeleteObjectsRequest) AWS Java SDK]]
+    */
   def deleteObjects(
     deleteObjectsRequest: DeleteObjectsRequest
   ): Future[Seq[DeleteObjectsResult.DeletedObject]] =
     wrapMethod((req: DeleteObjectsRequest) => client.deleteObjects(req).getDeletedObjects.asScala.toSeq, deleteObjectsRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#deleteVersion(com.amazonaws.services.s3.model.DeleteVersionRequest) AWS Java SDK]]
+    */
   def deleteVersion(
     deleteVersionRequest: DeleteVersionRequest
   ): Future[Unit] =
     wrapMethod(client.deleteVersion, deleteVersionRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#deleteVersion(com.amazonaws.services.s3.model.DeleteVersionRequest) AWS Java SDK]]
+    */
   def deleteVersion(
     bucketName: String,
     key:        String,
@@ -109,45 +288,72 @@ trait AmazonS3ScalaClient {
   ): Future[Unit] =
     deleteVersion(new DeleteVersionRequest(bucketName, key, versionId))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#doesBucketExist(java.lang.String) AWS Java SDK]]
+    */
   def doesBucketExist(
     bucketName: String
   ): Future[Boolean] =
     wrapMethod(client.doesBucketExist, bucketName)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getBucketLocation(com.amazonaws.services.s3.model.GetBucketLocationRequest) AWS Java SDK]]
+    */
   def getBucketLocation(
     getBucketLocationRequest: GetBucketLocationRequest
   ): Future[String] =
     wrapMethod[GetBucketLocationRequest, String](client.getBucketLocation, getBucketLocationRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getBucketLocation(com.amazonaws.services.s3.model.GetBucketLocationRequest) AWS Java SDK]]
+    */
   def getBucketLocation(
     bucketName: String
   ): Future[String] =
     getBucketLocation(new GetBucketLocationRequest(bucketName))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObjectMetadata(com.amazonaws.services.s3.model.GetObjectMetadataRequest) AWS Java SDK]]
+    */
   def getObjectMetadata(
     getObjectMetadataRequest: GetObjectMetadataRequest
   ): Future[ObjectMetadata] =
     wrapMethod(client.getObjectMetadata, getObjectMetadataRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObjectMetadata(com.amazonaws.services.s3.model.GetObjectMetadataRequest) AWS Java SDK]]
+    */
   def getObjectMetadata(
     bucketName: String,
     key:        String
   ): Future[ObjectMetadata] =
     getObjectMetadata(new GetObjectMetadataRequest(bucketName, key))
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listBuckets(com.amazonaws.services.s3.model.ListBucketsRequest) AWS Java SDK]]
+    */
   def listBuckets(
     listBucketsRequest: ListBucketsRequest
   ): Future[Seq[Bucket]] =
     wrapMethod((req: ListBucketsRequest) => client.listBuckets(req).asScala.toSeq, listBucketsRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listBuckets(com.amazonaws.services.s3.model.ListBucketsRequest) AWS Java SDK]]
+    */
   def listBuckets(): Future[Seq[Bucket]] =
     listBuckets(new ListBucketsRequest())
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listObjects(com.amazonaws.services.s3.model.ListObjectsRequest) AWS Java SDK]]
+    */
   def listObjects(
     listObjectsRequest: ListObjectsRequest
   ): Future[ObjectListing] =
     wrapMethod[ListObjectsRequest, ObjectListing](client.listObjects, listObjectsRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listObjects(com.amazonaws.services.s3.model.ListObjectsRequest) AWS Java SDK]]
+    */
   def listObjects(
     bucketName: String
   ): Future[ObjectListing] =
@@ -156,6 +362,9 @@ trait AmazonS3ScalaClient {
       .withBucketName(bucketName)
     )
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listObjects(com.amazonaws.services.s3.model.ListObjectsRequest) AWS Java SDK]]
+    */
   def listObjects(
     bucketName: String,
     prefix:     String
@@ -166,11 +375,17 @@ trait AmazonS3ScalaClient {
       .withPrefix(prefix)
     )
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listVersions(com.amazonaws.services.s3.model.ListVersionsRequest) AWS Java SDK]]
+    */
   def listVersions(
     listVersionsRequest: ListVersionsRequest
   ): Future[VersionListing] =
       wrapMethod(client.listVersions, listVersionsRequest)
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listVersions(com.amazonaws.services.s3.model.ListVersionsRequest) AWS Java SDK]]
+    */
   def listVersions(
     bucketName: String,
     prefix:     String
@@ -181,6 +396,9 @@ trait AmazonS3ScalaClient {
       .withPrefix(prefix)
     )
 
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listVersions(com.amazonaws.services.s3.model.ListVersionsRequest) AWS Java SDK]]
+    */
   def listVersions(
     bucketName:      String,
     prefix:          String,
@@ -193,70 +411,35 @@ trait AmazonS3ScalaClient {
 
 }
 
-object AmazonS3ScalaClient {
-
-  private class AmazonS3ScalaClientImpl(override val client: AmazonS3AsyncClient) extends AmazonS3ScalaClient
-
-  def fromAsyncClient(client: AmazonS3AsyncClient): AmazonS3ScalaClient =
-    new AmazonS3ScalaClientImpl(client)
-}
-
-class AmazonS3AsyncClient(
-  awsCredentialsProvider: AWSCredentialsProvider,
-  clientConfiguration:    ClientConfiguration,
-  private[aws] val executorService: ExecutorService
-) extends AmazonS3Client(awsCredentialsProvider, clientConfiguration) {
-
-  // default executor service
-  def this(awsCredentialsProvider: AWSCredentialsProvider, clientConfiguration: ClientConfiguration) {
-    this(awsCredentialsProvider, clientConfiguration, Executors.newCachedThreadPool())
-  }
-
-  // default provider and executor service
-  def this(clientConfiguration: ClientConfiguration) {
-    this(new DefaultAWSCredentialsProviderChain(), clientConfiguration, Executors.newCachedThreadPool())
-  }
-
-  // wrap credentials into a static provider
-  def this(awsCredentials: AWSCredentials, clientConfiguration: ClientConfiguration, executorService: ExecutorService) {
-    this(new StaticCredentialsProvider(awsCredentials), clientConfiguration, executorService)
-  }
-
-  // wrap credentials into a static provider, and default client config
-  def this(awsCredentials: AWSCredentials, executorService: ExecutorService) {
-    this(awsCredentials, new ClientConfiguration(), executorService)
-  }
-
-  // wrap credentials into a static provider, and default client config and executor service
-  def this(awsCredentials: AWSCredentials) {
-    this(awsCredentials, Executors.newCachedThreadPool())
-  }
-
-  // default client config
-  def this(awsCredentialsProvider: AWSCredentialsProvider, executorService: ExecutorService) {
-    this(awsCredentialsProvider, new ClientConfiguration(), executorService)
-  }
-
-  // default client config and executor service
-  def this(awsCredentialsProvider: AWSCredentialsProvider) {
-    this(awsCredentialsProvider, Executors.newCachedThreadPool())
-  }
-
-  // default credentials provider, client config and executor service
-  def this() {
-    this(new DefaultAWSCredentialsProviderChain())
-  }
-
-  def getExecutorsService(): ExecutorService = executorService
-
-  override def shutdown() {
-    super.shutdown()
-    executorService.shutdownNow()
-  }
-}
-
+/**
+  * A helper object providing a Scala Future interface for S3 Transfers.
+  *
+  * Transfers to and from S3 using the TransferManager provider a listener
+  * interface, and [[FutureTransfer.listenFor]] adapts this interface to
+  * Scala futures.
+  *
+  * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/TransferManager.html TransferManager]]
+  * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html Transfer]]
+  */
 object FutureTransfer {
 
+  /**
+    * Attach a listener to an S3 Transfer and return it as a Future.
+    *
+    * This helper method attaches a progress listener to the given
+    * Transfer object. The listener returns the transfer object in
+    * a future if the transfer is completed or is cancelled, and it
+    * extracts the exception on failure.
+    *
+    * @tparam T
+    *     a subtype of Transfer.
+    * @param transfer
+    *     an S3 Transfer to listen for progress.
+    * @return the completed or cancelled transfer in a future.
+    * @throws AmazonClientException in the future the transfer failed.
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html Transfer]]
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/model/ProgressListener.html ProgressListener]]
+    */
   def listenFor[T <: Transfer](transfer: T): Future[T] = {
     val p = Promise[T]
     transfer.addProgressListener(new ProgressListener {
