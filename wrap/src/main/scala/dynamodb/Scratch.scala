@@ -1,7 +1,5 @@
 
-package aws.wrap
-
-import dynamodb._
+package aws.wrap.dynamodb
 
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
