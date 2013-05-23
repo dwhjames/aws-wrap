@@ -7,7 +7,7 @@ object AWSBuild extends Build {
 
   lazy val buildSettings = Seq(
     organization := "aws",
-    version      := "0.4-SNAPSHOT",
+    version      := "0.4",
     scalaVersion := "2.10.1",
     scalacOptions ++= Seq("-feature", "-deprecation")
   )
