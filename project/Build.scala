@@ -66,9 +66,9 @@ object Publish {
     version { v: String =>
       val localPublishRepo = "../datomisca-repo/"
       if (v.trim endsWith "SNAPSHOT")
-        Some("snapshots" at localPublishRepo + "/snapshots")
+        Some(Resolver.file("snapshots", new File(localPublishRepo + "/snapshots")))
       else
-        Some("releases"  at localPublishRepo + "/releases")
+        Some(Resolver.file("releases",  new File(localPublishRepo + "/releases")))
     }
   }
 
