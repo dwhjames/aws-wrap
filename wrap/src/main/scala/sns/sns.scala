@@ -10,9 +10,7 @@ import java.util.concurrent.ExecutorService
 import com.amazonaws.services.sns._
 import com.amazonaws.services.sns.model._
 
-trait AmazonSNSScalaClient {
-
-  val client: AmazonSNSAsyncClient
+class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
 
   def addPermissionAsync(
     addPermissionAsyncRequest: AddPermissionRequest
@@ -155,14 +153,5 @@ trait AmazonSNSScalaClient {
     subsciptionArn: String
   ): Future[Unit] =
     unsubscribe(new UnsubscribeRequest(subsciptionArn))
-
-}
-
-object AmazonSNSScalaClient {
-
-  private class AmazonSNSScalaClientImpl(override val client: AmazonSNSAsyncClient) extends AmazonSNSScalaClient
-
-  def fromAsyncClient(client: AmazonSNSAsyncClient): AmazonSNSScalaClient =
-    new AmazonSNSScalaClientImpl(client)
 
 }

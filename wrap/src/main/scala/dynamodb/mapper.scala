@@ -92,7 +92,7 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map. The concrete implementation
     * of a serializer may want to override this method for
     * efficiency reasons, as the default implementation uses
-    * [[DynamoDBSerializer.toAttributeMap]].
+    * [[toAttributeMap]].
     *
     * @param obj
     *     An object of type T.
@@ -113,7 +113,7 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[AttributeValue]].
+    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
@@ -125,9 +125,9 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[AttributeValue]].
+    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
     * @param rangeKey
-    *     An value that is convertable to an [[AttributeValue]].
+    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K1, K2](
@@ -263,24 +263,40 @@ trait AmazonDynamoDBScalaMapper {
 
   private val logger: Logger = LoggerFactory.getLogger(classOf[AmazonDynamoDBScalaMapper])
 
+
+
   /**
-    * Delete a DynamoDB item by a hash key and range key.
+    * A method overloading container for [[deleteByKey]].
     *
-    * The object that was deleted is returned.
+    * This class contains the overloaded implementations
+    * of [[deleteByKey]].
     *
-    * @param hashKey
-    *     A string, number, or byte array that is the hash key value of the
-    *     item to be deleted
-    * @param rangeKey
-    *     A string, number, or byte array that is the range key value of the
-    *     item to be deleted
-    * @return object that was deleted in a future
+    * @tparam T
+    *     the type of the object to be deleted.
+    * @see [[deleteByKey]]
     */
-  def deleteByKey[T] = new {
+  class DeleteByKey[T] {
+
+    /**
+      * Delete a DynamoDB item by a hash key.
+      *
+      * If an item with the given key was deleted then the
+      * deleted object returned, otherwise none.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKey
+      *     a string, number, or byte array that is the hash key value of the
+      *     item to be deleted.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the deleted object, or None, in a future.
+      * @see [[deleteByKey]]
+      */
     def apply[K <% AttributeValue]
              (hashKey: K)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[T] =
+             : Future[Option[T]] =
       client.deleteItem(
         new DeleteItemRequest()
         .withTableName(tableName)
@@ -289,13 +305,36 @@ trait AmazonDynamoDBScalaMapper {
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
       ) map { result =>
         logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        serializer.fromAttributeMap(result.getAttributes.asScala)
+        Option { result.getAttributes } map { item =>
+          serializer.fromAttributeMap(item.asScala)
+        }
       }
 
+    /**
+      * Delete a DynamoDB item by a hash key and range key.
+      *
+      * If an item with the given key was deleted then the
+      * deleted object returned, otherwise none.
+      *
+      * @tparam K1
+      *     a type that is viewable as an [[AttributeValue]].
+      * @tparam K2
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKey
+      *     a string, number, or byte array that is the hash key value of the
+      *     item to be deleted.
+      * @param rangeKey
+      *     a string, number, or byte array that is the range key value of the
+      *     item to be deleted.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the deleted object, or None, in a future.
+      * @see [[deleteByKey]]
+      */
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKey: K1, rangeKey: K2)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[T] =
+             : Future[Option[T]] =
       client.deleteItem(
         new DeleteItemRequest()
         .withTableName(tableName)
@@ -304,15 +343,35 @@ trait AmazonDynamoDBScalaMapper {
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
       ) map { result =>
         logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        serializer.fromAttributeMap(result.getAttributes.asScala)
+        Option { result.getAttributes } map { item =>
+          serializer.fromAttributeMap(item.asScala)
+        }
       }
   }
 
   /**
+    * Delete a DynamoDB item by a hash key (and range key).
+    *
+    * If an item with the given key was deleted then the
+    * deleted object returned, otherwise none.
+    *
+    * @tparam T
+    *     the type of the object to be deleted.
+    * @see [[DeleteByKey]]
+    */
+  def deleteByKey[T] = new DeleteByKey[T]
+
+
+
+  /**
     * Delete the DynamoDB item that corresponds to the given object
     *
+    * @tparam T
+    *     the type of the object to delete.
     * @param obj
-    *     The object to delete
+    *     the object to delete.
+    * @param serializer
+    *     an implicit object serializer.
     */
   def delete[T](
     obj: T
@@ -327,14 +386,20 @@ trait AmazonDynamoDBScalaMapper {
       ()
     }
 
+
+
   /**
     * Dumps an object into DynamoDB
     *
     * If the object is new, then this creates the item in DynamoDB,
     * otherwise it overwrites the exisiting item.
     *
+    * @tparam T
+    *     the type of the object to put.
     * @param obj
-    *     the object to put
+    *     the object to put.
+    * @param serializer
+    *     an implicit object serializer.
     */
   def dump[T](
     obj: T
@@ -349,21 +414,35 @@ trait AmazonDynamoDBScalaMapper {
       ()
     }
 
+
+
   /**
-    * Load an object by its hash key (and range key).
+    * A method overloading container for [[loadByKey]].
     *
-    * If the item is not found in the DynamoDB table,
-    * then None is returned.
+    * This class contains the two overloaded implementations
+    * of [[loadByKey]].
     *
-    * @param hashKey
-    *     the hash key of the object to retrieve
-    * @param rangeKey
-    *     the range key of the object to retrieve
-    * @param serializer
-    *     an implicit object serializer
-    * @return the retreived object, or None, in a future
+    * @tparam T
+    *     the type of the object to be loaded.
+    * @see [[loadByKey]]
     */
-  def loadByKey[T] = new {
+  class LoadByKey[T] {
+
+    /**
+      * Load an object by its hash key.
+      *
+      * If the item is not found in the DynamoDB table,
+      * then None is returned.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKey
+      *     the hash key of the object to retrieve.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the retreived object, or None, in a future.
+      * @see [[loadByKey]]
+      */
     def apply[K <% AttributeValue]
              (hashKey: K)
              (implicit serializer: DynamoDBSerializer[T])
@@ -381,6 +460,25 @@ trait AmazonDynamoDBScalaMapper {
         }
       }
 
+    /**
+      * Load an object by its hash key and range key.
+      *
+      * If the item is not found in the DynamoDB table,
+      * then None is returned.
+      *
+      * @tparam K1
+      *     a type that is viewable as an [[AttributeValue]].
+      * @tparam K2
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKey
+      *     the hash key of the object to retrieve.
+      * @param rangeKey
+      *     the range key of the object to retrieve.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the retreived object, or None, in a future.
+      * @see [[loadByKey]]
+      */
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKey: K1, rangeKey: K2)
              (implicit serializer: DynamoDBSerializer[T])
@@ -400,14 +498,29 @@ trait AmazonDynamoDBScalaMapper {
   }
 
   /**
+    * Load an object by its hash key (and range key).
+    *
+    * If the item is not found in the DynamoDB table,
+    * then None is returned.
+    *
+    * @tparam T
+    *     the type of the object to be loaded.
+    * @see [[LoadByKey]]
+    */
+  def loadByKey[T] = new LoadByKey[T]
+
+
+
+  /**
     * Scan a table.
     *
     * This method will internally make repeated scan calls
     * until the full result of the scan has been retrieved.
     *
     * @param scanFilter
-    *     the optional filter conditions for the scan
-    * @return sequence of scanned objects in a future
+    *     the optional filter conditions for the scan.
+    * @return sequence of scanned objects in a future.
+    * @see [[countScan]]
     */
   def scan[T](
     scanFilter: Map[String, Condition] = Map.empty
@@ -436,6 +549,8 @@ trait AmazonDynamoDBScalaMapper {
     local() map { _ => builder.result }
   }
 
+
+
   /**
     * Scan a table and return a count.
     *
@@ -445,6 +560,7 @@ trait AmazonDynamoDBScalaMapper {
     * @param scanFilter
     *     the optional filter conditions for the scan
     * @return the total number of scanned items in a future
+    * @see [[scan]]
     */
   def countScan[T](
     scanFilter: Map[String, Condition] = Map.empty
@@ -471,22 +587,41 @@ trait AmazonDynamoDBScalaMapper {
     local()
   }
 
+
+
   /**
-    * Query a table
+    * A method overloading container for [[query]].
     *
-    * This method will internally make repeated query calls
-    * until the full result of the query has been retrieved.
+    * This class contains the overloaded implementations of [[query]].
     *
-    * @param queryRequest
-    *     the query parameters
-    * @return sequence of queries objects in a future
+    * @tparam T
+    *     the type of the object returned by the query.
+    * @see [[query]]
     */
-  def query[T] = new {
+  class Query[T] {
+
+    /**
+      * Query a table.
+      *
+      * This is the most primitive overload, which takess a raw
+      * query request object.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @param queryRequest
+      *     the query request object.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[query]]
+      * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
+      */
     def apply(queryRequest: QueryRequest)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] = {
-      val request =
-        queryRequest
+      // note this mutates the query request
+      queryRequest
         .withTableName(tableName)
         .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
@@ -509,54 +644,284 @@ trait AmazonDynamoDBScalaMapper {
       local() map { _ => builder.result }
     }
 
+    /**
+      * Query a table by a hash key value.
+      *
+      * The result will be all items with the same hash key
+      * value, but varying range keys.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[query]]
+      */
     def apply[K <% AttributeValue]
              (hashValue: K)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
       apply(mkHashKeyQuery(hashValue))
 
+    /**
+      * Query a table by a hash value and range condition.
+      *
+      * The result will be all items with the same hash key
+      * value, and range keys that match the range condition.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[query]]
+      */
     def apply[K <% AttributeValue]
              (hashValue: K, rangeCondition: Condition)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
       apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition))
+
+    /**
+      * Query a secondary index by a hash value and range condition.
+      *
+      * This query targets a named secondary index. The index
+      * being used must be named, as well well at the name of
+      * the attribute used as a range key in the index.
+      * The result will be all items with the same hash key
+      * value, and range keys that match the range condition.
+      * 
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * Note that all attributes will be requested, so that
+      * the serializer will get a complete item. This may incur
+      * extra read capacity, depending on what attributes
+      * are projected into the index.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param indexName
+      *     the name of the secondary index to query.
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeAttributeName
+      *     the name of the range key attribute used by the index.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[query]]
+      */
+    def apply[K <% AttributeValue]
+             (indexName: String, hashValue: K, rangeAttributeName: String, rangeCondition: Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      apply(
+        new QueryRequest()
+          .withIndexName(indexName)
+          .withKeyConditions(
+            Map(
+              serializer.hashAttributeName -> QueryCondition.equalTo(hashValue),
+              rangeAttributeName           -> rangeCondition
+            ).asJava
+          )
+          .withSelect(Select.ALL_ATTRIBUTES)
+      )
   }
 
   /**
-    * Query a table and return a count.
+    * Query a table.
     *
     * This method will internally make repeated query calls
     * until the full result of the query has been retrieved.
     *
-    * @param keyConditions
-    *     the query conditions on the keys
-    * @return the total number of queried items in a future
+    * @tparam T
+    *     the type of the object returned by the query.
+    * @see [[Query]]
+    * @see [[countQuery]]
     */
-  def countQuery[T](
-    keyConditions: Map[String, Condition]
-  )(implicit serializer: DynamoDBSerializer[T]): Future[Long] = {
-    val queryRequest =
-      new QueryRequest()
-      .withTableName(tableName)
-      .withKeyConditions(keyConditions.asJava)
-      .withSelect(Select.COUNT)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-      .withConsistentRead(config.consistentReads)
+  def query[T] = new Query[T]
 
-    def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
-      client.query(
-        queryRequest.withExclusiveStartKey(lastKey.orNull)
-      ) flatMap { result =>
-        logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        val newCount = count + result.getCount
-        Option { result.getLastEvaluatedKey } match {
-          case None   => Future.successful(newCount)
-          case optKey => local(newCount, optKey)
+
+
+  /**
+    * A method overloading container for [[countQuery]].
+    *
+    * This class contains the overloaded implementations of [[countQuery]].
+    *
+    * @tparam T
+    *     the type of object queried.
+    * @see [[countQuery]]
+    */
+  class CountQuery[T] {
+
+    /**
+      * Query a table, counting the results.
+      *
+      * This is the most primitive overload, which takes a raw
+      * query request object.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @param queryRequest
+      *     the query request object.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the total number items that match the query in a future.
+      * @see [[countQuery]]
+      * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
+      */
+    def apply(queryRequest: QueryRequest)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Long] = {
+      // note this mutates the query request
+      queryRequest
+        .withTableName(tableName)
+        .withSelect(Select.COUNT)
+        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+        .withConsistentRead(config.consistentReads)
+
+      def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
+        client.query(
+          queryRequest.withExclusiveStartKey(lastKey.orNull)
+        ) flatMap { result =>
+          logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          val newCount = count + result.getCount
+          Option { result.getLastEvaluatedKey } match {
+            case None   => Future.successful(newCount)
+            case optKey => local(newCount, optKey)
+          }
         }
-      }
 
-    local()
+      local()
+    }
+
+    /**
+      * Query a table by a hash key value, counting the results.
+      *
+      * The result will be the count of all items with the
+      * same hash key value, but varying range keys.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the total number items that match the query in a future.
+      * @see [[countQuery]]
+      */
+    def apply[K <% AttributeValue]
+             (hashValue: K)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Long] =
+      apply(mkHashKeyQuery(hashValue))
+
+    /**
+      * Query a table by a hash value and range condition,
+      * counting the results.
+      *
+      * The result will be the count of all items with
+      * the same hash key value, and range keys that
+      * match the range condition.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the total number items that match the query in a future.
+      * @see [[countQuery]]
+      */
+    def apply[K <% AttributeValue]
+             (hashValue: K, rangeCondition: Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Long] =
+      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition))
+
+    /**
+      * Query a secondary index by a hash value and range
+      * condition, counting the results.
+      *
+      * This query targets a named secondary index. The index
+      * being used must be named, as well well at the name of
+      * the attribute used as a range key in the index.
+      * The result will be all the count of all items with the
+      * same hash key value, and range keys that match the
+      * range condition.
+      *
+      * This method will internally make repeated query calls
+      * until the full result of the query has been retrieved.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param indexName
+      *     the name of the secondary index to query.
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeAttributeName
+      *     the name of the range key attribute used by the index.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return the total number items that match the query in a future.
+      * @see [[countQuery]]
+      */
+    def apply[K <% AttributeValue]
+             (indexName: String, hashValue: K, rangeAttributeName: String, rangeCondition: Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Long] =
+      apply(
+        new QueryRequest()
+          .withIndexName(indexName)
+          .withKeyConditions(
+            Map(
+              serializer.hashAttributeName -> QueryCondition.equalTo(hashValue),
+              rangeAttributeName           -> rangeCondition
+            ).asJava
+          )
+      )
   }
+
+  /**
+    * Query a table, counting the results.
+    *
+    * This method will internally make repeated query calls
+    * until the full result of the query has been retrieved.
+    *
+    * @tparam T
+    *     the type of object queried.
+    * @see [[CountQuery]]
+    * @see [[query]]
+    */
+  def countQuery[T] = new CountQuery[T]
+
+
 
   /**
     * Helper method to build seqences of keys
@@ -566,18 +931,20 @@ trait AmazonDynamoDBScalaMapper {
     * into a sequence of hash+range keys.
     *
     * @tparam T
-    *     the type object for the serializer
+    *     the type object for the serializer.
     * @tparam K1
-    *     a type that is viewable as an AttributeValue
+    *     a type that is viewable as an [[AttributeValue]].
     * @tparam K2
-    *     a type that is viewable as an AttributeValue
+    *     a type that is viewable as an [[AttributeValue]].
     * @param hashKeys
     *     a sequence of hash key values.
     * @param rangeKeys
     *     an optional sequence of range key values.
     * @param serializer
-    *     an object serializer
-    * @return a sequence of DynamoDB keys (a map of strings to values)
+    *     an implicit object serializer.
+    * @return a sequence of DynamoDB keys (a map of strings to values).
+    * @throws IllegalArgumentException if the sequence of hash key values is empty.
+    * @throws IllegalArgumentException if the number of hash and range keys don't match.
     */
   private def zipKeySeqs[T, K1 <% AttributeValue, K2 <% AttributeValue]
                         (hashKeys:  Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
@@ -598,20 +965,66 @@ trait AmazonDynamoDBScalaMapper {
     }
 
 
+
   /**
-    * Load a sequence of objects by a sequence of keys.
+    * A method overloading container for [[batchLoadByKeys]].
     *
-    * This method will internally make repeated batchGetItem
-    * calls, with up to 25 keys at a time, until all of the
-    * given keys have been requested.
+    * This class contains the overloaded implementation of [[batchLoadByKeys]].
     *
-    * @param hashKeys
-    *     the hash keys of the objects to retrieve
-    * @param rangeKeys
-    *     the range keys of the objects to retrieve
-    * @return sequence of retrieved objects in a future
+    * @tparam T
+    *     the type of the objects returned by the batch load.
+    * @see [[batchLoadByKeys]]
     */
-  def batchLoadByKeys[T] = new {
+  class BatchLoadByKeys[T] {
+
+    /**
+      * Load a sequence of objects by a sequence of hash key values.
+      *
+      * This method will internally make repeated batchGetItem
+      * calls, with up to 25 keys at a time, until all of the
+      * given keys have been requested.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKeys
+      *     the hash key values of the objects to retrieve.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return sequence of retrieved objects in a future.
+      * @see [[batchLoadByKeys]]
+      */
+    def apply[K <% AttributeValue]
+             (hashKeys:  Seq[K])
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      apply(hashKeys, Seq.empty[String])
+      /*
+       * Seq.empty[String] ensures that a valid view is inferred
+       * otherwise we will get an implicit error if Seq.empty
+       * is given type Seq[Nothing].
+       */
+
+    /**
+      * Load a sequence of objects by a sequence of hash key
+      * values and a sequences of range key values.
+      *
+      * This method will internally make repeated batchGetItem
+      * calls, with up to 25 keys at a time, until all of the
+      * given keys have been requested.
+      *
+      * @tparam K1
+      *     a type that is viewable as an [[AttributeValue]].
+      * @tparam K2
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKeys
+      *     the hash key values of the objects to retrieve.
+      * @param rangeKeys
+      *     the range key values of the objects to retrieve.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return sequence of retrieved objects in a future.
+      * @see [[batchLoadByKeys]]
+      */
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKeys:  Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
              (implicit serializer: DynamoDBSerializer[T])
@@ -649,6 +1062,21 @@ trait AmazonDynamoDBScalaMapper {
   }
 
   /**
+    * Load a sequence of objects by a sequence of keys.
+    *
+    * This method will internally make repeated batchGetItem
+    * calls, with up to 25 keys at a time, until all of the
+    * given keys have been requested.
+    *
+    * @tparam T
+    *     the type of the objects returned by the batch load.
+    * @see [[BatchLoadByKeys]]
+    */
+  def batchLoadByKeys[T] = new BatchLoadByKeys[T]
+
+
+
+  /**
     * A helper method to check for and retry any unprocessed items in
     * a batch write result.
     *
@@ -675,6 +1103,8 @@ trait AmazonDynamoDBScalaMapper {
       }
   }
 
+
+
   /**
     * Dump a sequence of objects into DynamoDB
     *
@@ -688,8 +1118,8 @@ trait AmazonDynamoDBScalaMapper {
     * otherwise they will overwrite exisiting items.
     *
     * @param objs
-    *     the sequence of objects to write to DynamoDB
-    * @throws BatchDumpException if a write to DynamoDB fails twice
+    *     the sequence of objects to write to DynamoDB.
+    * @throws BatchDumpException if a write to DynamoDB fails twice.
     */
   def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
     def local(objsPair: (Seq[T], Seq[T])): Future[Unit] =
@@ -719,6 +1149,8 @@ trait AmazonDynamoDBScalaMapper {
 
     local(objs.splitAt(25))
   }
+
+
 
   /**
     * Delete a sequence of objects.
@@ -766,24 +1198,73 @@ trait AmazonDynamoDBScalaMapper {
     local(objs.splitAt(25))
   }
 
+
+
   /**
-    * Delete items by a sequence of keys.
+    * A method overloading container for [[batchDeleteByKeys]].
     *
-    * This method will internally make repeated batchWriteItem
-    * calls, with up to 25 keys at a time, until all the input
-    * keys have been deleted. If any keys fail to be deleted,
-    * they will be retried once, and an exception will be thrown
-    * on their second failure.
+    * This class contains the overloaded implementation of [[batchDeleteByKeys]].
     *
-    * @param hashKeys
-    *     the hash keys of the items to delete.
-    * @param rangeKeys
-    *     the (optional) range keys of the items to delete.
-    * @throws BatchDumpException if a write to DynamoDB fails twice.
+    * @tparam T
+    *     the type of the objects deleted by the batch delete.
+    * @see [[batchDeleteByKeys]]
     */
-  def batchDeleteByKeys[T] = new {
+  class BatchDeleteByKeys[T] {
+
+    /**
+      * Delete items by a sequence of hash key values.
+      *
+      * This method will internally make repeated batchWriteItem
+      * calls, with up to 25 keys at a time, until all the input
+      * keys have been deleted. If any keys fail to be deleted,
+      * they will be retried once, and an exception will be thrown
+      * on their second failure.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKeys
+      *     the hash key values of the items to delete.
+      * @param serializer
+      *     an implicit object serializer.
+      * @throws BatchDumpException if a write to DynamoDB fails twice.
+      * @see [[batchDeleteByKeys]]
+      */
+    def apply[K <% AttributeValue]
+             (hashKeys: Seq[K])
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Unit] =
+      apply(hashKeys, Seq.empty[String])
+      /*
+       * Seq.empty[String] ensures that a valid view is inferred
+       * otherwise we will get an implicit error if Seq.empty
+       * is given type Seq[Nothing].
+       */
+
+    /**
+      * Delete items by a sequence of hash key values and a
+      * sequence of range key values.
+      *
+      * This method will internally make repeated batchWriteItem
+      * calls, with up to 25 keys at a time, until all the input
+      * keys have been deleted. If any keys fail to be deleted,
+      * they will be retried once, and an exception will be thrown
+      * on their second failure.
+      *
+      * @tparam K1
+      *     a type that is viewable as an [[AttributeValue]].
+      * @tparam K2
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashKeys
+      *     the hash key values of the items to delete.
+      * @param rangeKeys
+      *     the range key values of the items to delete.
+      * @param serializer
+      *     an implicit object serializer.
+      * @throws BatchDumpException if a write to DynamoDB fails twice.
+      * @see [[batchDeleteByKeys]]
+      */
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
-             (hashKeys:  Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
+             (hashKeys: Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Unit] = {
       val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
@@ -817,4 +1298,50 @@ trait AmazonDynamoDBScalaMapper {
     }
   }
 
+  /**
+    * Delete items by a sequence of keys.
+    *
+    * This method will internally make repeated batchWriteItem
+    * calls, with up to 25 keys at a time, until all the input
+    * keys have been deleted. If any keys fail to be deleted,
+    * they will be retried once, and an exception will be thrown
+    * on their second failure.
+    *
+    * @tparam T
+    *     the type of the objects deleted by the batch delete.
+    * @see [[BatchDeleteByKeys]]
+    */
+  def batchDeleteByKeys[T] = new BatchDeleteByKeys[T]
+
+}
+
+
+
+/**
+  * A factory for [[AmazonDynamoDBScalaMapper]].
+  */
+object AmazonDynamoDBScalaMapper {
+
+  /**
+    * A factory method for [[AmazonDynamoDBScalaMapper]].
+    *
+    * Build a new mapper from a client, a config, and
+    * an execution context.
+    *
+    * @param dynamoClient
+    *     the DynamoDB client to use.
+    * @param mapperConfig
+    *     the mapping configuration to use.
+    * @param exec
+    *     the execution context to use.
+    * @return a new mapper.
+    */
+  def apply(
+    dynamoClient: AmazonDynamoDBScalaClient,
+    mapperConfig: AmazonDynamoDBScalaMapperConfig = AmazonDynamoDBScalaMapperConfig.Default
+  )(implicit exec: ExecutionContext) = new AmazonDynamoDBScalaMapper {
+    override val client = dynamoClient
+    override protected val execCtx = exec
+    override protected val config = mapperConfig
+  }
 }
