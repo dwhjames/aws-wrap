@@ -12,13 +12,13 @@ import com.amazonaws.services.dynamodbv2.model._
 
 /**
   * A lightweight wrapper for [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html AmazonDynamoDBAsyncClient]].
+  *
+  * @constructor construct a wrapper client from an Amazon async client.
+  * @param client
+  *     the underlying [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html AmazonDynamoDBAsyncClient]].
+  * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html AmazonDynamoDBAsyncClient]]
   */
-trait AmazonDynamoDBScalaClient {
-
-  /**
-    * An abstract [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html AmazonDynamoDBAsyncClient]].
-    */
-  val client: AmazonDynamoDBAsyncClient
+class AmazonDynamoDBScalaClient(val client: AmazonDynamoDBAsyncClient) {
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDB.html#batchGetItem(com.amazonaws.services.dynamodbv2.model.BatchGetItemRequest) AWS Java SDK]]
@@ -279,26 +279,4 @@ trait AmazonDynamoDBScalaClient {
       .withTableName(tableName)
       .withProvisionedThroughput(provisionedThroughput)
     )
-}
-
-/**
-  * A factory for [[AmazonDynamoDBScalaClient]] instances.
-  */
-object AmazonDynamoDBScalaClient {
-
-  private class AmazonDynamoDBScalaClientImpl(override val client: AmazonDynamoDBAsyncClient) extends AmazonDynamoDBScalaClient
-
-  /**
-    * Construct an [[AmazonDynamoDBScalaClient]] instance from an
-    * [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html AmazonDynamoDBAsyncClient]]
-    * instance.
-    *
-    * A factory method for [[AmazonDynamoDBScalaClient]] instances.
-    *
-    * @param client
-    *     a [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html AmazonDynamoDBAsyncClient]] client.
-    * @return a new [[AmazonDynamoDBScalaClient]] instance.
-    */
-  def fromAsyncClient(client: AmazonDynamoDBAsyncClient): AmazonDynamoDBScalaClient =
-    new AmazonDynamoDBScalaClientImpl(client)
 }

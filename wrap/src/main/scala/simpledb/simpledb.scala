@@ -10,9 +10,7 @@ import java.util.concurrent.ExecutorService
 import com.amazonaws.services.simpledb._
 import com.amazonaws.services.simpledb.model._
 
-trait AmazonSimpleDBScalaClient {
-
-  val client: AmazonSimpleDBAsyncClient
+class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
 
   def batchDeleteAttributes(
     batchDeleteAttributesRequest: BatchDeleteAttributesRequest
@@ -187,12 +185,4 @@ trait AmazonSimpleDBScalaClient {
   def shutdown(): Unit =
     client.shutdown()
 
-}
-
-object AmazonSimpleDBScalaClient {
-
-  private class AmazonSimpleDBScalaClientImpl(override val client: AmazonSimpleDBAsyncClient) extends AmazonSimpleDBScalaClient
-
-  def fromAsyncClient(client: AmazonSimpleDBAsyncClient): AmazonSimpleDBScalaClient =
-    new AmazonSimpleDBScalaClientImpl(client)
 }

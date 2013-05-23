@@ -347,7 +347,7 @@ object Scratch {
 
   def main(args: Array[String]) {
 
-    val client = AmazonDynamoDBScalaClient.fromAsyncClient(new AmazonDynamoDBAsyncClient(UserHomeCredentialsProvider))
+    val client = new AmazonDynamoDBScalaClient(new AmazonDynamoDBAsyncClient(UserHomeCredentialsProvider))
 
     def awaitTableCreation(tableName: String): TableDescription = {
       logger.info(s"Waiting for $tableName table to become active.")

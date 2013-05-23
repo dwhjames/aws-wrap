@@ -10,9 +10,7 @@ import java.util.concurrent.ExecutorService
 import com.amazonaws.services.simpleemail._
 import com.amazonaws.services.simpleemail.model._
 
-trait AmazonSimpleEmailServiceScalaClient {
-
-  val client: AmazonSimpleEmailServiceAsyncClient
+class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAsyncClient) {
 
   def deleteIdentity(
     deleteIdentityRequest: DeleteIdentityRequest
@@ -219,14 +217,5 @@ trait AmazonSimpleEmailServiceScalaClient {
       new VerifyEmailIdentityRequest()
       .withEmailAddress(emailAddress)
     )
-
-}
-
-object AmazonSimpleEmailServiceScalaClient {
-
-  private class AmazonSimpleEmailServiceScalaClientImpl(override val client: AmazonSimpleEmailServiceAsyncClient) extends AmazonSimpleEmailServiceScalaClient
-
-  def fromAsyncClient(client: AmazonSimpleEmailServiceAsyncClient): AmazonSimpleEmailServiceScalaClient =
-    new AmazonSimpleEmailServiceScalaClientImpl(client)
 
 }

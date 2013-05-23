@@ -10,11 +10,10 @@ import java.util.concurrent.ExecutorService
 import com.amazonaws.services.sqs._
 import com.amazonaws.services.sqs.model._
 
-trait AmazonSQSScalaClient {
-
-  val client: AmazonSQSAsyncClient
-
-  protected implicit val execCtx: ExecutionContext
+class AmazonSQSScalaClient(
+    val client: AmazonSQSAsyncClient,
+    implicit val execCtx: ExecutionContext
+) {
 
   def addPermission(
     addPermissionRequest: AddPermissionRequest
@@ -235,15 +234,4 @@ trait AmazonSQSScalaClient {
   def shutdown(): Unit =
     client.shutdown()
 
-}
-
-object AmazonSQSScalaClient {
-
-  private class AmazonSQSScalaClientImpl(
-    override val client:  AmazonSQSAsyncClient,
-    override val execCtx: ExecutionContext
-  ) extends AmazonSQSScalaClient
-
-  def fromAsyncClient(client: AmazonSQSAsyncClient, execCtx: ExecutionContext): AmazonSQSScalaClient =
-    new AmazonSQSScalaClientImpl(client, execCtx)
 }
