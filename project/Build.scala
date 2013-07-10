@@ -8,7 +8,7 @@ object AWSBuild extends Build {
   lazy val buildSettings = Seq(
     organization := "aws",
     version      := "0.5-SNAPSHOT",
-    scalaVersion := "2.10.1",
+    scalaVersion := "2.10.2",
     scalacOptions ++= Seq("-feature", "-deprecation")
   )
 
@@ -40,7 +40,7 @@ object Dependencies {
 
   object Compile {
 
-    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % "1.4.3"
+    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % "1.5.0"
 
     val jodaTime    = "joda-time" % "joda-time"    % "2.2"
     val jodaConvert = "org.joda"  % "joda-convert" % "1.3.1"
