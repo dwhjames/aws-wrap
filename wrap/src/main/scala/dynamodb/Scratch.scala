@@ -1,9 +1,12 @@
 
 package aws.wrap.dynamodb
 
+import scala.collection.JavaConverters._
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+
+import java.util.UUID
 
 import com.amazonaws.AmazonClientException
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, BasicAWSCredentials}
@@ -655,3 +658,38 @@ object Scratch {
     client.shutdown()
   }
 }
+
+
+object TestSingleThreadedBatchWriter {
+
+  val tableName = "load-test"
+
+  private val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
+  def main(args: Array[String]): Unit = {
+
+    val source = new Iterator[WriteRequest] {
+      override def hasNext = true
+      override def next =
+        new WriteRequest()
+          .withPutRequest(
+              new PutRequest()
+                .withItem(
+                    Map(
+                      "key" ->
+                        new AttributeValue(UUID.randomUUID.toString),
+                      "value" ->
+                        new AttributeValue(UUID.randomUUID.toString)
+                    ).asJava
+                  )
+            )
+    }
+
+    val loader = new SingleThreadedBatchWriter(tableName, UserHomeCredentialsProvider)
+
+    loader.run(source)
+
+  }
+
+}
+
