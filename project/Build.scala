@@ -40,7 +40,7 @@ object Dependencies {
 
   object Compile {
 
-    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % "1.5.0"
+    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % "1.5.2"
 
     val jodaTime    = "joda-time" % "joda-time"    % "2.2"
     val jodaConvert = "org.joda"  % "joda-convert" % "1.3.1"
