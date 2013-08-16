@@ -693,3 +693,56 @@ object TestSingleThreadedBatchWriter {
 
 }
 
+object TestConcurrentBatchWriter {
+
+  val tableName = "load-test"
+
+  private val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
+  def main(args: Array[String]): Unit = {
+
+    def genWriteRequests(total: Int) = new Iterable[WriteRequest] {
+      override def iterator: Iterator[WriteRequest] =
+        new Iterator[WriteRequest] {
+          var i = 0
+          override def hasNext = i < total
+          override def next = {
+            i += 1
+            new WriteRequest()
+              .withPutRequest(
+                  new PutRequest()
+                    .withItem(
+                        Map(
+                          "key" ->
+                            new AttributeValue(UUID.randomUUID.toString),
+                          "value" ->
+                            new AttributeValue(UUID.randomUUID.toString)
+                        ).asJava
+                      )
+                )
+          }
+      }
+    }
+
+    val batchWriter = new ConcurrentBatchWriter(tableName, UserHomeCredentialsProvider, 5)
+
+    val errorQueue = new java.util.concurrent.ConcurrentLinkedQueue[batchWriter.FailedBatch[String]]
+
+    val writer = batchWriter.createWriteGroup("my-meta-data", errorQueue)
+
+    writer.queueWriteRequests(genWriteRequests(1000000))
+
+    val errorFree = writer.awaitCompletionOfAllWrites()
+
+    if (!errorFree) {
+      for (e <- errorQueue.iterator.asScala) {
+        logger.error(e.tableName, e.cause)
+      }
+    }
+
+    batchWriter.shutdownAndAwaitTermination()
+
+  }
+
+}
+
