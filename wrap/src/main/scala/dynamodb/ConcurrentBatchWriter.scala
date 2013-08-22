@@ -102,8 +102,8 @@ class ConcurrentBatchWriter(
   // a customized thread pool executor, with a fixed number of threads
   // using the blocking buffer as the input queue and the custom thread factory
   private val writerThreadPool = new juc.ThreadPoolExecutor(
-                                    writeConcurrency, writeConcurrency,
-                                    0L, juc.TimeUnit.MILLISECONDS,
+                                    0, writeConcurrency,
+                                    60L, juc.TimeUnit.SECONDS,
                                     new BlockingBuffer[Runnable](2*writeConcurrency),
                                     new CustomThreadFactory())
 
