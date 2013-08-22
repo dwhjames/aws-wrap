@@ -15,6 +15,28 @@ import com.amazonaws.services.dynamodbv2.model.{BatchWriteItemRequest, Provision
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+  * A record to communicate errors during batch write attempts.
+  *
+  * @tparam Metadata
+  *     the type of the metadata tag
+  * @param tableName
+  *     the name of the table that was being written to
+  * @param batch
+  *     the list of write request that were in the failed batch
+  * @param cause
+  *     the exception that occurred while writing the batch
+  * @param metadata
+  *     the metadata that was supplied for the write group
+  */
+case class FailedBatch[Metadata](
+    tableName: String,
+    batch:     ju.List[WriteRequest],
+    cause:     Throwable,
+    metadata:  Metadata
+)
+
 /**
   * A multi-threaded, self-throttling, batch writer to a given DynamoDB table
   *
@@ -178,28 +200,6 @@ class ConcurrentBatchWriter(
     m.put(tableName, requests)
     m
   }
-
-
-  /**
-    * A record to communicate errors during batch write attempts.
-    *
-    * @tparam Metadata
-    *     the type of the metadata tag
-    * @param tableName
-    *     the name of the table that was being written to
-    * @param batch
-    *     the list of write request that were in the failed batch
-    * @param cause
-    *     the exception that occurred while writing the batch
-    * @param metadata
-    *     the metadata that was supplied for the write group
-    */
-  case class FailedBatch[Metadata](
-      tableName: String,
-      batch:     ju.List[WriteRequest],
-      cause:     Throwable,
-      metadata:  Metadata
-  )
 
 
   /**

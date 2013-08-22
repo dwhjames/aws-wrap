@@ -726,7 +726,7 @@ object TestConcurrentBatchWriter {
 
     val batchWriter = new ConcurrentBatchWriter(tableName, UserHomeCredentialsProvider, 5)
 
-    val errorQueue = new java.util.concurrent.ConcurrentLinkedQueue[batchWriter.FailedBatch[String]]
+    val errorQueue = new java.util.concurrent.ConcurrentLinkedQueue[FailedBatch[String]]
 
     val writer = batchWriter.createWriteGroup("my-meta-data", errorQueue)
 
