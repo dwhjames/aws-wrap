@@ -753,13 +753,19 @@ trait AmazonDynamoDBScalaMapper {
       *     the name of the range key attribute used by the index.
       * @param rangeCondition
       *     the condition to apply to the range key.
+      * @param scanIndexForward
+      *     true for forwards scan, and false for reverse scan.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
     def apply[K <% AttributeValue]
-             (indexName: String, hashValue: K, rangeAttributeName: String, rangeCondition: Condition)
+             (indexName:           String,
+              hashValue:           K,
+              rangeAttributeName:  String,
+              rangeCondition:      Condition,
+              scanIndexForward:    Boolean    = true)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
       apply(
@@ -772,6 +778,7 @@ trait AmazonDynamoDBScalaMapper {
             ).asJava
           )
           .withSelect(Select.ALL_ATTRIBUTES)
+          .withScanIndexForward(scanIndexForward)
       )
   }
 
