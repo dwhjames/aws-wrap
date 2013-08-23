@@ -549,6 +549,38 @@ trait AmazonDynamoDBScalaMapper {
     local() map { _ => builder.result }
   }
 
+  /**
+    * Scan a table.
+    *
+    * This method will issue one scan request, stopping either
+    * at the supplied limit or at the response size limit.
+    *
+    * @param scanFilter
+    *     the optional filter conditions for the scan.
+    * @param limit
+    *     the optional limit for the number of items to return.
+    * @return sequence of scanned objects in a future.
+    * @see [[countScan]]
+    */
+  def scanOnce[T](
+    scanFilter: Map[String, Condition] = Map.empty,
+    limit:      Int                    = 0
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
+    val scanRequest =
+      new ScanRequest()
+      .withTableName(tableName)
+      .withScanFilter(scanFilter.asJava)
+      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+    if (limit > 0) scanRequest.setLimit(limit)
+
+    client.scan(scanRequest) map { result =>
+      logger.debug(s"scan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      result.getItems.asScala.view map { item =>
+        serializer.fromAttributeMap(item.asScala)
+      }
+    }
+  }
+
 
 
   /**
