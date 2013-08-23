@@ -212,11 +212,11 @@ class ConcurrentBatchWriter(
     * @param metadata
     *     the metadata that tags this group of writes
     * @param errorQueue
-    *     a concurrent queue on which to return errors from workers in the thread pool
+    *     a queue on which to return errors from workers in the thread pool (must be thread-safe)
     */
   class WriteGroup[Metadata](
       metadata:   Metadata,
-      errorQueue: juc.ConcurrentLinkedQueue[FailedBatch[Metadata]]
+      errorQueue: ju.Queue[FailedBatch[Metadata]]
   ) {
 
     private var uncompletedWrites = 0
@@ -343,7 +343,8 @@ class ConcurrentBatchWriter(
             Thread.currentThread.interrupt()
           case e: AmazonClientException =>
             errorFree = false
-            errorQueue.add(
+            logger.error(s"AWS error occured when attempting to write to table $tableName", e)
+            errorQueue.offer(
               FailedBatch[Metadata](tableName, batch.get(tableName), e, metadata))
           case e: Throwable =>
             // log and rethrow any other exceptions
