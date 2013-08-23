@@ -791,10 +791,193 @@ trait AmazonDynamoDBScalaMapper {
     * @tparam T
     *     the type of the object returned by the query.
     * @see [[Query]]
+    * @see [[queryOnce]]
     * @see [[countQuery]]
     */
   def query[T] = new Query[T]
 
+
+  /**
+    * A method overloading container for [[queryOnce]].
+    *
+    * This class contains the overloaded implementations of [[queryOnce]].
+    *
+    * @tparam T
+    *     the type of the object returned by the query.
+    * @see [[queryOnce]]
+    */
+  class QueryOnce[T] {
+
+    /**
+      * Query a table.
+      *
+      * This is the most primitive overload, which takes a raw
+      * query request object.
+      *
+      * This method will issue one query request, stopping
+      * at the response size limit.
+      *
+      * @param queryRequest
+      *     the query request object.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[queryOnce]]
+      * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
+      */
+    def apply(queryRequest: QueryRequest)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      // note this mutates the query request
+      queryRequest
+        .withTableName(tableName)
+        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+        .withConsistentRead(config.consistentReads)
+
+      client.query(
+        queryRequest
+      ) map { result =>
+        logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        result.getItems.asScala.view map { item =>
+          serializer.fromAttributeMap(item.asScala)
+        }
+      }
+    }
+
+    /**
+      * Query a table by a hash key value.
+      *
+      * The result will be all items with the same hash key
+      * value, but varying range keys.
+      *
+      * This method will issue one query request, stopping either
+      * at the supplied limit or at the response size limit.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param limit
+      *     the optional limit for the number of items to return.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[queryOnce]]
+      */
+    def apply[K <% AttributeValue]
+             (hashValue: K, limit: Int = 0)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      val request = mkHashKeyQuery(hashValue)
+      if (limit > 0) request.setLimit(limit)
+      apply(request)
+    }
+
+    /**
+      * Query a table by a hash value and range condition.
+      *
+      * The result will be all items with the same hash key
+      * value, and range keys that match the range condition.
+      *
+      * This method will issue one query request, stopping either
+      * at the supplied limit or at the response size limit.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param limit
+      *     the optional limit for the number of items to return.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[queryOnce]]
+      */
+    def apply[K <% AttributeValue]
+             (hashValue: K, rangeCondition: Condition, limit: Int = 0)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      val request = mkHashAndRangeKeyQuery(hashValue, rangeCondition)
+      if (limit > 0) request.setLimit(limit)
+      apply(request)
+    }
+
+    /**
+      * Query a secondary index by a hash value and range condition.
+      *
+      * This query targets a named secondary index. The index
+      * being used must be named, as well well at the name of
+      * the attribute used as a range key in the index.
+      * The result will be all items with the same hash key
+      * value, and range keys that match the range condition.
+      *
+      * This method will issue one query request, stopping either
+      * at the supplied limit or at the response size limit.
+      *
+      * Note that all attributes will be requested, so that
+      * the serializer will get a complete item. This may incur
+      * extra read capacity, depending on what attributes
+      * are projected into the index.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param indexName
+      *     the name of the secondary index to query.
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeAttributeName
+      *     the name of the range key attribute used by the index.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param scanIndexForward
+      *     true for forwards scan, and false for reverse scan.
+      * @param limit
+      *     the optional limit for the number of items to return.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[queryOnce]]
+      */
+    def apply[K <% AttributeValue]
+             (indexName:           String,
+              hashValue:           K,
+              rangeAttributeName:  String,
+              rangeCondition:      Condition,
+              scanIndexForward:    Boolean    = true,
+              limit:               Int        = 0)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      val request =
+        new QueryRequest()
+          .withIndexName(indexName)
+          .withKeyConditions(
+            Map(
+              serializer.hashAttributeName -> QueryCondition.equalTo(hashValue),
+              rangeAttributeName           -> rangeCondition
+            ).asJava
+          )
+          .withSelect(Select.ALL_ATTRIBUTES)
+          .withScanIndexForward(scanIndexForward)
+      if (limit > 0) request.setLimit(limit)
+      apply(request)
+    }
+  }
+
+  /**
+    * Query a table.
+    *
+    * This method will issue one query request, stopping either
+    * at the supplied limit or at the response size limit.
+    *
+    * @tparam T
+    *     the type of the object returned by the query.
+    * @see [[QueryOnce]]
+    * @see [[query]]
+    * @see [[countQuery]]
+    */
+  def queryOnce[T] = new QueryOnce[T]
 
 
   /**
@@ -957,6 +1140,7 @@ trait AmazonDynamoDBScalaMapper {
     *     the type of object queried.
     * @see [[CountQuery]]
     * @see [[query]]
+    * @see [[queryOnce]]
     */
   def countQuery[T] = new CountQuery[T]
 
