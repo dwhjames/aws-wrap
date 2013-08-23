@@ -6,7 +6,8 @@ import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.Try
 
-import java.util.concurrent.{Executors, ExecutorService}
+import java.util.concurrent.{Executors, ExecutorService, LinkedBlockingQueue, ThreadFactory, ThreadPoolExecutor, TimeUnit}
+import java.util.concurrent.atomic.AtomicLong
 
 import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, DefaultAWSCredentialsProviderChain}
@@ -14,6 +15,17 @@ import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.model._
 import com.amazonaws.services.s3.transfer.Transfer
+
+
+private[s3] class S3ThreadFactory extends ThreadFactory {
+  private val count = new AtomicLong(0L)
+  private val backingThreadFactory: ThreadFactory = Executors.defaultThreadFactory()
+  override def newThread(r: Runnable): Thread = {
+    val thread = backingThreadFactory.newThread(r)
+    thread.setName(s"aws.wrap.s3-${count.getAndIncrement()}")
+    thread
+  }
+}
 
 /**
   * A lightweight wrapper for [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html AmazonS3Client]]
@@ -60,17 +72,34 @@ class AmazonS3ScalaClient(
     *     a client configuration.
     */
   def this(awsCredentialsProvider: AWSCredentialsProvider, clientConfiguration: ClientConfiguration) {
-    this(awsCredentialsProvider, clientConfiguration, Executors.newCachedThreadPool())
+    this(awsCredentialsProvider, clientConfiguration,
+      new ThreadPoolExecutor(
+        0, clientConfiguration.getMaxConnections,
+        60L, TimeUnit.SECONDS,
+        new LinkedBlockingQueue[Runnable],
+        new S3ThreadFactory()))
   }
 
   /**
-    * make a client from a default credentials provider, a config, and a default executor service.
+    * make a client from a credentials provider, a default config, and an executor service.
     *
-    * @param clientConfiguration
-    *     a client configuration.
+    * @param awsCredentialsProvider
+    *     a provider of AWS credentials.
+    * @param executorService
+    *     an executor service for synchronous calls to the underlying AmazonS3Client.
     */
-  def this(clientConfiguration: ClientConfiguration) {
-    this(new DefaultAWSCredentialsProviderChain(), clientConfiguration, Executors.newCachedThreadPool())
+  def this(awsCredentialsProvider: AWSCredentialsProvider, executorService: ExecutorService) {
+    this(awsCredentialsProvider, new ClientConfiguration(), executorService)
+  }
+
+  /**
+    * make a client from a credentials provider, a default config, and a default executor service.
+    *
+    * @param awsCredentialsProvider
+    *     a provider of AWS credentials.
+    */
+  def this(awsCredentialsProvider: AWSCredentialsProvider) {
+    this(awsCredentialsProvider, new ClientConfiguration())
   }
 
   /**
@@ -108,29 +137,17 @@ class AmazonS3ScalaClient(
     *     AWS credentials.
     */
   def this(awsCredentials: AWSCredentials) {
-    this(awsCredentials, Executors.newCachedThreadPool())
+    this(new StaticCredentialsProvider(awsCredentials))
   }
 
   /**
-    * make a client from a credentials provider, a default config, and an executor service.
+    * make a client from a default credentials provider, a config, and a default executor service.
     *
-    * @param awsCredentialsProvider
-    *     a provider of AWS credentials.
-    * @param executorService
-    *     an executor service for synchronous calls to the underlying AmazonS3Client.
+    * @param clientConfiguration
+    *     a client configuration.
     */
-  def this(awsCredentialsProvider: AWSCredentialsProvider, executorService: ExecutorService) {
-    this(awsCredentialsProvider, new ClientConfiguration(), executorService)
-  }
-
-  /**
-    * make a client from a credentials provider, a default config, and a default executor service.
-    *
-    * @param awsCredentialsProvider
-    *     a provider of AWS credentials.
-    */
-  def this(awsCredentialsProvider: AWSCredentialsProvider) {
-    this(awsCredentialsProvider, Executors.newCachedThreadPool())
+  def this(clientConfiguration: ClientConfiguration) {
+    this(new DefaultAWSCredentialsProviderChain(), clientConfiguration)
   }
 
   /**
