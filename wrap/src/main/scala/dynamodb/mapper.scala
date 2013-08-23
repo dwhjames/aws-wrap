@@ -1360,11 +1360,9 @@ trait AmazonDynamoDBScalaMapper {
     * a batch write result.
     *
     * This method will attempt to retry any portion of a failed batch write.
-    * If this retry fails, then an exception will be thrown.
     *
     * @param lastResult
     *     the result object from a batchWrite operation.
-    * @throws BatchDumpException if the retry fails.
     */
   private def checkRetryBatchWrite(lastResult: BatchWriteItemResult): Future[Unit] = {
     val retryItems = lastResult.getUnprocessedItems
@@ -1377,12 +1375,11 @@ trait AmazonDynamoDBScalaMapper {
       if (logger.isDebugEnabled)
         request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
-      client.batchWriteItem(request) map { result =>
+      client.batchWriteItem(request) flatMap { result =>
         if (logger.isDebugEnabled)
           logger.debug(s"checkRetryBatchWrite() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
-        if (!result.getUnprocessedItems.isEmpty)
-          throw new BatchDumpException("AmazonDynamoDBScalaMapper: batch write retry failed", result.getUnprocessedItems)
+        checkRetryBatchWrite(result)
       }
     }
   }
@@ -1394,16 +1391,13 @@ trait AmazonDynamoDBScalaMapper {
     *
     * This method will internally make repeated batchWriteItem
     * calls, with up to 25 objects at a time, until all the input
-    * objects have been written. If any objects fail to be written,
-    * they will be retried once, and an exception will be thrown
-    * on their second failure.
+    * objects have been written.
     *
     * Objects that are new will create new items in DynamoDB,
     * otherwise they will overwrite exisiting items.
     *
     * @param objs
     *     the sequence of objects to write to DynamoDB.
-    * @throws BatchDumpException if a write to DynamoDB fails twice.
     */
   def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
     def local(objsPair: (Seq[T], Seq[T])): Future[Unit] = {
@@ -1446,9 +1440,7 @@ trait AmazonDynamoDBScalaMapper {
     *
     * This method will internally make repeated batchWriteItem
     * calls, with up to 25 objects at a time, until all the input
-    * objects have been deleted. If any objects fail to be deleted,
-    * they will be retried once, and an exception will be thrown
-    * on their second failure.
+    * objects have been deleted.
     *
     * @tparam T
     *     the type of objects to delete.
@@ -1456,7 +1448,6 @@ trait AmazonDynamoDBScalaMapper {
     *     a sequence of objects to delete.
     * @param serializer
     *     an implicit object serializer.
-    * @throws BatchDumpException if a write to DynamoDB fails twice.
     */
   def batchDelete[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
     def local(objsPair: (Seq[T], Seq[T])): Future[Unit] = {
@@ -1510,9 +1501,7 @@ trait AmazonDynamoDBScalaMapper {
       *
       * This method will internally make repeated batchWriteItem
       * calls, with up to 25 keys at a time, until all the input
-      * keys have been deleted. If any keys fail to be deleted,
-      * they will be retried once, and an exception will be thrown
-      * on their second failure.
+      * keys have been deleted.
       *
       * @tparam K
       *     a type that is viewable as an [[AttributeValue]].
@@ -1520,7 +1509,6 @@ trait AmazonDynamoDBScalaMapper {
       *     the hash key values of the items to delete.
       * @param serializer
       *     an implicit object serializer.
-      * @throws BatchDumpException if a write to DynamoDB fails twice.
       * @see [[batchDeleteByKeys]]
       */
     def apply[K <% AttributeValue]
@@ -1540,9 +1528,7 @@ trait AmazonDynamoDBScalaMapper {
       *
       * This method will internally make repeated batchWriteItem
       * calls, with up to 25 keys at a time, until all the input
-      * keys have been deleted. If any keys fail to be deleted,
-      * they will be retried once, and an exception will be thrown
-      * on their second failure.
+      * keys have been deleted.
       *
       * @tparam K1
       *     a type that is viewable as an [[AttributeValue]].
@@ -1554,7 +1540,6 @@ trait AmazonDynamoDBScalaMapper {
       *     the range key values of the items to delete.
       * @param serializer
       *     an implicit object serializer.
-      * @throws BatchDumpException if a write to DynamoDB fails twice.
       * @see [[batchDeleteByKeys]]
       */
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
@@ -1602,9 +1587,7 @@ trait AmazonDynamoDBScalaMapper {
     *
     * This method will internally make repeated batchWriteItem
     * calls, with up to 25 keys at a time, until all the input
-    * keys have been deleted. If any keys fail to be deleted,
-    * they will be retried once, and an exception will be thrown
-    * on their second failure.
+    * keys have been deleted.
     *
     * @tparam T
     *     the type of the objects deleted by the batch delete.
