@@ -9,15 +9,13 @@ object AWSBuild extends Build {
     organization := "aws",
     version      := "0.5-SNAPSHOT",
     scalaVersion := "2.10.2",
-    scalacOptions ++= Seq("-feature", "-deprecation")
+    scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked"),
+    shellPrompt  := CustomShellPrompt.customPrompt
   )
 
   override lazy val settings =
     super.settings ++
-    buildSettings ++
-    Seq(
-      shellPrompt := { s => Project.extract(s).currentProject.id + " > " }
-    )
+    buildSettings
 
   lazy val wrap = Project(
     id       = "wrap",
@@ -38,14 +36,23 @@ object AWSBuild extends Build {
 
 object Dependencies {
 
+  object V {
+    val awsJavaSDK  = "1.5.5"
+
+    val jodaTime    = "2.2"
+    val jodaConvert = "1.3.1"
+
+    val logback     = "1.0.13"
+  }
+
   object Compile {
 
-    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % "1.5.4"
+    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % V.awsJavaSDK
 
-    val jodaTime    = "joda-time" % "joda-time"    % "2.2"
-    val jodaConvert = "org.joda"  % "joda-convert" % "1.3.1"
+    val jodaTime    = "joda-time" % "joda-time"    % V.jodaTime
+    val jodaConvert = "org.joda"  % "joda-convert" % V.jodaConvert
 
-    val logback    = "ch.qos.logback" % "logback-classic" % "1.0.13"
+    val logback    = "ch.qos.logback" % "logback-classic" % V.logback
   }
 
   import Compile._
@@ -72,4 +79,30 @@ object Publish {
     }
   }
 
+}
+
+object CustomShellPrompt {
+
+  val Branch = """refs/heads/(.*)\s""".r
+
+  def gitBranchOrSha =
+    Process("git symbolic-ref HEAD") #|| Process("git rev-parse --short HEAD") !! match {
+      case Branch(name) => name
+      case sha          => sha.stripLineEnd
+    }
+
+  val customPrompt = { state: State =>
+
+    val extracted = Project.extract(state)
+    import extracted._
+
+    (name in currentRef get structure.data) map { name =>
+      "[" + scala.Console.CYAN + name + scala.Console.RESET + "] " +
+      scala.Console.BLUE + "git:(" +
+      scala.Console.RED + gitBranchOrSha +
+      scala.Console.BLUE + ")" +
+      scala.Console.RESET + " $ "
+    } getOrElse ("> ")
+
+  }
 }
