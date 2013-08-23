@@ -296,19 +296,24 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K <% AttributeValue]
              (hashKey: K)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] =
-      client.deleteItem(
+             : Future[Option[T]] = {
+      val request =
         new DeleteItemRequest()
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey).asJava)
         .withReturnValues(ReturnValue.ALL_OLD)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-      ) map { result =>
-        logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.deleteItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         Option { result.getAttributes } map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
       }
+    }
 
     /**
       * Delete a DynamoDB item by a hash key and range key.
@@ -334,19 +339,24 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKey: K1, rangeKey: K2)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] =
-      client.deleteItem(
+             : Future[Option[T]] = {
+      val request =
         new DeleteItemRequest()
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
         .withReturnValues(ReturnValue.ALL_OLD)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-      ) map { result =>
-        logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.deleteItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         Option { result.getAttributes } map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
       }
+    }
   }
 
   /**
@@ -375,16 +385,19 @@ trait AmazonDynamoDBScalaMapper {
     */
   def delete[T](
     obj: T
-  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
-    client.deleteItem(
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
+    val request =
       new DeleteItemRequest()
       .withTableName(tableName)
       .withKey(serializer.primaryKeyOf(obj).asJava)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-    ) map { result =>
-      logger.debug(s"delete() ConsumedCapacity = ${result.getConsumedCapacity()}")
-      ()
+    if (logger.isDebugEnabled)
+      request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+    client.deleteItem(request) map { result =>
+      if (logger.isDebugEnabled)
+        logger.debug(s"delete() ConsumedCapacity = ${result.getConsumedCapacity()}")
     }
+  }
 
 
 
@@ -403,16 +416,19 @@ trait AmazonDynamoDBScalaMapper {
     */
   def dump[T](
     obj: T
-  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
-    client.putItem(
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
+    val request =
       new PutItemRequest()
       .withTableName(tableName)
       .withItem(serializer.toAttributeMap(obj).asJava)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-    ) map { result =>
-      logger.debug(s"dump() ConsumedCapacity = ${result.getConsumedCapacity()}")
-      ()
+    if (logger.isDebugEnabled)
+      request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+    client.putItem(request) map { result =>
+      if (logger.isDebugEnabled)
+        logger.debug(s"dump() ConsumedCapacity = ${result.getConsumedCapacity()}")
     }
+  }
 
 
 
@@ -446,19 +462,24 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K <% AttributeValue]
              (hashKey: K)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] =
-      client.getItem(
+             : Future[Option[T]] = {
+      val request =
         new GetItemRequest()
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey).asJava)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
-      ) map { result =>
-        logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.getItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         Option { result.getItem } map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
       }
+    }
 
     /**
       * Load an object by its hash key and range key.
@@ -482,19 +503,24 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKey: K1, rangeKey: K2)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] =
-      client.getItem(
+             : Future[Option[T]] = {
+      val request =
         new GetItemRequest()
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
-      ) map { result =>
-        logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.getItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         Option { result.getItem } map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
       }
+    }
   }
 
   /**
@@ -529,17 +555,22 @@ trait AmazonDynamoDBScalaMapper {
       new ScanRequest()
       .withTableName(tableName)
       .withScanFilter(scanFilter.asJava)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+    if (logger.isDebugEnabled)
+      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
       client.scan(
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
-        logger.debug(s"scan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          logger.debug(s"scan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         builder ++= result.getItems.asScala.view map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
+
         Option { result.getLastEvaluatedKey } match {
           case None   => Future.successful(())
           case optKey => local(optKey)
@@ -570,11 +601,15 @@ trait AmazonDynamoDBScalaMapper {
       new ScanRequest()
       .withTableName(tableName)
       .withScanFilter(scanFilter.asJava)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-    if (limit > 0) scanRequest.setLimit(limit)
+    if (limit > 0)
+      scanRequest.setLimit(limit)
+    if (logger.isDebugEnabled)
+      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
     client.scan(scanRequest) map { result =>
-      logger.debug(s"scan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        logger.debug(s"scanOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
       result.getItems.asScala.view map { item =>
         serializer.fromAttributeMap(item.asScala)
       }
@@ -602,13 +637,16 @@ trait AmazonDynamoDBScalaMapper {
       .withTableName(tableName)
       .withScanFilter(scanFilter.asJava)
       .withSelect(Select.COUNT)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+    if (logger.isDebugEnabled)
+      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
     def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
       client.scan(
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
-        logger.debug(s"countScan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          logger.debug(s"countScan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         val newCount = count + result.getCount
         Option { result.getLastEvaluatedKey } match {
           case None   => Future.successful(newCount)
@@ -655,18 +693,23 @@ trait AmazonDynamoDBScalaMapper {
       // note this mutates the query request
       queryRequest
         .withTableName(tableName)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
+      if (logger.isDebugEnabled)
+        queryRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
       val builder = Seq.newBuilder[T]
 
       def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
         client.query(
           queryRequest.withExclusiveStartKey(lastKey.orNull)
         ) flatMap { result =>
-          logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          if (logger.isDebugEnabled)
+            logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
           builder ++= result.getItems.asScala.view map { item =>
             serializer.fromAttributeMap(item.asScala)
           }
+
           Option { result.getLastEvaluatedKey } match {
             case None   => Future.successful(())
             case optKey => local(optKey)
@@ -831,13 +874,16 @@ trait AmazonDynamoDBScalaMapper {
       // note this mutates the query request
       queryRequest
         .withTableName(tableName)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
+      if (logger.isDebugEnabled)
+        queryRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
       client.query(
         queryRequest
       ) map { result =>
-        logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          logger.debug(s"queryOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         result.getItems.asScala.view map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
@@ -1015,15 +1061,19 @@ trait AmazonDynamoDBScalaMapper {
       queryRequest
         .withTableName(tableName)
         .withSelect(Select.COUNT)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
+      if (logger.isDebugEnabled)
+        queryRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
       def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
         client.query(
           queryRequest.withExclusiveStartKey(lastKey.orNull)
         ) flatMap { result =>
-          logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          if (logger.isDebugEnabled)
+            logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
           val newCount = count + result.getCount
+
           Option { result.getLastEvaluatedKey } match {
             case None   => Future.successful(newCount)
             case optKey => local(newCount, optKey)
@@ -1255,10 +1305,9 @@ trait AmazonDynamoDBScalaMapper {
       val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
       val builder = Seq.newBuilder[T]
 
-      def local(keys: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] =
-        client.batchGetItem(
+      def local(keys: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] = {
+        val request =
           new BatchGetItemRequest()
-          .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
           .withRequestItems(
             Map(
               tableName ->
@@ -1269,16 +1318,23 @@ trait AmazonDynamoDBScalaMapper {
                 .withConsistentRead(config.consistentReads)
             ).asJava
           )
-        ) flatMap { result =>
-          logger.debug(s"batchLoadByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+        client.batchGetItem(request) flatMap { result =>
+          if (logger.isDebugEnabled)
+            logger.debug(s"batchLoadByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
           builder ++= result.getResponses.get(tableName).asScala.view map { item =>
             serializer.fromAttributeMap(item.asScala)
           }
+
           if (keys._2.isEmpty)
             Future.successful(())
           else
             local(keys._2.splitAt(100))
         }
+      }
 
       local(keys.splitAt(100)) map { _ => builder.result }
     }
@@ -1314,16 +1370,21 @@ trait AmazonDynamoDBScalaMapper {
     val retryItems = lastResult.getUnprocessedItems
     if (retryItems.isEmpty)
       Future.successful(())
-    else
-      client.batchWriteItem(
+    else {
+      val request =
         new BatchWriteItemRequest()
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(retryItems)
-      ) map { result =>
-        logger.debug(s"checkRetryBatchWrite() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.batchWriteItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"checkRetryBatchWrite() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         if (!result.getUnprocessedItems.isEmpty)
           throw new BatchDumpException("AmazonDynamoDBScalaMapper: batch write retry failed", result.getUnprocessedItems)
       }
+    }
   }
 
 
@@ -1345,10 +1406,9 @@ trait AmazonDynamoDBScalaMapper {
     * @throws BatchDumpException if a write to DynamoDB fails twice.
     */
   def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
-    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] =
-      client.batchWriteItem(
+    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] = {
+      val request =
         new BatchWriteItemRequest()
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(
           Map(
             tableName -> objsPair._1.view.map { obj =>
@@ -1360,8 +1420,13 @@ trait AmazonDynamoDBScalaMapper {
             } .asJava
           ).asJava
         )
-      ) flatMap { result =>
-        logger.debug(s"batchDump() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.batchWriteItem(request) flatMap { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"batchDump() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         checkRetryBatchWrite(result) flatMap { _ =>
           if (objsPair._2.isEmpty)
             Future.successful(())
@@ -1369,6 +1434,7 @@ trait AmazonDynamoDBScalaMapper {
             local(objsPair._2.splitAt(25))
         }
       }
+    }
 
     local(objs.splitAt(25))
   }
@@ -1393,10 +1459,9 @@ trait AmazonDynamoDBScalaMapper {
     * @throws BatchDumpException if a write to DynamoDB fails twice.
     */
   def batchDelete[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
-    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] =
-      client.batchWriteItem(
+    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] = {
+      val request =
         new BatchWriteItemRequest()
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(
           Map(
             tableName -> objsPair._1.view.map { obj =>
@@ -1408,8 +1473,13 @@ trait AmazonDynamoDBScalaMapper {
             } .asJava
           ).asJava
         )
-      ) flatMap { result =>
-        logger.debug(s"batchDelete() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.batchWriteItem(request) flatMap { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"batchDelete() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         checkRetryBatchWrite(result) flatMap { _ =>
           if (objsPair._2.isEmpty)
             Future.successful(())
@@ -1417,6 +1487,7 @@ trait AmazonDynamoDBScalaMapper {
             local(objsPair._2.splitAt(25))
         }
       }
+    }
 
     local(objs.splitAt(25))
   }
@@ -1492,10 +1563,9 @@ trait AmazonDynamoDBScalaMapper {
              : Future[Unit] = {
       val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
 
-      def local(keysPair: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] =
-        client.batchWriteItem(
+      def local(keysPair: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] = {
+        val request =
           new BatchWriteItemRequest()
-          .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
           .withRequestItems(
             Map(
               tableName -> keysPair._1.view.map { key =>
@@ -1507,8 +1577,13 @@ trait AmazonDynamoDBScalaMapper {
               } .asJava
             ).asJava
           )
-        ) flatMap { result =>
-          logger.debug(s"batchDeleteByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+        client.batchWriteItem(request) flatMap { result =>
+          if (logger.isDebugEnabled)
+            logger.debug(s"batchDeleteByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
           checkRetryBatchWrite(result) flatMap { _ =>
             if (keysPair._2.isEmpty)
               Future.successful(())
@@ -1516,6 +1591,7 @@ trait AmazonDynamoDBScalaMapper {
               local(keysPair._2.splitAt(25))
           }
         }
+      }
 
       local(keys.splitAt(25))
     }
