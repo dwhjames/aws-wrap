@@ -417,7 +417,7 @@ class ConcurrentBatchWriter(
     */
   def createWriteGroup[Metadata](
       metadata:   Metadata,
-      errorQueue: juc.ConcurrentLinkedQueue[FailedBatch[Metadata]]): WriteGroup[Metadata] =
+      errorQueue: ju.Queue[FailedBatch[Metadata]]): WriteGroup[Metadata] =
     new WriteGroup[Metadata](metadata, errorQueue)
 
 
