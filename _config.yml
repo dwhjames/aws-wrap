@@ -1,19 +1,4 @@
 safe: true
 pygments: true
 lsi: false
-url: /aws
-navigation:
-- title: Getting Started
-  url: doc/getstarted.html
-- title: Working with Results
-  url: doc/working_with_results.html
-- title: SimpleDB
-  url: doc/simpledb.html
-- title: DynamoDB
-  url: doc/dynamodb.html
-- title: S3
-  url: doc/s3.html
-- title: Simple Notification Service (SNS)
-  url: doc/sns.html
-- title: SES
-  url: doc/SES.html
+baseurl: /aws-wrap

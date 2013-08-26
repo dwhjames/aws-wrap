@@ -1,8 +1,0 @@
----
-layout: default
-title: S3
----
-
-h2. S3
-
-TODO

@@ -1,8 +1,0 @@
----
-layout: default
-title: SNS
----
-
-h2. Simple Notification Service
-
-TODO
