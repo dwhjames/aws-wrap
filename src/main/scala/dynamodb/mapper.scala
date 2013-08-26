@@ -1,4 +1,20 @@
-package aws.wrap
+/*
+ * Copyright 2013 Pellucid Analytics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.pellucid.wrap
 package dynamodb
 
 import scala.concurrent.{Future, ExecutionContext}
@@ -113,7 +129,7 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
@@ -125,9 +141,9 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
     * @param rangeKey
-    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K1, K2](

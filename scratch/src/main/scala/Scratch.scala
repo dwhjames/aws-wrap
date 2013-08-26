@@ -1,5 +1,7 @@
 
-package aws.wrap.dynamodb
+package scratch
+
+import com.pellucid.wrap.dynamodb._
 
 import scala.collection.JavaConverters._
 import scala.concurrent._
