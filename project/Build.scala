@@ -2,7 +2,7 @@
 import scala.language.postfixOps
 
 import sbt._
-import Keys._
+import sbt.Keys._
 
 
 object AWSWrapBuild extends Build {
@@ -24,9 +24,12 @@ object AWSWrapBuild extends Build {
     base     = file("."),
     settings =
       commonSettings ++
-      Publish.settings ++
+      bintray.Plugin.bintraySettings ++
       Seq(
-        libraryDependencies ++= Dependencies.awsWrap
+        libraryDependencies ++= Dependencies.awsWrap,
+        licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
+        bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("pellucid"),
+        bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("aws", "dynamodb", "s3", "ses", "simpledb", "sns", "sqs", "async", "future")
       )
   )
 
@@ -84,26 +87,6 @@ object Dependencies {
 
   val awsWrap = Seq(awsJavaSDK, slf4j)
   val scratch = Seq(awsJavaSDK, jodaTime, jodaConvert, logback)
-
-}
-
-object Publish {
-
-  lazy val settings = Seq(
-    publishMavenStyle := true,
-    publishTo <<= localPublishTo
-  )
-
-  // "AWS" at "http://pellucidanalytics.github.com/aws/repository/"
-  def localPublishTo: Def.Initialize[Option[Resolver]] = {
-    version { v: String =>
-      val localPublishRepo = "../datomisca-repo/"
-      if (v.trim endsWith "SNAPSHOT")
-        Some(Resolver.file("snapshots", new File(localPublishRepo + "/snapshots")))
-      else
-        Some(Resolver.file("releases",  new File(localPublishRepo + "/releases")))
-    }
-  }
 
 }
 
