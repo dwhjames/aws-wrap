@@ -1,9 +1,14 @@
 
-package aws.wrap.dynamodb
+package scratch
 
+import com.pellucid.wrap.dynamodb._
+
+import scala.collection.JavaConverters._
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+
+import java.util.UUID
 
 import com.amazonaws.AmazonClientException
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, BasicAWSCredentials}
@@ -655,3 +660,91 @@ object Scratch {
     client.shutdown()
   }
 }
+
+
+object TestSingleThreadedBatchWriter {
+
+  val tableName = "load-test"
+
+  private val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
+  def main(args: Array[String]): Unit = {
+
+    val source = new Iterator[WriteRequest] {
+      override def hasNext = true
+      override def next =
+        new WriteRequest()
+          .withPutRequest(
+              new PutRequest()
+                .withItem(
+                    Map(
+                      "key" ->
+                        new AttributeValue(UUID.randomUUID.toString),
+                      "value" ->
+                        new AttributeValue(UUID.randomUUID.toString)
+                    ).asJava
+                  )
+            )
+    }
+
+    val loader = new SingleThreadedBatchWriter(tableName, UserHomeCredentialsProvider)
+
+    loader.run(source)
+
+  }
+
+}
+
+object TestConcurrentBatchWriter {
+
+  val tableName = "load-test"
+
+  private val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
+  def main(args: Array[String]): Unit = {
+
+    def genWriteRequests(total: Int) = new Iterable[WriteRequest] {
+      override def iterator: Iterator[WriteRequest] =
+        new Iterator[WriteRequest] {
+          var i = 0
+          override def hasNext = i < total
+          override def next = {
+            i += 1
+            new WriteRequest()
+              .withPutRequest(
+                  new PutRequest()
+                    .withItem(
+                        Map(
+                          "key" ->
+                            new AttributeValue(UUID.randomUUID.toString),
+                          "value" ->
+                            new AttributeValue(UUID.randomUUID.toString)
+                        ).asJava
+                      )
+                )
+          }
+      }
+    }
+
+    val batchWriter = new ConcurrentBatchWriter(tableName, UserHomeCredentialsProvider, 5)
+
+    val errorQueue = new java.util.concurrent.ConcurrentLinkedQueue[FailedBatch[String]]
+
+    val writer = batchWriter.createWriteGroup("my-meta-data", errorQueue)
+
+    writer.queueWriteRequests(genWriteRequests(1000000))
+
+    val errorFree = writer.awaitCompletionOfAllWrites()
+
+    if (!errorFree) {
+      for (e <- errorQueue.iterator.asScala) {
+        logger.error(e.tableName, e.cause)
+      }
+    }
+
+    batchWriter.shutdownAndAwaitTermination()
+
+  }
+
+}
+

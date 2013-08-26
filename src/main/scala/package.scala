@@ -1,5 +1,20 @@
+/*
+ * Copyright 2013 Pellucid Analytics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-package aws
+package com.pellucid
 
 import scala.concurrent.{Future, Promise}
 import java.util.concurrent.{Future => JFuture}
@@ -22,7 +37,7 @@ package object wrap {
     }
 
   @inline
-  private[aws] def wrapAsyncMethod[Request <: AmazonWebServiceRequest, Result](
+  private[pellucid] def wrapAsyncMethod[Request <: AmazonWebServiceRequest, Result](
     f:       (Request, AsyncHandler[Request, Result]) => JFuture[Result],
     request: Request
   ): Future[Result] = {
@@ -32,7 +47,7 @@ package object wrap {
   }
 
   @inline
-  private[aws] def wrapVoidAsyncMethod[Request <: AmazonWebServiceRequest](
+  private[pellucid] def wrapVoidAsyncMethod[Request <: AmazonWebServiceRequest](
     f:       (Request, AsyncHandler[Request, Void]) => JFuture[Void],
     request: Request
   ): Future[Unit] = {

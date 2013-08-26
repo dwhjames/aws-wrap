@@ -1,4 +1,20 @@
-package aws.wrap
+/*
+ * Copyright 2013 Pellucid Analytics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.pellucid.wrap
 package dynamodb
 
 import scala.concurrent.{Future, ExecutionContext}
@@ -113,7 +129,7 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
@@ -125,9 +141,9 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
     * @param rangeKey
-    *     An value that is convertable to an [[aws.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K1, K2](
@@ -296,19 +312,24 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K <% AttributeValue]
              (hashKey: K)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] =
-      client.deleteItem(
+             : Future[Option[T]] = {
+      val request =
         new DeleteItemRequest()
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey).asJava)
         .withReturnValues(ReturnValue.ALL_OLD)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-      ) map { result =>
-        logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.deleteItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         Option { result.getAttributes } map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
       }
+    }
 
     /**
       * Delete a DynamoDB item by a hash key and range key.
@@ -334,19 +355,24 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKey: K1, rangeKey: K2)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] =
-      client.deleteItem(
+             : Future[Option[T]] = {
+      val request =
         new DeleteItemRequest()
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
         .withReturnValues(ReturnValue.ALL_OLD)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-      ) map { result =>
-        logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.deleteItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         Option { result.getAttributes } map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
       }
+    }
   }
 
   /**
@@ -375,16 +401,19 @@ trait AmazonDynamoDBScalaMapper {
     */
   def delete[T](
     obj: T
-  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
-    client.deleteItem(
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
+    val request =
       new DeleteItemRequest()
       .withTableName(tableName)
       .withKey(serializer.primaryKeyOf(obj).asJava)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-    ) map { result =>
-      logger.debug(s"delete() ConsumedCapacity = ${result.getConsumedCapacity()}")
-      ()
+    if (logger.isDebugEnabled)
+      request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+    client.deleteItem(request) map { result =>
+      if (logger.isDebugEnabled)
+        logger.debug(s"delete() ConsumedCapacity = ${result.getConsumedCapacity()}")
     }
+  }
 
 
 
@@ -403,16 +432,19 @@ trait AmazonDynamoDBScalaMapper {
     */
   def dump[T](
     obj: T
-  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] =
-    client.putItem(
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
+    val request =
       new PutItemRequest()
       .withTableName(tableName)
       .withItem(serializer.toAttributeMap(obj).asJava)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-    ) map { result =>
-      logger.debug(s"dump() ConsumedCapacity = ${result.getConsumedCapacity()}")
-      ()
+    if (logger.isDebugEnabled)
+      request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+    client.putItem(request) map { result =>
+      if (logger.isDebugEnabled)
+        logger.debug(s"dump() ConsumedCapacity = ${result.getConsumedCapacity()}")
     }
+  }
 
 
 
@@ -446,19 +478,24 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K <% AttributeValue]
              (hashKey: K)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] =
-      client.getItem(
+             : Future[Option[T]] = {
+      val request =
         new GetItemRequest()
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey).asJava)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
-      ) map { result =>
-        logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.getItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         Option { result.getItem } map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
       }
+    }
 
     /**
       * Load an object by its hash key and range key.
@@ -482,19 +519,24 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
              (hashKey: K1, rangeKey: K2)
              (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] =
-      client.getItem(
+             : Future[Option[T]] = {
+      val request =
         new GetItemRequest()
         .withTableName(tableName)
         .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
-      ) map { result =>
-        logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.getItem(request) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         Option { result.getItem } map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
       }
+    }
   }
 
   /**
@@ -529,17 +571,22 @@ trait AmazonDynamoDBScalaMapper {
       new ScanRequest()
       .withTableName(tableName)
       .withScanFilter(scanFilter.asJava)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+    if (logger.isDebugEnabled)
+      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
       client.scan(
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
-        logger.debug(s"scan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          logger.debug(s"scan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         builder ++= result.getItems.asScala.view map { item =>
           serializer.fromAttributeMap(item.asScala)
         }
+
         Option { result.getLastEvaluatedKey } match {
           case None   => Future.successful(())
           case optKey => local(optKey)
@@ -547,6 +594,42 @@ trait AmazonDynamoDBScalaMapper {
       }
 
     local() map { _ => builder.result }
+  }
+
+  /**
+    * Scan a table.
+    *
+    * This method will issue one scan request, stopping either
+    * at the supplied limit or at the response size limit.
+    *
+    * @param scanFilter
+    *     the optional filter conditions for the scan.
+    * @param limit
+    *     the optional limit for the number of items to return.
+    * @return sequence of scanned objects in a future.
+    * @see [[countScan]]
+    */
+  def scanOnce[T](
+    scanFilter: Map[String, Condition] = Map.empty,
+    limit:      Int                    = 0
+  )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
+    val scanRequest =
+      new ScanRequest()
+      .withTableName(tableName)
+      .withScanFilter(scanFilter.asJava)
+    if (limit > 0)
+      scanRequest.setLimit(limit)
+    if (logger.isDebugEnabled)
+      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+    client.scan(scanRequest) map { result =>
+      if (logger.isDebugEnabled)
+        logger.debug(s"scanOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
+      result.getItems.asScala.view map { item =>
+        serializer.fromAttributeMap(item.asScala)
+      }
+    }
   }
 
 
@@ -570,13 +653,16 @@ trait AmazonDynamoDBScalaMapper {
       .withTableName(tableName)
       .withScanFilter(scanFilter.asJava)
       .withSelect(Select.COUNT)
-      .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+    if (logger.isDebugEnabled)
+      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
     def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
       client.scan(
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
-        logger.debug(s"countScan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          logger.debug(s"countScan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         val newCount = count + result.getCount
         Option { result.getLastEvaluatedKey } match {
           case None   => Future.successful(newCount)
@@ -623,18 +709,23 @@ trait AmazonDynamoDBScalaMapper {
       // note this mutates the query request
       queryRequest
         .withTableName(tableName)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
+      if (logger.isDebugEnabled)
+        queryRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
       val builder = Seq.newBuilder[T]
 
       def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
         client.query(
           queryRequest.withExclusiveStartKey(lastKey.orNull)
         ) flatMap { result =>
-          logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          if (logger.isDebugEnabled)
+            logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
           builder ++= result.getItems.asScala.view map { item =>
             serializer.fromAttributeMap(item.asScala)
           }
+
           Option { result.getLastEvaluatedKey } match {
             case None   => Future.successful(())
             case optKey => local(optKey)
@@ -721,13 +812,19 @@ trait AmazonDynamoDBScalaMapper {
       *     the name of the range key attribute used by the index.
       * @param rangeCondition
       *     the condition to apply to the range key.
+      * @param scanIndexForward
+      *     true for forwards scan, and false for reverse scan.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
     def apply[K <% AttributeValue]
-             (indexName: String, hashValue: K, rangeAttributeName: String, rangeCondition: Condition)
+             (indexName:           String,
+              hashValue:           K,
+              rangeAttributeName:  String,
+              rangeCondition:      Condition,
+              scanIndexForward:    Boolean    = true)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
       apply(
@@ -740,6 +837,7 @@ trait AmazonDynamoDBScalaMapper {
             ).asJava
           )
           .withSelect(Select.ALL_ATTRIBUTES)
+          .withScanIndexForward(scanIndexForward)
       )
   }
 
@@ -752,10 +850,196 @@ trait AmazonDynamoDBScalaMapper {
     * @tparam T
     *     the type of the object returned by the query.
     * @see [[Query]]
+    * @see [[queryOnce]]
     * @see [[countQuery]]
     */
   def query[T] = new Query[T]
 
+
+  /**
+    * A method overloading container for [[queryOnce]].
+    *
+    * This class contains the overloaded implementations of [[queryOnce]].
+    *
+    * @tparam T
+    *     the type of the object returned by the query.
+    * @see [[queryOnce]]
+    */
+  class QueryOnce[T] {
+
+    /**
+      * Query a table.
+      *
+      * This is the most primitive overload, which takes a raw
+      * query request object.
+      *
+      * This method will issue one query request, stopping
+      * at the response size limit.
+      *
+      * @param queryRequest
+      *     the query request object.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[queryOnce]]
+      * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
+      */
+    def apply(queryRequest: QueryRequest)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      // note this mutates the query request
+      queryRequest
+        .withTableName(tableName)
+        .withConsistentRead(config.consistentReads)
+      if (logger.isDebugEnabled)
+        queryRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.query(
+        queryRequest
+      ) map { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"queryOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
+        result.getItems.asScala.view map { item =>
+          serializer.fromAttributeMap(item.asScala)
+        }
+      }
+    }
+
+    /**
+      * Query a table by a hash key value.
+      *
+      * The result will be all items with the same hash key
+      * value, but varying range keys.
+      *
+      * This method will issue one query request, stopping either
+      * at the supplied limit or at the response size limit.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param limit
+      *     the optional limit for the number of items to return.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[queryOnce]]
+      */
+    def apply[K <% AttributeValue]
+             (hashValue: K, limit: Int = 0)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      val request = mkHashKeyQuery(hashValue)
+      if (limit > 0) request.setLimit(limit)
+      apply(request)
+    }
+
+    /**
+      * Query a table by a hash value and range condition.
+      *
+      * The result will be all items with the same hash key
+      * value, and range keys that match the range condition.
+      *
+      * This method will issue one query request, stopping either
+      * at the supplied limit or at the response size limit.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param limit
+      *     the optional limit for the number of items to return.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[queryOnce]]
+      */
+    def apply[K <% AttributeValue]
+             (hashValue: K, rangeCondition: Condition, limit: Int = 0)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      val request = mkHashAndRangeKeyQuery(hashValue, rangeCondition)
+      if (limit > 0) request.setLimit(limit)
+      apply(request)
+    }
+
+    /**
+      * Query a secondary index by a hash value and range condition.
+      *
+      * This query targets a named secondary index. The index
+      * being used must be named, as well well at the name of
+      * the attribute used as a range key in the index.
+      * The result will be all items with the same hash key
+      * value, and range keys that match the range condition.
+      *
+      * This method will issue one query request, stopping either
+      * at the supplied limit or at the response size limit.
+      *
+      * Note that all attributes will be requested, so that
+      * the serializer will get a complete item. This may incur
+      * extra read capacity, depending on what attributes
+      * are projected into the index.
+      *
+      * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+      * @param indexName
+      *     the name of the secondary index to query.
+      * @param hashValue
+      *     the hash key value to match.
+      * @param rangeAttributeName
+      *     the name of the range key attribute used by the index.
+      * @param rangeCondition
+      *     the condition to apply to the range key.
+      * @param scanIndexForward
+      *     true for forwards scan, and false for reverse scan.
+      * @param limit
+      *     the optional limit for the number of items to return.
+      * @param serializer
+      *     an implicit object serializer.
+      * @return result sequence of the query in a future.
+      * @see [[queryOnce]]
+      */
+    def apply[K <% AttributeValue]
+             (indexName:           String,
+              hashValue:           K,
+              rangeAttributeName:  String,
+              rangeCondition:      Condition,
+              scanIndexForward:    Boolean    = true,
+              limit:               Int        = 0)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] = {
+      val request =
+        new QueryRequest()
+          .withIndexName(indexName)
+          .withKeyConditions(
+            Map(
+              serializer.hashAttributeName -> QueryCondition.equalTo(hashValue),
+              rangeAttributeName           -> rangeCondition
+            ).asJava
+          )
+          .withSelect(Select.ALL_ATTRIBUTES)
+          .withScanIndexForward(scanIndexForward)
+      if (limit > 0) request.setLimit(limit)
+      apply(request)
+    }
+  }
+
+  /**
+    * Query a table.
+    *
+    * This method will issue one query request, stopping either
+    * at the supplied limit or at the response size limit.
+    *
+    * @tparam T
+    *     the type of the object returned by the query.
+    * @see [[QueryOnce]]
+    * @see [[query]]
+    * @see [[countQuery]]
+    */
+  def queryOnce[T] = new QueryOnce[T]
 
 
   /**
@@ -793,15 +1077,19 @@ trait AmazonDynamoDBScalaMapper {
       queryRequest
         .withTableName(tableName)
         .withSelect(Select.COUNT)
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withConsistentRead(config.consistentReads)
+      if (logger.isDebugEnabled)
+        queryRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
       def local(count: Long = 0L, lastKey: Option[DynamoDBKey] = None): Future[Long] =
         client.query(
           queryRequest.withExclusiveStartKey(lastKey.orNull)
         ) flatMap { result =>
-          logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          if (logger.isDebugEnabled)
+            logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
           val newCount = count + result.getCount
+
           Option { result.getLastEvaluatedKey } match {
             case None   => Future.successful(newCount)
             case optKey => local(newCount, optKey)
@@ -918,6 +1206,7 @@ trait AmazonDynamoDBScalaMapper {
     *     the type of object queried.
     * @see [[CountQuery]]
     * @see [[query]]
+    * @see [[queryOnce]]
     */
   def countQuery[T] = new CountQuery[T]
 
@@ -1032,10 +1321,9 @@ trait AmazonDynamoDBScalaMapper {
       val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
       val builder = Seq.newBuilder[T]
 
-      def local(keys: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] =
-        client.batchGetItem(
+      def local(keys: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] = {
+        val request =
           new BatchGetItemRequest()
-          .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
           .withRequestItems(
             Map(
               tableName ->
@@ -1046,16 +1334,23 @@ trait AmazonDynamoDBScalaMapper {
                 .withConsistentRead(config.consistentReads)
             ).asJava
           )
-        ) flatMap { result =>
-          logger.debug(s"batchLoadByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+        client.batchGetItem(request) flatMap { result =>
+          if (logger.isDebugEnabled)
+            logger.debug(s"batchLoadByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
           builder ++= result.getResponses.get(tableName).asScala.view map { item =>
             serializer.fromAttributeMap(item.asScala)
           }
+
           if (keys._2.isEmpty)
             Future.successful(())
           else
             local(keys._2.splitAt(100))
         }
+      }
 
       local(keys.splitAt(100)) map { _ => builder.result }
     }
@@ -1081,26 +1376,28 @@ trait AmazonDynamoDBScalaMapper {
     * a batch write result.
     *
     * This method will attempt to retry any portion of a failed batch write.
-    * If this retry fails, then an exception will be thrown.
     *
     * @param lastResult
     *     the result object from a batchWrite operation.
-    * @throws BatchDumpException if the retry fails.
     */
   private def checkRetryBatchWrite(lastResult: BatchWriteItemResult): Future[Unit] = {
     val retryItems = lastResult.getUnprocessedItems
     if (retryItems.isEmpty)
       Future.successful(())
-    else
-      client.batchWriteItem(
+    else {
+      val request =
         new BatchWriteItemRequest()
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(retryItems)
-      ) map { result =>
-        logger.debug(s"checkRetryBatchWrite() ConsumedCapacity = ${result.getConsumedCapacity()}")
-        if (!result.getUnprocessedItems.isEmpty)
-          throw new BatchDumpException("AmazonDynamoDBScalaMapper: batch write retry failed", result.getUnprocessedItems)
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.batchWriteItem(request) flatMap { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"checkRetryBatchWrite() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
+        checkRetryBatchWrite(result)
       }
+    }
   }
 
 
@@ -1110,22 +1407,18 @@ trait AmazonDynamoDBScalaMapper {
     *
     * This method will internally make repeated batchWriteItem
     * calls, with up to 25 objects at a time, until all the input
-    * objects have been written. If any objects fail to be written,
-    * they will be retried once, and an exception will be thrown
-    * on their second failure.
+    * objects have been written.
     *
     * Objects that are new will create new items in DynamoDB,
     * otherwise they will overwrite exisiting items.
     *
     * @param objs
     *     the sequence of objects to write to DynamoDB.
-    * @throws BatchDumpException if a write to DynamoDB fails twice.
     */
   def batchDump[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
-    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] =
-      client.batchWriteItem(
+    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] = {
+      val request =
         new BatchWriteItemRequest()
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(
           Map(
             tableName -> objsPair._1.view.map { obj =>
@@ -1137,8 +1430,13 @@ trait AmazonDynamoDBScalaMapper {
             } .asJava
           ).asJava
         )
-      ) flatMap { result =>
-        logger.debug(s"batchDump() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.batchWriteItem(request) flatMap { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"batchDump() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         checkRetryBatchWrite(result) flatMap { _ =>
           if (objsPair._2.isEmpty)
             Future.successful(())
@@ -1146,6 +1444,7 @@ trait AmazonDynamoDBScalaMapper {
             local(objsPair._2.splitAt(25))
         }
       }
+    }
 
     local(objs.splitAt(25))
   }
@@ -1157,9 +1456,7 @@ trait AmazonDynamoDBScalaMapper {
     *
     * This method will internally make repeated batchWriteItem
     * calls, with up to 25 objects at a time, until all the input
-    * objects have been deleted. If any objects fail to be deleted,
-    * they will be retried once, and an exception will be thrown
-    * on their second failure.
+    * objects have been deleted.
     *
     * @tparam T
     *     the type of objects to delete.
@@ -1167,13 +1464,11 @@ trait AmazonDynamoDBScalaMapper {
     *     a sequence of objects to delete.
     * @param serializer
     *     an implicit object serializer.
-    * @throws BatchDumpException if a write to DynamoDB fails twice.
     */
   def batchDelete[T](objs: Seq[T])(implicit serializer: DynamoDBSerializer[T]): Future[Unit] = {
-    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] =
-      client.batchWriteItem(
+    def local(objsPair: (Seq[T], Seq[T])): Future[Unit] = {
+      val request =
         new BatchWriteItemRequest()
-        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
         .withRequestItems(
           Map(
             tableName -> objsPair._1.view.map { obj =>
@@ -1185,8 +1480,13 @@ trait AmazonDynamoDBScalaMapper {
             } .asJava
           ).asJava
         )
-      ) flatMap { result =>
-        logger.debug(s"batchDelete() ConsumedCapacity = ${result.getConsumedCapacity()}")
+      if (logger.isDebugEnabled)
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+      client.batchWriteItem(request) flatMap { result =>
+        if (logger.isDebugEnabled)
+          logger.debug(s"batchDelete() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
         checkRetryBatchWrite(result) flatMap { _ =>
           if (objsPair._2.isEmpty)
             Future.successful(())
@@ -1194,6 +1494,7 @@ trait AmazonDynamoDBScalaMapper {
             local(objsPair._2.splitAt(25))
         }
       }
+    }
 
     local(objs.splitAt(25))
   }
@@ -1216,9 +1517,7 @@ trait AmazonDynamoDBScalaMapper {
       *
       * This method will internally make repeated batchWriteItem
       * calls, with up to 25 keys at a time, until all the input
-      * keys have been deleted. If any keys fail to be deleted,
-      * they will be retried once, and an exception will be thrown
-      * on their second failure.
+      * keys have been deleted.
       *
       * @tparam K
       *     a type that is viewable as an [[AttributeValue]].
@@ -1226,7 +1525,6 @@ trait AmazonDynamoDBScalaMapper {
       *     the hash key values of the items to delete.
       * @param serializer
       *     an implicit object serializer.
-      * @throws BatchDumpException if a write to DynamoDB fails twice.
       * @see [[batchDeleteByKeys]]
       */
     def apply[K <% AttributeValue]
@@ -1246,9 +1544,7 @@ trait AmazonDynamoDBScalaMapper {
       *
       * This method will internally make repeated batchWriteItem
       * calls, with up to 25 keys at a time, until all the input
-      * keys have been deleted. If any keys fail to be deleted,
-      * they will be retried once, and an exception will be thrown
-      * on their second failure.
+      * keys have been deleted.
       *
       * @tparam K1
       *     a type that is viewable as an [[AttributeValue]].
@@ -1260,7 +1556,6 @@ trait AmazonDynamoDBScalaMapper {
       *     the range key values of the items to delete.
       * @param serializer
       *     an implicit object serializer.
-      * @throws BatchDumpException if a write to DynamoDB fails twice.
       * @see [[batchDeleteByKeys]]
       */
     def apply[K1 <% AttributeValue, K2 <% AttributeValue]
@@ -1269,10 +1564,9 @@ trait AmazonDynamoDBScalaMapper {
              : Future[Unit] = {
       val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
 
-      def local(keysPair: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] =
-        client.batchWriteItem(
+      def local(keysPair: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] = {
+        val request =
           new BatchWriteItemRequest()
-          .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
           .withRequestItems(
             Map(
               tableName -> keysPair._1.view.map { key =>
@@ -1284,8 +1578,13 @@ trait AmazonDynamoDBScalaMapper {
               } .asJava
             ).asJava
           )
-        ) flatMap { result =>
-          logger.debug(s"batchDeleteByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        if (logger.isDebugEnabled)
+          request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
+        client.batchWriteItem(request) flatMap { result =>
+          if (logger.isDebugEnabled)
+            logger.debug(s"batchDeleteByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+
           checkRetryBatchWrite(result) flatMap { _ =>
             if (keysPair._2.isEmpty)
               Future.successful(())
@@ -1293,6 +1592,7 @@ trait AmazonDynamoDBScalaMapper {
               local(keysPair._2.splitAt(25))
           }
         }
+      }
 
       local(keys.splitAt(25))
     }
@@ -1303,9 +1603,7 @@ trait AmazonDynamoDBScalaMapper {
     *
     * This method will internally make repeated batchWriteItem
     * calls, with up to 25 keys at a time, until all the input
-    * keys have been deleted. If any keys fail to be deleted,
-    * they will be retried once, and an exception will be thrown
-    * on their second failure.
+    * keys have been deleted.
     *
     * @tparam T
     *     the type of the objects deleted by the batch delete.
