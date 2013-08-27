@@ -1,6 +1,6 @@
 ---
 layout: default
-title: AWS-Wrap by Pellucid Analytics
+title: aws-wrap by Pellucid Analytics
 ---
 
 # Asynchronous Scala Clients for Amazon Web Services
