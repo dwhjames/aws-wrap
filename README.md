@@ -4,6 +4,7 @@
 Asynchronous clients are provided for the following services:
 
  * DynamoDB
+ * CloudWatch
  * Simple Storage Service (S3)
  * Simple Email Service (SES)
  * SimpleDB
@@ -18,4 +19,4 @@ Include the Pellucid Analytics maven repository in your resolvers:
 
 and add the following dependency:
 
-    "com.pellucid" %% "aws-wrap" % "0.5-RC1"
+    "com.pellucid" %% "aws-wrap" % "0.5-RC2"
