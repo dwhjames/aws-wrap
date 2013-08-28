@@ -20,3 +20,7 @@ project/plugins/project/
 .settings
 .target
 .DS_Store
+
+# IntelliJ
+.idea
+.idea_modules

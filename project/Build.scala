@@ -9,7 +9,7 @@ object AWSWrapBuild extends Build {
 
   lazy val buildSettings = Seq(
     organization := "com.pellucid",
-    version      := "0.5-RC1",
+    version      := "0.5-RC2",
     scalaVersion := "2.10.2",
     scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked"),
     shellPrompt  := CustomShellPrompt.customPrompt
