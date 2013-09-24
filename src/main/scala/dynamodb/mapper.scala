@@ -774,16 +774,23 @@ trait AmazonDynamoDBScalaMapper {
       *     the hash key value to match.
       * @param rangeCondition
       *     the condition to apply to the range key.
+      * @param scanIndexForward
+      *     true (default) for forwards scan, and false for reverse scan.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
     def apply[K <% AttributeValue]
-             (hashValue: K, rangeCondition: Condition)
+             (hashValue:         K,
+              rangeCondition:    Condition,
+              scanIndexForward:  Boolean    = true)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
-      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition))
+      apply(
+        mkHashAndRangeKeyQuery(hashValue, rangeCondition)
+        .withScanIndexForward(scanIndexForward)
+      )
 
     /**
       * Query a secondary index by a hash value and range condition.
@@ -813,7 +820,7 @@ trait AmazonDynamoDBScalaMapper {
       * @param rangeCondition
       *     the condition to apply to the range key.
       * @param scanIndexForward
-      *     true for forwards scan, and false for reverse scan.
+      *     true (default) for forwards scan, and false for reverse scan.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
@@ -950,6 +957,8 @@ trait AmazonDynamoDBScalaMapper {
       *     the hash key value to match.
       * @param rangeCondition
       *     the condition to apply to the range key.
+      * @param scanIndexForward
+      *     true (default) for forwards scan, and false for reverse scan.
       * @param limit
       *     the optional limit for the number of items to return.
       * @param serializer
@@ -958,10 +967,15 @@ trait AmazonDynamoDBScalaMapper {
       * @see [[queryOnce]]
       */
     def apply[K <% AttributeValue]
-             (hashValue: K, rangeCondition: Condition, limit: Int = 0)
+             (hashValue:         K,
+              rangeCondition:    Condition,
+              scanIndexForward:  Boolean    = true,
+              limit:             Int        = 0)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] = {
-      val request = mkHashAndRangeKeyQuery(hashValue, rangeCondition)
+      val request =
+        mkHashAndRangeKeyQuery(hashValue, rangeCondition)
+        .withScanIndexForward(scanIndexForward)
       if (limit > 0) request.setLimit(limit)
       apply(request)
     }
@@ -994,7 +1008,7 @@ trait AmazonDynamoDBScalaMapper {
       * @param rangeCondition
       *     the condition to apply to the range key.
       * @param scanIndexForward
-      *     true for forwards scan, and false for reverse scan.
+      *     true (default) for forwards scan, and false for reverse scan.
       * @param limit
       *     the optional limit for the number of items to return.
       * @param serializer
