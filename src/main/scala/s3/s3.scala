@@ -476,11 +476,12 @@ object FutureTransfer {
     val p = Promise[T]
     transfer.addProgressListener(new ProgressListener {
       override def progressChanged(progressEvent: ProgressEvent) {
+        import com.amazonaws.event.ProgressEvent._
         // listen only for 'done' states: completed, canceled, or failed
         progressEvent.getEventCode() match {
-          case ProgressEvent.COMPLETED_EVENT_CODE => p.success(transfer)
-          case ProgressEvent.CANCELED_EVENT_CODE  => p.success(transfer)
-          case ProgressEvent.FAILED_EVENT_CODE    =>
+          case COMPLETED_EVENT_CODE => p.success(transfer)
+          case CANCELED_EVENT_CODE  => p.success(transfer)
+          case FAILED_EVENT_CODE    =>
             try {
               p.failure(transfer.waitForException())
             } catch {
