@@ -1,4 +1,8 @@
 safe: true
 pygments: true
 lsi: false
+markdown: redcarpet
 baseurl: /aws-wrap
+navigation:
+- title: Getting started with DynamoDB
+  url:   doc/dynamodb.html
