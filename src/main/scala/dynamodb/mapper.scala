@@ -705,7 +705,17 @@ trait AmazonDynamoDBScalaMapper {
       * @see [[query]]
       * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
       */
-    def apply(queryRequest: QueryRequest, totalLimit: Option[Int] = None)
+    def apply(queryRequest: QueryRequest)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryRaw(queryRequest)
+
+    def apply(queryRequest: QueryRequest, totalLimit: Int)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryRaw(queryRequest, Some(totalLimit))
+
+    private def queryRaw(queryRequest: QueryRequest, totalLimit: Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] = {
       // note this mutates the query request
@@ -761,10 +771,22 @@ trait AmazonDynamoDBScalaMapper {
       * @see [[query]]
       */
     def apply[K <% AttributeValue]
+             (hashValue: K)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnHash(hashValue)
+
+    def apply[K <% AttributeValue]
+             (hashValue: K, totalLimit: Int)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnHash(hashValue, Some(totalLimit))
+
+    private def queryOnHash[K <% AttributeValue]
              (hashValue: K, totalLimit: Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
-      apply(mkHashKeyQuery(hashValue), totalLimit)
+      queryRaw(mkHashKeyQuery(hashValue), totalLimit)
 
     /**
       * Query a table by a hash value and range condition.
@@ -792,12 +814,44 @@ trait AmazonDynamoDBScalaMapper {
       */
     def apply[K <% AttributeValue]
              (hashValue:         K,
+              rangeCondition:    Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnHashAndRange(hashValue, rangeCondition)
+
+    def apply[K <% AttributeValue]
+             (hashValue:         K,
+              rangeCondition:    Condition,
+              scanIndexForward:  Boolean)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnHashAndRange(hashValue, rangeCondition, scanIndexForward)
+
+    def apply[K <% AttributeValue]
+             (hashValue:         K,
+              rangeCondition:    Condition,
+              totalLimit:        Int)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnHashAndRange(hashValue, rangeCondition, totalLimit = Some(totalLimit))
+
+    def apply[K <% AttributeValue]
+             (hashValue:         K,
+              rangeCondition:    Condition,
+              scanIndexForward:  Boolean,
+              totalLimit:        Int)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnHashAndRange(hashValue, rangeCondition, scanIndexForward, Some(totalLimit))
+
+    private def queryOnHashAndRange[K <% AttributeValue]
+             (hashValue:         K,
               rangeCondition:    Condition,
               scanIndexForward:  Boolean     = true,
               totalLimit:        Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
-      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition).withScanIndexForward(scanIndexForward), totalLimit)
+      queryRaw(mkHashAndRangeKeyQuery(hashValue, rangeCondition).withScanIndexForward(scanIndexForward), totalLimit)
 
     /**
       * Query a secondary index by a hash value and range condition.
@@ -839,12 +893,52 @@ trait AmazonDynamoDBScalaMapper {
              (indexName:           String,
               hashValue:           K,
               rangeAttributeName:  String,
+              rangeCondition:      Condition)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnSecondaryIndex(indexName, hashValue, rangeAttributeName, rangeCondition)
+
+    def apply[K <% AttributeValue]
+             (indexName:           String,
+              hashValue:           K,
+              rangeAttributeName:  String,
+              rangeCondition:      Condition,
+              scanIndexForward:    Boolean)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnSecondaryIndex(indexName, hashValue, rangeAttributeName, rangeCondition, scanIndexForward)
+
+    def apply[K <% AttributeValue]
+             (indexName:           String,
+              hashValue:           K,
+              rangeAttributeName:  String,
+              rangeCondition:      Condition,
+              totalLimit:          Int)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnSecondaryIndex(indexName, hashValue, rangeAttributeName, rangeCondition, totalLimit = Some(totalLimit))
+
+    def apply[K <% AttributeValue]
+             (indexName:           String,
+              hashValue:           K,
+              rangeAttributeName:  String,
+              rangeCondition:      Condition,
+              scanIndexForward:    Boolean,
+              totalLimit:          Int)
+             (implicit serializer: DynamoDBSerializer[T])
+             : Future[Seq[T]] =
+      queryOnSecondaryIndex(indexName, hashValue, rangeAttributeName, rangeCondition, scanIndexForward, Some(totalLimit))
+
+    private def queryOnSecondaryIndex[K <% AttributeValue]
+             (indexName:           String,
+              hashValue:           K,
+              rangeAttributeName:  String,
               rangeCondition:      Condition,
               scanIndexForward:    Boolean     = true,
               totalLimit:          Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
-      apply(
+      queryRaw(
         new QueryRequest()
           .withIndexName(indexName)
           .withKeyConditions(
