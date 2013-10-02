@@ -828,6 +828,8 @@ trait AmazonDynamoDBScalaMapper {
       *     the condition to apply to the range key.
       * @param scanIndexForward
       *     true (default) for forwards scan, and false for reverse scan.
+      * @param totalLimit
+      *     the total number of results you want.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
@@ -838,7 +840,8 @@ trait AmazonDynamoDBScalaMapper {
               hashValue:           K,
               rangeAttributeName:  String,
               rangeCondition:      Condition,
-              scanIndexForward:    Boolean    = true)
+              scanIndexForward:    Boolean    = true,
+              totalLimit: Option[Int]         = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
       apply(
@@ -852,7 +855,7 @@ trait AmazonDynamoDBScalaMapper {
           )
           .withSelect(Select.ALL_ATTRIBUTES)
           .withScanIndexForward(scanIndexForward),
-        None
+        totalLimit
       )
   }
 
