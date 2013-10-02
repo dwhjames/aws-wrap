@@ -697,13 +697,15 @@ trait AmazonDynamoDBScalaMapper {
       *
       * @param queryRequest
       *     the query request object.
+      * @param totalLimit
+      *     the total number of results you want.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
       * @see [[query]]
       * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
       */
-    def apply(queryRequest: QueryRequest)
+    def apply(queryRequest: QueryRequest, totalLimit: Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] = {
       // note this mutates the query request
@@ -715,24 +717,27 @@ trait AmazonDynamoDBScalaMapper {
 
       val builder = Seq.newBuilder[T]
 
-      def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
+      def local(lastKey: Option[DynamoDBKey] = None, numberLeftToFetch: Option[Int] = None): Future[Unit] =
         client.query(
           queryRequest.withExclusiveStartKey(lastKey.orNull)
         ) flatMap { result =>
           if (logger.isDebugEnabled)
-            logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity()}")
+            logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity}")
 
-          builder ++= result.getItems.asScala.view map { item =>
-            serializer.fromAttributeMap(item.asScala)
+          val queryResult = result.getItems.asScala map {
+            item =>
+              serializer.fromAttributeMap(item.asScala)
           }
 
-          Option { result.getLastEvaluatedKey } match {
-            case None   => Future.successful(())
-            case optKey => local(optKey)
+          (Option { result.getLastEvaluatedKey }, numberLeftToFetch) match {
+            case (None  , None   )                          => { builder ++= queryResult; Future.successful(()) }
+            case (optKey, None   )                          => { builder ++= queryResult; local(optKey, None) }
+            case (optKey, Some(n)) if n > queryResult.size  => { builder ++= queryResult; local(optKey, Some(n - queryResult.size)) }
+            case (optKey, Some(n))                          => { builder ++= queryResult.take(n); Future.successful(()) }
           }
         }
 
-      local() map { _ => builder.result }
+      local(None, totalLimit) map { _ => builder.result() }
     }
 
     /**
@@ -748,16 +753,18 @@ trait AmazonDynamoDBScalaMapper {
       *     a type that is viewable as an [[AttributeValue]].
       * @param hashValue
       *     the hash key value to match.
+      * @param totalLimit
+      *     the total number of results you want.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
     def apply[K <% AttributeValue]
-             (hashValue: K)
+             (hashValue: K, totalLimit: Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
-      apply(mkHashKeyQuery(hashValue))
+      apply(mkHashKeyQuery(hashValue), totalLimit)
 
     /**
       * Query a table by a hash value and range condition.
@@ -776,6 +783,8 @@ trait AmazonDynamoDBScalaMapper {
       *     the condition to apply to the range key.
       * @param scanIndexForward
       *     true (default) for forwards scan, and false for reverse scan.
+      * @param totalLimit
+      *     the total number of results you want.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
@@ -784,13 +793,11 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K <% AttributeValue]
              (hashValue:         K,
               rangeCondition:    Condition,
-              scanIndexForward:  Boolean    = true)
+              scanIndexForward:  Boolean     = true,
+              totalLimit:        Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
-      apply(
-        mkHashAndRangeKeyQuery(hashValue, rangeCondition)
-        .withScanIndexForward(scanIndexForward)
-      )
+      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition).withScanIndexForward(scanIndexForward), totalLimit)
 
     /**
       * Query a secondary index by a hash value and range condition.
@@ -821,6 +828,8 @@ trait AmazonDynamoDBScalaMapper {
       *     the condition to apply to the range key.
       * @param scanIndexForward
       *     true (default) for forwards scan, and false for reverse scan.
+      * @param totalLimit
+      *     the total number of results you want.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
@@ -831,7 +840,8 @@ trait AmazonDynamoDBScalaMapper {
               hashValue:           K,
               rangeAttributeName:  String,
               rangeCondition:      Condition,
-              scanIndexForward:    Boolean    = true)
+              scanIndexForward:    Boolean     = true,
+              totalLimit:          Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
       apply(
@@ -844,7 +854,8 @@ trait AmazonDynamoDBScalaMapper {
             ).asJava
           )
           .withSelect(Select.ALL_ATTRIBUTES)
-          .withScanIndexForward(scanIndexForward)
+          .withScanIndexForward(scanIndexForward),
+        totalLimit
       )
   }
 
