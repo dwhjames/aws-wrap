@@ -697,6 +697,8 @@ trait AmazonDynamoDBScalaMapper {
       *
       * @param queryRequest
       *     the query request object.
+      * @param totalLimit
+      *     the total number of results you want.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
@@ -751,6 +753,8 @@ trait AmazonDynamoDBScalaMapper {
       *     a type that is viewable as an [[AttributeValue]].
       * @param hashValue
       *     the hash key value to match.
+      * @param totalLimit
+      *     the total number of results you want.
       * @param serializer
       *     an implicit object serializer.
       * @return result sequence of the query in a future.
