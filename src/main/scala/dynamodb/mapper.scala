@@ -793,11 +793,11 @@ trait AmazonDynamoDBScalaMapper {
     def apply[K <% AttributeValue]
              (hashValue:         K,
               rangeCondition:    Condition,
-              scanIndexForward:  Boolean    = true,
+              scanIndexForward:  Boolean     = true,
               totalLimit:        Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
-      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition).withScanIndexForward(scanIndexForward), None)
+      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition).withScanIndexForward(scanIndexForward), totalLimit)
 
     /**
       * Query a secondary index by a hash value and range condition.
@@ -840,8 +840,8 @@ trait AmazonDynamoDBScalaMapper {
               hashValue:           K,
               rangeAttributeName:  String,
               rangeCondition:      Condition,
-              scanIndexForward:    Boolean    = true,
-              totalLimit: Option[Int]         = None)
+              scanIndexForward:    Boolean     = true,
+              totalLimit:          Option[Int] = None)
              (implicit serializer: DynamoDBSerializer[T])
              : Future[Seq[T]] =
       apply(
