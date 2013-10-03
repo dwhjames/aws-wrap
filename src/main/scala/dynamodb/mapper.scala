@@ -755,11 +755,13 @@ trait AmazonDynamoDBScalaMapper {
               serializer.fromAttributeMap(item.asScala)
           }
 
-          (Option { result.getLastEvaluatedKey }, numberLeftToFetch) match {
-            case (None  , None   )                          => { builder ++= queryResult; Future.successful(()) }
-            case (optKey, None   )                          => { builder ++= queryResult; local(optKey, None) }
-            case (optKey, Some(n)) if n > queryResult.size  => { builder ++= queryResult; local(optKey, Some(n - queryResult.size)) }
-            case (optKey, Some(n))                          => { builder ++= queryResult.take(n); Future.successful(()) }
+          (numberLeftToFetch, Option { result.getLastEvaluatedKey }) match {
+            case (None   , None  )      => { builder ++= queryResult; Future.successful(()) }
+            case (None   , optKey)      => { builder ++= queryResult; local(optKey, None) }
+            case (Some(n), optKey)      =>
+              if (n <= queryResult.size ||
+                optKey.isEmpty)          { builder ++= queryResult.take(n); Future.successful(()) }
+              else                         { builder ++= queryResult; local(optKey, Some(n - queryResult.size)) }
           }
         }
 
