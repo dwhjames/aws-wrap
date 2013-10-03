@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, DefaultAWSCredentialsProviderChain}
+import com.amazonaws.event.{ProgressListener, ProgressEvent}
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.model._
@@ -470,17 +471,18 @@ object FutureTransfer {
     * @return the completed or cancelled transfer in a future.
     * @throws AmazonClientException in the future the transfer failed.
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html Transfer]]
-    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/model/ProgressListener.html ProgressListener]]
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/event/ProgressListener.html ProgressListener]]
     */
-  def listenFor[T <: Transfer](transfer: T): Future[T] = {
-    val p = Promise[T]
+  def listenFor[T <: Transfer](transfer: T): Future[transfer.type] = {
+    val p = Promise[transfer.type]
     transfer.addProgressListener(new ProgressListener {
       override def progressChanged(progressEvent: ProgressEvent) {
+        import ProgressEvent._
         // listen only for 'done' states: completed, canceled, or failed
         progressEvent.getEventCode() match {
-          case ProgressEvent.COMPLETED_EVENT_CODE => p.success(transfer)
-          case ProgressEvent.CANCELED_EVENT_CODE  => p.success(transfer)
-          case ProgressEvent.FAILED_EVENT_CODE    =>
+          case COMPLETED_EVENT_CODE => p.success(transfer)
+          case CANCELED_EVENT_CODE  => p.success(transfer)
+          case FAILED_EVENT_CODE    =>
             try {
               p.failure(transfer.waitForException())
             } catch {
