@@ -755,22 +755,18 @@ trait AmazonDynamoDBScalaMapper {
               serializer.fromAttributeMap(item.asScala)
           }
 
+          builder ++= (numberLeftToFetch match {
+            case Some(n) if n <= queryResult.size => queryResult.take(n)
+            case _                                => queryResult
+          })
+
           val optKey = Option { result.getLastEvaluatedKey }
-          numberLeftToFetch match {
-            case None =>
-              builder ++= queryResult
-              if (optKey.isEmpty)
-                Future.successful(())
-              else
-                local(optKey, None)
-            case Some(n) =>
-              if (n <= queryResult.size || optKey.isEmpty) {
-                builder ++= queryResult.take(n)
-                Future.successful(())
-              } else {
-                builder ++= queryResult
-                local(optKey, Some(n - queryResult.size))
-              }
+
+          if (optKey.isEmpty) Future.successful(())
+          else numberLeftToFetch match {
+            case Some(n) if n <= queryResult.size => Future.successful(())
+            case Some(n)                          => local(optKey, Some(n - queryResult.size))
+            case None                             => local(optKey, None)
           }
         }
 
