@@ -345,7 +345,9 @@ object Scratch {
             .getResourceAsStream("credentials.properties")
       )
 
-    val client = new AmazonDynamoDBScalaClient(new AmazonDynamoDBAsyncClient(credentials))
+    val jClient = new AmazonDynamoDBAsyncClient(credentials)
+
+    val client = new AmazonDynamoDBScalaClient(jClient)
 
     def awaitTableCreation(tableName: String): TableDescription = {
       logger.info(s"Waiting for $tableName table to become active.")
