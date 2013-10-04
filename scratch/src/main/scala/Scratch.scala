@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 import java.util.UUID
 
 import com.amazonaws.AmazonClientException
-import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, BasicAWSCredentials}
+import com.amazonaws.auth.PropertiesCredentials
 import com.amazonaws.services.dynamodbv2._
 import com.amazonaws.services.dynamodbv2.model._
 
@@ -21,19 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 
-object UserHomeCredentialsProvider extends AWSCredentialsProvider {
-
-  override lazy val getCredentials: AWSCredentials =
-    try {
-      val lines = scala.io.Source.fromFile(System.getProperty("user.home") + "/.awssecret").getLines.toList
-      new BasicAWSCredentials(lines(0), lines(1))
-    } catch {
-      case (t: Throwable) =>
-        throw new AmazonClientException("No credentials were found at /.awssecret", t)
-    }
-
-  override def refresh() {}
-}
 
 case class Forum(
   name:     String,
@@ -352,7 +339,13 @@ object Scratch {
 
   def main(args: Array[String]) {
 
-    val client = new AmazonDynamoDBScalaClient(new AmazonDynamoDBAsyncClient(UserHomeCredentialsProvider))
+    val credentials = new PropertiesCredentials(
+        this.getClass()
+            .getClassLoader()
+            .getResourceAsStream("credentials.properties")
+      )
+
+    val client = new AmazonDynamoDBScalaClient(new AmazonDynamoDBAsyncClient(credentials))
 
     def awaitTableCreation(tableName: String): TableDescription = {
       logger.info(s"Waiting for $tableName table to become active.")
@@ -687,7 +680,13 @@ object TestSingleThreadedBatchWriter {
             )
     }
 
-    val loader = new SingleThreadedBatchWriter(tableName, UserHomeCredentialsProvider)
+    val credentials = new PropertiesCredentials(
+        this.getClass()
+            .getClassLoader()
+            .getResourceAsStream("credentials.properties")
+      )
+
+    val loader = new SingleThreadedBatchWriter(tableName, credentials)
 
     loader.run(source)
 
@@ -726,7 +725,13 @@ object TestConcurrentBatchWriter {
       }
     }
 
-    val batchWriter = new ConcurrentBatchWriter(tableName, UserHomeCredentialsProvider, 5)
+    val credentials = new PropertiesCredentials(
+        this.getClass()
+            .getClassLoader()
+            .getResourceAsStream("credentials.properties")
+      )
+
+    val batchWriter = new ConcurrentBatchWriter(tableName, credentials, 5)
 
     val errorQueue = new java.util.concurrent.ConcurrentLinkedQueue[FailedBatch[String]]
 
