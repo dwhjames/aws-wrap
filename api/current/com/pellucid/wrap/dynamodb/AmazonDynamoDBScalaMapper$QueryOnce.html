@@ -170,7 +170,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply[K](indexName:String,hashValue:K,rangeAttributeName:String,rangeCondition:com.amazonaws.services.dynamodbv2.model.Condition,scanIndexForward:Boolean,limit:Int)(implicitevidence$12:K=&gt;com.pellucid.wrap.dynamodb.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]"></a>
+      <a id="apply[K](indexName:String,hashValue:K,rangeAttributeName:String,rangeCondition:com.amazonaws.services.dynamodbv2.model.Condition,scanIndexForward:Boolean,limit:Int)(implicitevidence$22:K=&gt;com.pellucid.wrap.dynamodb.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]"></a>
       <a id="apply[K](String,K,String,Condition,Boolean,Int)((K)⇒AttributeValue,DynamoDBSerializer[T]):Future[Seq[T]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -196,20 +196,20 @@ are projected into the index.
     the hash key value to match.</p></dd><dt class="param">rangeAttributeName</dt><dd class="cmt"><p>
     the name of the range key attribute used by the index.</p></dd><dt class="param">rangeCondition</dt><dd class="cmt"><p>
     the condition to apply to the range key.</p></dd><dt class="param">scanIndexForward</dt><dd class="cmt"><p>
-    true for forwards scan, and false for reverse scan.</p></dd><dt class="param">limit</dt><dd class="cmt"><p>
+    true (default) for forwards scan, and false for reverse scan.</p></dd><dt class="param">limit</dt><dd class="cmt"><p>
     the optional limit for the number of items to return.</p></dd><dt class="param">serializer</dt><dd class="cmt"><p>
     an implicit object serializer.</p></dd><dt>returns</dt><dd class="cmt"><p>result sequence of the query in a future.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper.html#queryOnce[T]:AmazonDynamoDBScalaMapper.this.QueryOnce[T]" class="extmbr" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper#queryOnce">queryOnce</a>
 </p></span></dd></dl></div>
     </li><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply[K](hashValue:K,rangeCondition:com.amazonaws.services.dynamodbv2.model.Condition,limit:Int)(implicitevidence$11:K=&gt;com.pellucid.wrap.dynamodb.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]"></a>
-      <a id="apply[K](K,Condition,Int)((K)⇒AttributeValue,DynamoDBSerializer[T]):Future[Seq[T]]"></a>
+      <a id="apply[K](hashValue:K,rangeCondition:com.amazonaws.services.dynamodbv2.model.Condition,scanIndexForward:Boolean,limit:Int)(implicitevidence$21:K=&gt;com.pellucid.wrap.dynamodb.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]"></a>
+      <a id="apply[K](K,Condition,Boolean,Int)((K)⇒AttributeValue,DynamoDBSerializer[T]):Future[Seq[T]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="tparams">[<span name="K">K</span>]</span><span class="params">(<span name="hashValue">hashValue: <span class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce.apply.K">K</span></span>, <span name="rangeCondition">rangeCondition: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.Condition">Condition</span></span>, <span name="limit">limit: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce.apply.K">K</span>) ⇒ <a href="package.html#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>, <span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.pellucid.wrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce.T">T</span>]]</span>
+        <span class="name">apply</span><span class="tparams">[<span name="K">K</span>]</span><span class="params">(<span name="hashValue">hashValue: <span class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce.apply.K">K</span></span>, <span name="rangeCondition">rangeCondition: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.Condition">Condition</span></span>, <span name="scanIndexForward">scanIndexForward: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="limit">limit: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce.apply.K">K</span>) ⇒ <a href="package.html#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>, <span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.pellucid.wrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce.T">T</span>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Query a table by a hash value and range condition.</p><div class="fullcomment"><div class="comment cmt"><p>Query a table by a hash value and range condition.</p><p>The result will be all items with the same hash key
@@ -218,12 +218,13 @@ at the supplied limit or at the response size limit.
 </p></div><dl class="paramcmts block"><dt class="tparam">K</dt><dd class="cmt"><p>
     a type that is viewable as an <a href="package.html#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>.</p></dd><dt class="param">hashValue</dt><dd class="cmt"><p>
     the hash key value to match.</p></dd><dt class="param">rangeCondition</dt><dd class="cmt"><p>
-    the condition to apply to the range key.</p></dd><dt class="param">limit</dt><dd class="cmt"><p>
+    the condition to apply to the range key.</p></dd><dt class="param">scanIndexForward</dt><dd class="cmt"><p>
+    true (default) for forwards scan, and false for reverse scan.</p></dd><dt class="param">limit</dt><dd class="cmt"><p>
     the optional limit for the number of items to return.</p></dd><dt class="param">serializer</dt><dd class="cmt"><p>
     an implicit object serializer.</p></dd><dt>returns</dt><dd class="cmt"><p>result sequence of the query in a future.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper.html#queryOnce[T]:AmazonDynamoDBScalaMapper.this.QueryOnce[T]" class="extmbr" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper#queryOnce">queryOnce</a>
 </p></span></dd></dl></div>
     </li><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnce#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply[K](hashValue:K,limit:Int)(implicitevidence$10:K=&gt;com.pellucid.wrap.dynamodb.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]"></a>
+      <a id="apply[K](hashValue:K,limit:Int)(implicitevidence$20:K=&gt;com.pellucid.wrap.dynamodb.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]"></a>
       <a id="apply[K](K,Int)((K)⇒AttributeValue,DynamoDBSerializer[T]):Future[Seq[T]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">

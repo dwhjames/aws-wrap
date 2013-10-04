@@ -40,7 +40,7 @@
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A helper object providing a Scala Future interface for S3 Transfers.</p><p>Transfers to and from S3 using the TransferManager provider a listener
-interface, and <a href="#listenFor[T&lt;:com.amazonaws.services.s3.transfer.Transfer](transfer:T):scala.concurrent.Future[T]" class="extmbr" name="com.pellucid.wrap.s3.FutureTransfer#listenFor">FutureTransfer.listenFor</a> adapts this interface to
+interface, and <a href="#listenFor[T&lt;:com.amazonaws.services.s3.transfer.Transfer](transfer:T):scala.concurrent.Future[transfer.type]" class="extmbr" name="com.pellucid.wrap.s3.FutureTransfer#listenFor">FutureTransfer.listenFor</a> adapts this interface to
 Scala futures.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html" target="_blank">Transfer</a>
 </p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/TransferManager.html" target="_blank">TransferManager</a></p></span></dd></dl><div class="toggleContainer block">
@@ -271,15 +271,15 @@ Scala futures.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.pellucid.wrap.s3.FutureTransfer#listenFor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="listenFor[T&lt;:com.amazonaws.services.s3.transfer.Transfer](transfer:T):scala.concurrent.Future[T]"></a>
-      <a id="listenFor[T&lt;:Transfer](T):Future[T]"></a>
+      <a id="listenFor[T&lt;:com.amazonaws.services.s3.transfer.Transfer](transfer:T):scala.concurrent.Future[transfer.type]"></a>
+      <a id="listenFor[T&lt;:Transfer](T):Future[transfer.type]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listenFor</span><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="com.amazonaws.services.s3.transfer.Transfer">Transfer</span></span>]</span><span class="params">(<span name="transfer">transfer: <span class="extype" name="com.pellucid.wrap.s3.FutureTransfer.listenFor.T">T</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.pellucid.wrap.s3.FutureTransfer.listenFor.T">T</span>]</span>
+        <span class="name">listenFor</span><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="com.amazonaws.services.s3.transfer.Transfer">Transfer</span></span>]</span><span class="params">(<span name="transfer">transfer: <span class="extype" name="com.pellucid.wrap.s3.FutureTransfer.listenFor.T">T</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.pellucid.wrap.s3.FutureTransfer.listenFor.transfer">transfer</span>.type]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Attach a listener to an S3 Transfer and return it as a Future.</p><div class="fullcomment"><div class="comment cmt"><p>Attach a listener to an S3 Transfer and return it as a Future.</p><p>This helper method attaches a progress listener to the given
@@ -288,7 +288,7 @@ a future if the transfer is completed or is cancelled, and it
 extracts the exception on failure.
 </p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
     a subtype of Transfer.</p></dd><dt class="param">transfer</dt><dd class="cmt"><p>
-    an S3 Transfer to listen for progress.</p></dd><dt>returns</dt><dd class="cmt"><p>the completed or cancelled transfer in a future.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">AmazonClientException<p>in the future the transfer failed.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/model/ProgressListener.html" target="_blank">ProgressListener</a>
+    an S3 Transfer to listen for progress.</p></dd><dt>returns</dt><dd class="cmt"><p>the completed or cancelled transfer in a future.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">AmazonClientException<p>in the future the transfer failed.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/event/ProgressListener.html" target="_blank">ProgressListener</a>
 </p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html" target="_blank">Transfer</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>

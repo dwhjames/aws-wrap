@@ -639,7 +639,8 @@ then None is returned.
       </span>
       </h4>
       <p class="shortcomment cmt">Query a table.</p><div class="fullcomment"><div class="comment cmt"><p>Query a table.</p><p>This method will internally make repeated query calls
-until the full result of the query has been retrieved.
+until the full result of the query has been retrieved,
+or the at most the size of the limit, if specified.
 </p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
     the type of the object returned by the query.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#countQuery[T]:AmazonDynamoDBScalaMapper.this.CountQuery[T]" class="extmbr" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper#countQuery">countQuery</a>
 </p></span><span class="cmt"><p><a href="#queryOnce[T]:AmazonDynamoDBScalaMapper.this.QueryOnce[T]" class="extmbr" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper#queryOnce">queryOnce</a></p></span><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper$Query.html" class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper.Query">Query</a></p></span></dd></dl></div>
