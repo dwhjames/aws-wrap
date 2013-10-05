@@ -21,6 +21,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.Try
 
+import java.io.{File, InputStream}
 import java.util.concurrent.{Executors, ExecutorService, LinkedBlockingQueue, ThreadFactory, ThreadPoolExecutor, TimeUnit}
 import java.util.concurrent.atomic.AtomicLong
 
@@ -441,6 +442,35 @@ class AmazonS3ScalaClient(
     maxKeys:         Int
   ): Future[VersionListing] =
     listVersions(new ListVersionsRequest(bucketName, prefix, keyMarker, versionIdMarker, delimiter, maxKeys))
+  
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html#putObject(com.amazonaws.services.s3.model.PutObjectRequest) AWS Java SDK]]
+    */
+  def putObject(
+    putObjectRequest: PutObjectRequest
+  ): Future[PutObjectResult] =
+    wrapMethod[PutObjectRequest, PutObjectResult](client.putObject, putObjectRequest)
+
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html#putObject(java.lang.String, java.lang.String, java.io.File) AWS Java SDK]]
+    */
+  def putObject(
+    bucketName: String,
+    key: String,
+    file: File
+  ): Future[PutObjectResult] =
+    putObject(new PutObjectRequest(bucketName, key, file))
+
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html#putObject(java.lang.String, java.lang.String, java.io.InputStream, com.amazonaws.services.s3.model.ObjectMetadata) AWS Java SDK]]
+    */
+  def putObject(
+    bucketName: String,
+    key: String,
+    input: InputStream,
+    metadata: ObjectMetadata
+  ): Future[PutObjectResult] =
+    putObject(new PutObjectRequest(bucketName, key, input, metadata))
 
 }
 
