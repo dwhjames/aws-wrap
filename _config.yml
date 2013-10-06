@@ -6,3 +6,5 @@ baseurl: /aws-wrap
 navigation:
 - title: Getting started with DynamoDB
   url:   doc/dynamodb.html
+- title: Getting started with S3
+  url:   doc/s3.html
