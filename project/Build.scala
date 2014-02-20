@@ -97,14 +97,14 @@ object AWSWrapBuild extends Build {
 object Dependencies {
 
   object V {
-    val awsJavaSDK  = "1.6.0"
+    val awsJavaSDK  = "1.7.1"
 
-    val jodaTime    = "2.2"
-    val jodaConvert = "1.3.1"
+    val jodaTime    = "2.3"
+    val jodaConvert = "1.6"
 
-    val slf4j = "1.7.5"
+    val slf4j = "1.7.6"
 
-    val logback     = "1.0.13"
+    val logback     = "1.1.1"
   }
 
   object Compile {
