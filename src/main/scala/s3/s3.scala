@@ -475,23 +475,40 @@ object FutureTransfer {
     */
   def listenFor[T <: Transfer](transfer: T): Future[transfer.type] = {
     val p = Promise[transfer.type]
-    transfer.addProgressListener(new ProgressListener {
-      override def progressChanged(progressEvent: ProgressEvent) {
-        import ProgressEvent._
-        // listen only for 'done' states: completed, canceled, or failed
-        progressEvent.getEventCode() match {
-          case COMPLETED_EVENT_CODE => p.success(transfer)
-          case CANCELED_EVENT_CODE  => p.success(transfer)
-          case FAILED_EVENT_CODE    =>
-            try {
-              p.failure(transfer.waitForException())
-            } catch {
-              case (ex: InterruptedException) =>
-            }
-          case _ =>
+
+    /* This helper method will attempt to complete the promise if the
+     * transfer is ‘done’ at the time that it is invoked. Due to the
+     * race condition inherent in this method, this may be invoked
+     * twice, hence the use of `tryComplete`.
+     */
+    def tryComplete(): Unit = {
+      if (transfer.isDone)
+        p tryComplete Try {
+          /* This is a blocking call, but given that we have already
+           * asserted that `transfer.isDone`, it will not block!
+           * If the transfer failed, or was canceled, an exception
+           * will be thrown here and trapped by `Try`.
+           */
+          transfer.waitForCompletion()
+          transfer
         }
-      }
+    }
+
+    /* Attach a progress listener to the transfer.
+     * At this point, the transfer is already in progress
+     * and may even have already completed. We will have
+     * missed any progress events that have already been
+     * fired, included the completion event!
+     */
+    transfer.addProgressListener(new ProgressListener {
+      override def progressChanged(progressEvent: ProgressEvent): Unit = tryComplete()
     })
+
+    /* In case the progress listener never fires due to the
+     * transfer already being done, poll the transfer once.
+     */
+    tryComplete()
+
     p.future
   }
 }
