@@ -21,8 +21,8 @@ import java.util.Random
 
 import com.amazonaws.{AmazonClientException, AmazonServiceException, ClientConfiguration}
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, BasicAWSCredentials}
-import com.amazonaws.http.AmazonHttpClient
 import com.amazonaws.internal.StaticCredentialsProvider
+import com.amazonaws.retry.RetryUtils
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.amazonaws.services.dynamodbv2.model.{BatchWriteItemRequest, ProvisionedThroughputExceededException, ReturnConsumedCapacity, WriteRequest}
 
@@ -160,7 +160,7 @@ class SingleThreadedBatchWriter(
         try {
           writeWithBackoffRetry(batch)
         } catch {
-          case e: AmazonServiceException if AmazonHttpClient.isRequestEntityTooLargeException(e) =>
+          case e: AmazonServiceException if RetryUtils.isRequestEntityTooLargeException(e) =>
             // if request exceeded the 1Mb request limit
             val requests = batch.get(tableName)
             val size = requests.size
