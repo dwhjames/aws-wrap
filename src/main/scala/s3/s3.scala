@@ -460,54 +460,53 @@ object FutureTransfer {
     * Attach a listener to an S3 Transfer and return it as a Future.
     *
     * This helper method attaches a progress listener to the given
-    * Transfer object. The listener returns the transfer object in
-    * a future if the transfer is completed or is cancelled, and it
-    * extracts the exception on failure.
+    * Transfer object. The returned future is completed with the
+    * same transfer when the transfer is ‘done’ (canceled, completed,
+    * or failed). The future will always been completed successfully
+    * even if the transfer itself has failed. It is up to the caller
+    * to extract the result of the transfer and perform any error
+    * handling.
+    *
+    * In essence, this helper just gives back the transfer when it is done.
     *
     * @tparam T
     *     a subtype of Transfer.
     * @param transfer
     *     an S3 Transfer to listen for progress.
-    * @return the completed or cancelled transfer in a future.
-    * @throws AmazonClientException in the future the transfer failed.
+    * @return the transfer in a future.
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html Transfer]]
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/event/ProgressListener.html ProgressListener]]
     */
   def listenFor[T <: Transfer](transfer: T): Future[transfer.type] = {
     val p = Promise[transfer.type]
 
-    /* This helper method will attempt to complete the promise if the
-     * transfer is ‘done’ at the time that it is invoked. Due to the
-     * race condition inherent in this method, this may be invoked
-     * twice, hence the use of `tryComplete`.
-     */
-    def tryComplete(): Unit = {
-      if (transfer.isDone)
-        p tryComplete Try {
-          /* This is a blocking call, but given that we have already
-           * asserted that `transfer.isDone`, it will not block!
-           * If the transfer failed, or was canceled, an exception
-           * will be thrown here and trapped by `Try`.
-           */
-          transfer.waitForCompletion()
-          transfer
-        }
-    }
-
     /* Attach a progress listener to the transfer.
      * At this point, the transfer is already in progress
      * and may even have already completed. We will have
      * missed any progress events that have already been
-     * fired, included the completion event!
+     * fired, including the completion event!
      */
     transfer.addProgressListener(new ProgressListener {
-      override def progressChanged(progressEvent: ProgressEvent): Unit = tryComplete()
+      /* Note that the progressChanged will be called in the Java SDK’s
+       * `java-sdk-progress-listener-callback-thread` special thread
+       * for progress event callbacks, so any blocking calls here have
+       * the potential to induce deadlock.
+       */
+      override def progressChanged(progressEvent: ProgressEvent): Unit = {
+        val code = progressEvent.getEventCode()
+        if (code == ProgressEvent.CANCELED_EVENT_CODE ||
+            code == ProgressEvent.COMPLETED_EVENT_CODE ||
+            code == ProgressEvent.FAILED_EVENT_CODE) {
+          p trySuccess transfer
+        }
+      }
     })
 
     /* In case the progress listener never fires due to the
      * transfer already being done, poll the transfer once.
      */
-    tryComplete()
+    if (transfer.isDone)
+      p trySuccess transfer
 
     p.future
   }
