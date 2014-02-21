@@ -755,3 +755,93 @@ object TestConcurrentBatchWriter {
 
 }
 
+object ScratchS3 {
+
+  import com.pellucid.wrap.s3._
+  import com.amazonaws.event.{ProgressListener, ProgressEvent}
+  import com.amazonaws.services.s3._
+  import com.amazonaws.services.s3.transfer._
+  import java.io.File
+
+  private val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
+
+  def main(args: Array[String]): Unit = {
+
+    val myCredentials = new PropertiesCredentials(
+        this.getClass()
+            .getClassLoader()
+            .getResourceAsStream("credentials.properties")
+      )
+
+    val client = new AmazonS3ScalaClient(myCredentials)
+
+    val transferManager = new TransferManager(client.client)
+
+    //val bucketName = "my-first-s3-bucket-" + UUID.randomUUID();
+
+    val bucketName = "my-first-s3-bucket-98bfdf06-9475-4d1a-a235-e0eddd5859f9"
+    // val bucketName = "my-first-s3-bucket-a7fcbdef-52b4-497d-8ea3-11864d3da42c"
+
+    // logger.info(s"${client.client.createBucket(bucketName)}")
+
+    val file = new File(
+        this.getClass()
+            .getClassLoader()
+            .getResource("logback.xml")
+            .toURI()
+      )
+
+    val upload = transferManager.upload(bucketName, "test", file)
+
+    // Thread.sleep(100)
+
+    upload.addProgressListener(new ProgressListener {
+      override def progressChanged(progressEvent: ProgressEvent): Unit = {
+        progressEvent.getEventCode match {
+          case ProgressEvent.CANCELED_EVENT_CODE =>
+            logger.info("CANCELED_EVENT_CODE")
+          case ProgressEvent.COMPLETED_EVENT_CODE =>
+            logger.info("COMPLETED_EVENT_CODE")
+          case ProgressEvent.FAILED_EVENT_CODE =>
+            logger.info("FAILED_EVENT_CODE")
+          case ProgressEvent.PART_COMPLETED_EVENT_CODE =>
+            logger.info("PART_COMPLETED_EVENT_CODE")
+          case ProgressEvent.PART_FAILED_EVENT_CODE =>
+            logger.info("PART_FAILED_EVENT_CODE")
+          case ProgressEvent.PART_STARTED_EVENT_CODE =>
+            logger.info("PART_STARTED_EVENT_CODE")
+          case ProgressEvent.PREPARING_EVENT_CODE =>
+            logger.info("PREPARING_EVENT_CODE")
+          case ProgressEvent.RESET_EVENT_CODE =>
+            logger.info("RESET_EVENT_CODE")
+          case ProgressEvent.STARTED_EVENT_CODE =>
+            logger.info("STARTED_EVENT_CODE")
+          case _ =>
+            logger.warn("unrecognized event code")
+        }
+      }
+    })
+
+
+    try {
+      Await.result(
+        FutureTransfer.listenFor(upload),
+        10.seconds
+      )
+      // logger.error("aws exception", upload.waitForException())
+      // logger.info(upload.waitForUploadResult().toString)
+    } catch {
+      case ex: RuntimeException =>
+        logger.error(ex.getMessage)
+    }
+    logger.info(s"upload is done: ${upload.isDone()}")
+
+    Thread.sleep(5000)
+
+    transferManager.shutdownNow()
+    client.shutdown()
+
+  }
+}
+
