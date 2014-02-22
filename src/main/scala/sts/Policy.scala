@@ -1,10 +1,13 @@
 package com.pellucid.wrap
 package sts
 
+import org.joda.time.DateTime
+
 import scala.collection.JavaConverters._
 
 import com.amazonaws.auth.{policy => ap}
 import com.amazonaws.auth.policy.Statement.Effect
+import com.amazonaws.services.securitytoken.{model => am}
 
 case class Action(
     name: String
@@ -67,4 +70,53 @@ case class Policy(
   id.foreach(aws.setId)
 
   def toJson = aws.toJson
+
 }
+
+case class TemporaryCredentials(
+    accessKeyId: String,
+    secretAccessKey: String,
+    sessionToken: String,
+    expiration: DateTime
+) {
+
+  val aws = new am.Credentials(accessKeyId, secretAccessKey, sessionToken, expiration.toDate)
+
+}
+
+object TemporaryCredentials {
+  def apply(
+    c: am.Credentials
+  ): TemporaryCredentials =
+    new TemporaryCredentials(
+      c.getAccessKeyId,
+      c.getSecretAccessKey,
+      c.getSessionToken,
+      new DateTime(c.getExpiration)
+    )
+}
+
+case class SessionToken(credentials: TemporaryCredentials)
+
+case class FederatedUser(
+    userId: String,
+    arn:    String
+) {
+  val aws = new am.FederatedUser(userId, arn)
+}
+
+object FederatedUser {
+  def apply(
+    u: am.FederatedUser
+  ): FederatedUser = {
+    new FederatedUser(
+      u.getFederatedUserId,
+      u.getArn
+    )
+  }
+}
+
+case class FederationToken(
+    user:        FederatedUser,
+    credentials: TemporaryCredentials
+)

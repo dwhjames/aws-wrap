@@ -16,14 +16,19 @@ class AWSSecurityTokenServiceScalaClient(
 
   def getFederationToken(
     federationTokenRequest: GetFederationTokenRequest
-  ): Future[GetFederationTokenResult] =
-    wrapAsyncMethod(client.getFederationTokenAsync, federationTokenRequest)
+  ): Future[FederationToken] =
+    wrapAsyncMethod(client.getFederationTokenAsync, federationTokenRequest).map { result =>
+      FederationToken(
+        user = FederatedUser(result.getFederatedUser),
+        credentials = TemporaryCredentials(result.getCredentials)
+      )
+    }
 
   def getFederationToken(
     name:     String,
     policy:   Policy,
     duration: Duration
-  ): Future[GetFederationTokenResult] =
+  ): Future[FederationToken] =
     getFederationToken(
       new GetFederationTokenRequest(name)
       .withPolicy(policy.toJson)
@@ -32,14 +37,18 @@ class AWSSecurityTokenServiceScalaClient(
 
   def getSessionToken(
     sessionTokenRequest: GetSessionTokenRequest
-  ): Future[GetSessionTokenResult] =
-    wrapAsyncMethod(client.getSessionTokenAsync, sessionTokenRequest)
+  ): Future[SessionToken] =
+    wrapAsyncMethod(client.getSessionTokenAsync, sessionTokenRequest).map { result =>
+      SessionToken(
+        TemporaryCredentials(result.getCredentials)
+      )
+    }
 
   def getSessionToken(
     serialNumber: String,
     tokenCode:    String,
     duration:     Duration
-  ): Future[GetSessionTokenResult] =
+  ): Future[SessionToken] =
     getSessionToken(
       new GetSessionTokenRequest()
       .withSerialNumber(serialNumber)
