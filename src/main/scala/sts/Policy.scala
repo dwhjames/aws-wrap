@@ -1,13 +1,13 @@
 package com.pellucid.wrap
 package sts
 
-import org.joda.time.DateTime
-
 import scala.collection.JavaConverters._
 
 import com.amazonaws.auth.{policy => ap}
 import com.amazonaws.auth.policy.Statement.Effect
 import com.amazonaws.services.securitytoken.{model => am}
+
+import java.util.Date
 
 case class Action(
     name: String
@@ -77,10 +77,10 @@ case class TemporaryCredentials(
     accessKeyId: String,
     secretAccessKey: String,
     sessionToken: String,
-    expiration: DateTime
+    expiration: Date
 ) {
 
-  val aws = new am.Credentials(accessKeyId, secretAccessKey, sessionToken, expiration.toDate)
+  val aws = new am.Credentials(accessKeyId, secretAccessKey, sessionToken, expiration)
 
 }
 
@@ -92,7 +92,7 @@ object TemporaryCredentials {
       c.getAccessKeyId,
       c.getSecretAccessKey,
       c.getSessionToken,
-      new DateTime(c.getExpiration)
+      c.getExpiration
     )
 }
 
