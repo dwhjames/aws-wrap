@@ -42,7 +42,7 @@ case class Statement(
     actions:    Seq[Action],
     resources:  Seq[Resource],
     id:         Option[String] = None,
-    conditions: Seq[Condition],
+    conditions: Seq[Condition] = Nil,
     principals: Seq[ap.Principal] = Nil
 ) {
 
