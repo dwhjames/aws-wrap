@@ -18,16 +18,16 @@ package com.pellucid.wrap
 package s3
 
 import scala.collection.JavaConverters._
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{Future, Promise}
 import scala.util.Try
 
 import java.util.concurrent.{Executors, ExecutorService, LinkedBlockingQueue, ThreadFactory, ThreadPoolExecutor, TimeUnit}
 import java.util.concurrent.atomic.AtomicLong
 
-import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
+import com.amazonaws.ClientConfiguration
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, DefaultAWSCredentialsProviderChain}
 import com.amazonaws.event.{ProgressListener, ProgressEvent}
-import com.amazonaws.internal.StaticCredentialsProvider;
+import com.amazonaws.internal.StaticCredentialsProvider
 import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.model._
 import com.amazonaws.services.s3.transfer.Transfer
@@ -38,7 +38,7 @@ private[s3] class S3ThreadFactory extends ThreadFactory {
   private val backingThreadFactory: ThreadFactory = Executors.defaultThreadFactory()
   override def newThread(r: Runnable): Thread = {
     val thread = backingThreadFactory.newThread(r)
-    thread.setName(s"aws.wrap.s3-${count.getAndIncrement()}")
+    thread.setName(s"aws.wrap.s3-${count.getAndIncrement}")
     thread
   }
 }
@@ -179,7 +179,7 @@ class AmazonS3ScalaClient(
     *
     * @return the underlying executor service
     */
-  def getExecutorsService(): ExecutorService = executorService
+  def getExecutorsService: ExecutorService = executorService
 
   /**
     * Shutdown the executor service.
@@ -197,7 +197,7 @@ class AmazonS3ScalaClient(
     f:       Request => Result,
     request: Request
   ): Future[Result] = {
-    val p = Promise[Result]
+    val p = Promise[Result]()
     executorService.execute(new Runnable {
       override def run() =
         p complete {
@@ -478,7 +478,7 @@ object FutureTransfer {
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/event/ProgressListener.html ProgressListener]]
     */
   def listenFor[T <: Transfer](transfer: T): Future[transfer.type] = {
-    val p = Promise[transfer.type]
+    val p = Promise[transfer.type]()
 
     /* Attach a progress listener to the transfer.
      * At this point, the transfer is already in progress
@@ -493,7 +493,7 @@ object FutureTransfer {
        * the potential to induce deadlock.
        */
       override def progressChanged(progressEvent: ProgressEvent): Unit = {
-        val code = progressEvent.getEventCode()
+        val code = progressEvent.getEventCode
         if (code == ProgressEvent.CANCELED_EVENT_CODE ||
             code == ProgressEvent.COMPLETED_EVENT_CODE ||
             code == ProgressEvent.FAILED_EVENT_CODE) {
