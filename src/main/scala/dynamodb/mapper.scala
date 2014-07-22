@@ -1188,16 +1188,12 @@ trait AmazonDynamoDBScalaMapper {
   def query[T] = new Query[T]
 
 
-  /**
-    * A method overloading container for [[queryOnce]].
-    *
-    * This class contains the overloaded implementations of [[queryOnce]].
-    *
-    * @tparam T
-    *     the type of the object returned by the query.
-    * @see [[queryOnce]]
-    */
-  class QueryOnce[T] {
+  trait QueryOnceMagnet[T] {
+    def apply(): Future[Seq[T]]
+  }
+
+  object QueryOnceMagnet {
+    import scala.language.implicitConversions
 
     /**
       * Query a table.
@@ -1216,9 +1212,11 @@ trait AmazonDynamoDBScalaMapper {
       * @see [[queryOnce]]
       * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
       */
-    def apply(queryRequest: QueryRequest)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] = {
+    implicit def queryOnceWithQueryRequest
+        [T]
+        (queryRequest: QueryRequest)
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] = new QueryOnceMagnet[T] { def apply(): Future[Seq[T]] = {
       // note this mutates the query request
       queryRequest
         .withTableName(tableName)
@@ -1236,7 +1234,7 @@ trait AmazonDynamoDBScalaMapper {
           serializer.fromAttributeMap(item.asScala)
         }
       }
-    }
+    }}
 
     /**
       * Query a table by a hash key value.
@@ -1258,14 +1256,30 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[queryOnce]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue: K, limit: Int = 0)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] = {
+    def queryOnceWithHashValue
+        [T, K <% AttributeValue]
+        (hashValue: K,
+         limit:     Int)
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] = {
       val request = mkHashKeyQuery(hashValue)
       if (limit > 0) request.setLimit(limit)
-      apply(request)
+      queryOnceWithQueryRequest(request)
     }
+    implicit def queryOnceWithHashValue1
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue */ (K,
+                /* limit     */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceWithHashValue(tuple._1, tuple._2)
+    implicit def queryOnceWithHashValue2
+        [T, K <% AttributeValue]
+        (hashValue: K)
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceWithHashValue(hashValue, 0)
+
 
     /**
       * Query a table by a hash value and range condition.
@@ -1291,19 +1305,52 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[queryOnce]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue:         K,
-              rangeCondition:    Condition,
-              scanIndexForward:  Boolean    = true,
-              limit:             Int        = 0)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] = {
+    def queryOnceWithHashValueRangeCondition
+        [T, K <% AttributeValue]
+        (hashValue:        K,
+         rangeCondition:   Condition,
+         scanIndexForward: Boolean,
+         limit:            Int)
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] = {
       val request =
         mkHashAndRangeKeyQuery(hashValue, rangeCondition)
         .withScanIndexForward(scanIndexForward)
       if (limit > 0) request.setLimit(limit)
-      apply(request)
+      queryOnceWithQueryRequest(request)
     }
+    implicit def queryOnceWithHashValueRangeCondition1
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue        */ (K,
+                /* rangeCondition   */  Condition,
+                /* scanIndexForward */  Boolean,
+                /* limit            */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceWithHashValueRangeCondition(tuple._1, tuple._2, tuple._3, tuple._4)
+    implicit def queryOnceWithHashValueRangeCondition2
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue        */ (K,
+                /* rangeCondition   */  Condition,
+                /* scanIndexForward */  Boolean))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceWithHashValueRangeCondition(tuple._1, tuple._2, tuple._3, 0)
+    implicit def queryOnceWithHashValueRangeCondition3
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue        */ (K,
+                /* rangeCondition   */  Condition,
+                /* limit            */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceWithHashValueRangeCondition(tuple._1, tuple._2, true, tuple._3)
+    implicit def queryOnceWithHashValueRangeCondition4
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue        */ (K,
+                /* rangeCondition   */  Condition))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceWithHashValueRangeCondition(tuple._1, tuple._2, true, 0)
 
     /**
       * Query a secondary index by a hash value and range condition.
@@ -1341,15 +1388,16 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[queryOnce]]
       */
-    def apply[K <% AttributeValue]
-             (indexName:           String,
-              hashValue:           K,
-              rangeAttributeName:  String,
-              rangeCondition:      Condition,
-              scanIndexForward:    Boolean    = true,
-              limit:               Int        = 0)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] = {
+    def queryOnceSecondaryIndex
+        [T, K <% AttributeValue]
+        (indexName:          String,
+         hashValue:          K,
+         rangeAttributeName: String,
+         rangeCondition:     Condition,
+         scanIndexForward:   Boolean,
+         limit:              Int)
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] = {
       val request =
         new QueryRequest()
           .withIndexName(indexName)
@@ -1362,8 +1410,48 @@ trait AmazonDynamoDBScalaMapper {
           .withSelect(Select.ALL_ATTRIBUTES)
           .withScanIndexForward(scanIndexForward)
       if (limit > 0) request.setLimit(limit)
-      apply(request)
+      queryOnceWithQueryRequest(request)
     }
+    implicit def queryOnceSecondaryIndex1
+        [T, K <% AttributeValue]
+        (tuple: /* indexName          */ (String,
+                /* hashValue          */  K,
+                /* rangeAttributeName */  String,
+                /* rangeCondition     */  Condition,
+                /* scanIndexForward   */  Boolean,
+                /* limit              */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceSecondaryIndex(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6)
+    implicit def queryOnceSecondaryIndex2
+        [T, K <% AttributeValue]
+        (tuple: /* indexName          */ (String,
+                /* hashValue          */  K,
+                /* rangeAttributeName */  String,
+                /* rangeCondition     */  Condition,
+                /* scanIndexForward   */  Boolean))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceSecondaryIndex(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, 0)
+    implicit def queryOnceSecondaryIndex3
+        [T, K <% AttributeValue]
+        (tuple: /* indexName          */ (String,
+                /* hashValue          */  K,
+                /* rangeAttributeName */  String,
+                /* rangeCondition     */  Condition,
+                /* limit              */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceSecondaryIndex(tuple._1, tuple._2, tuple._3, tuple._4, true, tuple._5)
+    implicit def queryOnceSecondaryIndex4
+        [T, K <% AttributeValue]
+        (tuple: /* indexName          */ (String,
+                /* hashValue          */  K,
+                /* rangeAttributeName */  String,
+                /* rangeCondition     */  Condition))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryOnceMagnet[T] =
+      queryOnceSecondaryIndex(tuple._1, tuple._2, tuple._3, tuple._4, true, 0)
   }
 
   /**
@@ -1374,11 +1462,11 @@ trait AmazonDynamoDBScalaMapper {
     *
     * @tparam T
     *     the type of the object returned by the query.
-    * @see [[QueryOnce]]
+    * @see [[QueryOnceMagnet]]
     * @see [[query]]
     * @see [[countQuery]]
     */
-  def queryOnce[T] = new QueryOnce[T]
+  def queryOnce[T](magnet: QueryOnceMagnet[T]): Future[Seq[T]] = magnet()
 
 
   /**

@@ -10,7 +10,7 @@ object AWSWrapBuild extends Build {
   lazy val buildSettings = Seq(
     organization := "com.pellucid",
     version      := "0.5-SNAPSHOT",
-    scalaVersion := "2.10.3",
+    scalaVersion := "2.11.1",
     scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked"),
     shellPrompt  := CustomShellPrompt.customPrompt
   )
@@ -97,19 +97,19 @@ object AWSWrapBuild extends Build {
 object Dependencies {
 
   object V {
-    val awsJavaSDK  = "1.7.1"
+    val awsJavaSDK  = "1.8.4"
 
     val jodaTime    = "2.3"
     val jodaConvert = "1.6"
 
-    val slf4j = "1.7.6"
+    val slf4j = "1.7.7"
 
     val logback     = "1.1.1"
   }
 
   object Compile {
 
-    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % V.awsJavaSDK
+    val awsJavaSDK = "com.amazonaws" % "aws-java-sdk" % V.awsJavaSDK exclude("joda-time", "joda-time")
 
     val jodaTime    = "joda-time" % "joda-time"    % V.jodaTime
     val jodaConvert = "org.joda"  % "joda-convert" % V.jodaConvert
