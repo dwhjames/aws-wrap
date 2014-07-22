@@ -17,6 +17,8 @@
 package com.pellucid.wrap
 package dynamodb
 
+import scala.language.implicitConversions
+
 import scala.concurrent.{Future, ExecutionContext}
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -291,7 +293,11 @@ trait AmazonDynamoDBScalaMapper {
     *     the type of the object to be deleted.
     * @see [[deleteByKey]]
     */
-  class DeleteByKey[T] {
+  trait DeleteByKeyMagnet[T] {
+    def apply(): Future[Option[T]]
+  }
+
+  object DeleteByKeyMagnet {
 
     /**
       * Delete a DynamoDB item by a hash key.
@@ -309,10 +315,11 @@ trait AmazonDynamoDBScalaMapper {
       * @return the deleted object, or None, in a future.
       * @see [[deleteByKey]]
       */
-    def apply[K <% AttributeValue]
-             (hashKey: K)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] = {
+    implicit def deleteByHashKey
+        [T, K <% AttributeValue]
+        (hashKey: K)
+        (implicit serializer: DynamoDBSerializer[T])
+        : DeleteByKeyMagnet[T] = new DeleteByKeyMagnet[T] { def apply() = {
       val request =
         new DeleteItemRequest()
         .withTableName(tableName)
@@ -329,7 +336,7 @@ trait AmazonDynamoDBScalaMapper {
           serializer.fromAttributeMap(item.asScala)
         }
       }
-    }
+    }}
 
     /**
       * Delete a DynamoDB item by a hash key and range key.
@@ -352,14 +359,16 @@ trait AmazonDynamoDBScalaMapper {
       * @return the deleted object, or None, in a future.
       * @see [[deleteByKey]]
       */
-    def apply[K1 <% AttributeValue, K2 <% AttributeValue]
-             (hashKey: K1, rangeKey: K2)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] = {
+    implicit def deletebyHashAndRangeKey
+        [T, K1 <% AttributeValue, K2 <% AttributeValue]
+        (tuple: /* hashKey  */ (K1,
+                /* rangeKey */  K2))
+        (implicit serializer: DynamoDBSerializer[T])
+        : DeleteByKeyMagnet[T] = new DeleteByKeyMagnet[T] { def apply() = {
       val request =
         new DeleteItemRequest()
         .withTableName(tableName)
-        .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
+        .withKey(serializer.makeKey(tuple._1, tuple._2).asJava)
         .withReturnValues(ReturnValue.ALL_OLD)
       if (logger.isDebugEnabled)
         request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
@@ -372,7 +381,7 @@ trait AmazonDynamoDBScalaMapper {
           serializer.fromAttributeMap(item.asScala)
         }
       }
-    }
+    }}
   }
 
   /**
@@ -383,9 +392,9 @@ trait AmazonDynamoDBScalaMapper {
     *
     * @tparam T
     *     the type of the object to be deleted.
-    * @see [[DeleteByKey]]
+    * @see [[DeleteByKeyMagnet]]
     */
-  def deleteByKey[T] = new DeleteByKey[T]
+  def deleteByKey[T](magnet: DeleteByKeyMagnet[T]): Future[Option[T]] = magnet()
 
 
 
@@ -458,7 +467,11 @@ trait AmazonDynamoDBScalaMapper {
     *     the type of the object to be loaded.
     * @see [[loadByKey]]
     */
-  class LoadByKey[T] {
+  trait LoadByKeyMagnet[T] {
+    def apply(): Future[Option[T]]
+  }
+
+  object LoadByKeyMagnet {
 
     /**
       * Load an object by its hash key.
@@ -475,10 +488,11 @@ trait AmazonDynamoDBScalaMapper {
       * @return the retreived object, or None, in a future.
       * @see [[loadByKey]]
       */
-    def apply[K <% AttributeValue]
-             (hashKey: K)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] = {
+    implicit def loadByHashKey
+        [T, K <% AttributeValue]
+        (hashKey: K)
+        (implicit serializer: DynamoDBSerializer[T])
+        : LoadByKeyMagnet[T] = new LoadByKeyMagnet[T] { def apply() = {
       val request =
         new GetItemRequest()
         .withTableName(tableName)
@@ -495,7 +509,7 @@ trait AmazonDynamoDBScalaMapper {
           serializer.fromAttributeMap(item.asScala)
         }
       }
-    }
+    }}
 
     /**
       * Load an object by its hash key and range key.
@@ -516,14 +530,16 @@ trait AmazonDynamoDBScalaMapper {
       * @return the retreived object, or None, in a future.
       * @see [[loadByKey]]
       */
-    def apply[K1 <% AttributeValue, K2 <% AttributeValue]
-             (hashKey: K1, rangeKey: K2)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Option[T]] = {
+    implicit def loadByHashAndRangeKey
+        [T, K1 <% AttributeValue, K2 <% AttributeValue]
+        (tuple: /* hashKey  */ (K1,
+                /* rangeKey */  K2))
+        (implicit serializer: DynamoDBSerializer[T])
+        : LoadByKeyMagnet[T] = new LoadByKeyMagnet[T] { def apply() = {
       val request =
         new GetItemRequest()
         .withTableName(tableName)
-        .withKey(serializer.makeKey(hashKey, rangeKey).asJava)
+        .withKey(serializer.makeKey(tuple._1, tuple._2).asJava)
         .withConsistentRead(config.consistentReads)
       if (logger.isDebugEnabled)
         request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
@@ -536,7 +552,7 @@ trait AmazonDynamoDBScalaMapper {
           serializer.fromAttributeMap(item.asScala)
         }
       }
-    }
+    }}
   }
 
   /**
@@ -547,9 +563,9 @@ trait AmazonDynamoDBScalaMapper {
     *
     * @tparam T
     *     the type of the object to be loaded.
-    * @see [[LoadByKey]]
+    * @see [[LoadByKeyMagnet]]
     */
-  def loadByKey[T] = new LoadByKey[T]
+  def loadByKey[T](magnet: LoadByKeyMagnet[T]): Future[Option[T]] = magnet()
 
 
 
@@ -684,7 +700,11 @@ trait AmazonDynamoDBScalaMapper {
     *     the type of the object returned by the query.
     * @see [[query]]
     */
-  class Query[T] {
+  trait QueryMagnet[T] {
+    def apply(): Future[Seq[T]]
+  }
+
+  object QueryMagnet {
 
     /**
       * Query a table.
@@ -703,9 +723,11 @@ trait AmazonDynamoDBScalaMapper {
       * @see [[query]]
       * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
       */
-    def apply(queryRequest: QueryRequest)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
+    implicit def queryRequest1
+        [T]
+        (queryRequest: QueryRequest)
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] =
       queryRaw(queryRequest)
 
     /**
@@ -727,14 +749,19 @@ trait AmazonDynamoDBScalaMapper {
       * @see [[query]]
       * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
       */
-    def apply(queryRequest: QueryRequest, totalLimit: Int)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryRaw(queryRequest, Some(totalLimit))
+    implicit def queryRequest2
+        [T]
+        (tuple: /* queryRequest */ (QueryRequest,
+               /* totalLimit    */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] =
+      queryRaw(tuple._1, Some(tuple._2))
 
-    private def queryRaw(queryRequest: QueryRequest, totalLimit: Option[Int] = None)
-                        (implicit serializer: DynamoDBSerializer[T])
-                        : Future[Seq[T]] = {
+    private def queryRaw
+        [T]
+        (queryRequest: QueryRequest, totalLimit: Option[Int] = None)
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] = new QueryMagnet[T] { def apply() = {
       // note this mutates the query request
       queryRequest
         .withTableName(tableName)
@@ -771,7 +798,7 @@ trait AmazonDynamoDBScalaMapper {
         }
 
       local(None, totalLimit) map { _ => builder.result() }
-    }
+    }}
 
 
     /**
@@ -792,10 +819,11 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue: K)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
+    implicit def queryOnHash1
+        [T, K <% AttributeValue]
+        (hashValue: K)
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] =
       queryOnHash(hashValue)
 
     /**
@@ -818,17 +846,19 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue: K, totalLimit: Int)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnHash(hashValue, Some(totalLimit))
+    implicit def queryOnHash2
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue  */ (K,
+                /* totalLimit */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] =
+      queryOnHash(tuple._1, Some(tuple._2))
 
     private def queryOnHash
-        [K <% AttributeValue]
+        [T, K <% AttributeValue]
         (hashValue: K, totalLimit: Option[Int] = None)
         (implicit serializer: DynamoDBSerializer[T])
-        : Future[Seq[T]] =
+        : QueryMagnet[T] =
       queryRaw(mkHashKeyQuery(hashValue), totalLimit)
 
 
@@ -853,12 +883,13 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue:         K,
-              rangeCondition:    Condition)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnHashAndRange(hashValue, rangeCondition)
+    implicit def queryOnHashAndRange1
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue        */ (K,
+                /* rangeCondition   */  Condition))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] =
+      queryOnHashAndRange(tuple._1, tuple._2, true, None)
 
     /**
       * Query a table by a hash value and range condition,
@@ -883,13 +914,14 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue:         K,
-              rangeCondition:    Condition,
-              scanIndexForward:  Boolean)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnHashAndRange(hashValue, rangeCondition, scanIndexForward)
+    implicit def queryOnHashAndRange2
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue        */ (K,
+                /* rangeCondition   */  Condition,
+                /* scanIndexForward */  Boolean))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] =
+      queryOnHashAndRange(tuple._1, tuple._2, tuple._3, None)
 
     /**
       * Query a table by a hash value and range condition,
@@ -914,13 +946,14 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue:         K,
-              rangeCondition:    Condition,
-              totalLimit:        Int)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnHashAndRange(hashValue, rangeCondition, totalLimit = Some(totalLimit))
+    implicit def queryOnHashAndRange3
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue        */ (K,
+                /* rangeCondition   */  Condition,
+                /* totalLimit       */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] =
+      queryOnHashAndRange(tuple._1, tuple._2, true, Some(tuple._3))
 
     /**
       * Query a table by a hash value and range condition,
@@ -947,23 +980,24 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue:         K,
-              rangeCondition:    Condition,
-              scanIndexForward:  Boolean,
-              totalLimit:        Int)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnHashAndRange(hashValue, rangeCondition, scanIndexForward, Some(totalLimit))
+    implicit def queryOnHashAndRange4
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue        */ (K,
+                /* rangeCondition   */  Condition,
+                /* scanIndexForward */  Boolean,
+                /* totalLimit       */  Int))
+        (implicit serializer: DynamoDBSerializer[T])
+        : QueryMagnet[T] =
+      queryOnHashAndRange(tuple._1, tuple._2, tuple._3, Some(tuple._4))
 
     private def queryOnHashAndRange
-        [K <% AttributeValue]
+        [T, K <% AttributeValue]
         (hashValue:         K,
          rangeCondition:    Condition,
-         scanIndexForward:  Boolean     = true,
-         totalLimit:        Option[Int] = None)
+         scanIndexForward:  Boolean,
+         totalLimit:        Option[Int])
         (implicit serializer: DynamoDBSerializer[T])
-        : Future[Seq[T]] =
+        : QueryMagnet[T] =
       queryRaw(mkHashAndRangeKeyQuery(hashValue, rangeCondition).withScanIndexForward(scanIndexForward), totalLimit)
 
 
@@ -1000,14 +1034,15 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (indexName:           String,
-              hashValue:           K,
-              rangeAttributeName:  String,
-              rangeCondition:      Condition)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnSecondaryIndex(indexName, hashValue, rangeAttributeName, rangeCondition)
+    implicit def queryOnSecondaryIndex1
+      [T, K <% AttributeValue]
+      (tuple: /* indexName          */ (String,
+              /* hashValue          */  K,
+              /* rangeAttributeName */  String,
+              /* rangeCondition     */  Condition))
+      (implicit serializer: DynamoDBSerializer[T])
+      : QueryMagnet[T] =
+      queryOnSecondaryIndex(tuple._1, tuple._2, tuple._3, tuple._4, true, None)
 
     /**
       * Query a secondary index by a hash value and range condition,
@@ -1044,15 +1079,16 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (indexName:           String,
-              hashValue:           K,
-              rangeAttributeName:  String,
-              rangeCondition:      Condition,
-              scanIndexForward:    Boolean)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnSecondaryIndex(indexName, hashValue, rangeAttributeName, rangeCondition, scanIndexForward)
+    implicit def queryOnSecondaryIndex2
+      [T, K <% AttributeValue]
+      (tuple: /* indexName          */ (String,
+              /* hashValue          */  K,
+              /* rangeAttributeName */  String,
+              /* rangeCondition     */  Condition,
+              /* scanIndexForward   */  Boolean))
+      (implicit serializer: DynamoDBSerializer[T])
+      : QueryMagnet[T] =
+      queryOnSecondaryIndex(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, None)
 
     /**
       * Query a secondary index by a hash value and range condition,
@@ -1089,15 +1125,16 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (indexName:           String,
-              hashValue:           K,
-              rangeAttributeName:  String,
-              rangeCondition:      Condition,
-              totalLimit:          Int)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnSecondaryIndex(indexName, hashValue, rangeAttributeName, rangeCondition, totalLimit = Some(totalLimit))
+    implicit def queryOnSecondaryIndex3
+      [T, K <% AttributeValue]
+      (tuple: /* indexName          */ (String,
+              /* hashValue          */  K,
+              /* rangeAttributeName */  String,
+              /* rangeCondition     */  Condition,
+              /* totalLimit         */  Int))
+      (implicit serializer: DynamoDBSerializer[T])
+      : QueryMagnet[T] =
+      queryOnSecondaryIndex(tuple._1, tuple._2, tuple._3, tuple._4, true, Some(tuple._5))
 
     /**
       * Query a secondary index by a hash value and range condition,
@@ -1136,19 +1173,20 @@ trait AmazonDynamoDBScalaMapper {
       * @return result sequence of the query in a future.
       * @see [[query]]
       */
-    def apply[K <% AttributeValue]
-             (indexName:           String,
-              hashValue:           K,
-              rangeAttributeName:  String,
-              rangeCondition:      Condition,
-              scanIndexForward:    Boolean,
-              totalLimit:          Int)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      queryOnSecondaryIndex(indexName, hashValue, rangeAttributeName, rangeCondition, scanIndexForward, Some(totalLimit))
+    implicit def queryOnSecondaryIndex4
+      [T, K <% AttributeValue]
+      (tuple: /* indexName          */ (String,
+              /* hashValue          */  K,
+              /* rangeAttributeName */  String,
+              /* rangeCondition     */  Condition,
+              /* scanIndexForward   */  Boolean,
+              /* totalLimit         */  Int))
+      (implicit serializer: DynamoDBSerializer[T])
+      : QueryMagnet[T] =
+      queryOnSecondaryIndex(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, Some(tuple._6))
 
     private def queryOnSecondaryIndex
-        [K <% AttributeValue]
+        [T, K <% AttributeValue]
         (indexName:           String,
          hashValue:           K,
          rangeAttributeName:  String,
@@ -1156,7 +1194,7 @@ trait AmazonDynamoDBScalaMapper {
          scanIndexForward:    Boolean     = true,
          totalLimit:          Option[Int] = None)
         (implicit serializer: DynamoDBSerializer[T])
-        : Future[Seq[T]] =
+        : QueryMagnet[T] =
       queryRaw(
         new QueryRequest()
           .withIndexName(indexName)
@@ -1181,11 +1219,11 @@ trait AmazonDynamoDBScalaMapper {
     *
     * @tparam T
     *     the type of the object returned by the query.
-    * @see [[Query]]
+    * @see [[QueryMagnet]]
     * @see [[queryOnce]]
     * @see [[countQuery]]
     */
-  def query[T] = new Query[T]
+  def query[T](magnet: QueryMagnet[T]): Future[Seq[T]] = magnet()
 
 
   trait QueryOnceMagnet[T] {
@@ -1193,7 +1231,6 @@ trait AmazonDynamoDBScalaMapper {
   }
 
   object QueryOnceMagnet {
-    import scala.language.implicitConversions
 
     /**
       * Query a table.
@@ -1478,7 +1515,11 @@ trait AmazonDynamoDBScalaMapper {
     *     the type of object queried.
     * @see [[countQuery]]
     */
-  class CountQuery[T] {
+  trait CountQueryMagnet[T] {
+    def apply(): Future[Long]
+  }
+
+  object CountQueryMagnet {
 
     /**
       * Query a table, counting the results.
@@ -1497,9 +1538,11 @@ trait AmazonDynamoDBScalaMapper {
       * @see [[countQuery]]
       * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html QueryRequest]]
       */
-    def apply(queryRequest: QueryRequest)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Long] = {
+    implicit def countQueryRequest
+        [T]
+        (queryRequest: QueryRequest)
+        (implicit serializer: DynamoDBSerializer[T])
+        : CountQueryMagnet[T] = new CountQueryMagnet[T] { def apply() = {
       // note this mutates the query request
       queryRequest
         .withTableName(tableName)
@@ -1524,7 +1567,7 @@ trait AmazonDynamoDBScalaMapper {
         }
 
       local()
-    }
+    }}
 
     /**
       * Query a table by a hash key value, counting the results.
@@ -1544,11 +1587,12 @@ trait AmazonDynamoDBScalaMapper {
       * @return the total number items that match the query in a future.
       * @see [[countQuery]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue: K)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Long] =
-      apply(mkHashKeyQuery(hashValue))
+    implicit def countQueryHashValue
+        [T, K <% AttributeValue]
+        (hashValue: K)
+        (implicit serializer: DynamoDBSerializer[T])
+        : CountQueryMagnet[T] =
+      countQueryRequest(mkHashKeyQuery(hashValue))
 
     /**
       * Query a table by a hash value and range condition,
@@ -1572,11 +1616,13 @@ trait AmazonDynamoDBScalaMapper {
       * @return the total number items that match the query in a future.
       * @see [[countQuery]]
       */
-    def apply[K <% AttributeValue]
-             (hashValue: K, rangeCondition: Condition)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Long] =
-      apply(mkHashAndRangeKeyQuery(hashValue, rangeCondition))
+    implicit def countQueryHashValueAndRangeCondition
+        [T, K <% AttributeValue]
+        (tuple: /* hashValue      */ (K,
+                /* rangeCondition */  Condition))
+        (implicit serializer: DynamoDBSerializer[T])
+        : CountQueryMagnet[T] =
+      countQueryRequest(mkHashAndRangeKeyQuery(tuple._1, tuple._2))
 
     /**
       * Query a secondary index by a hash value and range
@@ -1607,17 +1653,21 @@ trait AmazonDynamoDBScalaMapper {
       * @return the total number items that match the query in a future.
       * @see [[countQuery]]
       */
-    def apply[K <% AttributeValue]
-             (indexName: String, hashValue: K, rangeAttributeName: String, rangeCondition: Condition)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Long] =
-      apply(
+    implicit def countQuerySecondaryIndex
+        [T, K <% AttributeValue]
+        (tuple: /* indexName          */ (String,
+                /* hashValue          */  K,
+                /* rangeAttributeName */  String,
+                /* rangeCondition     */  Condition))
+        (implicit serializer: DynamoDBSerializer[T])
+        : CountQueryMagnet[T] =
+      countQueryRequest(
         new QueryRequest()
-          .withIndexName(indexName)
+          .withIndexName(tuple._1)
           .withKeyConditions(
             Map(
-              serializer.hashAttributeName -> QueryCondition.equalTo(hashValue),
-              rangeAttributeName           -> rangeCondition
+              serializer.hashAttributeName -> QueryCondition.equalTo(tuple._2),
+              tuple._3                     -> tuple._4
             ).asJava
           )
       )
@@ -1631,11 +1681,11 @@ trait AmazonDynamoDBScalaMapper {
     *
     * @tparam T
     *     the type of object queried.
-    * @see [[CountQuery]]
+    * @see [[CountQueryMagnet]]
     * @see [[query]]
     * @see [[queryOnce]]
     */
-  def countQuery[T] = new CountQuery[T]
+  def countQuery[T](magnet: CountQueryMagnet[T]): Future[Long] = magnet()
 
 
 
@@ -1691,7 +1741,11 @@ trait AmazonDynamoDBScalaMapper {
     *     the type of the objects returned by the batch load.
     * @see [[batchLoadByKeys]]
     */
-  class BatchLoadByKeys[T] {
+  trait BatchLoadByKeysMagnet[T] {
+    def apply(): Future[Seq[T]]
+  }
+
+  object BatchLoadByKeysMagnet {
 
     /**
       * Load a sequence of objects by a sequence of hash key values.
@@ -1709,11 +1763,12 @@ trait AmazonDynamoDBScalaMapper {
       * @return sequence of retrieved objects in a future.
       * @see [[batchLoadByKeys]]
       */
-    def apply[K <% AttributeValue]
-             (hashKeys:  Seq[K])
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] =
-      apply(hashKeys, Seq.empty[String])
+    implicit def batchLoadByHashKeys
+        [T, K <% AttributeValue]
+        (hashKeys:  Seq[K])
+        (implicit serializer: DynamoDBSerializer[T])
+        : BatchLoadByKeysMagnet[T] =
+      batchLoadByHashAndRangeKeys(hashKeys, Seq.empty[String])
       /*
        * Seq.empty[String] ensures that a valid view is inferred
        * otherwise we will get an implicit error if Seq.empty
@@ -1741,11 +1796,13 @@ trait AmazonDynamoDBScalaMapper {
       * @return sequence of retrieved objects in a future.
       * @see [[batchLoadByKeys]]
       */
-    def apply[K1 <% AttributeValue, K2 <% AttributeValue]
-             (hashKeys:  Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Seq[T]] = {
-      val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
+    implicit def batchLoadByHashAndRangeKeys
+        [T, K1 <% AttributeValue, K2 <% AttributeValue]
+        (tuple: /* hashKeys  */ (Seq[K1],
+                /* rangeKeys */  Seq[K2]))
+        (implicit serializer: DynamoDBSerializer[T])
+        : BatchLoadByKeysMagnet[T] = new BatchLoadByKeysMagnet[T] { def apply() = {
+      val keys: Seq[DynamoDBKey] = zipKeySeqs(tuple._1, tuple._2)
       val builder = Seq.newBuilder[T]
 
       def local(keys: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] = {
@@ -1780,7 +1837,7 @@ trait AmazonDynamoDBScalaMapper {
       }
 
       local(keys.splitAt(100)) map { _ => builder.result }
-    }
+    }}
   }
 
   /**
@@ -1792,9 +1849,9 @@ trait AmazonDynamoDBScalaMapper {
     *
     * @tparam T
     *     the type of the objects returned by the batch load.
-    * @see [[BatchLoadByKeys]]
+    * @see [[BatchLoadByKeysMagnet]]
     */
-  def batchLoadByKeys[T] = new BatchLoadByKeys[T]
+  def batchLoadByKeys[T](magnet: BatchLoadByKeysMagnet[T]): Future[Seq[T]] = magnet()
 
 
 
@@ -1937,7 +1994,11 @@ trait AmazonDynamoDBScalaMapper {
     *     the type of the objects deleted by the batch delete.
     * @see [[batchDeleteByKeys]]
     */
-  class BatchDeleteByKeys[T] {
+  trait BatchDeleteByKeysMagnet[T] {
+    def apply(): Future[Unit]
+  }
+
+  object BatchDeleteByKeysMagnet {
 
     /**
       * Delete items by a sequence of hash key values.
@@ -1954,11 +2015,12 @@ trait AmazonDynamoDBScalaMapper {
       *     an implicit object serializer.
       * @see [[batchDeleteByKeys]]
       */
-    def apply[K <% AttributeValue]
-             (hashKeys: Seq[K])
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Unit] =
-      apply(hashKeys, Seq.empty[String])
+    implicit def batchDeleteByHashKeys
+        [T, K <% AttributeValue]
+        (hashKeys: Seq[K])
+        (implicit serializer: DynamoDBSerializer[T])
+        : BatchDeleteByKeysMagnet[T] =
+      batchDeleteByHashAndRangeKeys(hashKeys, Seq.empty[String])
       /*
        * Seq.empty[String] ensures that a valid view is inferred
        * otherwise we will get an implicit error if Seq.empty
@@ -1985,11 +2047,13 @@ trait AmazonDynamoDBScalaMapper {
       *     an implicit object serializer.
       * @see [[batchDeleteByKeys]]
       */
-    def apply[K1 <% AttributeValue, K2 <% AttributeValue]
-             (hashKeys: Seq[K1], rangeKeys: Seq[K2] = Seq.empty)
-             (implicit serializer: DynamoDBSerializer[T])
-             : Future[Unit] = {
-      val keys: Seq[DynamoDBKey] = zipKeySeqs(hashKeys, rangeKeys)
+    implicit def batchDeleteByHashAndRangeKeys
+        [T, K1 <% AttributeValue, K2 <% AttributeValue]
+        (tuple: /* hashKeys  */ (Seq[K1],
+                /* rangeKeys */  Seq[K2]))
+        (implicit serializer: DynamoDBSerializer[T])
+        : BatchDeleteByKeysMagnet[T] = new BatchDeleteByKeysMagnet[T] { def apply() = {
+      val keys: Seq[DynamoDBKey] = zipKeySeqs(tuple._1, tuple._2)
 
       def local(keysPair: (Seq[DynamoDBKey], Seq[DynamoDBKey])): Future[Unit] = {
         val request =
@@ -2022,7 +2086,7 @@ trait AmazonDynamoDBScalaMapper {
       }
 
       local(keys.splitAt(25))
-    }
+    }}
   }
 
   /**
@@ -2034,9 +2098,9 @@ trait AmazonDynamoDBScalaMapper {
     *
     * @tparam T
     *     the type of the objects deleted by the batch delete.
-    * @see [[BatchDeleteByKeys]]
+    * @see [[BatchDeleteByKeysMagnet]]
     */
-  def batchDeleteByKeys[T] = new BatchDeleteByKeys[T]
+  def batchDeleteByKeys[T](magnet: BatchDeleteByKeysMagnet[T]): Future[Unit] = magnet()
 
 }
 
