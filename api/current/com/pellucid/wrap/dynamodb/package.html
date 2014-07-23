@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>dynamodb - com.pellucid.wrap.dynamodb</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -26,7 +30,11 @@
       <div id="definition">
         <img src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.pellucid">pellucid</a>.<a href="../package.html" class="extype" name="com.pellucid.wrap">wrap</a></p>
-        <h1>dynamodb</h1>
+        <h1>dynamodb</h1> <span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -81,7 +89,7 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaClient" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaClient" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AmazonDynamoDBScalaClientextendsAnyRef"></a>
       <a id="AmazonDynamoDBScalaClient:AmazonDynamoDBScalaClient"></a>
       <h4 class="signature">
@@ -92,9 +100,15 @@
       <span class="symbol">
         <a href="AmazonDynamoDBScalaClient.html"><span class="name">AmazonDynamoDBScalaClient</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A lightweight wrapper for <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html" target="_blank">AmazonDynamoDBAsyncClient</a>.</p>
-    </li><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@AmazonDynamoDBScalaClientextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A lightweight wrapper for <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html" target="_blank">AmazonDynamoDBAsyncClient</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A lightweight wrapper for <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html" target="_blank">AmazonDynamoDBAsyncClient</a>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDBAsyncClient.html" target="_blank">AmazonDynamoDBAsyncClient</a>
+</p></span></dd></dl></div>
+    </li><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="AmazonDynamoDBScalaMapperextendsAnyRef"></a>
       <a id="AmazonDynamoDBScalaMapper:AmazonDynamoDBScalaMapper"></a>
       <h4 class="signature">
@@ -105,8 +119,14 @@
       <span class="symbol">
         <a href="AmazonDynamoDBScalaMapper.html"><span class="name">AmazonDynamoDBScalaMapper</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">An object mapping for DynamoDB items.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@AmazonDynamoDBScalaMapperextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An object mapping for DynamoDB items.</p><div class="fullcomment"><div class="comment cmt"><p>An object mapping for DynamoDB items.</p><p>This trait provides the interface to an object mapper for DynamoDB.
+It depends on a concrete implementation of <a href="AmazonDynamoDBScalaClient.html" class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaClient">AmazonDynamoDBScalaClient</a>.
+</p></div></div>
     </li><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapperConfig" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="AmazonDynamoDBScalaMapperConfigextendsAnyRef"></a>
       <a id="AmazonDynamoDBScalaMapperConfig:AmazonDynamoDBScalaMapperConfig"></a>
@@ -118,8 +138,12 @@
       <span class="symbol">
         <a href="AmazonDynamoDBScalaMapperConfig.html"><span class="name">AmazonDynamoDBScalaMapperConfig</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A trait for configuring <a href="AmazonDynamoDBScalaMapper.html" class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper">AmazonDynamoDBScalaMapper</a>.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@AmazonDynamoDBScalaMapperConfigextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A trait for configuring <a href="AmazonDynamoDBScalaMapper.html" class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper">AmazonDynamoDBScalaMapper</a>.</p>
     </li><li name="com.pellucid.wrap.dynamodb.AttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="AttributeValue:AttributeValue"></a>
@@ -131,10 +155,14 @@
       <span class="symbol">
         <span class="name">AttributeValue</span><span class="result"> = <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">A convienience type synonym for
 <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/AttributeValue.html" target="_blank">AttributeValue</a>.</p>
-    </li><li name="com.pellucid.wrap.dynamodb.AttributeValueConversionException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb.AttributeValueConversionException" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AttributeValueConversionExceptionextendsRuntimeException"></a>
       <a id="AttributeValueConversionException:AttributeValueConversionException"></a>
       <h4 class="signature">
@@ -145,10 +173,16 @@
       <span class="symbol">
         <a href="AttributeValueConversionException.html"><span class="name">AttributeValueConversionException</span></a><span class="result"> extends <span class="extype" name="scala.RuntimeException">RuntimeException</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A value could not be converted to an <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/AttributeValue.html" target="_blank">AttributeValue</a>
-</p>
-    </li><li name="com.pellucid.wrap.dynamodb.ConcurrentBatchWriter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@AttributeValueConversionExceptionextendsRuntimeException" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A value could not be converted to an <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/AttributeValue.html" target="_blank">AttributeValue</a>
+</p><div class="fullcomment"><div class="comment cmt"><p>A value could not be converted to an <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/AttributeValue.html" target="_blank">AttributeValue</a>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/AttributeValue.html" target="_blank">AWS Java SDK</a>
+</p></span></dd></dl></div>
+    </li><li name="com.pellucid.wrap.dynamodb.ConcurrentBatchWriter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ConcurrentBatchWriterextendsAnyRef"></a>
       <a id="ConcurrentBatchWriter:ConcurrentBatchWriter"></a>
       <h4 class="signature">
@@ -159,9 +193,16 @@
       <span class="symbol">
         <a href="ConcurrentBatchWriter.html"><span class="name">ConcurrentBatchWriter</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A multi-threaded, self-throttling, batch writer to a given DynamoDB table</p>
-    </li><li name="com.pellucid.wrap.dynamodb.DynamoDBSerializer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@ConcurrentBatchWriterextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A multi-threaded, self-throttling, batch writer to a given DynamoDB table</p><div class="fullcomment"><div class="comment cmt"><p>A multi-threaded, self-throttling, batch writer to a given DynamoDB table</p><p>This class provides a blocking interface to write items in batch to one
+DynamoDB table. The credentials that are provided must permit the
+&quot;BatchWriteItem&quot; operation to the named table.
+</p></div></div>
+    </li><li name="com.pellucid.wrap.dynamodb.DynamoDBSerializer" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="DynamoDBSerializer[T]extendsAnyRef"></a>
       <a id="DynamoDBSerializer[T]:DynamoDBSerializer[T]"></a>
       <h4 class="signature">
@@ -172,10 +213,17 @@
       <span class="symbol">
         <a href="DynamoDBSerializer.html"><span class="name">DynamoDBSerializer</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A trait for serializers that convert Scala objects
-to and from DynamoDB items.</p>
-    </li><li name="com.pellucid.wrap.dynamodb.FailedBatch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@DynamoDBSerializer[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A trait for serializers that convert Scala objects
+to and from DynamoDB items.</p><div class="fullcomment"><div class="comment cmt"><p>A trait for serializers that convert Scala objects
+to and from DynamoDB items.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the object type of this serializer
+</p></dd></dl></div>
+    </li><li name="com.pellucid.wrap.dynamodb.FailedBatch" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="FailedBatch[Metadata]extendsProductwithSerializable"></a>
       <a id="FailedBatch[Metadata]:FailedBatch[Metadata]"></a>
       <h4 class="signature">
@@ -186,9 +234,20 @@ to and from DynamoDB items.</p>
       <span class="symbol">
         <a href="FailedBatch.html"><span class="name">FailedBatch</span></a><span class="tparams">[<span name="Metadata">Metadata</span>]</span><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="batch">batch: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.amazonaws.services.dynamodbv2.model.WriteRequest">WriteRequest</span>]</span>, <span name="cause">cause: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="metadata">metadata: <span class="extype" name="com.pellucid.wrap.dynamodb.FailedBatch.Metadata">Metadata</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A record to communicate errors during batch write attempts.</p>
-    </li><li name="com.pellucid.wrap.dynamodb.RichAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@FailedBatch[Metadata]extendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A record to communicate errors during batch write attempts.</p><div class="fullcomment"><div class="comment cmt"><p>A record to communicate errors during batch write attempts.
+</p></div><dl class="paramcmts block"><dt class="tparam">Metadata</dt><dd class="cmt"><p>
+    the type of the metadata tag</p></dd><dt class="param">tableName</dt><dd class="cmt"><p>
+    the name of the table that was being written to</p></dd><dt class="param">batch</dt><dd class="cmt"><p>
+    the list of write request that were in the failed batch</p></dd><dt class="param">cause</dt><dd class="cmt"><p>
+    the exception that occurred while writing the batch</p></dd><dt class="param">metadata</dt><dd class="cmt"><p>
+    the metadata that was supplied for the write group
+</p></dd></dl></div>
+    </li><li name="com.pellucid.wrap.dynamodb.RichAttributeValue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="RichAttributeValueextendsAnyRef"></a>
       <a id="RichAttributeValue:RichAttributeValue"></a>
       <h4 class="signature">
@@ -199,10 +258,18 @@ to and from DynamoDB items.</p>
       <span class="symbol">
         <a href="package$$RichAttributeValue.html"><span class="name">RichAttributeValue</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">An enrichment of the
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@RichAttributeValueextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An enrichment of the
 <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/AttributeValue.html" target="_blank">AttributeValue</a>
-class.</p>
+class.</p><div class="fullcomment"><div class="comment cmt"><p>An enrichment of the
+<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/AttributeValue.html" target="_blank">AttributeValue</a>
+class.</p><p>An implicit class to extend attribute values with a type-safe(ish)
+casting method.
+</p></div></div>
     </li><li name="com.pellucid.wrap.dynamodb.SingleThreadedBatchWriter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SingleThreadedBatchWriterextendsAnyRef"></a>
       <a id="SingleThreadedBatchWriter:SingleThreadedBatchWriter"></a>
@@ -214,7 +281,11 @@ class.</p>
       <span class="symbol">
         <a href="SingleThreadedBatchWriter.html"><span class="name">SingleThreadedBatchWriter</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@SingleThreadedBatchWriterextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -234,8 +305,12 @@ class.</p>
       <span class="symbol">
         <a href="AmazonDynamoDBScalaMapper$.html"><span class="name">AmazonDynamoDBScalaMapper</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">A factory for <a href="AmazonDynamoDBScalaMapper.html" class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper">AmazonDynamoDBScalaMapper</a>.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@AmazonDynamoDBScalaMapper" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A factory for <a href="AmazonDynamoDBScalaMapper.html" class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper">AmazonDynamoDBScalaMapper</a>.</p>
     </li><li name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapperConfig" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AmazonDynamoDBScalaMapperConfig"></a>
       <a id="AmazonDynamoDBScalaMapperConfig:AmazonDynamoDBScalaMapperConfig"></a>
@@ -247,9 +322,13 @@ class.</p>
       <span class="symbol">
         <a href="AmazonDynamoDBScalaMapperConfig$.html"><span class="name">AmazonDynamoDBScalaMapperConfig</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">A factory for <a href="AmazonDynamoDBScalaMapperConfig.html" class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapperConfig">AmazonDynamoDBScalaMapperConfig</a>.</p>
-    </li><li name="com.pellucid.wrap.dynamodb.QueryCondition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@AmazonDynamoDBScalaMapperConfig" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A factory for <a href="AmazonDynamoDBScalaMapperConfig.html" class="extype" name="com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapperConfig">AmazonDynamoDBScalaMapperConfig</a>.</p>
+    </li><li name="com.pellucid.wrap.dynamodb.QueryCondition" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="QueryCondition"></a>
       <a id="QueryCondition:QueryCondition"></a>
       <h4 class="signature">
@@ -260,9 +339,15 @@ class.</p>
       <span class="symbol">
         <a href="QueryCondition$.html"><span class="name">QueryCondition</span></a><span class="result"> extends <span class="extype" name="com.pellucid.wrap.dynamodb.AttributeConditions">AttributeConditions</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A factory of Conditions for queries.</p>
-    </li><li name="com.pellucid.wrap.dynamodb.ScanCondition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@QueryCondition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A factory of Conditions for queries.</p><div class="fullcomment"><div class="comment cmt"><p>A factory of Conditions for queries.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/Condition.html" target="_blank">AWS Java SDK</a>
+</p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Condition.html" target="_blank">DynamoDB API Reference</a></p></span></dd></dl></div>
+    </li><li name="com.pellucid.wrap.dynamodb.ScanCondition" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ScanCondition"></a>
       <a id="ScanCondition:ScanCondition"></a>
       <h4 class="signature">
@@ -273,9 +358,15 @@ class.</p>
       <span class="symbol">
         <a href="ScanCondition$.html"><span class="name">ScanCondition</span></a><span class="result"> extends <span class="extype" name="com.pellucid.wrap.dynamodb.AttributeConditions">AttributeConditions</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A factory of Conditions for scans.</p>
-    </li><li name="com.pellucid.wrap.dynamodb.Schema" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@ScanCondition" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A factory of Conditions for scans.</p><div class="fullcomment"><div class="comment cmt"><p>A factory of Conditions for scans.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/Condition.html" target="_blank">AWS Java SDK</a>
+</p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Condition.html" target="_blank">DynamoDB API Reference</a></p></span></dd></dl></div>
+    </li><li name="com.pellucid.wrap.dynamodb.Schema" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Schema"></a>
       <a id="Schema:Schema"></a>
       <h4 class="signature">
@@ -286,9 +377,15 @@ class.</p>
       <span class="symbol">
         <a href="Schema$.html"><span class="name">Schema</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Convenience methods for constructing DynamoDB table schemas.</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToBigDecimal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@Schema" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Convenience methods for constructing DynamoDB table schemas.</p><div class="fullcomment"><div class="comment cmt"><p>Convenience methods for constructing DynamoDB table schemas.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_CreateTable.html" target="_blank">DynamoDB API Reference</a>
+</p></span></dd></dl></div>
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToBigDecimal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToBigDecimal:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.math.BigDecimal"></a>
       <a id="attributeValueToBigDecimal:(AttributeValue)⇒BigDecimal"></a>
       <h4 class="signature">
@@ -299,9 +396,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToBigDecimal</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.math.BigDecimal">BigDecimal</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBigDecimal:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.math.BigDecimal" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">string AttributeValue to BigDecimal</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToBigDecimalSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToBigDecimalSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToBigDecimalSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[scala.math.BigDecimal]"></a>
       <a id="attributeValueToBigDecimalSet:(AttributeValue)⇒Set[BigDecimal]"></a>
       <h4 class="signature">
@@ -312,9 +413,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToBigDecimalSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.math.BigDecimal">BigDecimal</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBigDecimalSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[scala.math.BigDecimal]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">string set AttributeValue to Set[BigDecimal]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToBigInt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToBigInt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToBigInt:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.math.BigInt"></a>
       <a id="attributeValueToBigInt:(AttributeValue)⇒BigInt"></a>
       <h4 class="signature">
@@ -325,9 +430,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToBigInt</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.math.BigInt">BigInt</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBigInt:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.math.BigInt" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">string AttributeValue to BigInt</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToBigIntSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToBigIntSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToBigIntSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[scala.math.BigInt]"></a>
       <a id="attributeValueToBigIntSet:(AttributeValue)⇒Set[BigInt]"></a>
       <h4 class="signature">
@@ -338,9 +447,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToBigIntSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.math.BigInt">BigInt</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBigIntSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[scala.math.BigInt]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">string set AttributeValue to Set[BigInt]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToBoolean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToBoolean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToBoolean:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Boolean"></a>
       <a id="attributeValueToBoolean:(AttributeValue)⇒Boolean"></a>
       <h4 class="signature">
@@ -351,9 +464,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToBoolean</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBoolean:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">string AttributeValue to Boolean</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToBooleanSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToBooleanSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToBooleanSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Boolean]"></a>
       <a id="attributeValueToBooleanSet:(AttributeValue)⇒Set[Boolean]"></a>
       <h4 class="signature">
@@ -364,9 +481,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToBooleanSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBooleanSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Boolean]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">string set AttributeValue to Set[Boolean]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToByte" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToByte" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToByte:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Byte"></a>
       <a id="attributeValueToByte:(AttributeValue)⇒Byte"></a>
       <h4 class="signature">
@@ -377,9 +498,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToByte</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Byte">Byte</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToByte:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Byte" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric AttributeValue to Byte</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToByteArray" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToByteArray" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToByteArray:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Array[Byte]"></a>
       <a id="attributeValueToByteArray:(AttributeValue)⇒Array[Byte]"></a>
       <h4 class="signature">
@@ -390,9 +515,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToByteArray</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToByteArray:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Array[Byte]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">binary AttributeValue to Array[Byte]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToByteArraySet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToByteArraySet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToByteArraySet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Array[Byte]]"></a>
       <a id="attributeValueToByteArraySet:(AttributeValue)⇒Set[Array[Byte]]"></a>
       <h4 class="signature">
@@ -403,9 +532,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToByteArraySet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToByteArraySet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Array[Byte]]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">binary set AttributeValue to Set[Array[Byte]]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToByteSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToByteSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToByteSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Byte]"></a>
       <a id="attributeValueToByteSet:(AttributeValue)⇒Set[Byte]"></a>
       <h4 class="signature">
@@ -416,9 +549,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToByteSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToByteSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Byte]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric set AttributeValue to Set[Byte]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToDouble" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToDouble" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToDouble:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Double"></a>
       <a id="attributeValueToDouble:(AttributeValue)⇒Double"></a>
       <h4 class="signature">
@@ -429,9 +566,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToDouble</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Double">Double</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToDouble:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Double" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric AttributeValue to Double</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToDoubleSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToDoubleSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToDoubleSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Double]"></a>
       <a id="attributeValueToDoubleSet:(AttributeValue)⇒Set[Double]"></a>
       <h4 class="signature">
@@ -442,9 +583,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToDoubleSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Double">Double</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToDoubleSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Double]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric set AttributeValue to Set[Double]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToFloat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToFloat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToFloat:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Float"></a>
       <a id="attributeValueToFloat:(AttributeValue)⇒Float"></a>
       <h4 class="signature">
@@ -455,9 +600,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToFloat</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Float">Float</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToFloat:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Float" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric AttributeValue to Float</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToFloatSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToFloatSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToFloatSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Float]"></a>
       <a id="attributeValueToFloatSet:(AttributeValue)⇒Set[Float]"></a>
       <h4 class="signature">
@@ -468,9 +617,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToFloatSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Float">Float</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToFloatSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Float]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric set AttributeValue to Set[Float]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToInt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToInt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToInt:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Int"></a>
       <a id="attributeValueToInt:(AttributeValue)⇒Int"></a>
       <h4 class="signature">
@@ -481,9 +634,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToInt</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToInt:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric AttributeValue to Int</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToIntSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToIntSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToIntSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Int]"></a>
       <a id="attributeValueToIntSet:(AttributeValue)⇒Set[Int]"></a>
       <h4 class="signature">
@@ -494,9 +651,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToIntSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Int">Int</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToIntSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Int]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric set AttributeValue to Set[Int]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToLong" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToLong" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToLong:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Long"></a>
       <a id="attributeValueToLong:(AttributeValue)⇒Long"></a>
       <h4 class="signature">
@@ -507,9 +668,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToLong</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Long">Long</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToLong:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Long" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric AttributeValue to Long</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToLongSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToLongSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToLongSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Long]"></a>
       <a id="attributeValueToLongSet:(AttributeValue)⇒Set[Long]"></a>
       <h4 class="signature">
@@ -520,9 +685,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToLongSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Long">Long</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToLongSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Long]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric set AttributeValue to Set[Long]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToShort" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToShort" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToShort:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Short"></a>
       <a id="attributeValueToShort:(AttributeValue)⇒Short"></a>
       <h4 class="signature">
@@ -533,9 +702,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToShort</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Short">Short</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToShort:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Short" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric AttributeValue to Short</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToShortSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToShortSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToShortSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Short]"></a>
       <a id="attributeValueToShortSet:(AttributeValue)⇒Set[Short]"></a>
       <h4 class="signature">
@@ -546,9 +719,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToShortSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Short">Short</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToShortSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Short]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">numeric set AttributeValue to Set[Short]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToString:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;String"></a>
       <a id="attributeValueToString:(AttributeValue)⇒String"></a>
       <h4 class="signature">
@@ -559,9 +736,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToString</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToString:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">string AttributeValue to String</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#attributeValueToStringSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#attributeValueToStringSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="attributeValueToStringSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[String]"></a>
       <a id="attributeValueToStringSet:(AttributeValue)⇒Set[String]"></a>
       <h4 class="signature">
@@ -572,9 +753,13 @@ class.</p>
       <span class="symbol">
         <span class="name">attributeValueToStringSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="java.lang.String">String</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToStringSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[String]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">string set AttributeValue to Set[String]</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#bigDecimalIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#bigDecimalIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="bigDecimalIterableToAttributeValue:Iterable[BigDecimal]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="bigDecimalIterableToAttributeValue:(Iterable[BigDecimal])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -585,9 +770,13 @@ class.</p>
       <span class="symbol">
         <span class="name">bigDecimalIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.BigDecimal">BigDecimal</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@bigDecimalIterableToAttributeValue:Iterable[BigDecimal]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">BigDecimal to a string set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#bigDecimalToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#bigDecimalToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="bigDecimalToAttributeValue:BigDecimal=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="bigDecimalToAttributeValue:(BigDecimal)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -598,9 +787,13 @@ class.</p>
       <span class="symbol">
         <span class="name">bigDecimalToAttributeValue</span><span class="result">: (<span class="extype" name="scala.BigDecimal">BigDecimal</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@bigDecimalToAttributeValue:BigDecimal=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">BigDecimal to a string AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#bigIntIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#bigIntIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="bigIntIterableToAttributeValue:Iterable[BigInt]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="bigIntIterableToAttributeValue:(Iterable[BigInt])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -611,9 +804,13 @@ class.</p>
       <span class="symbol">
         <span class="name">bigIntIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.BigInt">BigInt</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@bigIntIterableToAttributeValue:Iterable[BigInt]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">BigInt to a string set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#bigIntToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#bigIntToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="bigIntToAttributeValue:BigInt=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="bigIntToAttributeValue:(BigInt)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -624,9 +821,13 @@ class.</p>
       <span class="symbol">
         <span class="name">bigIntToAttributeValue</span><span class="result">: (<span class="extype" name="scala.BigInt">BigInt</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@bigIntToAttributeValue:BigInt=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">BigInt to a string AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#booleanIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#booleanIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="booleanIterableToAttributeValue:Iterable[Boolean]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="booleanIterableToAttributeValue:(Iterable[Boolean])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -637,9 +838,13 @@ class.</p>
       <span class="symbol">
         <span class="name">booleanIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Boolean">Boolean</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@booleanIterableToAttributeValue:Iterable[Boolean]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Boolean collection to a string set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#booleanToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#booleanToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="booleanToAttributeValue:Boolean=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="booleanToAttributeValue:(Boolean)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -650,9 +855,13 @@ class.</p>
       <span class="symbol">
         <span class="name">booleanToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Boolean">Boolean</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@booleanToAttributeValue:Boolean=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Boolean to a string AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#byteArrayIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#byteArrayIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="byteArrayIterableToAttributeValue:Iterable[Array[Byte]]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="byteArrayIterableToAttributeValue:(Iterable[Array[Byte]])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -663,9 +872,13 @@ class.</p>
       <span class="symbol">
         <span class="name">byteArrayIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@byteArrayIterableToAttributeValue:Iterable[Array[Byte]]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Array[Byte] collection to a binary set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#byteArrayToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#byteArrayToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="byteArrayToAttributeValue:Array[Byte]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="byteArrayToAttributeValue:(Array[Byte])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -676,9 +889,13 @@ class.</p>
       <span class="symbol">
         <span class="name">byteArrayToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@byteArrayToAttributeValue:Array[Byte]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Array[Byte] to a binary AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#byteIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#byteIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="byteIterableToAttributeValue:Iterable[Byte]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="byteIterableToAttributeValue:(Iterable[Byte])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -689,9 +906,13 @@ class.</p>
       <span class="symbol">
         <span class="name">byteIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Byte">Byte</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@byteIterableToAttributeValue:Iterable[Byte]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Byte collection to a numeric set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#byteToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#byteToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="byteToAttributeValue:Byte=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="byteToAttributeValue:(Byte)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -702,9 +923,13 @@ class.</p>
       <span class="symbol">
         <span class="name">byteToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Byte">Byte</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@byteToAttributeValue:Byte=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Byte to a numeric AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#doubleIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#doubleIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="doubleIterableToAttributeValue:Iterable[Double]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="doubleIterableToAttributeValue:(Iterable[Double])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -715,9 +940,13 @@ class.</p>
       <span class="symbol">
         <span class="name">doubleIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@doubleIterableToAttributeValue:Iterable[Double]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Double collection to a numeric set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#doubleToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#doubleToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="doubleToAttributeValue:Double=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="doubleToAttributeValue:(Double)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -728,9 +957,13 @@ class.</p>
       <span class="symbol">
         <span class="name">doubleToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Double">Double</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@doubleToAttributeValue:Double=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Double to a numeric AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#floatIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#floatIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="floatIterableToAttributeValue:Iterable[Float]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="floatIterableToAttributeValue:(Iterable[Float])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -741,9 +974,13 @@ class.</p>
       <span class="symbol">
         <span class="name">floatIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Float">Float</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@floatIterableToAttributeValue:Iterable[Float]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Float collection to a numeric set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#floatToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#floatToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="floatToAttributeValue:Float=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="floatToAttributeValue:(Float)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -754,9 +991,13 @@ class.</p>
       <span class="symbol">
         <span class="name">floatToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Float">Float</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@floatToAttributeValue:Float=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Float to a numeric AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#intIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#intIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="intIterableToAttributeValue:Iterable[Int]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="intIterableToAttributeValue:(Iterable[Int])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -767,9 +1008,13 @@ class.</p>
       <span class="symbol">
         <span class="name">intIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Int">Int</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@intIterableToAttributeValue:Iterable[Int]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Int collection to a numeric set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#intToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#intToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="intToAttributeValue:Int=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="intToAttributeValue:(Int)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -780,9 +1025,13 @@ class.</p>
       <span class="symbol">
         <span class="name">intToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@intToAttributeValue:Int=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Int to a numeric AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#longIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#longIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="longIterableToAttributeValue:Iterable[Long]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="longIterableToAttributeValue:(Iterable[Long])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -793,9 +1042,13 @@ class.</p>
       <span class="symbol">
         <span class="name">longIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Long">Long</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@longIterableToAttributeValue:Iterable[Long]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Long collection to a numeric set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#longToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#longToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="longToAttributeValue:Long=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="longToAttributeValue:(Long)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -806,9 +1059,13 @@ class.</p>
       <span class="symbol">
         <span class="name">longToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Long">Long</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@longToAttributeValue:Long=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Long to a numeric AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#mkHashAndRangeKeyQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#mkHashAndRangeKeyQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="mkHashAndRangeKeyQuery[T,K](hashValue:K,rangeCondition:com.amazonaws.services.dynamodbv2.model.Condition)(implicitevidence$4:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):com.amazonaws.services.dynamodbv2.model.QueryRequest"></a>
       <a id="mkHashAndRangeKeyQuery[T,K](K,Condition)((K)⇒AttributeValue,DynamoDBSerializer[T]):QueryRequest"></a>
       <h4 class="signature">
@@ -819,7 +1076,11 @@ class.</p>
       <span class="symbol">
         <span class="name">mkHashAndRangeKeyQuery</span><span class="tparams">[<span name="T">T</span>, <span name="K">K</span>]</span><span class="params">(<span name="hashValue">hashValue: <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span></span>, <span name="rangeCondition">rangeCondition: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.Condition">Condition</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>, <span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.pellucid.wrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.QueryRequest">QueryRequest</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@mkHashAndRangeKeyQuery[T,K](hashValue:K,rangeCondition:com.amazonaws.services.dynamodbv2.model.Condition)(implicitevidence$4:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):com.amazonaws.services.dynamodbv2.model.QueryRequest" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Constructs a
 <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html" target="_blank">QueryRequest</a>
 for hash and range keys.</p><div class="fullcomment"><div class="comment cmt"><p>Constructs a
@@ -832,7 +1093,7 @@ from an attribute value, a range condition, and an implicit serializer.
     a condition on the range key.</p></dd><dt class="param">serializer</dt><dd class="cmt"><p>
     an implicit object serializer</p></dd><dt>returns</dt><dd class="cmt"><p>a query request</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="QueryCondition$.html" class="extype" name="com.pellucid.wrap.dynamodb.QueryCondition">QueryCondition</a>
 </p></span></dd></dl></div>
-    </li><li name="com.pellucid.wrap.dynamodb.package#mkHashAndRangeKeyQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#mkHashAndRangeKeyQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="mkHashAndRangeKeyQuery[K](hashAttr:(String,K),rangeAttr:(String,com.amazonaws.services.dynamodbv2.model.Condition))(implicitevidence$3:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue):com.amazonaws.services.dynamodbv2.model.QueryRequest"></a>
       <a id="mkHashAndRangeKeyQuery[K]((String,K),(String,Condition))((K)⇒AttributeValue):QueryRequest"></a>
       <h4 class="signature">
@@ -843,7 +1104,11 @@ from an attribute value, a range condition, and an implicit serializer.
       <span class="symbol">
         <span class="name">mkHashAndRangeKeyQuery</span><span class="tparams">[<span name="K">K</span>]</span><span class="params">(<span name="hashAttr">hashAttr: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>)</span>, <span name="rangeAttr">rangeAttr: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="com.amazonaws.services.dynamodbv2.model.Condition">Condition</span>)</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>)</span><span class="result">: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.QueryRequest">QueryRequest</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@mkHashAndRangeKeyQuery[K](hashAttr:(String,K),rangeAttr:(String,com.amazonaws.services.dynamodbv2.model.Condition))(implicitevidence$3:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue):com.amazonaws.services.dynamodbv2.model.QueryRequest" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Constructs a
 <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html" target="_blank">QueryRequest</a>
 for hash and range keys.</p><div class="fullcomment"><div class="comment cmt"><p>Constructs a
@@ -856,7 +1121,7 @@ and condition pair.
     the hash key name and the value it must equal.</p></dd><dt class="param">rangeAttr</dt><dd class="cmt"><p>
     an attribute name and condition pair.</p></dd><dt>returns</dt><dd class="cmt"><p>a query request</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="QueryCondition$.html" class="extype" name="com.pellucid.wrap.dynamodb.QueryCondition">QueryCondition</a>
 </p></span></dd></dl></div>
-    </li><li name="com.pellucid.wrap.dynamodb.package#mkHashKeyQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#mkHashKeyQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="mkHashKeyQuery[T,K](hashValue:K)(implicitevidence$2:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):com.amazonaws.services.dynamodbv2.model.QueryRequest"></a>
       <a id="mkHashKeyQuery[T,K](K)((K)⇒AttributeValue,DynamoDBSerializer[T]):QueryRequest"></a>
       <h4 class="signature">
@@ -867,7 +1132,11 @@ and condition pair.
       <span class="symbol">
         <span class="name">mkHashKeyQuery</span><span class="tparams">[<span name="T">T</span>, <span name="K">K</span>]</span><span class="params">(<span name="hashValue">hashValue: <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>, <span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.pellucid.wrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.QueryRequest">QueryRequest</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@mkHashKeyQuery[T,K](hashValue:K)(implicitevidence$2:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):com.amazonaws.services.dynamodbv2.model.QueryRequest" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Constructs a
 <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html" target="_blank">QueryRequest</a>
 for a hash key.</p><div class="fullcomment"><div class="comment cmt"><p>Constructs a
@@ -879,7 +1148,7 @@ from an attribute value and an implicit serializer.
     the value the hash key must equal.</p></dd><dt class="param">serializer</dt><dd class="cmt"><p>
     an implicit object serializer</p></dd><dt>returns</dt><dd class="cmt"><p>a query request
 </p></dd></dl></div>
-    </li><li name="com.pellucid.wrap.dynamodb.package#mkHashKeyQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#mkHashKeyQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="mkHashKeyQuery[K](hashAttr:(String,K))(implicitevidence$1:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue):com.amazonaws.services.dynamodbv2.model.QueryRequest"></a>
       <a id="mkHashKeyQuery[K]((String,K))((K)⇒AttributeValue):QueryRequest"></a>
       <h4 class="signature">
@@ -890,7 +1159,11 @@ from an attribute value and an implicit serializer.
       <span class="symbol">
         <span class="name">mkHashKeyQuery</span><span class="tparams">[<span name="K">K</span>]</span><span class="params">(<span name="hashAttr">hashAttr: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>)</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>)</span><span class="result">: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.QueryRequest">QueryRequest</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@mkHashKeyQuery[K](hashAttr:(String,K))(implicitevidence$1:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue):com.amazonaws.services.dynamodbv2.model.QueryRequest" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Constructs a
 <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/model/QueryRequest.html" target="_blank">QueryRequest</a>
 for a hash key.</p><div class="fullcomment"><div class="comment cmt"><p>Constructs a
@@ -901,7 +1174,7 @@ from an attribute name and attribute value pair.
 </p></div><dl class="paramcmts block"><dt class="param">hashAttr</dt><dd class="cmt"><p>
     the hash key name and the value it must equal.</p></dd><dt>returns</dt><dd class="cmt"><p>a query request
 </p></dd></dl></div>
-    </li><li name="com.pellucid.wrap.dynamodb.package#shortIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#shortIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="shortIterableToAttributeValue:Iterable[Short]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="shortIterableToAttributeValue:(Iterable[Short])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -912,9 +1185,13 @@ from an attribute name and attribute value pair.
       <span class="symbol">
         <span class="name">shortIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Short">Short</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@shortIterableToAttributeValue:Iterable[Short]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Short collection to a numeric set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#shortToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#shortToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="shortToAttributeValue:Short=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="shortToAttributeValue:(Short)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -925,9 +1202,13 @@ from an attribute name and attribute value pair.
       <span class="symbol">
         <span class="name">shortToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Short">Short</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@shortToAttributeValue:Short=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Short to a numeric AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#stringIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#stringIterableToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="stringIterableToAttributeValue:Iterable[String]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="stringIterableToAttributeValue:(Iterable[String])⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -938,9 +1219,13 @@ from an attribute name and attribute value pair.
       <span class="symbol">
         <span class="name">stringIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Predef.String">String</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@stringIterableToAttributeValue:Iterable[String]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">String collection to a string set AttributeValue</p>
-    </li><li name="com.pellucid.wrap.dynamodb.package#stringToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.pellucid.wrap.dynamodb#stringToAttributeValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="stringToAttributeValue:String=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <a id="stringToAttributeValue:(String)⇒amazonaws.services.dynamodbv2.model.AttributeValue"></a>
       <h4 class="signature">
@@ -951,7 +1236,11 @@ from an attribute name and attribute value pair.
       <span class="symbol">
         <span class="name">stringToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@stringToAttributeValue:String=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">String to a string AttributeValue</p>
     </li></ol>
             </div>
@@ -982,6 +1271,7 @@ from an attribute name and attribute value pair.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>s3 - com.pellucid.wrap.s3</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -26,7 +30,11 @@
       <div id="definition">
         <img src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.pellucid">pellucid</a>.<a href="../package.html" class="extype" name="com.pellucid.wrap">wrap</a></p>
-        <h1>s3</h1>
+        <h1>s3</h1> <span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -58,7 +66,7 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.pellucid.wrap.s3.AmazonS3ScalaClient" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.pellucid.wrap.s3.AmazonS3ScalaClient" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AmazonS3ScalaClientextendsAnyRef"></a>
       <a id="AmazonS3ScalaClient:AmazonS3ScalaClient"></a>
       <h4 class="signature">
@@ -69,8 +77,18 @@
       <span class="symbol">
         <a href="AmazonS3ScalaClient.html"><span class="name">AmazonS3ScalaClient</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A lightweight wrapper for <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html" target="_blank">AmazonS3Client</a></p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.package@AmazonS3ScalaClientextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A lightweight wrapper for <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html" target="_blank">AmazonS3Client</a></p><div class="fullcomment"><div class="comment cmt"><p>A lightweight wrapper for <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html" target="_blank">AmazonS3Client</a></p><p>The AWS Java SDK does not provide an asynchronous S3 client,
+so this class follows the approach of the asynchronous clients
+that are provided by the SDK. Namely, to make the synchronous
+calls within an executor service. The methods in this class
+all return Scala futures.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>java.util.concurrent.ExecutorService
+</p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/ClientConfiguration.html" target="_blank">ClientConfiguration</a></p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/AWSCredentialsProvider.html" target="_blank">AWSCredentialsProvider</a></p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html" target="_blank">AmazonS3Client</a></p></span></dd></dl></div>
     </li></ol>
             </div>
 
@@ -78,7 +96,7 @@
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="com.pellucid.wrap.s3.FutureTransfer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.pellucid.wrap.s3.FutureTransfer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="FutureTransfer"></a>
       <a id="FutureTransfer:FutureTransfer"></a>
       <h4 class="signature">
@@ -89,8 +107,16 @@
       <span class="symbol">
         <a href="FutureTransfer$.html"><span class="name">FutureTransfer</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">A helper object providing a Scala Future interface for S3 Transfers.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.package@FutureTransfer" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A helper object providing a Scala Future interface for S3 Transfers.</p><div class="fullcomment"><div class="comment cmt"><p>A helper object providing a Scala Future interface for S3 Transfers.</p><p>Transfers to and from S3 using the TransferManager provider a listener
+interface, and <a href="FutureTransfer$.html#listenFor[T&lt;:com.amazonaws.services.s3.transfer.Transfer](transfer:T):scala.concurrent.Future[transfer.type]" class="extmbr" name="com.pellucid.wrap.s3.FutureTransfer#listenFor">FutureTransfer.listenFor</a> adapts this interface to
+Scala futures.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html" target="_blank">Transfer</a>
+</p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/TransferManager.html" target="_blank">TransferManager</a></p></span></dd></dl></div>
     </li></ol>
             </div>
 
@@ -116,6 +142,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>
