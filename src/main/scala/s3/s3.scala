@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, DefaultAWSCredentialsProviderChain}
-import com.amazonaws.event.{ProgressListener, ProgressEvent}
+import com.amazonaws.event.{ProgressListener, ProgressEvent, ProgressEventType}
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.model._
@@ -493,10 +493,10 @@ object FutureTransfer {
        * the potential to induce deadlock.
        */
       override def progressChanged(progressEvent: ProgressEvent): Unit = {
-        val code = progressEvent.getEventCode()
-        if (code == ProgressEvent.CANCELED_EVENT_CODE ||
-            code == ProgressEvent.COMPLETED_EVENT_CODE ||
-            code == ProgressEvent.FAILED_EVENT_CODE) {
+        val code = progressEvent.getEventType()
+        if (code == ProgressEventType.TRANSFER_CANCELED_EVENT ||
+            code == ProgressEventType.TRANSFER_COMPLETED_EVENT ||
+            code == ProgressEventType.TRANSFER_FAILED_EVENT) {
           p trySuccess transfer
         }
       }
