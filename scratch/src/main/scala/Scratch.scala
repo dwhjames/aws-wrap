@@ -758,7 +758,7 @@ object TestConcurrentBatchWriter {
 object ScratchS3 {
 
   import com.pellucid.wrap.s3._
-  import com.amazonaws.event.{ProgressListener, ProgressEvent}
+  import com.amazonaws.event.{ProgressListener, ProgressEvent, ProgressEventType}
   import com.amazonaws.services.s3._
   import com.amazonaws.services.s3.transfer._
   import java.io.File
@@ -798,25 +798,53 @@ object ScratchS3 {
 
     upload.addProgressListener(new ProgressListener {
       override def progressChanged(progressEvent: ProgressEvent): Unit = {
-        progressEvent.getEventCode match {
-          case ProgressEvent.CANCELED_EVENT_CODE =>
-            logger.info("CANCELED_EVENT_CODE")
-          case ProgressEvent.COMPLETED_EVENT_CODE =>
-            logger.info("COMPLETED_EVENT_CODE")
-          case ProgressEvent.FAILED_EVENT_CODE =>
-            logger.info("FAILED_EVENT_CODE")
-          case ProgressEvent.PART_COMPLETED_EVENT_CODE =>
-            logger.info("PART_COMPLETED_EVENT_CODE")
-          case ProgressEvent.PART_FAILED_EVENT_CODE =>
-            logger.info("PART_FAILED_EVENT_CODE")
-          case ProgressEvent.PART_STARTED_EVENT_CODE =>
-            logger.info("PART_STARTED_EVENT_CODE")
-          case ProgressEvent.PREPARING_EVENT_CODE =>
-            logger.info("PREPARING_EVENT_CODE")
-          case ProgressEvent.RESET_EVENT_CODE =>
-            logger.info("RESET_EVENT_CODE")
-          case ProgressEvent.STARTED_EVENT_CODE =>
-            logger.info("STARTED_EVENT_CODE")
+        progressEvent.getEventType match {
+          case ProgressEventType.CLIENT_REQUEST_FAILED_EVENT =>
+            logger.info("CLIENT_REQUEST_FAILED_EVENT")
+          case ProgressEventType.CLIENT_REQUEST_RETRY_EVENT =>
+            logger.info("CLIENT_REQUEST_RETRY_EVENT")
+          case ProgressEventType.CLIENT_REQUEST_STARTED_EVENT =>
+            logger.info("CLIENT_REQUEST_STARTED_EVENT")
+          case ProgressEventType.CLIENT_REQUEST_SUCCESS_EVENT =>
+            logger.info("CLIENT_REQUEST_SUCCESS_EVENT")
+          case ProgressEventType.HTTP_REQUEST_COMPLETED_EVENT =>
+            logger.info("HTTP_REQUEST_COMPLETED_EVENT")
+          case ProgressEventType.HTTP_REQUEST_CONTENT_RESET_EVENT =>
+            logger.info("HTTP_REQUEST_CONTENT_RESET_EVENT")
+          case ProgressEventType.HTTP_REQUEST_STARTED_EVENT =>
+            logger.info("HTTP_REQUEST_STARTED_EVENT")
+          case ProgressEventType.HTTP_RESPONSE_COMPLETED_EVENT =>
+            logger.info("HTTP_RESPONSE_COMPLETED_EVENT")
+          case ProgressEventType.HTTP_RESPONSE_CONTENT_RESET_EVENT =>
+            logger.info("HTTP_RESPONSE_CONTENT_RESET_EVENT")
+          case ProgressEventType.HTTP_RESPONSE_STARTED_EVENT =>
+            logger.info("HTTP_RESPONSE_STARTED_EVENT")
+          case ProgressEventType.REQUEST_BYTE_TRANSFER_EVENT =>
+            logger.info("REQUEST_BYTE_TRANSFER_EVENT")
+          case ProgressEventType.REQUEST_CONTENT_LENGTH_EVENT =>
+            logger.info("REQUEST_CONTENT_LENGTH_EVENT")
+          case ProgressEventType.RESPONSE_BYTE_DISCARD_EVENT =>
+            logger.info("RESPONSE_BYTE_DISCARD_EVENT")
+          case ProgressEventType.RESPONSE_BYTE_TRANSFER_EVENT =>
+            logger.info("RESPONSE_BYTE_TRANSFER_EVENT")
+          case ProgressEventType.RESPONSE_CONTENT_LENGTH_EVENT =>
+            logger.info("RESPONSE_CONTENT_LENGTH_EVENT")
+          case ProgressEventType.TRANSFER_CANCELED_EVENT =>
+            logger.info("TRANSFER_CANCELED_EVENT")
+          case ProgressEventType.TRANSFER_COMPLETED_EVENT =>
+            logger.info("TRANSFER_COMPLETED_EVENT")
+          case ProgressEventType.TRANSFER_FAILED_EVENT =>
+            logger.info("TRANSFER_FAILED_EVENT")
+          case ProgressEventType.TRANSFER_PART_COMPLETED_EVENT =>
+            logger.info("TRANSFER_PART_COMPLETED_EVENT")
+          case ProgressEventType.TRANSFER_PART_FAILED_EVENT =>
+            logger.info("TRANSFER_PART_FAILED_EVENT")
+          case ProgressEventType.TRANSFER_PART_STARTED_EVENT =>
+            logger.info("TRANSFER_PART_STARTED_EVENT")
+          case ProgressEventType.TRANSFER_PREPARING_EVENT =>
+            logger.info("TRANSFER_PREPARING_EVENT")
+          case ProgressEventType.TRANSFER_STARTED_EVENT =>
+            logger.info("TRANSFER_STARTED_EVENT")
           case _ =>
             logger.warn("unrecognized event code")
         }
