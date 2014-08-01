@@ -47,7 +47,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/pellucidanalytics/aws-wrap/tree/v0.6.0/src/main/scala/dynamodb/package.scala" target="_blank">package.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -153,7 +153,7 @@ It depends on a concrete implementation of <a href="AmazonDynamoDBScalaClient.ht
         <span class="kind">type</span>
       </span>
       <span class="symbol">
-        <span class="name">AttributeValue</span><span class="result"> = <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">AttributeValue</span><span class="result"> = <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -232,7 +232,7 @@ to and from DynamoDB items.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="FailedBatch.html"><span class="name">FailedBatch</span></a><span class="tparams">[<span name="Metadata">Metadata</span>]</span><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="batch">batch: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.amazonaws.services.dynamodbv2.model.WriteRequest">WriteRequest</span>]</span>, <span name="cause">cause: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="metadata">metadata: <span class="extype" name="com.pellucid.wrap.dynamodb.FailedBatch.Metadata">Metadata</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="FailedBatch.html"><span class="name">FailedBatch</span></a><span class="tparams">[<span name="Metadata">Metadata</span>]</span><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="batch">batch: <span class="extype" name="java.util.List">List</span>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/WriteRequest.html" class="extype" target="_top">WriteRequest</a>]</span>, <span name="cause">cause: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="metadata">metadata: <span class="extype" name="com.pellucid.wrap.dynamodb.FailedBatch.Metadata">Metadata</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@FailedBatch[Metadata]extendsProductwithSerializable" title="Permalink" target="_top">
@@ -394,7 +394,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToBigDecimal</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.math.BigDecimal">BigDecimal</span></span>
+        <span class="name">attributeValueToBigDecimal</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.math.BigDecimal" class="extype" target="_top">BigDecimal</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBigDecimal:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.math.BigDecimal" title="Permalink" target="_top">
@@ -411,7 +411,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToBigDecimalSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.math.BigDecimal">BigDecimal</span>]</span>
+        <span class="name">attributeValueToBigDecimalSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.math.BigDecimal" class="extype" target="_top">BigDecimal</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBigDecimalSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[scala.math.BigDecimal]" title="Permalink" target="_top">
@@ -428,7 +428,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToBigInt</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.math.BigInt">BigInt</span></span>
+        <span class="name">attributeValueToBigInt</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.math.BigInt" class="extype" target="_top">BigInt</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBigInt:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.math.BigInt" title="Permalink" target="_top">
@@ -445,7 +445,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToBigIntSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.math.BigInt">BigInt</span>]</span>
+        <span class="name">attributeValueToBigIntSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.math.BigInt" class="extype" target="_top">BigInt</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBigIntSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[scala.math.BigInt]" title="Permalink" target="_top">
@@ -462,7 +462,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToBoolean</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">attributeValueToBoolean</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBoolean:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Boolean" title="Permalink" target="_top">
@@ -479,7 +479,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToBooleanSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>
+        <span class="name">attributeValueToBooleanSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToBooleanSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Boolean]" title="Permalink" target="_top">
@@ -496,7 +496,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToByte</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Byte">Byte</span></span>
+        <span class="name">attributeValueToByte</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Byte" class="extype" target="_top">Byte</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToByte:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Byte" title="Permalink" target="_top">
@@ -513,7 +513,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToByteArray</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
+        <span class="name">attributeValueToByteArray</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToByteArray:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Array[Byte]" title="Permalink" target="_top">
@@ -530,7 +530,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToByteArraySet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]]</span>
+        <span class="name">attributeValueToByteArraySet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToByteArraySet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Array[Byte]]" title="Permalink" target="_top">
@@ -547,7 +547,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToByteSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
+        <span class="name">attributeValueToByteSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToByteSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Byte]" title="Permalink" target="_top">
@@ -564,7 +564,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToDouble</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Double">Double</span></span>
+        <span class="name">attributeValueToDouble</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToDouble:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Double" title="Permalink" target="_top">
@@ -581,7 +581,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToDoubleSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Double">Double</span>]</span>
+        <span class="name">attributeValueToDoubleSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToDoubleSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Double]" title="Permalink" target="_top">
@@ -598,7 +598,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToFloat</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Float">Float</span></span>
+        <span class="name">attributeValueToFloat</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Float" class="extype" target="_top">Float</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToFloat:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Float" title="Permalink" target="_top">
@@ -615,7 +615,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToFloatSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Float">Float</span>]</span>
+        <span class="name">attributeValueToFloatSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Float" class="extype" target="_top">Float</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToFloatSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Float]" title="Permalink" target="_top">
@@ -632,7 +632,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToInt</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">attributeValueToInt</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToInt:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Int" title="Permalink" target="_top">
@@ -649,7 +649,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToIntSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+        <span class="name">attributeValueToIntSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToIntSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Int]" title="Permalink" target="_top">
@@ -666,7 +666,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToLong</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Long">Long</span></span>
+        <span class="name">attributeValueToLong</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToLong:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Long" title="Permalink" target="_top">
@@ -683,7 +683,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToLongSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Long">Long</span>]</span>
+        <span class="name">attributeValueToLongSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToLongSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Long]" title="Permalink" target="_top">
@@ -700,7 +700,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToShort</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.Short">Short</span></span>
+        <span class="name">attributeValueToShort</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Short" class="extype" target="_top">Short</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToShort:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;Short" title="Permalink" target="_top">
@@ -717,7 +717,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToShortSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Short">Short</span>]</span>
+        <span class="name">attributeValueToShortSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Short" class="extype" target="_top">Short</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToShortSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[Short]" title="Permalink" target="_top">
@@ -751,7 +751,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">attributeValueToStringSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="java.lang.String">String</span>]</span>
+        <span class="name">attributeValueToStringSet</span><span class="result">: (<a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.collection.immutable.Set" class="extype" target="_top">Set</a>[<span class="extype" name="java.lang.String">String</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@attributeValueToStringSet:com.pellucid.wrap.dynamodb.package.AttributeValue=&gt;scala.collection.immutable.Set[String]" title="Permalink" target="_top">
@@ -768,7 +768,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">bigDecimalIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.BigDecimal">BigDecimal</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">bigDecimalIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.BigDecimal">BigDecimal</span>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@bigDecimalIterableToAttributeValue:Iterable[BigDecimal]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -785,7 +785,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">bigDecimalToAttributeValue</span><span class="result">: (<span class="extype" name="scala.BigDecimal">BigDecimal</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">bigDecimalToAttributeValue</span><span class="result">: (<span class="extype" name="scala.BigDecimal">BigDecimal</span>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@bigDecimalToAttributeValue:BigDecimal=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -802,7 +802,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">bigIntIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.BigInt">BigInt</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">bigIntIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.BigInt">BigInt</span>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@bigIntIterableToAttributeValue:Iterable[BigInt]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -819,7 +819,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">bigIntToAttributeValue</span><span class="result">: (<span class="extype" name="scala.BigInt">BigInt</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">bigIntToAttributeValue</span><span class="result">: (<span class="extype" name="scala.BigInt">BigInt</span>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@bigIntToAttributeValue:BigInt=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -836,7 +836,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">booleanIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Boolean">Boolean</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">booleanIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@booleanIterableToAttributeValue:Iterable[Boolean]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -853,7 +853,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">booleanToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Boolean">Boolean</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">booleanToAttributeValue</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@booleanToAttributeValue:Boolean=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -870,7 +870,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">byteArrayIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">byteArrayIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@byteArrayIterableToAttributeValue:Iterable[Array[Byte]]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -887,7 +887,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">byteArrayToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">byteArrayToAttributeValue</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@byteArrayToAttributeValue:Array[Byte]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -904,7 +904,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">byteIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Byte">Byte</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">byteIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@byteIterableToAttributeValue:Iterable[Byte]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -921,7 +921,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">byteToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Byte">Byte</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">byteToAttributeValue</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@byteToAttributeValue:Byte=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -938,7 +938,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">doubleIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">doubleIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Double" class="extype" target="_top">Double</a>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@doubleIterableToAttributeValue:Iterable[Double]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -955,7 +955,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">doubleToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Double">Double</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">doubleToAttributeValue</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Double" class="extype" target="_top">Double</a>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@doubleToAttributeValue:Double=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -972,7 +972,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">floatIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Float">Float</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">floatIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Float" class="extype" target="_top">Float</a>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@floatIterableToAttributeValue:Iterable[Float]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -989,7 +989,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">floatToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Float">Float</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">floatToAttributeValue</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Float" class="extype" target="_top">Float</a>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@floatToAttributeValue:Float=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -1006,7 +1006,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">intIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Int">Int</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">intIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Int" class="extype" target="_top">Int</a>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@intIterableToAttributeValue:Iterable[Int]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -1023,7 +1023,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">intToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">intToAttributeValue</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Int" class="extype" target="_top">Int</a>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@intToAttributeValue:Int=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -1040,7 +1040,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">longIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Long">Long</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">longIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Long" class="extype" target="_top">Long</a>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@longIterableToAttributeValue:Iterable[Long]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -1057,7 +1057,7 @@ casting method.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">longToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Long">Long</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">longToAttributeValue</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Long" class="extype" target="_top">Long</a>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@longToAttributeValue:Long=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -1074,7 +1074,7 @@ casting method.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mkHashAndRangeKeyQuery</span><span class="tparams">[<span name="T">T</span>, <span name="K">K</span>]</span><span class="params">(<span name="hashValue">hashValue: <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span></span>, <span name="rangeCondition">rangeCondition: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.Condition">Condition</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>, <span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.pellucid.wrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.QueryRequest">QueryRequest</span></span>
+        <span class="name">mkHashAndRangeKeyQuery</span><span class="tparams">[<span name="T">T</span>, <span name="K">K</span>]</span><span class="params">(<span name="hashValue">hashValue: <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span></span>, <span name="rangeCondition">rangeCondition: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/Condition.html" class="extype" target="_top">Condition</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>, <span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.pellucid.wrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.T">T</span>]</span>)</span><span class="result">: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/QueryRequest.html" class="extype" target="_top">QueryRequest</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@mkHashAndRangeKeyQuery[T,K](hashValue:K,rangeCondition:com.amazonaws.services.dynamodbv2.model.Condition)(implicitevidence$4:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):com.amazonaws.services.dynamodbv2.model.QueryRequest" title="Permalink" target="_top">
@@ -1102,7 +1102,7 @@ from an attribute value, a range condition, and an implicit serializer.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mkHashAndRangeKeyQuery</span><span class="tparams">[<span name="K">K</span>]</span><span class="params">(<span name="hashAttr">hashAttr: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>)</span>, <span name="rangeAttr">rangeAttr: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="com.amazonaws.services.dynamodbv2.model.Condition">Condition</span>)</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>)</span><span class="result">: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.QueryRequest">QueryRequest</span></span>
+        <span class="name">mkHashAndRangeKeyQuery</span><span class="tparams">[<span name="K">K</span>]</span><span class="params">(<span name="hashAttr">hashAttr: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>)</span>, <span name="rangeAttr">rangeAttr: (<span class="extype" name="scala.Predef.String">String</span>, <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/Condition.html" class="extype" target="_top">Condition</a>)</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashAndRangeKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>)</span><span class="result">: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/QueryRequest.html" class="extype" target="_top">QueryRequest</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@mkHashAndRangeKeyQuery[K](hashAttr:(String,K),rangeAttr:(String,com.amazonaws.services.dynamodbv2.model.Condition))(implicitevidence$3:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue):com.amazonaws.services.dynamodbv2.model.QueryRequest" title="Permalink" target="_top">
@@ -1130,7 +1130,7 @@ and condition pair.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mkHashKeyQuery</span><span class="tparams">[<span name="T">T</span>, <span name="K">K</span>]</span><span class="params">(<span name="hashValue">hashValue: <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>, <span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.pellucid.wrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.QueryRequest">QueryRequest</span></span>
+        <span class="name">mkHashKeyQuery</span><span class="tparams">[<span name="T">T</span>, <span name="K">K</span>]</span><span class="params">(<span name="hashValue">hashValue: <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>, <span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.pellucid.wrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.T">T</span>]</span>)</span><span class="result">: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/QueryRequest.html" class="extype" target="_top">QueryRequest</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@mkHashKeyQuery[T,K](hashValue:K)(implicitevidence$2:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue,implicitserializer:com.pellucid.wrap.dynamodb.DynamoDBSerializer[T]):com.amazonaws.services.dynamodbv2.model.QueryRequest" title="Permalink" target="_top">
@@ -1157,7 +1157,7 @@ from an attribute value and an implicit serializer.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mkHashKeyQuery</span><span class="tparams">[<span name="K">K</span>]</span><span class="params">(<span name="hashAttr">hashAttr: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>)</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>)</span><span class="result">: <span class="extype" name="com.amazonaws.services.dynamodbv2.model.QueryRequest">QueryRequest</span></span>
+        <span class="name">mkHashKeyQuery</span><span class="tparams">[<span name="K">K</span>]</span><span class="params">(<span name="hashAttr">hashAttr: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>)</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.pellucid.wrap.dynamodb.mkHashKeyQuery.K">K</span>) ⇒ <a href="#AttributeValue=com.amazonaws.services.dynamodbv2.model.AttributeValue" class="extmbr" name="com.pellucid.wrap.dynamodb.AttributeValue">AttributeValue</a></span>)</span><span class="result">: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/QueryRequest.html" class="extype" target="_top">QueryRequest</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@mkHashKeyQuery[K](hashAttr:(String,K))(implicitevidence$1:K=&gt;com.pellucid.wrap.dynamodb.package.AttributeValue):com.amazonaws.services.dynamodbv2.model.QueryRequest" title="Permalink" target="_top">
@@ -1183,7 +1183,7 @@ from an attribute name and attribute value pair.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">shortIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Short">Short</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">shortIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Short" class="extype" target="_top">Short</a>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@shortIterableToAttributeValue:Iterable[Short]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -1200,7 +1200,7 @@ from an attribute name and attribute value pair.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">shortToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Short">Short</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">shortToAttributeValue</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Short" class="extype" target="_top">Short</a>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@shortToAttributeValue:Short=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -1217,7 +1217,7 @@ from an attribute name and attribute value pair.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">stringIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Predef.String">String</span>]) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">stringIterableToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Iterable">Iterable</span>[<span class="extype" name="scala.Predef.String">String</span>]) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@stringIterableToAttributeValue:Iterable[String]=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">
@@ -1234,7 +1234,7 @@ from an attribute name and attribute value pair.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">stringToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="com.amazonaws.services.dynamodbv2.model.AttributeValue">amazonaws.services.dynamodbv2.model.AttributeValue</span></span>
+        <span class="name">stringToAttributeValue</span><span class="result">: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/AttributeValue.html" class="extype" target="_top">amazonaws.services.dynamodbv2.model.AttributeValue</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.dynamodb.package@stringToAttributeValue:String=&gt;com.amazonaws.services.dynamodbv2.model.AttributeValue" title="Permalink" target="_top">

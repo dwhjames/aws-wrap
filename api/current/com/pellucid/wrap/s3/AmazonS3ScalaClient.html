@@ -52,7 +52,7 @@ so this class follows the approach of the asynchronous clients
 that are provided by the SDK. Namely, to make the synchronous
 calls within an executor service. The methods in this class
 all return Scala futures.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>java.util.concurrent.ExecutorService
+</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/pellucidanalytics/aws-wrap/tree/v0.6.0/src/main/scala/s3/s3.scala" target="_blank">s3.scala</a></dd><dt>See also</dt><dd><span class="cmt"><p>java.util.concurrent.ExecutorService
 </p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/ClientConfiguration.html" target="_blank">ClientConfiguration</a></p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/AWSCredentialsProvider.html" target="_blank">AWSCredentialsProvider</a></p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3Client.html" target="_blank">AmazonS3Client</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -74,6 +74,11 @@ all return Scala futures.
                 </span>
                 <ol id="linearization">
                   <li class="in" name="com.pellucid.wrap.s3.AmazonS3ScalaClient"><span>AmazonS3ScalaClient</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+                <span class="filtertype">Implicitly<br />
+                </span>
+                <ol id="implicits"> <li class="in" name="scala.Predef.any2stringadd" data-hidden="true"><span>by any2stringadd</span></li><li class="in" name="scala.Predef.StringFormat" data-hidden="true"><span>by StringFormat</span></li><li class="in" name="scala.Predef.Ensuring" data-hidden="true"><span>by Ensuring</span></li><li class="in" name="scala.Predef.ArrowAssoc" data-hidden="true"><span>by ArrowAssoc</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -119,7 +124,7 @@ all return Scala futures.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="clientConfiguration">clientConfiguration: <span class="extype" name="com.amazonaws.ClientConfiguration">ClientConfiguration</span></span>)</span>
+        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="clientConfiguration">clientConfiguration: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/ClientConfiguration.html" class="extype" target="_top">ClientConfiguration</a></span>)</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@&lt;init&gt;(clientConfiguration:com.amazonaws.ClientConfiguration):com.pellucid.wrap.s3.AmazonS3ScalaClient" title="Permalink" target="_top">
@@ -139,7 +144,7 @@ all return Scala futures.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentials">awsCredentials: <span class="extype" name="com.amazonaws.auth.AWSCredentials">AWSCredentials</span></span>)</span>
+        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentials">awsCredentials: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/auth/AWSCredentials.html" class="extype" target="_top">AWSCredentials</a></span>)</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@&lt;init&gt;(awsCredentials:com.amazonaws.auth.AWSCredentials):com.pellucid.wrap.s3.AmazonS3ScalaClient" title="Permalink" target="_top">
@@ -159,7 +164,7 @@ all return Scala futures.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentials">awsCredentials: <span class="extype" name="com.amazonaws.auth.AWSCredentials">AWSCredentials</span></span>, <span name="executorService">executorService: <span class="extype" name="java.util.concurrent.ExecutorService">ExecutorService</span></span>)</span>
+        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentials">awsCredentials: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/auth/AWSCredentials.html" class="extype" target="_top">AWSCredentials</a></span>, <span name="executorService">executorService: <span class="extype" name="java.util.concurrent.ExecutorService">ExecutorService</span></span>)</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@&lt;init&gt;(awsCredentials:com.amazonaws.auth.AWSCredentials,executorService:java.util.concurrent.ExecutorService):com.pellucid.wrap.s3.AmazonS3ScalaClient" title="Permalink" target="_top">
@@ -180,7 +185,7 @@ all return Scala futures.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentials">awsCredentials: <span class="extype" name="com.amazonaws.auth.AWSCredentials">AWSCredentials</span></span>, <span name="clientConfiguration">clientConfiguration: <span class="extype" name="com.amazonaws.ClientConfiguration">ClientConfiguration</span></span>, <span name="executorService">executorService: <span class="extype" name="java.util.concurrent.ExecutorService">ExecutorService</span></span>)</span>
+        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentials">awsCredentials: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/auth/AWSCredentials.html" class="extype" target="_top">AWSCredentials</a></span>, <span name="clientConfiguration">clientConfiguration: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/ClientConfiguration.html" class="extype" target="_top">ClientConfiguration</a></span>, <span name="executorService">executorService: <span class="extype" name="java.util.concurrent.ExecutorService">ExecutorService</span></span>)</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@&lt;init&gt;(awsCredentials:com.amazonaws.auth.AWSCredentials,clientConfiguration:com.amazonaws.ClientConfiguration,executorService:java.util.concurrent.ExecutorService):com.pellucid.wrap.s3.AmazonS3ScalaClient" title="Permalink" target="_top">
@@ -202,7 +207,7 @@ all return Scala futures.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentialsProvider">awsCredentialsProvider: <span class="extype" name="com.amazonaws.auth.AWSCredentialsProvider">AWSCredentialsProvider</span></span>)</span>
+        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentialsProvider">awsCredentialsProvider: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/auth/AWSCredentialsProvider.html" class="extype" target="_top">AWSCredentialsProvider</a></span>)</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@&lt;init&gt;(awsCredentialsProvider:com.amazonaws.auth.AWSCredentialsProvider):com.pellucid.wrap.s3.AmazonS3ScalaClient" title="Permalink" target="_top">
@@ -222,7 +227,7 @@ all return Scala futures.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentialsProvider">awsCredentialsProvider: <span class="extype" name="com.amazonaws.auth.AWSCredentialsProvider">AWSCredentialsProvider</span></span>, <span name="executorService">executorService: <span class="extype" name="java.util.concurrent.ExecutorService">ExecutorService</span></span>)</span>
+        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentialsProvider">awsCredentialsProvider: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/auth/AWSCredentialsProvider.html" class="extype" target="_top">AWSCredentialsProvider</a></span>, <span name="executorService">executorService: <span class="extype" name="java.util.concurrent.ExecutorService">ExecutorService</span></span>)</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@&lt;init&gt;(awsCredentialsProvider:com.amazonaws.auth.AWSCredentialsProvider,executorService:java.util.concurrent.ExecutorService):com.pellucid.wrap.s3.AmazonS3ScalaClient" title="Permalink" target="_top">
@@ -243,7 +248,7 @@ all return Scala futures.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentialsProvider">awsCredentialsProvider: <span class="extype" name="com.amazonaws.auth.AWSCredentialsProvider">AWSCredentialsProvider</span></span>, <span name="clientConfiguration">clientConfiguration: <span class="extype" name="com.amazonaws.ClientConfiguration">ClientConfiguration</span></span>)</span>
+        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentialsProvider">awsCredentialsProvider: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/auth/AWSCredentialsProvider.html" class="extype" target="_top">AWSCredentialsProvider</a></span>, <span name="clientConfiguration">clientConfiguration: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/ClientConfiguration.html" class="extype" target="_top">ClientConfiguration</a></span>)</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@&lt;init&gt;(awsCredentialsProvider:com.amazonaws.auth.AWSCredentialsProvider,clientConfiguration:com.amazonaws.ClientConfiguration):com.pellucid.wrap.s3.AmazonS3ScalaClient" title="Permalink" target="_top">
@@ -264,7 +269,7 @@ all return Scala futures.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentialsProvider">awsCredentialsProvider: <span class="extype" name="com.amazonaws.auth.AWSCredentialsProvider">AWSCredentialsProvider</span></span>, <span name="clientConfiguration">clientConfiguration: <span class="extype" name="com.amazonaws.ClientConfiguration">ClientConfiguration</span></span>, <span name="executorService">executorService: <span class="extype" name="java.util.concurrent.ExecutorService">ExecutorService</span></span>)</span>
+        <span class="name">AmazonS3ScalaClient</span><span class="params">(<span name="awsCredentialsProvider">awsCredentialsProvider: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/auth/AWSCredentialsProvider.html" class="extype" target="_top">AWSCredentialsProvider</a></span>, <span name="clientConfiguration">clientConfiguration: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/ClientConfiguration.html" class="extype" target="_top">ClientConfiguration</a></span>, <span name="executorService">executorService: <span class="extype" name="java.util.concurrent.ExecutorService">ExecutorService</span></span>)</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@&lt;init&gt;(awsCredentialsProvider:com.amazonaws.auth.AWSCredentialsProvider,clientConfiguration:com.amazonaws.ClientConfiguration,executorService:java.util.concurrent.ExecutorService):com.pellucid.wrap.s3.AmazonS3ScalaClient" title="Permalink" target="_top">
@@ -295,7 +300,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@!=(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -312,7 +317,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@##():Int" title="Permalink" target="_top">
@@ -320,6 +325,51 @@ all return Scala futures.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Predef.any2stringadd#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="+(other:String):String"></a>
+      <a id="+(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $plus" class="implicit">+</span><span class="params">(<span name="other">other: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@+(other:String):String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to
+            <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>] performed by method any2stringadd in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>any2stringadd</dd></dl></div>
+    </li><li name="scala.Predef.ArrowAssoc#-&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="-&gt;[B](y:B):(A,B)"></a>
+      <a id="-&gt;[B](B):(AmazonS3ScalaClient,B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $minus$greater" class="implicit">-&gt;</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>, <span class="extype" name="scala.Predef.ArrowAssoc.-&gt;.B">B</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@-&gt;[B](y:B):(A,B)" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>] performed by method ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
@@ -329,7 +379,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@==(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -363,7 +413,7 @@ all return Scala futures.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">client</span><span class="result">: <span class="extype" name="com.amazonaws.services.s3.AmazonS3Client">AmazonS3Client</span></span>
+        <span class="name">client</span><span class="result">: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/AmazonS3Client.html" class="extype" target="_top">AmazonS3Client</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@client:com.amazonaws.services.s3.AmazonS3Client" title="Permalink" target="_top">
@@ -405,7 +455,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">copyObject</span><span class="params">(<span name="sourceBucketName">sourceBucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceKey">sourceKey: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationBucketName">destinationBucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationKey">destinationKey: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.CopyObjectResult">CopyObjectResult</span>]</span>
+        <span class="name">copyObject</span><span class="params">(<span name="sourceBucketName">sourceBucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceKey">sourceKey: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationBucketName">destinationBucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationKey">destinationKey: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/CopyObjectResult.html" class="extype" target="_top">CopyObjectResult</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@copyObject(sourceBucketName:String,sourceKey:String,destinationBucketName:String,destinationKey:String):scala.concurrent.Future[com.amazonaws.services.s3.model.CopyObjectResult]" title="Permalink" target="_top">
@@ -423,7 +473,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">copyObject</span><span class="params">(<span name="copyObjectRequest">copyObjectRequest: <span class="extype" name="com.amazonaws.services.s3.model.CopyObjectRequest">CopyObjectRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.CopyObjectResult">CopyObjectResult</span>]</span>
+        <span class="name">copyObject</span><span class="params">(<span name="copyObjectRequest">copyObjectRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/CopyObjectRequest.html" class="extype" target="_top">CopyObjectRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/CopyObjectResult.html" class="extype" target="_top">CopyObjectResult</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@copyObject(copyObjectRequest:com.amazonaws.services.s3.model.CopyObjectRequest):scala.concurrent.Future[com.amazonaws.services.s3.model.CopyObjectResult]" title="Permalink" target="_top">
@@ -441,7 +491,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createBucket</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="region">region: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.Bucket">Bucket</span>]</span>
+        <span class="name">createBucket</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="region">region: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/Bucket.html" class="extype" target="_top">Bucket</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@createBucket(bucketName:String,region:String):scala.concurrent.Future[com.amazonaws.services.s3.model.Bucket]" title="Permalink" target="_top">
@@ -459,7 +509,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createBucket</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="region">region: <span class="extype" name="com.amazonaws.services.s3.model.Region">Region</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.Bucket">Bucket</span>]</span>
+        <span class="name">createBucket</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="region">region: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/Region.html" class="extype" target="_top">Region</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/Bucket.html" class="extype" target="_top">Bucket</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@createBucket(bucketName:String,region:com.amazonaws.services.s3.model.Region):scala.concurrent.Future[com.amazonaws.services.s3.model.Bucket]" title="Permalink" target="_top">
@@ -477,7 +527,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createBucket</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.Bucket">Bucket</span>]</span>
+        <span class="name">createBucket</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/Bucket.html" class="extype" target="_top">Bucket</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@createBucket(bucketName:String):scala.concurrent.Future[com.amazonaws.services.s3.model.Bucket]" title="Permalink" target="_top">
@@ -495,7 +545,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createBucket</span><span class="params">(<span name="createBucketRequest">createBucketRequest: <span class="extype" name="com.amazonaws.services.s3.model.CreateBucketRequest">CreateBucketRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.Bucket">Bucket</span>]</span>
+        <span class="name">createBucket</span><span class="params">(<span name="createBucketRequest">createBucketRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/CreateBucketRequest.html" class="extype" target="_top">CreateBucketRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/Bucket.html" class="extype" target="_top">Bucket</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@createBucket(createBucketRequest:com.amazonaws.services.s3.model.CreateBucketRequest):scala.concurrent.Future[com.amazonaws.services.s3.model.Bucket]" title="Permalink" target="_top">
@@ -513,7 +563,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteBucket</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">deleteBucket</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@deleteBucket(bucketName:String):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
@@ -531,7 +581,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteBucket</span><span class="params">(<span name="deleteBucketRequest">deleteBucketRequest: <span class="extype" name="com.amazonaws.services.s3.model.DeleteBucketRequest">DeleteBucketRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">deleteBucket</span><span class="params">(<span name="deleteBucketRequest">deleteBucketRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/DeleteBucketRequest.html" class="extype" target="_top">DeleteBucketRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@deleteBucket(deleteBucketRequest:com.amazonaws.services.s3.model.DeleteBucketRequest):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
@@ -549,7 +599,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteObject</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">deleteObject</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@deleteObject(bucketName:String,key:String):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
@@ -567,7 +617,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteObject</span><span class="params">(<span name="deleteObjectRequest">deleteObjectRequest: <span class="extype" name="com.amazonaws.services.s3.model.DeleteObjectRequest">DeleteObjectRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">deleteObject</span><span class="params">(<span name="deleteObjectRequest">deleteObjectRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/DeleteObjectRequest.html" class="extype" target="_top">DeleteObjectRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@deleteObject(deleteObjectRequest:com.amazonaws.services.s3.model.DeleteObjectRequest):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
@@ -585,7 +635,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteObjects</span><span class="params">(<span name="deleteObjectsRequest">deleteObjectsRequest: <span class="extype" name="com.amazonaws.services.s3.model.DeleteObjectsRequest">DeleteObjectsRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.amazonaws.services.s3.model.DeleteObjectsResult.DeletedObject">DeletedObject</span>]]</span>
+        <span class="name">deleteObjects</span><span class="params">(<span name="deleteObjectsRequest">deleteObjectsRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/DeleteObjectsRequest.html" class="extype" target="_top">DeleteObjectsRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.amazonaws.services.s3.model.DeleteObjectsResult.DeletedObject">DeletedObject</span>]]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@deleteObjects(deleteObjectsRequest:com.amazonaws.services.s3.model.DeleteObjectsRequest):scala.concurrent.Future[Seq[com.amazonaws.services.s3.model.DeleteObjectsResult.DeletedObject]]" title="Permalink" target="_top">
@@ -603,7 +653,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteVersion</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="versionId">versionId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">deleteVersion</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="versionId">versionId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@deleteVersion(bucketName:String,key:String,versionId:String):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
@@ -621,7 +671,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteVersion</span><span class="params">(<span name="deleteVersionRequest">deleteVersionRequest: <span class="extype" name="com.amazonaws.services.s3.model.DeleteVersionRequest">DeleteVersionRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">deleteVersion</span><span class="params">(<span name="deleteVersionRequest">deleteVersionRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/DeleteVersionRequest.html" class="extype" target="_top">DeleteVersionRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@deleteVersion(deleteVersionRequest:com.amazonaws.services.s3.model.DeleteVersionRequest):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
@@ -639,7 +689,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">doesBucketExist</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>
+        <span class="name">doesBucketExist</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@doesBucketExist(bucketName:String):scala.concurrent.Future[Boolean]" title="Permalink" target="_top">
@@ -648,6 +698,90 @@ all return Scala futures.
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#doesBucketExist(java.lang.String)" target="_blank">AWS Java SDK</a>
 </p></span></dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring((AmazonS3ScalaClient)⇒Boolean,⇒Any):AmazonS3ScalaClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="msg">msg: ⇒ <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@ensuring(cond:A=&gt;Boolean,msg:=&gt;Any):A" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:A=&gt;Boolean):A"></a>
+      <a id="ensuring((AmazonS3ScalaClient)⇒Boolean):AmazonS3ScalaClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: (<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@ensuring(cond:A=&gt;Boolean):A" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean,msg:=&gt;Any):A"></a>
+      <a id="ensuring(Boolean,⇒Any):AmazonS3ScalaClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="msg">msg: ⇒ <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@ensuring(cond:Boolean,msg:=&gt;Any):A" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
+    </li><li name="scala.Predef.Ensuring#ensuring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensuring(cond:Boolean):A"></a>
+      <a id="ensuring(Boolean):AmazonS3ScalaClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">ensuring</span><span class="params">(<span name="cond">cond: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@ensuring(cond:Boolean):A" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to
+            <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>] performed by method Ensuring in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>Ensuring</dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -657,7 +791,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -674,7 +808,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@equals(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -691,7 +825,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@finalize():Unit" title="Permalink" target="_top">
@@ -705,6 +839,30 @@ all return Scala futures.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="scala.Predef.StringFormat#formatted" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="formatted(fmtstr:String):String"></a>
+      <a id="formatted(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="implicit">formatted</span><span class="params">(<span name="fmtstr">fmtstr: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@formatted(fmtstr:String):String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to
+            <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>] performed by method StringFormat in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>StringFormat</dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.pellucid.wrap.s3.AmazonS3ScalaClient#getBucketLocation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getBucketLocation(bucketName:String):scala.concurrent.Future[String]"></a>
       <a id="getBucketLocation(String):Future[String]"></a>
@@ -714,7 +872,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getBucketLocation</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+        <span class="name">getBucketLocation</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@getBucketLocation(bucketName:String):scala.concurrent.Future[String]" title="Permalink" target="_top">
@@ -732,7 +890,7 @@ all return Scala futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getBucketLocation</span><span class="params">(<span name="getBucketLocationRequest">getBucketLocationRequest: <span class="extype" name="com.amazonaws.services.s3.model.GetBucketLocationRequest">GetBucketLocationRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+        <span class="name">getBucketLocation</span><span class="params">(<span name="getBucketLocationRequest">getBucketLocationRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/GetBucketLocationRequest.html" class="extype" target="_top">GetBucketLocationRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@getBucketLocation(getBucketLocationRequest:com.amazonaws.services.s3.model.GetBucketLocationRequest):scala.concurrent.Future[String]" title="Permalink" target="_top">
@@ -788,7 +946,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getObjectMetadata</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.ObjectMetadata">ObjectMetadata</span>]</span>
+        <span class="name">getObjectMetadata</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/ObjectMetadata.html" class="extype" target="_top">ObjectMetadata</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@getObjectMetadata(bucketName:String,key:String):scala.concurrent.Future[com.amazonaws.services.s3.model.ObjectMetadata]" title="Permalink" target="_top">
@@ -806,7 +964,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getObjectMetadata</span><span class="params">(<span name="getObjectMetadataRequest">getObjectMetadataRequest: <span class="extype" name="com.amazonaws.services.s3.model.GetObjectMetadataRequest">GetObjectMetadataRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.ObjectMetadata">ObjectMetadata</span>]</span>
+        <span class="name">getObjectMetadata</span><span class="params">(<span name="getObjectMetadataRequest">getObjectMetadataRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/GetObjectMetadataRequest.html" class="extype" target="_top">GetObjectMetadataRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/ObjectMetadata.html" class="extype" target="_top">ObjectMetadata</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@getObjectMetadata(getObjectMetadataRequest:com.amazonaws.services.s3.model.GetObjectMetadataRequest):scala.concurrent.Future[com.amazonaws.services.s3.model.ObjectMetadata]" title="Permalink" target="_top">
@@ -824,7 +982,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@hashCode():Int" title="Permalink" target="_top">
@@ -841,7 +999,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
@@ -858,7 +1016,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listBuckets</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.amazonaws.services.s3.model.Bucket">Bucket</span>]]</span>
+        <span class="name">listBuckets</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/Bucket.html" class="extype" target="_top">Bucket</a>]]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@listBuckets():scala.concurrent.Future[Seq[com.amazonaws.services.s3.model.Bucket]]" title="Permalink" target="_top">
@@ -876,7 +1034,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listBuckets</span><span class="params">(<span name="listBucketsRequest">listBucketsRequest: <span class="extype" name="com.amazonaws.services.s3.model.ListBucketsRequest">ListBucketsRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.amazonaws.services.s3.model.Bucket">Bucket</span>]]</span>
+        <span class="name">listBuckets</span><span class="params">(<span name="listBucketsRequest">listBucketsRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/ListBucketsRequest.html" class="extype" target="_top">ListBucketsRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/Bucket.html" class="extype" target="_top">Bucket</a>]]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@listBuckets(listBucketsRequest:com.amazonaws.services.s3.model.ListBucketsRequest):scala.concurrent.Future[Seq[com.amazonaws.services.s3.model.Bucket]]" title="Permalink" target="_top">
@@ -894,7 +1052,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listObjects</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="prefix">prefix: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.ObjectListing">ObjectListing</span>]</span>
+        <span class="name">listObjects</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="prefix">prefix: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/ObjectListing.html" class="extype" target="_top">ObjectListing</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@listObjects(bucketName:String,prefix:String):scala.concurrent.Future[com.amazonaws.services.s3.model.ObjectListing]" title="Permalink" target="_top">
@@ -912,7 +1070,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listObjects</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.ObjectListing">ObjectListing</span>]</span>
+        <span class="name">listObjects</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/ObjectListing.html" class="extype" target="_top">ObjectListing</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@listObjects(bucketName:String):scala.concurrent.Future[com.amazonaws.services.s3.model.ObjectListing]" title="Permalink" target="_top">
@@ -930,7 +1088,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listObjects</span><span class="params">(<span name="listObjectsRequest">listObjectsRequest: <span class="extype" name="com.amazonaws.services.s3.model.ListObjectsRequest">ListObjectsRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.ObjectListing">ObjectListing</span>]</span>
+        <span class="name">listObjects</span><span class="params">(<span name="listObjectsRequest">listObjectsRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/ListObjectsRequest.html" class="extype" target="_top">ListObjectsRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/ObjectListing.html" class="extype" target="_top">ObjectListing</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@listObjects(listObjectsRequest:com.amazonaws.services.s3.model.ListObjectsRequest):scala.concurrent.Future[com.amazonaws.services.s3.model.ObjectListing]" title="Permalink" target="_top">
@@ -948,7 +1106,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listVersions</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="prefix">prefix: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="keyMarker">keyMarker: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="versionIdMarker">versionIdMarker: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="delimiter">delimiter: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="maxKeys">maxKeys: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.VersionListing">VersionListing</span>]</span>
+        <span class="name">listVersions</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="prefix">prefix: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="keyMarker">keyMarker: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="versionIdMarker">versionIdMarker: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="delimiter">delimiter: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="maxKeys">maxKeys: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/VersionListing.html" class="extype" target="_top">VersionListing</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@listVersions(bucketName:String,prefix:String,keyMarker:String,versionIdMarker:String,delimiter:String,maxKeys:Int):scala.concurrent.Future[com.amazonaws.services.s3.model.VersionListing]" title="Permalink" target="_top">
@@ -966,7 +1124,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listVersions</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="prefix">prefix: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.VersionListing">VersionListing</span>]</span>
+        <span class="name">listVersions</span><span class="params">(<span name="bucketName">bucketName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="prefix">prefix: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/VersionListing.html" class="extype" target="_top">VersionListing</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@listVersions(bucketName:String,prefix:String):scala.concurrent.Future[com.amazonaws.services.s3.model.VersionListing]" title="Permalink" target="_top">
@@ -984,7 +1142,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listVersions</span><span class="params">(<span name="listVersionsRequest">listVersionsRequest: <span class="extype" name="com.amazonaws.services.s3.model.ListVersionsRequest">ListVersionsRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.amazonaws.services.s3.model.VersionListing">VersionListing</span>]</span>
+        <span class="name">listVersions</span><span class="params">(<span name="listVersionsRequest">listVersionsRequest: <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/ListVersionsRequest.html" class="extype" target="_top">ListVersionsRequest</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/s3/model/VersionListing.html" class="extype" target="_top">VersionListing</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@listVersions(listVersionsRequest:com.amazonaws.services.s3.model.ListVersionsRequest):scala.concurrent.Future[com.amazonaws.services.s3.model.VersionListing]" title="Permalink" target="_top">
@@ -1002,7 +1160,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -1019,7 +1177,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@notify():Unit" title="Permalink" target="_top">
@@ -1036,7 +1194,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@notifyAll():Unit" title="Permalink" target="_top">
@@ -1053,7 +1211,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">shutdown</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">shutdown</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@shutdown():Unit" title="Permalink" target="_top">
@@ -1106,7 +1264,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@wait():Unit" title="Permalink" target="_top">
@@ -1129,7 +1287,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
@@ -1152,7 +1310,7 @@ API calls are made.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@wait(x$1:Long):Unit" title="Permalink" target="_top">
@@ -1166,6 +1324,27 @@ API calls are made.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="scala.Predef.ArrowAssoc#→" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="→[B](y:B):(A,B)"></a>
+      <a id="→[B](B):(AmazonS3ScalaClient,B)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $u2192" class="implicit">→</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span></span>)</span><span class="result">: (<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>, <span class="extype" name="scala.Predef.ArrowAssoc.→.B">B</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.pellucid.wrap.s3.AmazonS3ScalaClient@→[B](y:B):(A,B)" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt class="implicit">Implicit information</dt><dd>
+            This member is added by an implicit conversion from <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to
+            <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>] performed by method ArrowAssoc in scala.Predef.
+            
+          </dd><dt>Definition Classes</dt><dd>ArrowAssoc</dd></dl></div>
     </li></ol>
             </div>
 
@@ -1180,7 +1359,23 @@ API calls are made.
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
-        
+        <div class="conversion" name="scala.Predef.any2stringadd">
+              <h3>Inherited by implicit conversion any2stringadd from
+                <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to <span class="extype" name="scala.Predef.any2stringadd">any2stringadd</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.StringFormat">
+              <h3>Inherited by implicit conversion StringFormat from
+                <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to <span class="extype" name="scala.Predef.StringFormat">StringFormat</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.Ensuring">
+              <h3>Inherited by implicit conversion Ensuring from
+                <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to <span class="extype" name="scala.Predef.Ensuring">Ensuring</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>]
+              </h3>
+            </div><div class="conversion" name="scala.Predef.ArrowAssoc">
+              <h3>Inherited by implicit conversion ArrowAssoc from
+                <a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a> to <span class="extype" name="scala.Predef.ArrowAssoc">ArrowAssoc</span>[<a href="" class="extype" name="com.pellucid.wrap.s3.AmazonS3ScalaClient">AmazonS3ScalaClient</a>]
+              </h3>
+            </div>
         </div>
 
         <div id="groupedMembers">
