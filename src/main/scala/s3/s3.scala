@@ -32,6 +32,8 @@ import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.model._
 import com.amazonaws.services.s3.transfer.Transfer
 
+import org.slf4j.{Logger, LoggerFactory}
+
 
 private[s3] class S3ThreadFactory extends ThreadFactory {
   private val count = new AtomicLong(0L)
@@ -456,6 +458,8 @@ class AmazonS3ScalaClient(
   */
 object FutureTransfer {
 
+  private val logger: Logger = LoggerFactory.getLogger("com.pellucid.wrap.s3.FutureTransfer")
+
   /**
     * Attach a listener to an S3 Transfer and return it as a Future.
     *
@@ -469,6 +473,9 @@ object FutureTransfer {
     *
     * In essence, this helper just gives back the transfer when it is done.
     *
+    * The detailed progress of the transfer is logged at debug level to the
+    * `com.pellucid.wrap.s3.FutureTransfer` logger.
+    *
     * @tparam T
     *     a subtype of Transfer.
     * @param transfer
@@ -478,6 +485,65 @@ object FutureTransfer {
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/event/ProgressListener.html ProgressListener]]
     */
   def listenFor[T <: Transfer](transfer: T): Future[transfer.type] = {
+    val transferDescription = transfer.getDescription
+    def debugLog(eventType: String): Unit = {
+      logger.debug(s"$eventType : $transferDescription")
+    }
+    def logProgressEvent(progressEvent: ProgressEvent): Unit = {
+      if (logger.isDebugEnabled) {
+        progressEvent.getEventType match {
+          case ProgressEventType.CLIENT_REQUEST_FAILED_EVENT =>
+            debugLog("CLIENT_REQUEST_FAILED_EVENT")
+          case ProgressEventType.CLIENT_REQUEST_RETRY_EVENT =>
+            debugLog("CLIENT_REQUEST_RETRY_EVENT")
+          case ProgressEventType.CLIENT_REQUEST_STARTED_EVENT =>
+            debugLog("CLIENT_REQUEST_STARTED_EVENT")
+          case ProgressEventType.CLIENT_REQUEST_SUCCESS_EVENT =>
+            debugLog("CLIENT_REQUEST_SUCCESS_EVENT")
+          case ProgressEventType.HTTP_REQUEST_COMPLETED_EVENT =>
+            debugLog("HTTP_REQUEST_COMPLETED_EVENT")
+          case ProgressEventType.HTTP_REQUEST_CONTENT_RESET_EVENT =>
+            debugLog("HTTP_REQUEST_CONTENT_RESET_EVENT")
+          case ProgressEventType.HTTP_REQUEST_STARTED_EVENT =>
+            debugLog("HTTP_REQUEST_STARTED_EVENT")
+          case ProgressEventType.HTTP_RESPONSE_COMPLETED_EVENT =>
+            debugLog("HTTP_RESPONSE_COMPLETED_EVENT")
+          case ProgressEventType.HTTP_RESPONSE_CONTENT_RESET_EVENT =>
+            debugLog("HTTP_RESPONSE_CONTENT_RESET_EVENT")
+          case ProgressEventType.HTTP_RESPONSE_STARTED_EVENT =>
+            debugLog("HTTP_RESPONSE_STARTED_EVENT")
+          case ProgressEventType.REQUEST_BYTE_TRANSFER_EVENT =>
+            debugLog("REQUEST_BYTE_TRANSFER_EVENT")
+          case ProgressEventType.REQUEST_CONTENT_LENGTH_EVENT =>
+            debugLog("REQUEST_CONTENT_LENGTH_EVENT")
+          case ProgressEventType.RESPONSE_BYTE_DISCARD_EVENT =>
+            debugLog("RESPONSE_BYTE_DISCARD_EVENT")
+          case ProgressEventType.RESPONSE_BYTE_TRANSFER_EVENT =>
+            debugLog("RESPONSE_BYTE_TRANSFER_EVENT")
+          case ProgressEventType.RESPONSE_CONTENT_LENGTH_EVENT =>
+            debugLog("RESPONSE_CONTENT_LENGTH_EVENT")
+          case ProgressEventType.TRANSFER_CANCELED_EVENT =>
+            debugLog("TRANSFER_CANCELED_EVENT")
+          case ProgressEventType.TRANSFER_COMPLETED_EVENT =>
+            debugLog("TRANSFER_COMPLETED_EVENT")
+          case ProgressEventType.TRANSFER_FAILED_EVENT =>
+            debugLog("TRANSFER_FAILED_EVENT")
+          case ProgressEventType.TRANSFER_PART_COMPLETED_EVENT =>
+            debugLog("TRANSFER_PART_COMPLETED_EVENT")
+          case ProgressEventType.TRANSFER_PART_FAILED_EVENT =>
+            debugLog("TRANSFER_PART_FAILED_EVENT")
+          case ProgressEventType.TRANSFER_PART_STARTED_EVENT =>
+            debugLog("TRANSFER_PART_STARTED_EVENT")
+          case ProgressEventType.TRANSFER_PREPARING_EVENT =>
+            debugLog("TRANSFER_PREPARING_EVENT")
+          case ProgressEventType.TRANSFER_STARTED_EVENT =>
+            debugLog("TRANSFER_STARTED_EVENT")
+          case _ =>
+            logger.warn(s"unrecognized progress event type for transfer $transferDescription")
+        }
+      }
+    }
+
     val p = Promise[transfer.type]
 
     /* Attach a progress listener to the transfer.
@@ -493,11 +559,20 @@ object FutureTransfer {
        * the potential to induce deadlock.
        */
       override def progressChanged(progressEvent: ProgressEvent): Unit = {
+        logProgressEvent(progressEvent)
+
         val code = progressEvent.getEventType()
         if (code == ProgressEventType.TRANSFER_CANCELED_EVENT ||
             code == ProgressEventType.TRANSFER_COMPLETED_EVENT ||
             code == ProgressEventType.TRANSFER_FAILED_EVENT) {
-          p trySuccess transfer
+          val success = p trySuccess transfer
+          if (logger.isDebugEnabled) {
+            if (success) {
+              logger.debug(s"promise successfully completed from progress listener for $transferDescription")
+            } else {
+              logger.debug(s"promise was found to be already completed from progress listener for $transferDescription")
+            }
+          }
         }
       }
     })
@@ -505,8 +580,16 @@ object FutureTransfer {
     /* In case the progress listener never fires due to the
      * transfer already being done, poll the transfer once.
      */
-    if (transfer.isDone)
-      p trySuccess transfer
+    if (transfer.isDone) {
+      val success = p trySuccess transfer
+      if (logger.isDebugEnabled) {
+        if (success) {
+          logger.debug(s"promise successfully completed outside of progress listener for $transferDescription")
+        } else {
+          logger.debug(s"promise was found to be already completed outside of progress listener for $transferDescription")
+        }
+      }
+    }
 
     p.future
   }
