@@ -19,4 +19,4 @@ Include the Pellucid Analytics maven repository in your resolvers:
 
 and add the following dependency:
 
-    "com.pellucid" %% "aws-wrap" % "0.6.0"
+    "com.pellucid" %% "aws-wrap" % "0.6.1"
