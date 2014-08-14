@@ -50,7 +50,7 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A helper object providing a Scala Future interface for S3 Transfers.</p><p>Transfers to and from S3 using the TransferManager provider a listener
 interface, and <a href="#listenFor[T&lt;:com.amazonaws.services.s3.transfer.Transfer](transfer:T):scala.concurrent.Future[transfer.type]" class="extmbr" name="com.pellucid.wrap.s3.FutureTransfer#listenFor">FutureTransfer.listenFor</a> adapts this interface to
 Scala futures.
-</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/pellucidanalytics/aws-wrap/tree/v0.6.0/src/main/scala/s3/s3.scala" target="_blank">s3.scala</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html" target="_blank">Transfer</a>
+</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/pellucidanalytics/aws-wrap/tree/v0.6.1/src/main/scala/s3/s3.scala" target="_blank">s3.scala</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/Transfer.html" target="_blank">Transfer</a>
 </p></span><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/TransferManager.html" target="_blank">TransferManager</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -318,7 +318,8 @@ same transfer when the transfer is ‘done’ (canceled, completed,
 or failed). The future will always been completed successfully
 even if the transfer itself has failed. It is up to the caller
 to extract the result of the transfer and perform any error
-handling.</p><p>In essence, this helper just gives back the transfer when it is done.
+handling.</p><p>In essence, this helper just gives back the transfer when it is done.</p><p>The detailed progress of the transfer is logged at debug level to the
+<code>com.pellucid.wrap.s3.FutureTransfer</code> logger.
 </p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
     a subtype of Transfer.</p></dd><dt class="param">transfer</dt><dd class="cmt"><p>
     an S3 Transfer to listen for progress.</p></dd><dt>returns</dt><dd class="cmt"><p>the transfer in a future.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/event/ProgressListener.html" target="_blank">ProgressListener</a>
