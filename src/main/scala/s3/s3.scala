@@ -21,7 +21,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.Try
 
-import java.util.concurrent.{Executors, ExecutorService, LinkedBlockingQueue, ThreadFactory, ThreadPoolExecutor, TimeUnit}
+import java.util.concurrent.{Executors, ExecutorService, ThreadFactory}
 import java.util.concurrent.atomic.AtomicLong
 
 import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
@@ -90,12 +90,7 @@ class AmazonS3ScalaClient(
     *     a client configuration.
     */
   def this(awsCredentialsProvider: AWSCredentialsProvider, clientConfiguration: ClientConfiguration) {
-    this(awsCredentialsProvider, clientConfiguration,
-      new ThreadPoolExecutor(
-        0, clientConfiguration.getMaxConnections,
-        60L, TimeUnit.SECONDS,
-        new LinkedBlockingQueue[Runnable],
-        new S3ThreadFactory()))
+    this(awsCredentialsProvider, clientConfiguration, Executors.newFixedThreadPool(clientConfiguration.getMaxConnections, new S3ThreadFactory()))
   }
 
   /**
