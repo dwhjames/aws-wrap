@@ -11,6 +11,7 @@ A model. A forum has a name and category, and counts of the number of threads,
 messages, and views.
 
 ```scala
+import com.pellucid.wrap.dynamodb._
 case class Forum(
     name:     String,
     category: String,
@@ -72,7 +73,7 @@ that will convert between our `Forum` type and a mapping of attribute names as
       )
 
     override def fromAttributeMap(
-      item: mutable.Map[String, AttributeValue]) =
+      item: collection.mutable.Map[String, AttributeValue]) =
       Forum(
         name     = item(Attributes.name),
         category = item(Attributes.category),
