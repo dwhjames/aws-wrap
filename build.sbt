@@ -1,13 +1,13 @@
 
-organization in ThisBuild := "com.pellucid"
+organization in ThisBuild := "com.github.dwhjames"
 
 licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 
 version in ThisBuild := "0.6.3"
 
-scalaVersion in ThisBuild := "2.11.4"
+scalaVersion in ThisBuild := "2.11.5"
 
-crossScalaVersions in ThisBuild := Seq("2.10.4", "2.11.4")
+crossScalaVersions in ThisBuild := Seq("2.10.4", "2.11.5")
 
 scalacOptions in ThisBuild ++= Seq("-feature", "-deprecation", "-unchecked")
 
@@ -31,8 +31,6 @@ libraryDependencies ++= Seq(
 
 
 bintray.Plugin.bintrayPublishSettings
-
-bintray.Keys.bintrayOrganization in bintray.Keys.bintray := Some("pellucid")
 
 bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("aws", "dynamodb", "s3", "ses", "simpledb", "sns", "sqs", "async", "future")
 

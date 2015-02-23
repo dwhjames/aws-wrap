@@ -4,12 +4,12 @@ import scala.util.matching.Regex.Match
 scalacOptions in (Compile, doc) ++=
   Seq(
     "-sourcepath", baseDirectory.value.getAbsolutePath,
-    "-doc-source-url", s"https://github.com/pellucidanalytics/aws-wrap/tree/v${version.value}€{FILE_PATH}.scala")
+    "-doc-source-url", s"https://github.com/dwhjames/aws-wrap/tree/v${version.value}€{FILE_PATH}.scala")
 
 
 autoAPIMappings := true
 
-apiURL := Some(url("https://pellucidanalytics.github.io/aws-wrap/api/current/"))
+apiURL := Some(url("https://dwhjames.github.io/aws-wrap/api/current/"))
 
 apiMappings += {
   val jarFiles = (managedClasspath in Compile).value.files
