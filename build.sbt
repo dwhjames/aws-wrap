@@ -3,7 +3,7 @@ organization in ThisBuild := "com.github.dwhjames"
 
 licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 
-version in ThisBuild := "0.6.3"
+version in ThisBuild := "0.6.4"
 
 scalaVersion in ThisBuild := "2.11.5"
 
