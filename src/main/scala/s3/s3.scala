@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.pellucid.wrap
+package com.github.dwhjames.awswrap
 package s3
 
 import scala.collection.JavaConverters._
@@ -454,7 +454,7 @@ class AmazonS3ScalaClient(
   */
 object FutureTransfer {
 
-  private val logger: Logger = LoggerFactory.getLogger("com.pellucid.wrap.s3.FutureTransfer")
+  private val logger: Logger = LoggerFactory.getLogger("com.github.dwhjames.awswrap.s3.FutureTransfer")
 
   /**
     * Attach a listener to an S3 Transfer and return it as a Future.
@@ -470,7 +470,7 @@ object FutureTransfer {
     * In essence, this helper just gives back the transfer when it is done.
     *
     * The detailed progress of the transfer is logged at debug level to the
-    * `com.pellucid.wrap.s3.FutureTransfer` logger.
+    * `com.github.dwhjames.awswrap.s3.FutureTransfer` logger.
     *
     * @tparam T
     *     a subtype of Transfer.

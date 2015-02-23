@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.pellucid.wrap
+package com.github.dwhjames.awswrap
 package simpledb
 
 import scala.concurrent.{Future, ExecutionContext}

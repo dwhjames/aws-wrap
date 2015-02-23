@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.pellucid
+package com.github.dwhjames
 
 import scala.concurrent.{Future, Promise}
 import java.util.concurrent.{Future => JFuture}
@@ -23,7 +23,7 @@ import java.util.concurrent.{Future => JFuture}
 import com.amazonaws.AmazonWebServiceRequest
 import com.amazonaws.handlers.AsyncHandler
 
-package object wrap {
+package object awswrap {
 
   private def promiseToAsyncHandler[Request <: AmazonWebServiceRequest, Result](p: Promise[Result]) =
     new AsyncHandler[Request, Result] {
@@ -38,7 +38,7 @@ package object wrap {
     }
 
   @inline
-  private[pellucid] def wrapAsyncMethod[Request <: AmazonWebServiceRequest, Result](
+  private[awswrap] def wrapAsyncMethod[Request <: AmazonWebServiceRequest, Result](
     f:       (Request, AsyncHandler[Request, Result]) => JFuture[Result],
     request: Request
   ): Future[Result] = {
@@ -48,7 +48,7 @@ package object wrap {
   }
 
   @inline
-  private[pellucid] def wrapVoidAsyncMethod[Request <: AmazonWebServiceRequest](
+  private[awswrap] def wrapVoidAsyncMethod[Request <: AmazonWebServiceRequest](
     f:       (Request, AsyncHandler[Request, Void]) => JFuture[Void],
     request: Request
   ): Future[Unit] = {

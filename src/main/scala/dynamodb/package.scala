@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.pellucid.wrap
+package com.github.dwhjames.awswrap
 
 import scala.collection.JavaConverters._
 

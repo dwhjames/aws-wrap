@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.pellucid.wrap
+package com.github.dwhjames.awswrap
 package dynamodb
 
 import scala.language.implicitConversions
@@ -132,7 +132,7 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.github.dwhjames.awswrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K](hashKey: K)(implicit conv: K => AttributeValue): Map[String, AttributeValue] =
@@ -144,9 +144,9 @@ trait DynamoDBSerializer[T] {
     * The key is represented as a map.
     *
     * @param hashKey
-    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.github.dwhjames.awswrap.dynamodb.AttributeValue AttributeValue]].
     * @param rangeKey
-    *     An value that is convertable to an [[com.pellucid.wrap.dynamodb.AttributeValue AttributeValue]].
+    *     An value that is convertable to an [[com.github.dwhjames.awswrap.dynamodb.AttributeValue AttributeValue]].
     * @return a map from attribute names to attribute values.
     */
   def makeKey[K1, K2](

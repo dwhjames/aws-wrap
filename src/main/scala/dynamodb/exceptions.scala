@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.pellucid.wrap.dynamodb
+package com.github.dwhjames.awswrap.dynamodb
 
 
 /**

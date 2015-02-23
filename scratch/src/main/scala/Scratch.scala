@@ -17,7 +17,7 @@
 
 package scratch
 
-import com.pellucid.wrap.dynamodb._
+import com.github.dwhjames.awswrap.dynamodb._
 
 import scala.collection.JavaConverters._
 import scala.concurrent._
@@ -773,7 +773,7 @@ object TestConcurrentBatchWriter {
 
 object ScratchS3 {
 
-  import com.pellucid.wrap.s3._
+  import com.github.dwhjames.awswrap.s3._
   import com.amazonaws.event.{ProgressListener, ProgressEvent, ProgressEventType}
   import com.amazonaws.services.s3._
   import com.amazonaws.services.s3.transfer._
