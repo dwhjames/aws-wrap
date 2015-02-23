@@ -1,6 +1,6 @@
 ---
 layout: default
-title: aws-wrap by Pellucid Analytics
+title: aws-wrap
 ---
 
 # Getting started with DynamoDB
@@ -11,7 +11,7 @@ A model. A forum has a name and category, and counts of the number of threads,
 messages, and views.
 
 ```scala
-import com.pellucid.wrap.dynamodb._
+import com.github.dwhjames.awswrap.dynamodb._
 case class Forum(
     name:     String,
     category: String,
@@ -49,7 +49,7 @@ object Forum {
         Schema.hashKey(Attributes.name))
 ```
 
-Second, we define an implicit [serializer]({{site.baseurl}}/api/current/#com.pellucid.wrap.dynamodb.DynamoDBSerializer)
+Second, we define an implicit [serializer]({{site.baseurl}}/api/v0.7.0/index.html#com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer)
 that will convert between our `Forum` type and a mapping of attribute names as
 `String` and values as `AttributeValue`.
 
@@ -85,7 +85,7 @@ that will convert between our `Forum` type and a mapping of attribute names as
 }
 ```
 
-The dynamodb [package object]({{site.baseurl}}/api/current/#com.pellucid.wrap.dynamodb.package)
+The dynamodb [package object]({{site.baseurl}}/api/v0.7.0/index.html#com.github.dwhjames.awswrap.dynamodb.package)
 contains implicit views between Scala types and `AttributeValue`, which makes
 the definitions of `toAttributeMap` and `fromAttributeMap` clean (and maybe a
 little magical).
@@ -134,19 +134,19 @@ Await.result(
 ```
 
 We can initialize the table by loading all our sample objects as items into the
-table, using [batchDump]({{site.baseurl}}/api/current/index.html#com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper).
+table, using [batchDump]({{site.baseurl}}/api/v0.7.0/index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper).
 
 ```scala
     _ <- mapper.batchDump(sampleForums)
 ```
 
-We can count the number of items in the table, using [countScan]({{site.baseurl}}/api/current/index.html#com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper).
+We can count the number of items in the table, using [countScan]({{site.baseurl}}/api/v0.7.0/index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper).
 
 ```scala
     forumCount <- mapper.countScan[Forum]()
 ```
 
-We can scan for items in the table, using [scan]({{site.baseurl}}/api/current/index.html#com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper) with a condition.
+We can scan for items in the table, using [scan]({{site.baseurl}}/api/v0.7.0/index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper) with a condition.
 
 ```scala
     forums <- mapper.scan[Forum](
@@ -154,7 +154,7 @@ We can scan for items in the table, using [scan]({{site.baseurl}}/api/current/in
                       ScanCondition.contains("Services")))
 ```
 
-And we can find a forum item in the table by its hash key, using [loadByKey]({{site.baseurl}}/api/current/index.html#com.pellucid.wrap.dynamodb.AmazonDynamoDBScalaMapper).
+And we can find a forum item in the table by its hash key, using [loadByKey]({{site.baseurl}}/api/v0.7.0/index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper).
 
 ```scala
     Some(forum) <- mapper.loadByKey[Forum](sampleForums.head.name)
