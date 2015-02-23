@@ -1,6 +1,6 @@
 ---
 layout: default
-title: aws-wrap by Pellucid Analytics
+title: aws-wrap
 ---
 
 # Asynchronous Scala Clients for Amazon Web Services
@@ -17,10 +17,14 @@ Asynchronous clients are provided for the following services:
 
 ## Usage
 
-Include the Pellucid Analytics maven repository in your resolvers:
+aws-wrap is built for both Scala 2.10.x and 2.11.x. Binary releases are available from [Bintray]('https://bintray.com/dwhjames/maven/aws-wrap/view?source=watch').
 
-    http://dl.bintray.com/content/pellucid/maven
+<a href='https://bintray.com/dwhjames/maven/aws-wrap/view?source=watch' alt='Get automatic notifications about new "play-cors" versions'><img src='https://www.bintray.com/docs/images/bintray_badge_color.png'></a>
 
-and add the following dependency:
+If you are using SBT, simply add the following to your `build.sbt` file:
 
-    "com.pellucid" %% "aws-wrap" % "0.6.0"
+```
+resolvers += Resolver.bintrayRepo("dwhjames", "maven")
+
+libraryDependencies += "com.github.dwhjames" %% "aws-wrap" % "0.6.4"
+```
