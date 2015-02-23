@@ -20,3 +20,10 @@ Include the Pellucid Analytics maven repository in your resolvers:
 and add the following dependency:
 
     "com.pellucid" %% "aws-wrap" % "0.6.1"
+
+## License
+
+Copyright © 2012-2015 Pellucid Analytics.
+Copyright © 2015 Daniel W. H. James.
+
+This software is distributed under the [Apache License, Version 2.0](LICENSE).
