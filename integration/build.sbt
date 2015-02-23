@@ -4,10 +4,10 @@ name := "aws-wrap-test"
 
 
 libraryDependencies ++= Seq(
-  Dependencies.Compile.awsJavaSDK,
-  Dependencies.Compile.jodaTime,
-  Dependencies.Compile.jodaConvert,
-  Dependencies.Compile.logback,
+  Dependencies.Compile.awsJavaSDK_dynamodb % "it",
+  Dependencies.Compile.jodaTime % "it",
+  Dependencies.Compile.jodaConvert % "it",
+  Dependencies.Compile.logback % "it",
   Dependencies.IntegrationTest.scalaTest
 )
 

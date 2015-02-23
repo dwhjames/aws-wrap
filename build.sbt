@@ -25,7 +25,13 @@ lazy val awsWrap = project in file(".")
 name := "aws-wrap"
 
 libraryDependencies ++= Seq(
-  Dependencies.Compile.awsJavaSDK % "provided",
+  Dependencies.Compile.awsJavaSDK_cloudwatch % "provided",
+  Dependencies.Compile.awsJavaSDK_dynamodb % "provided",
+  Dependencies.Compile.awsJavaSDK_s3 % "provided",
+  Dependencies.Compile.awsJavaSDK_ses % "provided",
+  Dependencies.Compile.awsJavaSDK_simpledb % "provided",
+  Dependencies.Compile.awsJavaSDK_sns % "provided",
+  Dependencies.Compile.awsJavaSDK_sqs % "provided",
   Dependencies.Compile.slf4j
 )
 
