@@ -22,8 +22,7 @@ import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-import org.scalatest.{FlatSpec, BeforeAndAfterAll}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{ FlatSpec, BeforeAndAfterAll, Matchers }
 
 import com.amazonaws.AmazonClientException
 import com.amazonaws.services.dynamodbv2._
@@ -32,7 +31,7 @@ import com.amazonaws.services.dynamodbv2.model._
 
 class ReadsOnHashKeyTableSpec
   extends FlatSpec
-     with ShouldMatchers
+     with Matchers
      with DynamoDBClient
 {
   import SampleData.sampleForums
