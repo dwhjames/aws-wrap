@@ -23,9 +23,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 import org.scalatest.{Suite, BeforeAndAfterAll}
-import org.scalatest.matchers.ShouldMatchers
 
-import com.amazonaws.auth.PropertiesCredentials
+import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.dynamodbv2._
 import com.amazonaws.services.dynamodbv2.model._
 
@@ -41,34 +40,8 @@ trait DynamoDBClient
   private val logger: Logger = LoggerFactory.getLogger(self.getClass)
 
   val client = {
-    val inputStream =
-      this.getClass()
-          .getClassLoader()
-          .getResourceAsStream("credentials.properties")
-
-    require(inputStream ne null, """
-      |*A file called credentials.properties was not found on the classpath.*
-      |
-      |Please add this file and place your AWS credentials in it. The required
-      |format is specified in the provided credentials-template.properties file.
-      """.stripMargin)
-
-    val credentials =
-      try {
-        new PropertiesCredentials(inputStream)
-      } catch {
-        case ex: IllegalArgumentException =>
-          throw new IllegalArgumentException("""requirement failed:
-            |*The credentials.properties file was not properly specified*
-            |
-            |The required format is specified in the provided
-            |credentials-template.properties file.
-            """.stripMargin)
-      }
-
-    val jClient = new AmazonDynamoDBAsyncClient(credentials)
-    if (System.getProperty("DynamoDB.localMode") == "true")
-      jClient.setEndpoint("http://localhost:8000")
+    val jClient = new AmazonDynamoDBAsyncClient(new BasicAWSCredentials("FAKE_ACCESS_KEY", "FAKE_SECRET_KEY"))
+    jClient.setEndpoint("http://localhost:8000")
 
     new AmazonDynamoDBScalaClient(jClient)
   }

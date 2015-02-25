@@ -1,34 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+IFS=$'\n\t'
 
 WORKING_DIR="dynamodb"
 
 mkdir -p $WORKING_DIR
 cd $WORKING_DIR
 
-VERSION="dynamodb_local_2013-09-12"
+VERSION="dynamodb_local_latest"
 ARCHIVE="${VERSION}.tar.gz"
-URL="https://s3-us-west-2.amazonaws.com/dynamodb-local/${ARCHIVE}"
+URL="http://dynamodb-local.s3-website-us-west-2.amazonaws.com/${ARCHIVE}"
 
 if [ ! -f $ARCHIVE ]
 then
   echo "Downloading DynamoDB Local"
-  curl -O $URL
-fi
-
-if [ ! -d $VERSION ]
-then
+  curl -LO $URL
   echo "Extracting DynamoDB Local"
   tar -xzf $ARCHIVE
 fi
 
-NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-LOG_FILE="dynamodb-${NOW}.log"
 LOG_DIR="logs"
-
 mkdir -p $LOG_DIR
+echo "DynamoDB Local output will save to ${WORKING_DIR}/${LOG_DIR}/"
 
-echo "DynamoDB Local output will save to ${WORKING_DIR}/${LOG_DIR}/${LOG_FILE}"
-nohup java -Djava.library.path=${VERSION} -jar ${VERSION}/DynamoDBLocal.jar >"${LOG_DIR}/${LOG_FILE}" 2>&1 &
+NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+nohup java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -port 8000 -inMemory 1>"${LOG_DIR}/${NOW}.out.log" 2>"${LOG_DIR}/${NOW}.err.log" &
 PID=$!
 
 echo "DynamoDB Local started with pid ${PID}"
