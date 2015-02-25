@@ -10,4 +10,4 @@ cache:
   directories:
     - $HOME/.ivy2/cache
 script:
-- sbt ++$TRAVIS_SCALA_VERSION --warn compile doc
+- sbt ++$TRAVIS_SCALA_VERSION --warn update compile awsWrapTest/it:compile doc && sbt ++$TRAVIS_SCALA_VERSION awsWrapTest/it:test
