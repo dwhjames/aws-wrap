@@ -18,6 +18,8 @@
 package com.github.dwhjames.awswrap
 package s3
 
+import java.io.{InputStream, File}
+
 import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.Try
@@ -344,6 +346,23 @@ class AmazonS3ScalaClient(
     getBucketLocation(new GetBucketLocationRequest(bucketName))
 
   /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObject(com.amazonaws.services.s3.model.GetObjectRequest) AWS Java SDK]]
+   */
+  def getObject(
+    getObjectRequest: GetObjectRequest
+  ): Future[S3Object] =
+    wrapMethod[GetObjectRequest, S3Object](client.getObject, getObjectRequest)
+
+  /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObject(com.amazonaws.services.s3.model.GetObjectRequest) AWS Java SDK]]
+   */
+  def getObject(
+    bucketName: String,
+    key: String
+  ): Future[S3Object] =
+    getObject(new GetObjectRequest(bucketName, key))
+
+  /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObjectMetadata(com.amazonaws.services.s3.model.GetObjectMetadataRequest) AWS Java SDK]]
     */
   def getObjectMetadata(
@@ -440,6 +459,34 @@ class AmazonS3ScalaClient(
   ): Future[VersionListing] =
     listVersions(new ListVersionsRequest(bucketName, prefix, keyMarker, versionIdMarker, delimiter, maxKeys))
 
+  /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#putObject(com.amazonaws.services.s3.model.PutObjectRequest) AWS Java SDK]]
+   */
+  def putObject(
+    putObjectRequest: PutObjectRequest
+  ): Future[PutObjectResult] =
+    wrapMethod[PutObjectRequest, PutObjectResult](client.putObject, putObjectRequest)
+
+  /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#putObject(com.amazonaws.services.s3.model.PutObjectRequest) AWS Java SDK]]
+   */
+  def putObject(
+    bucketName: String,
+    key: String,
+    file: File
+  ): Future[PutObjectResult] =
+    putObject(new PutObjectRequest(bucketName, key, file))
+
+  /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#putObject(com.amazonaws.services.s3.model.PutObjectRequest) AWS Java SDK]]
+   */
+  def putObject(
+    bucketName: String,
+    key: String,
+    input: InputStream,
+    metadata: ObjectMetadata
+  ): Future[PutObjectResult] =
+    putObject(new PutObjectRequest(bucketName, key, input, metadata))
 }
 
 /**
