@@ -362,7 +362,9 @@ class AmazonS3ScalaClient(
   ): Future[S3Object] =
     getObject(new GetObjectRequest(bucketName, key))
 
-
+  /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObject(com.amazonaws.services.s3.model.GetObjectRequest) AWS Java SDK]]
+   */
   def getObject(
     getObjectRequest: GetObjectRequest,
     destinationFile: File
