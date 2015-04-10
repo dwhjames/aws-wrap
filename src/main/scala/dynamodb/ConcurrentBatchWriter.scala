@@ -152,7 +152,7 @@ class ConcurrentBatchWriter(
   private def pause(attempts: Int): Unit =
     if (attempts > 0) {
       // 50, 100, 200, 400, 800
-      val delay = (math.pow(2.0, attempts - 1) * 50.0).toLong
+      val delay = (math.pow(2.0, (attempts - 1).toDouble) * 50.0).toLong
       if (logger.isTraceEnabled) logger.trace(s"backing off for $delay msecs.")
       Thread.sleep(delay)
     }
@@ -363,6 +363,7 @@ class ConcurrentBatchWriter(
             logger.error(s"AWS error occured when attempting to write to table $tableName", e)
             errorQueue.offer(
               FailedBatch[Metadata](tableName, batch.get(tableName), e, metadata))
+            ()
           case e: Throwable =>
             // log and rethrow any other exceptions
             // AmazonClientException should cover all error cases
@@ -457,7 +458,7 @@ class ConcurrentBatchWriter(
         logger.warn(s"batch writer thread pool for table $tableName being forced to shutdown.")
         // Wait a while for tasks to respond to being cancelled
         if (!writerThreadPool.awaitTermination(60, juc.TimeUnit.SECONDS))
-            logger.error("batch writer thread pool for table $tableName did not shutdown!")
+            logger.error(s"batch writer thread pool for table $tableName did not shutdown!")
       }
       dynamoDBClient.shutdown()
       logger.info(s"batch writer DynamoDB client for table $tableName is shutting down.")

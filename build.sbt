@@ -9,7 +9,24 @@ scalaVersion in ThisBuild := "2.11.6"
 
 crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6")
 
-scalacOptions in ThisBuild ++= Seq("-feature", "-deprecation", "-unchecked")
+scalacOptions in ThisBuild ++= Seq(
+    "-deprecation",
+    "-encoding", "UTF-8",
+    "-feature",
+    "-unchecked",
+    "-Xfatal-warnings",
+    "-Xfuture",
+    //"-Xlint",
+    //"-Yno-adapted-args",
+    "-Ywarn-dead-code",
+    "-Ywarn-numeric-widen",
+    "-Ywarn-value-discard"
+  )
+
+scalacOptions in ThisBuild ++= (
+    if (scalaVersion.value.startsWith("2.10")) Nil
+    else List("-Ywarn-unused-import")
+  )
 
 shellPrompt in ThisBuild := CustomShellPrompt.customPrompt
 

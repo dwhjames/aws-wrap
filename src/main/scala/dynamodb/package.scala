@@ -42,7 +42,7 @@ package object dynamodb {
     *     the hash key name and the value it must equal.
     * @return a query request
     */
-  def mkHashKeyQuery[K <% AttributeValue](hashAttr: (String, K)): QueryRequest =
+  def mkHashKeyQuery[K](hashAttr: (String, K))(implicit ev: K => AttributeValue): QueryRequest =
     new QueryRequest()
     .withKeyConditions(
       Map(
@@ -65,9 +65,10 @@ package object dynamodb {
     *     an implicit object serializer
     * @return a query request
     */
-  def mkHashKeyQuery[T, K <% AttributeValue]
+  def mkHashKeyQuery[T, K]
                     (hashValue: K)
-                    (implicit serializer: DynamoDBSerializer[T])
+                    (implicit serializer: DynamoDBSerializer[T],
+                              ev: K => AttributeValue)
                     : QueryRequest =
     mkHashKeyQuery(serializer.hashAttributeName -> hashValue)
 
@@ -88,8 +89,9 @@ package object dynamodb {
     * @return a query request
     * @see [[QueryCondition]]
     */
-  def mkHashAndRangeKeyQuery[K <% AttributeValue]
+  def mkHashAndRangeKeyQuery[K]
                             (hashAttr: (String, K), rangeAttr: (String, Condition))
+                            (implicit ev: K => AttributeValue)
                             : QueryRequest =
     new QueryRequest()
     .withKeyConditions(
@@ -117,9 +119,10 @@ package object dynamodb {
     * @return a query request
     * @see [[QueryCondition]]
     */
-  def mkHashAndRangeKeyQuery[T, K <% AttributeValue]
+  def mkHashAndRangeKeyQuery[T, K]
                             (hashValue: K, rangeCondition: Condition)
-                            (implicit serializer: DynamoDBSerializer[T])
+                            (implicit serializer: DynamoDBSerializer[T],
+                                      ev: K => AttributeValue)
                             : QueryRequest =
     mkHashAndRangeKeyQuery(
       serializer.hashAttributeName -> hashValue,

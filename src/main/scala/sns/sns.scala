@@ -19,7 +19,6 @@ package com.github.dwhjames.awswrap
 package sns
 
 import scala.concurrent.{Future, ExecutionContext}
-import scala.collection.JavaConverters._
 
 import java.util.concurrent.ExecutorService
 

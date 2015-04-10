@@ -17,8 +17,6 @@
 
 package com.github.dwhjames.awswrap.dynamodb
 
-import scala.collection.JavaConverters._
-import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
@@ -48,13 +46,13 @@ trait DynamoDBClient
 
   val tableNames: Seq[String]
 
-  override def beforeAll() {
+  override def beforeAll(): Unit = {
     deleteAllSpecifiedTables()
 
     super.beforeAll()
   }
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     try {
       super.afterAll()
     } finally {
@@ -62,20 +60,21 @@ trait DynamoDBClient
     }
   }
 
-  private def deleteAllSpecifiedTables() {
+  private def deleteAllSpecifiedTables(): Unit = {
     tableNames foreach tryDeleteTable
 
     tableNames foreach awaitTableDeletion
   }
 
-  def tryDeleteTable(tableName: String) {
+  def tryDeleteTable(tableName: String): Unit = {
     logger.info(s"Deleting $tableName table")
     await {
       client.deleteTable(tableName) recover { case e: ResourceNotFoundException => () }
     }
+    ()
   }
 
-  def awaitTableDeletion(tableName: String) {
+  def awaitTableDeletion(tableName: String): Unit = {
     logger.info(s"Waiting for $tableName table to be deleted.")
 
     val deadline = 10.minutes.fromNow
@@ -96,11 +95,12 @@ trait DynamoDBClient
     throw new RuntimeException(s"Timed out waiting for $tableName table to be deleted.")
   }
 
-  def tryCreateTable(createTableRequest: CreateTableRequest) {
+  def tryCreateTable(createTableRequest: CreateTableRequest): Unit = {
     logger.info(s"Creating ${createTableRequest.getTableName()} table")
     await {
       client.createTable(createTableRequest)
     }
+    ()
   }
 
   def awaitTableCreation(tableName: String): TableDescription = {

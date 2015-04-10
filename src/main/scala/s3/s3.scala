@@ -186,9 +186,10 @@ class AmazonS3ScalaClient(
     *
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/AmazonWebServiceClient.html#shutdown() AmazonWebServiceClient.shutdown()]]
     */
-  def shutdown() {
+  def shutdown(): Unit = {
     client.shutdown()
     executorService.shutdownNow()
+    ()
   }
 
 
@@ -199,12 +200,14 @@ class AmazonS3ScalaClient(
   ): Future[Result] = {
     val p = Promise[Result]
     executorService.execute(new Runnable {
-      override def run() =
+      override def run(): Unit = {
         p complete {
           Try {
             f(request)
           }
         }
+        ()
+      }
     })
     p.future
   }

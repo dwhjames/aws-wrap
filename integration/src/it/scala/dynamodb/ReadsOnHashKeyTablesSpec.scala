@@ -18,15 +18,12 @@
 package com.github.dwhjames.awswrap.dynamodb
 
 import scala.collection.JavaConverters._
-import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 import org.scalatest.{ FlatSpec, BeforeAndAfterAll, Matchers }
 
 import com.amazonaws.AmazonClientException
-import com.amazonaws.services.dynamodbv2._
-import com.amazonaws.services.dynamodbv2.model._
 
 
 class ReadsOnHashKeyTableSpec
@@ -40,7 +37,7 @@ class ReadsOnHashKeyTableSpec
 
   val mapper = AmazonDynamoDBScalaMapper(client)
 
-  override def beforeAll() {
+  override def beforeAll(): Unit = {
     super.beforeAll()
 
     tryCreateTable(Forum.tableRequest)
@@ -92,10 +89,10 @@ class ReadsOnHashKeyTableSpec
       mapper.batchLoadByKeys[Forum](sampleForums map (_.name))
     }
 
-    forumScan          should have size (sampleForums.size)
-    forumScanOnce      should have size (sampleForums.size)
-    forumScanOnceLimit should have size (sampleForums.size)
-    forumBatch         should have size (sampleForums.size)
+    forumScan          should have size (sampleForums.size.toLong)
+    forumScanOnce      should have size (sampleForums.size.toLong)
+    forumScanOnceLimit should have size (sampleForums.size.toLong)
+    forumBatch         should have size (sampleForums.size.toLong)
 
     for (forum <- sampleForums) {
       forumScan     should contain (forum)

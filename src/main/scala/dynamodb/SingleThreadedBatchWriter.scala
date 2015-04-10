@@ -57,7 +57,7 @@ class SingleThreadedBatchWriter(
   private def pause(retries: Int): Unit =
     if (retries > 0) {
       // 50, 100, 200, 400, 800
-      val delay = (math.pow(2.0, retries - 1) * 50.0).toLong
+      val delay = (math.pow(2.0, (retries - 1).toDouble) * 50.0).toLong
       logger.debug(s"backing off for $delay msecs.")
       Thread.sleep(delay)
     }
@@ -144,7 +144,7 @@ class SingleThreadedBatchWriter(
 
     while (source.hasNext) {
       logger.debug(s"pausing for $pauseDuration msecs.")
-      Thread.sleep(pauseDuration)
+      Thread.sleep(pauseDuration.toLong)
 
       // construct a batch of write requests
       val writeRequests = new ju.ArrayList[WriteRequest](batchSize)

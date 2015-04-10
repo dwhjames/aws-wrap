@@ -353,7 +353,7 @@ object Scratch {
       )
     )
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
 
     val credentials = new PropertiesCredentials(
         this.getClass()
@@ -384,15 +384,16 @@ object Scratch {
       throw new RuntimeException(s"Timed out waiting for $tableName table to become active.")
     }
 
-    def tryDeleteTable(tableName: String) {
+    def tryDeleteTable(tableName: String): Unit = {
       logger.info(s"Deleting $tableName table")
       Await.result(
         client.deleteTable(tableName) recover { case e: ResourceNotFoundException => () },
         10.seconds
       )
+      ()
     }
 
-    def awaitTableDeletion(tableName: String) {
+    def awaitTableDeletion(tableName: String): Unit = {
       logger.info(s"Waiting for $tableName table to be deleted.")
 
       val deadline = 10.minutes.fromNow
@@ -775,7 +776,7 @@ object ScratchS3 {
 
   import com.github.dwhjames.awswrap.s3._
   import com.amazonaws.event.{ProgressListener, ProgressEvent, ProgressEventType}
-  import com.amazonaws.services.s3._
+  // import com.amazonaws.services.s3._
   import com.amazonaws.services.s3.transfer._
   import java.io.File
 

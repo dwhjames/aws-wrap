@@ -27,14 +27,14 @@ package object awswrap {
 
   private def promiseToAsyncHandler[Request <: AmazonWebServiceRequest, Result](p: Promise[Result]) =
     new AsyncHandler[Request, Result] {
-      override def onError(exception: Exception): Unit = p.failure(exception)
-      override def onSuccess(request: Request, result: Result): Unit = p.success(result)
+      override def onError(exception: Exception): Unit = { p.failure(exception); () }
+      override def onSuccess(request: Request, result: Result): Unit = { p.success(result); () }
     }
 
   private def promiseToVoidAsyncHandler[Request <: AmazonWebServiceRequest](p: Promise[Unit]) =
     new AsyncHandler[Request, Void] {
-      override def onError(exception: Exception): Unit = p.failure(exception)
-      override def onSuccess(request: Request, result: Void): Unit = p.success(())
+      override def onError(exception: Exception): Unit = { p.failure(exception); () }
+      override def onSuccess(request: Request, result: Void): Unit = { p.success(()); () }
     }
 
   @inline
