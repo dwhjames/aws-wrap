@@ -363,6 +363,15 @@ class AmazonS3ScalaClient(
     getObject(new GetObjectRequest(bucketName, key))
 
   /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObject(com.amazonaws.services.s3.model.GetObjectRequest) AWS Java SDK]]
+   */
+  def getObject(
+    getObjectRequest: GetObjectRequest,
+    destinationFile: File
+  ): Future[ObjectMetadata] =
+    wrapMethod[(GetObjectRequest, File), ObjectMetadata]({ case (r: GetObjectRequest, f: File) => client.getObject(r, f) }, (getObjectRequest, destinationFile))
+
+  /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObjectMetadata(com.amazonaws.services.s3.model.GetObjectMetadataRequest) AWS Java SDK]]
     */
   def getObjectMetadata(
