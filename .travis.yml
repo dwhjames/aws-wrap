@@ -1,8 +1,8 @@
 sudo: false
 language: scala
 scala:
-- 2.11.5
-- 2.10.4
+- 2.11.6
+- 2.10.5
 jdk:
 - oraclejdk7
 - oraclejdk8
@@ -10,4 +10,4 @@ cache:
   directories:
     - $HOME/.ivy2/cache
 script:
-- sbt ++$TRAVIS_SCALA_VERSION --warn update compile awsWrapTest/it:compile doc && sbt ++$TRAVIS_SCALA_VERSION awsWrapTest/it:test
+- sbt ++$TRAVIS_SCALA_VERSION --warn update compile doc awsWrapTest/it:compile && sbt ++$TRAVIS_SCALA_VERSION awsWrapTest/it:test
