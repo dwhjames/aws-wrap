@@ -1,10 +1,23 @@
-safe: true
-pygments: true
-lsi: false
-markdown: redcarpet
+
+name: "aws-wrap"
+
+url: "http://dwhjames.github.io/aws-wrap"
+
 baseurl: /aws-wrap
+
 navigation:
 - title: Getting started with DynamoDB
   url:   doc/dynamodb.html
 - title: Getting started with S3
   url:   doc/s3.html
+
+latestrelease: 0.7.1
+
+markdown: kramdown
+highlighter: pygments
+
+exclude:
+    - Gemfile
+    - Gemfile.lock
+    - LICENSE
+    - README.md
