@@ -4,7 +4,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-WORKING_DIR="dynamodb"
+WORKING_DIR="dynamodb-local"
 
 mkdir -p $WORKING_DIR
 cd $WORKING_DIR
@@ -26,7 +26,7 @@ mkdir -p $LOG_DIR
 echo "DynamoDB Local output will save to ${WORKING_DIR}/${LOG_DIR}/"
 
 NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-nohup java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -port 8000 -inMemory 1>"${LOG_DIR}/${NOW}.out.log" 2>"${LOG_DIR}/${NOW}.err.log" &
+exec java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -port 8000 -inMemory 1>"${LOG_DIR}/${NOW}.out.log" 2>"${LOG_DIR}/${NOW}.err.log" &
 PID=$!
 
 echo "DynamoDB Local started with pid ${PID}"
