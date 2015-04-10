@@ -3,14 +3,14 @@ import sbt._
 object Dependencies {
 
   object V {
-    val awsJavaSDK  = "1.9.21"
+    val awsJavaSDK  = "1.9.30"
 
     val jodaTime    = "2.7"
     val jodaConvert = "1.7"
 
-    val slf4j = "1.7.10"
+    val slf4j = "1.7.12"
 
-    val logback     = "1.1.2"
+    val logback     = "1.1.3"
   }
 
   object Compile {

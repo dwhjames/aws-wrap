@@ -5,9 +5,9 @@ licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICE
 
 version in ThisBuild := "0.7.0"
 
-scalaVersion in ThisBuild := "2.11.5"
+scalaVersion in ThisBuild := "2.11.6"
 
-crossScalaVersions in ThisBuild := Seq("2.10.4", "2.11.5")
+crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6")
 
 scalacOptions in ThisBuild ++= Seq("-feature", "-deprecation", "-unchecked")
 
