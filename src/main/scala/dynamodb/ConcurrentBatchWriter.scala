@@ -282,7 +282,7 @@ class ConcurrentBatchWriter(
       * Note that this is an blocking call
       *
       * @return true if the group of writes completed without errors
-      * @throws InterruptedException if interrupted while waiting
+      * @throws java.lang.InterruptedException if interrupted while waiting
       */
     @throws(classOf[InterruptedException])
     def awaitCompletionOfAllWrites(): Boolean = {
@@ -387,7 +387,7 @@ class ConcurrentBatchWriter(
       *
       * @param requests
       *     an iterable collection of WriteRequests
-      * @throws InterruptedException if interrupted while waiting
+      * @throws java.lang.InterruptedException if interrupted while waiting
       */
     @throws(classOf[InterruptedException])
     def queueWriteRequests(requests: Iterable[WriteRequest]): Unit = {
