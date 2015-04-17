@@ -42,6 +42,7 @@ name := "aws-wrap"
 libraryDependencies ++= Seq(
   Dependencies.Compile.awsJavaSDK_cloudwatch % "provided",
   Dependencies.Compile.awsJavaSDK_dynamodb % "provided",
+  Dependencies.Compile.awsJavaSDK_elasticbeanstalk % "provided",
   Dependencies.Compile.awsJavaSDK_s3 % "provided",
   Dependencies.Compile.awsJavaSDK_ses % "provided",
   Dependencies.Compile.awsJavaSDK_simpledb % "provided",

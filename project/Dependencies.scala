@@ -17,6 +17,7 @@ object Dependencies {
 
     val awsJavaSDK_cloudwatch = "com.amazonaws" % "aws-java-sdk-cloudwatch" % V.awsJavaSDK
     val awsJavaSDK_dynamodb = "com.amazonaws" % "aws-java-sdk-dynamodb" % V.awsJavaSDK
+    val awsJavaSDK_elasticbeanstalk = "com.amazonaws" % "aws-java-sdk-elasticbeanstalk" % V.awsJavaSDK
     val awsJavaSDK_s3 = "com.amazonaws" % "aws-java-sdk-s3" % V.awsJavaSDK
     val awsJavaSDK_ses = "com.amazonaws" % "aws-java-sdk-ses" % V.awsJavaSDK
     val awsJavaSDK_simpledb = "com.amazonaws" % "aws-java-sdk-simpledb" % V.awsJavaSDK
