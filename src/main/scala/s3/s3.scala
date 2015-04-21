@@ -19,6 +19,7 @@ package com.github.dwhjames.awswrap
 package s3
 
 import java.io.{InputStream, File}
+import java.net.URL
 
 import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future, Promise}
@@ -213,6 +214,14 @@ class AmazonS3ScalaClient(
   }
 
   /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#completeMultipartUpload(com.amazonaws.services.s3.model.CompleteMultipartUploadRequest) AWS Java SDK]]
+   */
+  def completeMultipartUpload(
+    completeMultipartUploadRequest: CompleteMultipartUploadRequest
+  ): Future[CompleteMultipartUploadResult] =
+    wrapMethod(client.completeMultipartUpload, completeMultipartUploadRequest)
+
+  /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#copyObject(com.amazonaws.services.s3.model.CopyObjectRequest) AWS Java SDK]]
     */
   def copyObject(
@@ -230,6 +239,14 @@ class AmazonS3ScalaClient(
     destinationKey:        String
   ): Future[CopyObjectResult] =
     copyObject(new CopyObjectRequest(sourceBucketName, sourceKey, destinationBucketName, destinationKey))
+
+  /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#copyPart(com.amazonaws.services.s3.model.CopyPartRequest) AWS Java SDK]]
+   */
+  def copyPart(
+    copyPartRequest: CopyPartRequest
+  ): Future[CopyPartResult] =
+    wrapMethod(client.copyPart, copyPartRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#createBucket(com.amazonaws.services.s3.model.CreateBucketRequest) AWS Java SDK]]
@@ -349,6 +366,14 @@ class AmazonS3ScalaClient(
     getBucketLocation(new GetBucketLocationRequest(bucketName))
 
   /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#generatePresignedUrl(com.amazonaws.services.s3.model.GeneratePresignedUrlRequest) AWS Java SDK]]
+   */
+  def generatePresignedUrlRequest(
+    generatePresignedUrlRequest: GeneratePresignedUrlRequest
+  ): Future[URL] =
+    wrapMethod(client.generatePresignedUrl, generatePresignedUrlRequest)
+
+  /**
    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#getObject(com.amazonaws.services.s3.model.GetObjectRequest) AWS Java SDK]]
    */
   def getObject(
@@ -390,6 +415,14 @@ class AmazonS3ScalaClient(
     key:        String
   ): Future[ObjectMetadata] =
     getObjectMetadata(new GetObjectMetadataRequest(bucketName, key))
+
+  /**
+   * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#initiateMultipartUpload(com.amazonaws.services.s3.model.InitiateMultipartUploadRequest) AWS Java SDK]]
+   */
+  def initiateMultipartUpload(
+    initiateMultipartUploadRequest: InitiateMultipartUploadRequest
+  ): Future[InitiateMultipartUploadResult] =
+    wrapMethod(client.initiateMultipartUpload, initiateMultipartUploadRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listBuckets(com.amazonaws.services.s3.model.ListBucketsRequest) AWS Java SDK]]
