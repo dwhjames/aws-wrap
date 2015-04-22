@@ -1,0 +1,1132 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>AmazonDynamoDBScalaMapper - com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper</title>
+          <meta name="description" content="AmazonDynamoDBScalaMapper - com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper" />
+          <meta name="keywords" content="AmazonDynamoDBScalaMapper com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <a href="AmazonDynamoDBScalaMapper$.html" title="See companion object"><img src="../../../../../lib/trait_to_object_big.png" /></a>
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.github">github</a>.<a href="../../package.html" class="extype" name="com.github.dwhjames">dwhjames</a>.<a href="../package.html" class="extype" name="com.github.dwhjames.awswrap">awswrap</a>.<a href="package.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb">dynamodb</a></p>
+        <h1><a href="AmazonDynamoDBScalaMapper$.html" title="See companion object">AmazonDynamoDBScalaMapper</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="AmazonDynamoDBScalaMapper$.html" title="See companion object">object AmazonDynamoDBScalaMapper</a>
+            | <a href="package.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb">package dynamodb</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">AmazonDynamoDBScalaMapper</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An object mapping for DynamoDB items.</p><p>This trait provides the interface to an object mapper for DynamoDB.
+It depends on a concrete implementation of <a href="AmazonDynamoDBScalaClient.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaClient">AmazonDynamoDBScalaClient</a>.
+</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/dwhjames/aws-wrap/tree/v0.7.2/src/main/scala/dynamodb/mapper.scala" target="_blank">mapper.scala</a></dd></dl><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper"><span>AmazonDynamoDBScalaMapper</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.BatchDeleteByKeysMagnet" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="BatchDeleteByKeysMagnet[T]extendsAnyRef"></a>
+      <a id="BatchDeleteByKeysMagnet[T]:BatchDeleteByKeysMagnet[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$BatchDeleteByKeysMagnet.html"><span class="name">BatchDeleteByKeysMagnet</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@BatchDeleteByKeysMagnet[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A method overloading container for <a href="#batchDeleteByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchDeleteByKeysMagnet[T]):scala.concurrent.Future[Unit]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchDeleteByKeys">batchDeleteByKeys</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A method overloading container for <a href="#batchDeleteByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchDeleteByKeysMagnet[T]):scala.concurrent.Future[Unit]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchDeleteByKeys">batchDeleteByKeys</a>.</p><p>This class contains the overloaded implementation of <a href="#batchDeleteByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchDeleteByKeysMagnet[T]):scala.concurrent.Future[Unit]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchDeleteByKeys">batchDeleteByKeys</a>.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the objects deleted by the batch delete.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#batchDeleteByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchDeleteByKeysMagnet[T]):scala.concurrent.Future[Unit]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchDeleteByKeys">batchDeleteByKeys</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.BatchLoadByKeysMagnet" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="BatchLoadByKeysMagnet[T]extendsAnyRef"></a>
+      <a id="BatchLoadByKeysMagnet[T]:BatchLoadByKeysMagnet[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$BatchLoadByKeysMagnet.html"><span class="name">BatchLoadByKeysMagnet</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@BatchLoadByKeysMagnet[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A method overloading container for <a href="#batchLoadByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchLoadByKeysMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchLoadByKeys">batchLoadByKeys</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A method overloading container for <a href="#batchLoadByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchLoadByKeysMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchLoadByKeys">batchLoadByKeys</a>.</p><p>This class contains the overloaded implementation of <a href="#batchLoadByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchLoadByKeysMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchLoadByKeys">batchLoadByKeys</a>.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the objects returned by the batch load.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#batchLoadByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchLoadByKeysMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchLoadByKeys">batchLoadByKeys</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.CountQueryMagnet" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="CountQueryMagnet[T]extendsAnyRef"></a>
+      <a id="CountQueryMagnet[T]:CountQueryMagnet[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$CountQueryMagnet.html"><span class="name">CountQueryMagnet</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@CountQueryMagnet[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A method overloading container for <a href="#countQuery[T](magnet:AmazonDynamoDBScalaMapper.this.CountQueryMagnet[T]):scala.concurrent.Future[Long]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countQuery">countQuery</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A method overloading container for <a href="#countQuery[T](magnet:AmazonDynamoDBScalaMapper.this.CountQueryMagnet[T]):scala.concurrent.Future[Long]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countQuery">countQuery</a>.</p><p>This class contains the overloaded implementations of <a href="#countQuery[T](magnet:AmazonDynamoDBScalaMapper.this.CountQueryMagnet[T]):scala.concurrent.Future[Long]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countQuery">countQuery</a>.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of object queried.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#countQuery[T](magnet:AmazonDynamoDBScalaMapper.this.CountQueryMagnet[T]):scala.concurrent.Future[Long]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countQuery">countQuery</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.DeleteByKeyMagnet" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="DeleteByKeyMagnet[T]extendsAnyRef"></a>
+      <a id="DeleteByKeyMagnet[T]:DeleteByKeyMagnet[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$DeleteByKeyMagnet.html"><span class="name">DeleteByKeyMagnet</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@DeleteByKeyMagnet[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A method overloading container for <a href="#deleteByKey[T](magnet:AmazonDynamoDBScalaMapper.this.DeleteByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#deleteByKey">deleteByKey</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A method overloading container for <a href="#deleteByKey[T](magnet:AmazonDynamoDBScalaMapper.this.DeleteByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#deleteByKey">deleteByKey</a>.</p><p>This class contains the overloaded implementations
+of <a href="#deleteByKey[T](magnet:AmazonDynamoDBScalaMapper.this.DeleteByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#deleteByKey">deleteByKey</a>.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object to be deleted.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#deleteByKey[T](magnet:AmazonDynamoDBScalaMapper.this.DeleteByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#deleteByKey">deleteByKey</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.LoadByKeyMagnet" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="LoadByKeyMagnet[T]extendsAnyRef"></a>
+      <a id="LoadByKeyMagnet[T]:LoadByKeyMagnet[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$LoadByKeyMagnet.html"><span class="name">LoadByKeyMagnet</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@LoadByKeyMagnet[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A method overloading container for <a href="#loadByKey[T](magnet:AmazonDynamoDBScalaMapper.this.LoadByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#loadByKey">loadByKey</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A method overloading container for <a href="#loadByKey[T](magnet:AmazonDynamoDBScalaMapper.this.LoadByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#loadByKey">loadByKey</a>.</p><p>This class contains the two overloaded implementations
+of <a href="#loadByKey[T](magnet:AmazonDynamoDBScalaMapper.this.LoadByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#loadByKey">loadByKey</a>.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object to be loaded.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#loadByKey[T](magnet:AmazonDynamoDBScalaMapper.this.LoadByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#loadByKey">loadByKey</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.QueryMagnet" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="QueryMagnet[T]extendsAnyRef"></a>
+      <a id="QueryMagnet[T]:QueryMagnet[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$QueryMagnet.html"><span class="name">QueryMagnet</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@QueryMagnet[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A method overloading container for <a href="#query[T](magnet:AmazonDynamoDBScalaMapper.this.QueryMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#query">query</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A method overloading container for <a href="#query[T](magnet:AmazonDynamoDBScalaMapper.this.QueryMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#query">query</a>.</p><p>This class contains the overloaded implementations of <a href="#query[T](magnet:AmazonDynamoDBScalaMapper.this.QueryMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#query">query</a>.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object returned by the query.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#query[T](magnet:AmazonDynamoDBScalaMapper.this.QueryMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#query">query</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnceMagnet" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="QueryOnceMagnet[T]extendsAnyRef"></a>
+      <a id="QueryOnceMagnet[T]:QueryOnceMagnet[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$QueryOnceMagnet.html"><span class="name">QueryOnceMagnet</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@QueryOnceMagnet[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Abstract Value Members</h3>
+              <ol><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#client" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="client:com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaClient"></a>
+      <a id="client:AmazonDynamoDBScalaClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">client</span><span class="result">: <a href="AmazonDynamoDBScalaClient.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaClient">AmazonDynamoDBScalaClient</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@client:com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaClient" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An abstract <a href="AmazonDynamoDBScalaClient.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaClient">AmazonDynamoDBScalaClient</a>.</p>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#execCtx" visbl="prt" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="execCtx:scala.concurrent.ExecutionContext"></a>
+      <a id="execCtx:ExecutionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit abstract </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">execCtx</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.ExecutionContext" class="extype" target="_top">ExecutionContext</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@execCtx:scala.concurrent.ExecutionContext" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An abstract ExecutionContext.</p><div class="fullcomment"><div class="comment cmt"><p>An abstract ExecutionContext.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Concrete Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@##():Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.BatchDeleteByKeysMagnet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BatchDeleteByKeysMagnet"></a>
+      <a id="BatchDeleteByKeysMagnet:BatchDeleteByKeysMagnet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$BatchDeleteByKeysMagnet$.html"><span class="name">BatchDeleteByKeysMagnet</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@BatchDeleteByKeysMagnet" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.BatchLoadByKeysMagnet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BatchLoadByKeysMagnet"></a>
+      <a id="BatchLoadByKeysMagnet:BatchLoadByKeysMagnet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$BatchLoadByKeysMagnet$.html"><span class="name">BatchLoadByKeysMagnet</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@BatchLoadByKeysMagnet" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.CountQueryMagnet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CountQueryMagnet"></a>
+      <a id="CountQueryMagnet:CountQueryMagnet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$CountQueryMagnet$.html"><span class="name">CountQueryMagnet</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@CountQueryMagnet" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.DeleteByKeyMagnet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DeleteByKeyMagnet"></a>
+      <a id="DeleteByKeyMagnet:DeleteByKeyMagnet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$DeleteByKeyMagnet$.html"><span class="name">DeleteByKeyMagnet</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@DeleteByKeyMagnet" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.LoadByKeyMagnet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LoadByKeyMagnet"></a>
+      <a id="LoadByKeyMagnet:LoadByKeyMagnet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$LoadByKeyMagnet$.html"><span class="name">LoadByKeyMagnet</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@LoadByKeyMagnet" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.QueryMagnet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="QueryMagnet"></a>
+      <a id="QueryMagnet:QueryMagnet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$QueryMagnet$.html"><span class="name">QueryMagnet</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@QueryMagnet" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnceMagnet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="QueryOnceMagnet"></a>
+      <a id="QueryOnceMagnet:QueryOnceMagnet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AmazonDynamoDBScalaMapper$QueryOnceMagnet$.html"><span class="name">QueryOnceMagnet</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@QueryOnceMagnet" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchDelete" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="batchDelete[T](objs:Seq[T])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Unit]"></a>
+      <a id="batchDelete[T](Seq[T])(DynamoDBSerializer[T]):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">batchDelete</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="objs">objs: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.batchDelete.T">T</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.batchDelete.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@batchDelete[T](objs:Seq[T])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Delete a sequence of objects.</p><div class="fullcomment"><div class="comment cmt"><p>Delete a sequence of objects.</p><p>This method will internally make repeated batchWriteItem
+calls, with up to 25 objects at a time, until all the input
+objects have been deleted.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of objects to delete.</p></dd><dt class="param">objs</dt><dd class="cmt"><p>
+    a sequence of objects to delete.</p></dd><dt class="param">serializer</dt><dd class="cmt"><p>
+    an implicit object serializer.
+</p></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchDeleteByKeys" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="batchDeleteByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchDeleteByKeysMagnet[T]):scala.concurrent.Future[Unit]"></a>
+      <a id="batchDeleteByKeys[T](BatchDeleteByKeysMagnet[T]):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">batchDeleteByKeys</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="magnet">magnet: <a href="AmazonDynamoDBScalaMapper$BatchDeleteByKeysMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.BatchDeleteByKeysMagnet">BatchDeleteByKeysMagnet</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.batchDeleteByKeys.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@batchDeleteByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchDeleteByKeysMagnet[T]):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Delete items by a sequence of keys.</p><div class="fullcomment"><div class="comment cmt"><p>Delete items by a sequence of keys.</p><p>This method will internally make repeated batchWriteItem
+calls, with up to 25 keys at a time, until all the input
+keys have been deleted.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the objects deleted by the batch delete.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper$BatchDeleteByKeysMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.BatchDeleteByKeysMagnet">BatchDeleteByKeysMagnet</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchDump" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="batchDump[T](objs:Seq[T])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Unit]"></a>
+      <a id="batchDump[T](Seq[T])(DynamoDBSerializer[T]):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">batchDump</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="objs">objs: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.batchDump.T">T</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.batchDump.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@batchDump[T](objs:Seq[T])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Dump a sequence of objects into DynamoDB</p><div class="fullcomment"><div class="comment cmt"><p>Dump a sequence of objects into DynamoDB</p><p>This method will internally make repeated batchWriteItem
+calls, with up to 25 objects at a time, until all the input
+objects have been written.</p><p>Objects that are new will create new items in DynamoDB,
+otherwise they will overwrite exisiting items.
+</p></div><dl class="paramcmts block"><dt class="param">objs</dt><dd class="cmt"><p>
+    the sequence of objects to write to DynamoDB.
+</p></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#batchLoadByKeys" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="batchLoadByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchLoadByKeysMagnet[T]):scala.concurrent.Future[Seq[T]]"></a>
+      <a id="batchLoadByKeys[T](BatchLoadByKeysMagnet[T]):Future[Seq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">batchLoadByKeys</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="magnet">magnet: <a href="AmazonDynamoDBScalaMapper$BatchLoadByKeysMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.BatchLoadByKeysMagnet">BatchLoadByKeysMagnet</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.batchLoadByKeys.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.batchLoadByKeys.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@batchLoadByKeys[T](magnet:AmazonDynamoDBScalaMapper.this.BatchLoadByKeysMagnet[T]):scala.concurrent.Future[Seq[T]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Load a sequence of objects by a sequence of keys.</p><div class="fullcomment"><div class="comment cmt"><p>Load a sequence of objects by a sequence of keys.</p><p>This method will internally make repeated batchGetItem
+calls, with up to 25 keys at a time, until all of the
+given keys have been requested.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the objects returned by the batch load.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper$BatchLoadByKeysMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.BatchLoadByKeysMagnet">BatchLoadByKeysMagnet</a>
+</p></span></dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#config" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="config:com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapperConfig"></a>
+      <a id="config:AmazonDynamoDBScalaMapperConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">config</span><span class="result">: <a href="AmazonDynamoDBScalaMapperConfig.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapperConfig">AmazonDynamoDBScalaMapperConfig</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@config:com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapperConfig" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The mapping configuration.</p><div class="fullcomment"><div class="comment cmt"><p>The mapping configuration.</p><p><a href="AmazonDynamoDBScalaMapperConfig$$Default$.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapperConfig.Default">AmazonDynamoDBScalaMapperConfig.Default</a> is used by default.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="countQuery[T](magnet:AmazonDynamoDBScalaMapper.this.CountQueryMagnet[T]):scala.concurrent.Future[Long]"></a>
+      <a id="countQuery[T](CountQueryMagnet[T]):Future[Long]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">countQuery</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="magnet">magnet: <a href="AmazonDynamoDBScalaMapper$CountQueryMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.CountQueryMagnet">CountQueryMagnet</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.countQuery.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@countQuery[T](magnet:AmazonDynamoDBScalaMapper.this.CountQueryMagnet[T]):scala.concurrent.Future[Long]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Query a table, counting the results.</p><div class="fullcomment"><div class="comment cmt"><p>Query a table, counting the results.</p><p>This method will internally make repeated query calls
+until the full result of the query has been retrieved.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of object queried.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#queryOnce[T](magnet:AmazonDynamoDBScalaMapper.this.QueryOnceMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#queryOnce">queryOnce</a>
+</p></span><span class="cmt"><p><a href="#query[T](magnet:AmazonDynamoDBScalaMapper.this.QueryMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#query">query</a></p></span><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper$CountQueryMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.CountQueryMagnet">CountQueryMagnet</a></p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countScan" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="countScan[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Long]"></a>
+      <a id="countScan[T](Map[String,Condition])(DynamoDBSerializer[T]):Future[Long]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">countScan</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="scanFilter">scanFilter: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/Condition.html" class="extype" target="_top">Condition</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.countScan.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@countScan[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Long]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Scan a table and return a count.</p><div class="fullcomment"><div class="comment cmt"><p>Scan a table and return a count.</p><p>This method will internally make repeated scan calls
+until the full result of the scan has been retrieved.
+</p></div><dl class="paramcmts block"><dt class="param">scanFilter</dt><dd class="cmt"><p>
+    the optional filter conditions for the scan</p></dd><dt>returns</dt><dd class="cmt"><p>the total number of scanned items in a future</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#scan[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#scan">scan</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#delete" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="delete[T](obj:T)(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Unit]"></a>
+      <a id="delete[T](T)(DynamoDBSerializer[T]):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">delete</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="obj">obj: <span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.delete.T">T</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.delete.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@delete[T](obj:T)(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Delete the DynamoDB item that corresponds to the given object
+</p><div class="fullcomment"><div class="comment cmt"><p>Delete the DynamoDB item that corresponds to the given object
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object to delete.</p></dd><dt class="param">obj</dt><dd class="cmt"><p>
+    the object to delete.</p></dd><dt class="param">serializer</dt><dd class="cmt"><p>
+    an implicit object serializer.
+</p></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#deleteByKey" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="deleteByKey[T](magnet:AmazonDynamoDBScalaMapper.this.DeleteByKeyMagnet[T]):scala.concurrent.Future[Option[T]]"></a>
+      <a id="deleteByKey[T](DeleteByKeyMagnet[T]):Future[Option[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deleteByKey</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="magnet">magnet: <a href="AmazonDynamoDBScalaMapper$DeleteByKeyMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.DeleteByKeyMagnet">DeleteByKeyMagnet</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.deleteByKey.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.deleteByKey.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@deleteByKey[T](magnet:AmazonDynamoDBScalaMapper.this.DeleteByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Delete a DynamoDB item by a hash key (and range key).</p><div class="fullcomment"><div class="comment cmt"><p>Delete a DynamoDB item by a hash key (and range key).</p><p>If an item with the given key was deleted then the
+deleted object returned, otherwise none.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object to be deleted.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper$DeleteByKeyMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.DeleteByKeyMagnet">DeleteByKeyMagnet</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#dump" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="dump[T](obj:T)(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Unit]"></a>
+      <a id="dump[T](T)(DynamoDBSerializer[T]):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dump</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="obj">obj: <span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.dump.T">T</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.dump.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@dump[T](obj:T)(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Dumps an object into DynamoDB</p><div class="fullcomment"><div class="comment cmt"><p>Dumps an object into DynamoDB</p><p>If the object is new, then this creates the item in DynamoDB,
+otherwise it overwrites the exisiting item.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object to put.</p></dd><dt class="param">obj</dt><dd class="cmt"><p>
+    the object to put.</p></dd><dt class="param">serializer</dt><dd class="cmt"><p>
+    an implicit object serializer.
+</p></dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html" class="extype" target="_top">Class</a>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#loadByKey" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="loadByKey[T](magnet:AmazonDynamoDBScalaMapper.this.LoadByKeyMagnet[T]):scala.concurrent.Future[Option[T]]"></a>
+      <a id="loadByKey[T](LoadByKeyMagnet[T]):Future[Option[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">loadByKey</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="magnet">magnet: <a href="AmazonDynamoDBScalaMapper$LoadByKeyMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.LoadByKeyMagnet">LoadByKeyMagnet</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.loadByKey.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.loadByKey.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@loadByKey[T](magnet:AmazonDynamoDBScalaMapper.this.LoadByKeyMagnet[T]):scala.concurrent.Future[Option[T]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Load an object by its hash key (and range key).</p><div class="fullcomment"><div class="comment cmt"><p>Load an object by its hash key (and range key).</p><p>If the item is not found in the DynamoDB table,
+then None is returned.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object to be loaded.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper$LoadByKeyMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.LoadByKeyMagnet">LoadByKeyMagnet</a>
+</p></span></dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#query" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="query[T](magnet:AmazonDynamoDBScalaMapper.this.QueryMagnet[T]):scala.concurrent.Future[Seq[T]]"></a>
+      <a id="query[T](QueryMagnet[T]):Future[Seq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="magnet">magnet: <a href="AmazonDynamoDBScalaMapper$QueryMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.QueryMagnet">QueryMagnet</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.query.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.query.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@query[T](magnet:AmazonDynamoDBScalaMapper.this.QueryMagnet[T]):scala.concurrent.Future[Seq[T]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Query a table.</p><div class="fullcomment"><div class="comment cmt"><p>Query a table.</p><p>This method will internally make repeated query calls
+until the full result of the query has been retrieved,
+or the at most the size of the limit, if specified.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object returned by the query.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#countQuery[T](magnet:AmazonDynamoDBScalaMapper.this.CountQueryMagnet[T]):scala.concurrent.Future[Long]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countQuery">countQuery</a>
+</p></span><span class="cmt"><p><a href="#queryOnce[T](magnet:AmazonDynamoDBScalaMapper.this.QueryOnceMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#queryOnce">queryOnce</a></p></span><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper$QueryMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.QueryMagnet">QueryMagnet</a></p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#queryOnce" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="queryOnce[T](magnet:AmazonDynamoDBScalaMapper.this.QueryOnceMagnet[T]):scala.concurrent.Future[Seq[T]]"></a>
+      <a id="queryOnce[T](QueryOnceMagnet[T]):Future[Seq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryOnce</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="magnet">magnet: <a href="AmazonDynamoDBScalaMapper$QueryOnceMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnceMagnet">QueryOnceMagnet</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.queryOnce.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.queryOnce.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@queryOnce[T](magnet:AmazonDynamoDBScalaMapper.this.QueryOnceMagnet[T]):scala.concurrent.Future[Seq[T]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Query a table.</p><div class="fullcomment"><div class="comment cmt"><p>Query a table.</p><p>This method will issue one query request, stopping either
+at the supplied limit or at the response size limit.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>
+    the type of the object returned by the query.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#countQuery[T](magnet:AmazonDynamoDBScalaMapper.this.CountQueryMagnet[T]):scala.concurrent.Future[Long]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countQuery">countQuery</a>
+</p></span><span class="cmt"><p><a href="#query[T](magnet:AmazonDynamoDBScalaMapper.this.QueryMagnet[T]):scala.concurrent.Future[Seq[T]]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#query">query</a></p></span><span class="cmt"><p><a href="AmazonDynamoDBScalaMapper$QueryOnceMagnet.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.QueryOnceMagnet">QueryOnceMagnet</a></p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#scan" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="scan[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]"></a>
+      <a id="scan[T](Map[String,Condition])(DynamoDBSerializer[T]):Future[Seq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scan</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="scanFilter">scanFilter: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/Condition.html" class="extype" target="_top">Condition</a>] = <span class="symbol">Map.empty</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.scan.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.scan.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@scan[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Scan a table.</p><div class="fullcomment"><div class="comment cmt"><p>Scan a table.</p><p>This method will internally make repeated scan calls
+until the full result of the scan has been retrieved.
+</p></div><dl class="paramcmts block"><dt class="param">scanFilter</dt><dd class="cmt"><p>
+    the optional filter conditions for the scan.</p></dd><dt>returns</dt><dd class="cmt"><p>sequence of scanned objects in a future.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#countScan[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Long]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countScan">countScan</a>
+</p></span></dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#scanOnce" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="scanOnce[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition],limit:Int)(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]"></a>
+      <a id="scanOnce[T](Map[String,Condition],Int)(DynamoDBSerializer[T]):Future[Seq[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scanOnce</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="scanFilter">scanFilter: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html?com/amazonaws/services/dynamodbv2/model/Condition.html" class="extype" target="_top">Condition</a>] = <span class="symbol">Map.empty</span></span>, <span name="limit">limit: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a> = <span class="symbol">0</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.scanOnce.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.concurrent.Future" class="extype" target="_top">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.scanOnce.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@scanOnce[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition],limit:Int)(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Seq[T]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Scan a table.</p><div class="fullcomment"><div class="comment cmt"><p>Scan a table.</p><p>This method will issue one scan request, stopping either
+at the supplied limit or at the response size limit.
+</p></div><dl class="paramcmts block"><dt class="param">scanFilter</dt><dd class="cmt"><p>
+    the optional filter conditions for the scan.</p></dd><dt class="param">limit</dt><dd class="cmt"><p>
+    the optional limit for the number of items to return.</p></dd><dt>returns</dt><dd class="cmt"><p>sequence of scanned objects in a future.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#countScan[T](scanFilter:Map[String,com.amazonaws.services.dynamodbv2.model.Condition])(implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):scala.concurrent.Future[Long]" class="extmbr" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#countScan">countScan</a>
+</p></span></dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper#tableName" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="tableName[T](implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):String"></a>
+      <a id="tableName[T](DynamoDBSerializer[T]):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tableName</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="serializer">serializer: <a href="DynamoDBSerializer.html" class="extype" name="com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer">DynamoDBSerializer</a>[<span class="extype" name="com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper.tableName.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@tableName[T](implicitserializer:com.github.dwhjames.awswrap.dynamodb.DynamoDBSerializer[T]):String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Returns the table name.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the table name.</p><p>Determines the table name, by transforming the table name
+of the implict serializer using the mapper's configuration.
+</p></div><dl class="paramcmts block"><dt class="param">serializer</dt><dd class="cmt"><p>
+    the object serializer.</p></dd><dt>returns</dt><dd class="cmt"><p>the transformed table name.
+</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/String.html" class="extype" target="_top">String</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@toString():String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.github.dwhjames.awswrap.dynamodb.AmazonDynamoDBScalaMapper@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

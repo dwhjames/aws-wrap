@@ -11,7 +11,7 @@ navigation:
 - title: Getting started with S3
   url:   doc/s3.html
 
-latestrelease: 0.7.1
+latestrelease: 0.7.2
 
 markdown: kramdown
 highlighter: pygments
