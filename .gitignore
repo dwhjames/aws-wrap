@@ -1,7 +1,10 @@
 *.class
 *.log
 
-/dynamodb
+/dynamodb-local
+/fakes3
+
+/Gemfile.lock
 
 # sbt specific
 dist/*

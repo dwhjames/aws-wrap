@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 
-package com.github.dwhjames.awswrap.dynamodb
+package com.github.dwhjames.awswrap
 
 import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 trait AwaitHelper {

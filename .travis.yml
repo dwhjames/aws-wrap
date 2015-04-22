@@ -9,5 +9,6 @@ jdk:
 cache:
   directories:
     - $HOME/.ivy2/cache
+install: bundle install
 script:
 - sbt ++$TRAVIS_SCALA_VERSION --warn update compile doc awsWrapTest/it:compile && sbt ++$TRAVIS_SCALA_VERSION awsWrapTest/it:test
