@@ -1,5 +1,4 @@
 /*
- * Copyright 2012-2015 Pellucid Analytics
  * Copyright 2015 Daniel W. H. James
  * Copyright 2015 Andrea Lattuada
  *
