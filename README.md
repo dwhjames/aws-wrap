@@ -23,7 +23,7 @@ If you are using SBT, simply add the following to your `build.sbt` file:
 ```
 resolvers += Resolver.bintrayRepo("dwhjames", "maven")
 
-libraryDependencies += "com.github.dwhjames" %% "aws-wrap" % "0.7.1"
+libraryDependencies += "com.github.dwhjames" %% "aws-wrap" % "0.7.2"
 ```
 
 ## License
