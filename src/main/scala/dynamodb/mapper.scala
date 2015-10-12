@@ -1213,19 +1213,89 @@ trait AmazonDynamoDBScalaMapper {
         (implicit serializer: DynamoDBSerializer[T],
                   ev: K => AttributeValue)
         : QueryMagnet[T] =
-      queryRaw(
-        new QueryRequest()
-          .withIndexName(indexName)
-          .withKeyConditions(
-            Map(
-              serializer.hashAttributeName -> QueryCondition.equalTo(hashValue),
-              rangeAttributeName           -> rangeCondition
-            ).asJava
-          )
-          .withSelect(Select.ALL_ATTRIBUTES)
-          .withScanIndexForward(scanIndexForward),
-        totalLimit
-      )
+      queryOnAnyIndex(indexName, serializer.hashAttributeName, hashValue, Some((rangeAttributeName, rangeCondition)), scanIndexForward, totalLimit)
+
+    type RangeCondition = (String,Condition)
+
+    /**
+     * Query a global secondary index by a hash value and optional
+     * range condition, ascending or desending, with a limit.
+     *
+     * This query targets a named global secondary index. The index
+     * being used must be named, as well well at the name of
+     * the hash attribute used and the target key of the index.
+     * If the index contains a range then the name of
+     * the range attribute used must also be given along with the
+     * target range key.
+     * The result will be all items with the same hash key
+     * value, and range keys that match the optional range condition.
+     *
+     * This method will internally make repeated query calls
+     * until at most the given limit has been retrieved.
+     *
+     * Note that all attributes will be requested, so that
+     * the serializer will get a complete item. This may incur
+     * extra read capacity, depending on what attributes
+     * are projected into the index.
+     *
+     * @tparam K
+      *     a type that is viewable as an [[AttributeValue]].
+     * @param indexName
+      *     the name of the secondary index to query.
+     * @param hashAttributeName
+      *     the name of the key attribute used by the index.
+     * @param hashValue
+      *     the hash key value to match.
+     * @param rangeCondition
+      *     an optional tuple who's first member is the name (String) of the range key attribute used by the index,
+      *     and who's second member is the Condition to apply to the range key.
+     * @param scanIndexForward
+      *     true for forwards scan, and false for reverse scan.
+     * @param totalLimit
+      *     the total number of results you want.
+     * @param serializer
+      *     an implicit object serializer.
+     * @return result sequence of the query in a future.
+     * @see [[query]]
+     */
+    implicit def queryOnGlobalSecondaryIndex
+      [T, K]
+      (tuple: /* indexName          */ (String,
+              /* hashAttributeName  */  String,
+              /* hashValue          */  K,
+              /* rangeCondition     */  Option[RangeCondition],
+              /* scanIndexForward   */  Boolean,
+              /* totalLimit         */  Int))
+      (implicit serializer: DynamoDBSerializer[T],
+       ev: K => AttributeValue)
+      : QueryMagnet[T] =
+        queryOnAnyIndex(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, Some(tuple._6))
+
+    private def queryOnAnyIndex
+      [T, K]
+      (indexName:           String,
+       hashAttributeName:   String,
+       hashValue:           K,
+       rangeCondition:      Option[RangeCondition],
+       scanIndexForward:    Boolean     = true,
+       totalLimit:          Option[Int] = None)
+      (implicit serializer: DynamoDBSerializer[T],
+                ev: K => AttributeValue)
+      : QueryMagnet[T] = {
+
+        val keyConditions: Seq[(String, Condition)] =
+        Seq((hashAttributeName, QueryCondition.equalTo(hashValue))) ++
+          rangeCondition.map( Seq(_) ).getOrElse(Seq.empty[(String, Condition)])
+
+        queryRaw(
+          new QueryRequest()
+            .withIndexName(indexName)
+            .withKeyConditions( (Map[String,Condition]() ++ keyConditions).asJava )
+            .withSelect(Select.ALL_ATTRIBUTES)
+            .withScanIndexForward(scanIndexForward),
+          totalLimit
+        )
+    }
   }
 
   /**
