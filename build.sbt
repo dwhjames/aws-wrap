@@ -51,9 +51,7 @@ libraryDependencies ++= Seq(
 )
 
 
-bintray.Plugin.bintrayPublishSettings
-
-bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("aws", "dynamodb", "s3", "ses", "simpledb", "sns", "sqs", "async", "future")
+bintrayPackageLabels := Seq("aws", "dynamodb", "s3", "ses", "simpledb", "sns", "sqs", "async", "future")
 
 
 
