@@ -75,6 +75,19 @@ class QueryGlobalSecondaryIndexSpec
     result should have size (2)
     result(0).userId should equal ("101")
     result(1).userId should equal ("103")
-  }
 
+    val result2 = await {
+      mapper.queryOnce[GameScore](
+        GameScore.globalSecondaryIndexName,
+        GameScore.Attributes.gameTitle,
+        "Galaxy Invaders",
+        Some(GameScore.Attributes.topScore -> QueryCondition.greaterThan(0)),
+        false,
+        10 // top ten high scores
+      )
+    }
+    result2 should have size (2)
+    result2(0).userId should equal ("101")
+    result2(1).userId should equal ("103")
+  }
 }
