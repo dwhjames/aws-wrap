@@ -42,7 +42,7 @@ class AmazonDynamoDBScalaClient(val client: AmazonDynamoDBAsyncClient) {
   def batchGetItem(
     batchGetItemRequest: BatchGetItemRequest
   ): Future[BatchGetItemResult] =
-    wrapAsyncMethod(client.batchGetItemAsync, batchGetItemRequest)
+    wrapAsyncMethod[BatchGetItemRequest, BatchGetItemResult](client.batchGetItemAsync, batchGetItemRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDB.html#batchGetItem(com.amazonaws.services.dynamodbv2.model.BatchGetItemRequest) AWS Java SDK]]
@@ -61,7 +61,7 @@ class AmazonDynamoDBScalaClient(val client: AmazonDynamoDBAsyncClient) {
   def batchWriteItem(
     batchWriteItemRequest: BatchWriteItemRequest
   ): Future[BatchWriteItemResult] =
-    wrapAsyncMethod(client.batchWriteItemAsync, batchWriteItemRequest)
+    wrapAsyncMethod[BatchWriteItemRequest, BatchWriteItemResult](client.batchWriteItemAsync, batchWriteItemRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDB.html#batchWriteItem(com.amazonaws.services.dynamodbv2.model.BatchWriteItemRequest) AWS Java SDK]]
@@ -124,7 +124,7 @@ class AmazonDynamoDBScalaClient(val client: AmazonDynamoDBAsyncClient) {
   def deleteTable(
     deleteTableRequest: DeleteTableRequest
   ): Future[DeleteTableResult] =
-    wrapAsyncMethod(client.deleteTableAsync, deleteTableRequest)
+    wrapAsyncMethod[DeleteTableRequest, DeleteTableResult](client.deleteTableAsync, deleteTableRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDB.html#deleteTable(com.amazonaws.services.dynamodbv2.model.DeleteTableRequest) AWS Java SDK]]
@@ -140,7 +140,7 @@ class AmazonDynamoDBScalaClient(val client: AmazonDynamoDBAsyncClient) {
   def describeTable(
     describeTableRequest: DescribeTableRequest
   ): Future[DescribeTableResult] =
-    wrapAsyncMethod(client.describeTableAsync, describeTableRequest)
+    wrapAsyncMethod[DescribeTableRequest, DescribeTableResult](client.describeTableAsync, describeTableRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDB.html#describeTable(com.amazonaws.services.dynamodbv2.model.DescribeTableRequest) AWS Java SDK]]
@@ -188,7 +188,7 @@ class AmazonDynamoDBScalaClient(val client: AmazonDynamoDBAsyncClient) {
   def listTables(
     listTablesRequest: ListTablesRequest
   ): Future[ListTablesResult] =
-    wrapAsyncMethod(client.listTablesAsync, listTablesRequest)
+    wrapAsyncMethod[ListTablesRequest, ListTablesResult](client.listTablesAsync, listTablesRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/AmazonDynamoDB.html#listTables(com.amazonaws.services.dynamodbv2.model.ListTablesRequest) AWS Java SDK]]
