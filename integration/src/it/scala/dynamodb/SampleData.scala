@@ -106,4 +106,81 @@ object SampleData {
         postedBy      = "User A"
       )
     )
+
+  val sampleGameScores: Seq[GameScore] = Seq(
+      GameScore(
+        userId = "101",
+        gameTitle = "Galaxy Invaders",
+        topScore = 5842,
+        topScoreDateTime = DateTime.now.minusDays(1),
+        wins = 21,
+        losses = 72
+      ),
+      GameScore(
+        userId = "101",
+        gameTitle = "Meteor Blasters",
+        topScore = 1000,
+        topScoreDateTime = DateTime.now.minusDays(2),
+        wins = 12,
+        losses = 3
+      ),
+      GameScore(
+        userId = "101",
+        gameTitle = "Starship X",
+        topScore = 24,
+        topScoreDateTime = DateTime.now.minusDays(3),
+        wins = 4,
+        losses = 9
+      ),
+
+      GameScore(
+        userId = "102",
+        gameTitle = "Alien Adventure",
+        topScore = 192,
+        topScoreDateTime = DateTime.now.minusDays(4),
+        wins = 32,
+        losses = 192
+      ),
+      GameScore(
+        userId = "102",
+        gameTitle = "Galaxy Invaders",
+        topScore = 0,
+        topScoreDateTime = DateTime.now.minusDays(5),
+        wins = 0,
+        losses = 5
+      ),
+
+      GameScore(
+        userId = "103",
+        gameTitle = "Attack Ships",
+        topScore = 3,
+        topScoreDateTime = DateTime.now.minusDays(6),
+        wins = 1,
+        losses = 8
+      ),
+      GameScore(
+        userId = "103",
+        gameTitle = "Galaxy Invaders",
+        topScore = 2317,
+        topScoreDateTime = DateTime.now.minusDays(7),
+        wins = 40,
+        losses = 3
+      ),
+      GameScore(
+        userId = "103",
+        gameTitle = "Meteor Blasters",
+        topScore = 723,
+        topScoreDateTime = DateTime.now.minusDays(8),
+        wins = 22,
+        losses = 12
+      ),
+      GameScore(
+        userId = "103",
+        gameTitle = "Starship X",
+        topScore = 42,
+        topScoreDateTime = DateTime.now.minusDays(9),
+        wins = 4,
+        losses = 19
+      )
+    )
 }
