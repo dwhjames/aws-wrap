@@ -85,6 +85,22 @@ class ReadsOnHashKeyTableSpec
     val forumScanOnceLimit = await {
       mapper.scanOnce[Forum](limit = sampleForums.size)
     }
+
+    val forumProgressively = await {
+      mapper.scanProgressively[Forum](limit = sampleForums.size).map(_._2)
+    }
+
+    val forumProgressivelyLimit = await {
+      for {
+        (lastEvaluatedKey, head) <- mapper.scanProgressively[Forum](limit = 1)
+        (lastEvaluatedKeyNone, next) <- mapper.scanProgressively[Forum](lastEvaluatedKey = lastEvaluatedKey)
+      } yield {
+        lastEvaluatedKey should not be empty
+        lastEvaluatedKeyNone shouldEqual None
+        head ++ next
+      }
+    }
+
     val forumBatch = await {
       mapper.batchLoadByKeys[Forum](sampleForums map (_.name))
     }
@@ -92,6 +108,8 @@ class ReadsOnHashKeyTableSpec
     forumScan          should have size (sampleForums.size.toLong)
     forumScanOnce      should have size (sampleForums.size.toLong)
     forumScanOnceLimit should have size (sampleForums.size.toLong)
+    forumProgressively should have size (sampleForums.size.toLong)
+    forumProgressivelyLimit should have size (sampleForums.size.toLong)
     forumBatch         should have size (sampleForums.size.toLong)
 
     for (forum <- sampleForums) {

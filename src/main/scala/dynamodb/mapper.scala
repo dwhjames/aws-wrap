@@ -588,33 +588,19 @@ trait AmazonDynamoDBScalaMapper {
   def scan[T](
     scanFilter: Map[String, Condition] = Map.empty
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
-    val scanRequest =
-      new ScanRequest()
-      .withTableName(tableName)
-      .withScanFilter(scanFilter.asJava)
-    if (logger.isDebugEnabled)
-      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-
     val builder = Seq.newBuilder[T]
 
-    def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
-      client.scan(
-        scanRequest.withExclusiveStartKey(lastKey.orNull)
-      ) flatMap { result =>
-        if (logger.isDebugEnabled)
-          logger.debug(s"scan() ConsumedCapacity = ${result.getConsumedCapacity()}")
-
-        builder ++= result.getItems.asScala.view map { item =>
-          serializer.fromAttributeMap(item.asScala)
-        }
-
-        Option { result.getLastEvaluatedKey } match {
-          case None   => Future.successful(())
-          case optKey => local(optKey)
-        }
+    def local(lastKey: Option[DynamoDBKey] = None): Future[Seq[T]] =
+      scanProgressively(scanFilter, lastEvaluatedKey = lastKey).flatMap {
+        case (key, result) =>
+          builder ++= result
+          key match {
+            case None   => Future.successful(builder.result())
+            case optKey => local(optKey)
+          }
       }
 
-    local() map { _ => builder.result }
+    local()
   }
 
   /**
@@ -634,26 +620,58 @@ trait AmazonDynamoDBScalaMapper {
     scanFilter: Map[String, Condition] = Map.empty,
     limit:      Int                    = 0
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
+    scanProgressively(scanFilter, limit).map(_._2)
+  }
+
+  /**
+    * Scan a table.
+    *
+    * This method will issue one scan request, stopping either
+    * at the supplied limit or at the response size limit.
+    *
+    * @param scanFilter
+    *     the optional filter conditions for the scan.
+    * @param lastEvaluatedKey
+    *     the optional starting key.
+    * @param limit
+    *     the optional limit for the number of items to return.
+    * @return Tuple of
+    *         some last dynamoDB key or none if the "end" of the scan is reached
+    *         and sequence of scanned objects in a future.
+    * @see [[countScan]]
+    */
+  def scanProgressively[T](
+    scanFilter: Map[String, Condition] = Map.empty,
+    limit: Int = 0,
+    lastEvaluatedKey: Option[DynamoDBKey] = None
+  )(implicit serializer: DynamoDBSerializer[T]): Future[(Option[DynamoDBKey], Seq[T])] = {
     val scanRequest =
       new ScanRequest()
-      .withTableName(tableName)
-      .withScanFilter(scanFilter.asJava)
+        .withTableName(tableName)
+        .withScanFilter(scanFilter.asJava)
+
     if (limit > 0)
       scanRequest.setLimit(limit)
+
     if (logger.isDebugEnabled)
       scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 
-    client.scan(scanRequest) map { result =>
+    client.scan(
+      scanRequest.withExclusiveStartKey(lastEvaluatedKey.orNull)
+    ) map { result =>
       if (logger.isDebugEnabled)
         logger.debug(s"scanOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
-      result.getItems.asScala.view map { item =>
+      val r = result.getItems.asScala map { item =>
         serializer.fromAttributeMap(item.asScala)
       }
+
+      val lastEvaluatedKey = Option {
+        result.getLastEvaluatedKey
+      }
+      (lastEvaluatedKey, r)
     }
   }
-
-
 
   /**
     * Scan a table and return a count.
