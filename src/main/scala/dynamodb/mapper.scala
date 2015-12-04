@@ -634,23 +634,7 @@ trait AmazonDynamoDBScalaMapper {
     scanFilter: Map[String, Condition] = Map.empty,
     limit:      Int                    = 0
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
-    val scanRequest =
-      new ScanRequest()
-      .withTableName(tableName)
-      .withScanFilter(scanFilter.asJava)
-    if (limit > 0)
-      scanRequest.setLimit(limit)
-    if (logger.isDebugEnabled)
-      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-
-    client.scan(scanRequest) map { result =>
-      if (logger.isDebugEnabled)
-        logger.debug(s"scanOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
-
-      result.getItems.asScala.view map { item =>
-        serializer.fromAttributeMap(item.asScala)
-      }
-    }
+    scanProgressively(scanFilter, limit).map(_._2)
   }
 
   /**
@@ -671,10 +655,10 @@ trait AmazonDynamoDBScalaMapper {
     * @see [[countScan]]
     */
   def scanProgressively[T](
-                   scanFilter: Map[String, Condition] = Map.empty,
-                   limit : Int = 0,
-                   lastEvaluatedKey: Option[DynamoDBKey] = None
-                          )(implicit serializer: DynamoDBSerializer[T]): Future[(Option[DynamoDBKey], Seq[T])] = {
+    scanFilter: Map[String, Condition] = Map.empty,
+    limit: Int = 0,
+    lastEvaluatedKey: Option[DynamoDBKey] = None
+  )(implicit serializer: DynamoDBSerializer[T]): Future[(Option[DynamoDBKey], Seq[T])] = {
     val scanRequest =
       new ScanRequest()
         .withTableName(tableName)
@@ -683,9 +667,14 @@ trait AmazonDynamoDBScalaMapper {
     if (limit > 0)
       scanRequest.setLimit(limit)
 
+    if (logger.isDebugEnabled)
+      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+
     client.scan(
       scanRequest.withExclusiveStartKey(lastEvaluatedKey.orNull)
     ) map { result =>
+      if (logger.isDebugEnabled)
+        logger.debug(s"scanOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
       val r = result.getItems.asScala map { item =>
         serializer.fromAttributeMap(item.asScala)
