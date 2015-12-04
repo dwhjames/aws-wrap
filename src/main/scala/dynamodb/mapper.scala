@@ -588,13 +588,6 @@ trait AmazonDynamoDBScalaMapper {
   def scan[T](
     scanFilter: Map[String, Condition] = Map.empty
   )(implicit serializer: DynamoDBSerializer[T]): Future[Seq[T]] = {
-    val scanRequest =
-      new ScanRequest()
-      .withTableName(tableName)
-      .withScanFilter(scanFilter.asJava)
-    if (logger.isDebugEnabled)
-      scanRequest.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
-
     val builder = Seq.newBuilder[T]
 
     def local(lastKey: Option[DynamoDBKey] = None): Future[Seq[T]] =
@@ -602,7 +595,7 @@ trait AmazonDynamoDBScalaMapper {
         case (key, result) =>
           builder ++= result
           key match {
-            case None   => Future.successful(builder.result)
+            case None   => Future.successful(builder.result())
             case optKey => local(optKey)
           }
       }
