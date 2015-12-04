@@ -597,24 +597,17 @@ trait AmazonDynamoDBScalaMapper {
 
     val builder = Seq.newBuilder[T]
 
-    def local(lastKey: Option[DynamoDBKey] = None): Future[Unit] =
-      client.scan(
-        scanRequest.withExclusiveStartKey(lastKey.orNull)
-      ) flatMap { result =>
-        if (logger.isDebugEnabled)
-          logger.debug(s"scan() ConsumedCapacity = ${result.getConsumedCapacity()}")
-
-        builder ++= result.getItems.asScala.view map { item =>
-          serializer.fromAttributeMap(item.asScala)
-        }
-
-        Option { result.getLastEvaluatedKey } match {
-          case None   => Future.successful(())
-          case optKey => local(optKey)
-        }
+    def local(lastKey: Option[DynamoDBKey] = None): Future[Seq[T]] =
+      scanProgressively(scanFilter, lastEvaluatedKey = lastKey).flatMap {
+        case (key, result) =>
+          builder ++= result
+          key match {
+            case None   => Future.successful(builder.result)
+            case optKey => local(optKey)
+          }
       }
 
-    local() map { _ => builder.result }
+    local()
   }
 
   /**
