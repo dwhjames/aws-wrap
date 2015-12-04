@@ -28,7 +28,8 @@ libraryDependencies ++= Seq(
   Dependencies.Compile.awsJavaSDK_simpledb % "provided",
   Dependencies.Compile.awsJavaSDK_sns % "provided",
   Dependencies.Compile.awsJavaSDK_sqs % "provided",
-  Dependencies.Compile.slf4j
+  Dependencies.Compile.slf4j,
+  Dependencies.Test.scalaTest
 )
 
 
