@@ -277,4 +277,11 @@ package object dynamodb {
   /** string set AttributeValue to Set[BigDecimal] */
   implicit val attributeValueToBigDecimalSet = (x: AttributeValue) => catchAndRethrowConversion { x.getSS.asScala.map(BigDecimal(_)).toSet }
 
+
+
+  import scala.collection.JavaConversions._
+
+  implicit def attributeValueToMapString[T](implicit to: AttributeValue => T): AttributeValue => Map[String, T] = (x: AttributeValue) => catchAndRethrowConversion { x.getM.mapValues(to(_)).toMap }
+
+  implicit def mapStringToAttributeValue[T](implicit to: T => AttributeValue): Map[String, T] => AttributeValue = (x: Map[String, T]) => new AttributeValue().withM(x.mapValues(to).asJava)
 }
