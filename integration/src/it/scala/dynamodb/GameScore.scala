@@ -28,7 +28,8 @@ case class GameScore(
     topScoreDateTime: DateTime,
     wins:             Long,
     losses:           Long,
-    extra:            Map[String, String] = Map.empty
+    extra:            Map[String, String] = Map.empty,
+    seq:              Seq[String] = Seq.empty
 )
 
 object GameScore {
@@ -71,6 +72,7 @@ object GameScore {
     val wins             = "Wins"
     val losses           = "Losses"
     val extra            = "extra"
+    val seq              = "seq"
   }
 
   implicit object sameScoreSerializer extends DynamoDBSerializer[GameScore] {
@@ -94,7 +96,8 @@ object GameScore {
         Attributes.topScoreDateTime -> fmt.print(score.topScoreDateTime),
         Attributes.wins             -> score.wins,
         Attributes.losses           -> score.losses,
-        Attributes.extra            -> implicitly[Map[String, String] => AttributeValue].apply(score.extra)
+        mkAttribute(Attributes.extra            -> score.extra),
+        mkAttribute(Attributes.seq              -> score.seq)
       )
 
     override def fromAttributeMap(item: collection.mutable.Map[String, AttributeValue]) =
@@ -105,7 +108,8 @@ object GameScore {
         topScoreDateTime = fmt.parseDateTime(item(Attributes.topScoreDateTime)),
         wins             = item(Attributes.wins),
         losses           = item(Attributes.losses),
-        extra            = implicitly[AttributeValue => Map[String, String]].apply(item(Attributes.extra))
+        extra            = item(Attributes.extra).as[Map[String, String]], // or .as
+        seq              = item(Attributes.seq).as[Seq[String]] // or .as
       )
   }
 }
