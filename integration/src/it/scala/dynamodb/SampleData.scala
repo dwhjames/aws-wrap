@@ -114,7 +114,9 @@ object SampleData {
         topScore = 5842,
         topScoreDateTime = DateTime.now.minusDays(1),
         wins = 21,
-        losses = 72
+        losses = 72,
+        extra = Map("key1" -> "value1"),
+        seq = Seq("1", "a")
       ),
       GameScore(
         userId = "101",
@@ -130,7 +132,9 @@ object SampleData {
         topScore = 24,
         topScoreDateTime = DateTime.now.minusDays(3),
         wins = 4,
-        losses = 9
+        losses = 9,
+        extra = Map("key2" -> "value2", "key3" -> "value3"),
+        seq = Seq("4", "d")
       ),
 
       GameScore(

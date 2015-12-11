@@ -83,7 +83,7 @@ trait DynamoDBSerializer[T] {
    * {{{
    * override def toAttributeMap(obj: Foo): Map[String, AttributeValue] =
    *   Map(
-   *     mkAtrribute("company", obj.company),
+   *     mkAttribute("company", obj.company),
    *     ...
    *   )
    * }}}
@@ -97,7 +97,7 @@ trait DynamoDBSerializer[T] {
    * {{{
    * override def toAttributeMap(obj: Foo): Map[String, AttributeValue] =
    *   Map(
-   *     mkAtrribute("company" -> obj.company),
+   *     mkAttribute("company" -> obj.company),
    *     ...
    *   )
    * }}}

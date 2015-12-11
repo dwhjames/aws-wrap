@@ -17,9 +17,16 @@
 
 package com.github.dwhjames.awswrap
 
+import java.util
+
 import scala.collection.JavaConverters._
 
 import com.amazonaws.services.dynamodbv2.model._
+
+import scala.collection.generic.{IsTraversableOnce, CanBuildFrom}
+import scala.language.higherKinds
+import scala.language.implicitConversions
+
 
 package object dynamodb {
 
@@ -134,7 +141,7 @@ package object dynamodb {
   /** String to a string AttributeValue */
   implicit val stringToAttributeValue = (x: String) => new AttributeValue().withS(x)
   /** String collection to a string set AttributeValue */
-  implicit val stringIterableToAttributeValue = (x: Iterable[String]) => new AttributeValue().withSS(x.asJavaCollection)
+  implicit val stringIterableToAttributeValue = (x: Set[String]) => new AttributeValue().withSS(x.asJavaCollection)
 
 
   /** Double to a numeric AttributeValue */
@@ -277,4 +284,31 @@ package object dynamodb {
   /** string set AttributeValue to Set[BigDecimal] */
   implicit val attributeValueToBigDecimalSet = (x: AttributeValue) => catchAndRethrowConversion { x.getSS.asScala.map(BigDecimal(_)).toSet }
 
+
+
+  import scala.collection.JavaConversions._
+
+  implicit def attributeValueToMapString[T](implicit to: AttributeValue => T): AttributeValue => Map[String, T] = (x: AttributeValue) => catchAndRethrowConversion { x.getM.mapValues(to(_)).toMap }
+
+  implicit def mapStringToAttributeValue[T](implicit to: T => AttributeValue): Map[String, T] => AttributeValue = (x: Map[String, T]) => new AttributeValue().withM(x.mapValues(to).asJava)
+
+  implicit def decodeCanBuildFrom[A, C[_]](implicit bf: CanBuildFrom[Nothing, A, C[A]], conv: AttributeValue => A): AttributeValue => C[A] = {
+    (x: AttributeValue) =>
+      val builder = bf()
+      val list = x.getL
+      builder ++= list.map(conv)
+      builder.result()
+  }
+
+  implicit def encodeTraversableOnce[A0, C[_]](implicit
+                                               e: A0 => AttributeValue,
+                                               is: IsTraversableOnce[C[A0]] {type A = A0}
+                                              ): C[A0] => AttributeValue = { x =>
+      val xx = is.conversion(x)
+      val list = new util.ArrayList[AttributeValue]()
+      xx.foreach { elem =>
+        list.add(e(elem))
+      }
+      new AttributeValue().withL(list)
+  }
 }
