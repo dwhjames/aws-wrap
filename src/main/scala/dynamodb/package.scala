@@ -141,7 +141,7 @@ package object dynamodb {
   /** String to a string AttributeValue */
   implicit val stringToAttributeValue = (x: String) => new AttributeValue().withS(x)
   /** String collection to a string set AttributeValue */
-  implicit val stringIterableToAttributeValue = (x: Iterable[String]) => new AttributeValue().withSS(x.asJavaCollection)
+  implicit val stringIterableToAttributeValue = (x: Set[String]) => new AttributeValue().withSS(x.asJavaCollection)
 
 
   /** Double to a numeric AttributeValue */
