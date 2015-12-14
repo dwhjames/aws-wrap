@@ -138,17 +138,20 @@ package object dynamodb {
 
 
   /** Double to a numeric AttributeValue */
-  implicit val doubleToAttributeValue = (x: Double) => new AttributeValue().withN(x.toString)
+  implicit val doubleToAttributeValue     = (x: Double)     => new AttributeValue().withN(x.toString)
   /** Float to a numeric AttributeValue */
-  implicit val floatToAttributeValue  = (x: Float)  => new AttributeValue().withN(x.toString)
+  implicit val floatToAttributeValue      = (x: Float)      => new AttributeValue().withN(x.toString)
   /** Long to a numeric AttributeValue */
-  implicit val longToAttributeValue   = (x: Long)   => new AttributeValue().withN(x.toString)
+  implicit val longToAttributeValue       = (x: Long)       => new AttributeValue().withN(x.toString)
   /** Int to a numeric AttributeValue */
-  implicit val intToAttributeValue    = (x: Int)    => new AttributeValue().withN(x.toString)
+  implicit val intToAttributeValue        = (x: Int)        => new AttributeValue().withN(x.toString)
   /** Short to a numeric AttributeValue */
-  implicit val shortToAttributeValue  = (x: Short)  => new AttributeValue().withN(x.toString)
+  implicit val shortToAttributeValue      = (x: Short)      => new AttributeValue().withN(x.toString)
   /** Byte to a numeric AttributeValue */
-  implicit val byteToAttributeValue   = (x: Byte)   => new AttributeValue().withN(x.toString)
+  implicit val byteToAttributeValue       = (x: Byte)       => new AttributeValue().withN(x.toString)
+  /** BigDecimal to a numeric AttributeValue */
+  implicit val bigDecimalToAttributeValue = (x: BigDecimal) => new AttributeValue().withN(x.toString)
+
 
   /** Double collection to a numeric set AttributeValue */
   implicit val doubleIterableToAttributeValue = (x: Iterable[Double]) => new AttributeValue().withNS(x.map(_.toString).asJavaCollection)
@@ -177,8 +180,6 @@ package object dynamodb {
 
   /** BigInt to a string AttributeValue */
   implicit val bigIntToAttributeValue     = (x: BigInt)     => new AttributeValue().withS(x.toString)
-  /** BigDecimal to a string AttributeValue */
-  implicit val bigDecimalToAttributeValue = (x: BigDecimal) => new AttributeValue().withS(x.toString)
 
   /** BigInt to a string set AttributeValue */
   implicit val bigIntIterableToAttributeValue     = (x: Iterable[BigInt])     => new AttributeValue().withSS(x.map(_.toString).asJavaCollection)
