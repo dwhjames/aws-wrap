@@ -25,7 +25,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.Try
 
-import java.util.concurrent.{Executors, ExecutorService, ThreadFactory}
+import java.util.concurrent.{TimeUnit, Executors, ExecutorService, ThreadFactory}
 import java.util.concurrent.atomic.AtomicLong
 
 import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
@@ -183,13 +183,16 @@ class AmazonS3ScalaClient(
   def getExecutorsService(): ExecutorService = executorService
 
   /**
-    * Shutdown the executor service.
+    * Attempt to shutdown the executor service gracefully, and if it takes longer than 30 seconds issues a ShutdownNow command which interrupts the sleeping com.amazonaws.http.IdleConnectionReaper.
     *
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/AmazonWebServiceClient.html#shutdown() AmazonWebServiceClient.shutdown()]]
     */
   def shutdown(): Unit = {
     client.shutdown()
-    executorService.shutdownNow()
+    executorService.shutdown()
+    if (!executorService.awaitTermination(30, TimeUnit.SECONDS)) {
+      executorService.shutdownNow()
+    }
     ()
   }
 
