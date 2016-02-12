@@ -214,6 +214,12 @@ class AmazonS3ScalaClient(
   }
 
   /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#abortMultipartUpload(com.amazonaws.services.s3.model.AbortMultipartUploadRequest)]]
+    */
+  def abortMultipartUpload(req: AbortMultipartUploadRequest): Future[Unit] =
+    wrapMethod[AbortMultipartUploadRequest, Unit](client.abortMultipartUpload, req)
+
+  /**
    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#completeMultipartUpload(com.amazonaws.services.s3.model.CompleteMultipartUploadRequest) AWS Java SDK]]
    */
   def completeMultipartUpload(
@@ -447,6 +453,18 @@ class AmazonS3ScalaClient(
     wrapMethod[ListObjectsRequest, ObjectListing](client.listObjects, listObjectsRequest)
 
   /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listNextBatchOfObjects(com.amazonaws.services.s3.model.ListNextBatchOfObjectsRequest)]]
+    */
+  def listNextBatchOfObjects(req: ListNextBatchOfObjectsRequest): Future[ObjectListing] =
+    wrapMethod[ListNextBatchOfObjectsRequest, ObjectListing](client.listNextBatchOfObjects, req)
+
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listNextBatchOfObjects(com.amazonaws.services.s3.model.ObjectListing)]]
+    */
+  def listNextBatchOfObjects(req: ObjectListing): Future[ObjectListing] =
+    wrapMethod[ObjectListing, ObjectListing](client.listNextBatchOfObjects, req)
+
+  /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listObjects(com.amazonaws.services.s3.model.ListObjectsRequest) AWS Java SDK]]
     */
   def listObjects(
@@ -532,6 +550,13 @@ class AmazonS3ScalaClient(
     metadata: ObjectMetadata
   ): Future[PutObjectResult] =
     putObject(new PutObjectRequest(bucketName, key, input, metadata))
+
+  /**
+    * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#uploadPart(com.amazonaws.services.s3.model.UploadPartRequest)]]
+    */
+  def uploadPart(req: UploadPartRequest): Future[UploadPartResult] =
+    wrapMethod[UploadPartRequest, UploadPartResult](client.uploadPart, req)
+
 }
 
 /**
