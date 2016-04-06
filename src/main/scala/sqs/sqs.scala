@@ -34,7 +34,10 @@ class AmazonSQSScalaClient(
   def addPermission(
     addPermissionRequest: AddPermissionRequest
   ): Future[Unit] =
-    wrapVoidAsyncMethod(client.addPermissionAsync, addPermissionRequest)
+    wrapVoidAsyncMethod[AddPermissionRequest](
+      client.addPermissionAsync,
+      addPermissionRequest
+    )
 
   def addPermission(
     queueUrl:       String,
@@ -55,7 +58,10 @@ class AmazonSQSScalaClient(
   def changeMessageVisibility(
     changeMessageVisibilityRequest: ChangeMessageVisibilityRequest
   ): Future[Unit] =
-    wrapVoidAsyncMethod(client.changeMessageVisibilityAsync, changeMessageVisibilityRequest)
+    wrapVoidAsyncMethod[ChangeMessageVisibilityRequest](
+      client.changeMessageVisibilityAsync,
+      changeMessageVisibilityRequest
+    )
 
   def changeMessageVisibility(
     queueUrl:          String,
@@ -67,7 +73,10 @@ class AmazonSQSScalaClient(
   def changeMessageVisibilityBatch(
     changeMessageVisibilityBatchRequest: ChangeMessageVisibilityBatchRequest
   ): Future[ChangeMessageVisibilityBatchResult] =
-    wrapAsyncMethod(client.changeMessageVisibilityBatchAsync, changeMessageVisibilityBatchRequest)
+    wrapAsyncMethod[ChangeMessageVisibilityBatchRequest, ChangeMessageVisibilityBatchResult](
+      client.changeMessageVisibilityBatchAsync,
+      changeMessageVisibilityBatchRequest
+    )
 
   def changeMessageVisibilityBatch(
     queueUrl:            String,
@@ -86,7 +95,10 @@ class AmazonSQSScalaClient(
   def createQueue(
     createQueueRequest: CreateQueueRequest
   ): Future[CreateQueueResult] =
-    wrapAsyncMethod(client.createQueueAsync, createQueueRequest)
+    wrapAsyncMethod[CreateQueueRequest, CreateQueueResult](
+      client.createQueueAsync,
+      createQueueRequest
+    )
 
   def createQueue(
     queueName: String,
@@ -104,7 +116,10 @@ class AmazonSQSScalaClient(
   def deleteMessage(
     deleteMessageRequest: DeleteMessageRequest
   ): Future[Unit] =
-    wrapVoidAsyncMethod(client.deleteMessageAsync, deleteMessageRequest)
+    wrapVoidAsyncMethod[DeleteMessageRequest](
+      client.deleteMessageAsync,
+      deleteMessageRequest
+    )
 
   def deleteMessage(
     queueUrl:      String,
@@ -115,7 +130,10 @@ class AmazonSQSScalaClient(
   def deleteMessageBatch(
     deleteMessageBatchRequest: DeleteMessageBatchRequest
   ): Future[DeleteMessageBatchResult] =
-    wrapAsyncMethod(client.deleteMessageBatchAsync, deleteMessageBatchRequest)
+    wrapAsyncMethod[DeleteMessageBatchRequest, DeleteMessageBatchResult](
+      client.deleteMessageBatchAsync,
+      deleteMessageBatchRequest
+    )
 
   def deleteMessageBatch(
     queueUrl: String,
@@ -133,7 +151,10 @@ class AmazonSQSScalaClient(
   def deleteQueue(
     deleteQueueRequest: DeleteQueueRequest
   ): Future[Unit] =
-    wrapVoidAsyncMethod(client.deleteQueueAsync, deleteQueueRequest)
+    wrapVoidAsyncMethod[DeleteQueueRequest](
+      client.deleteQueueAsync,
+      deleteQueueRequest
+    )
 
   def deleteQueue(
     queueUrl: String
@@ -146,7 +167,10 @@ class AmazonSQSScalaClient(
   def getQueueAttributes(
     getQueueAttributesRequest: GetQueueAttributesRequest
   ): Future[GetQueueAttributesResult] =
-    wrapAsyncMethod(client.getQueueAttributesAsync, getQueueAttributesRequest)
+    wrapAsyncMethod[GetQueueAttributesRequest, GetQueueAttributesResult](
+      client.getQueueAttributesAsync,
+      getQueueAttributesRequest
+    )
 
   def getQueueAttributes(
     queueUrl: String,
@@ -160,7 +184,10 @@ class AmazonSQSScalaClient(
   def getQueueUrl(
     getQueueUrlRequest: GetQueueUrlRequest
   ): Future[GetQueueUrlResult] =
-    wrapAsyncMethod(client.getQueueUrlAsync, getQueueUrlRequest)
+    wrapAsyncMethod[GetQueueUrlRequest, GetQueueUrlResult](
+      client.getQueueUrlAsync,
+      getQueueUrlRequest
+    )
 
   def getQueueUrl(
     queueName: String
@@ -170,7 +197,10 @@ class AmazonSQSScalaClient(
   def listQueues(
     listQueuesRequest: ListQueuesRequest
   ): Future[ListQueuesResult] =
-    wrapAsyncMethod(client.listQueuesAsync, listQueuesRequest)
+    wrapAsyncMethod[ListQueuesRequest, ListQueuesResult](
+      client.listQueuesAsync,
+      listQueuesRequest
+    )
 
   def listQueues(
     queueNamePrefix: String = null
@@ -180,7 +210,10 @@ class AmazonSQSScalaClient(
   def receiveMessage(
     receiveMessageRequest: ReceiveMessageRequest
   ): Future[ReceiveMessageResult] =
-    wrapAsyncMethod(client.receiveMessageAsync, receiveMessageRequest)
+    wrapAsyncMethod[ReceiveMessageRequest, ReceiveMessageResult](
+      client.receiveMessageAsync,
+      receiveMessageRequest
+    )
 
   def receiveMessage(
     queueUrl: String
@@ -199,7 +232,10 @@ class AmazonSQSScalaClient(
   def removePermission(
     removePermissionRequest: RemovePermissionRequest
   ): Future[Unit] =
-    wrapVoidAsyncMethod(client.removePermissionAsync, removePermissionRequest)
+    wrapVoidAsyncMethod[RemovePermissionRequest](
+      client.removePermissionAsync,
+      removePermissionRequest
+    )
 
   def removePermission(
     queueUrl: String,
@@ -210,7 +246,10 @@ class AmazonSQSScalaClient(
   def sendMessage(
     sendMessageRequest: SendMessageRequest
   ): Future[SendMessageResult] =
-    wrapAsyncMethod(client.sendMessageAsync, sendMessageRequest)
+    wrapAsyncMethod[SendMessageRequest, SendMessageResult](
+      client.sendMessageAsync,
+      sendMessageRequest
+    )
 
   def sendMessage(
     queueUrl:    String,
@@ -221,7 +260,10 @@ class AmazonSQSScalaClient(
   def sendMessageBatch(
     sendMessageBatchRequest: SendMessageBatchRequest
   ): Future[SendMessageBatchResult] =
-    wrapAsyncMethod(client.sendMessageBatchAsync, sendMessageBatchRequest)
+    wrapAsyncMethod[SendMessageBatchRequest, SendMessageBatchResult](
+      client.sendMessageBatchAsync,
+      sendMessageBatchRequest
+    )
 
   def sendMessageBatch(
     queueUrl: String,
@@ -239,7 +281,10 @@ class AmazonSQSScalaClient(
   def setQueueAttributes(
     setQueueAttributesRequest: SetQueueAttributesRequest
   ): Future[Unit] =
-    wrapVoidAsyncMethod(client.setQueueAttributesAsync, setQueueAttributesRequest)
+    wrapVoidAsyncMethod[SetQueueAttributesRequest](
+      client.setQueueAttributesAsync,
+      setQueueAttributesRequest
+    )
 
   def setQueueAttributes(
     queueUrl:   String,
