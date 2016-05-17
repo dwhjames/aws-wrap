@@ -331,7 +331,7 @@ trait AmazonDynamoDBScalaMapper {
 
       client.deleteItem(request) map { result =>
         if (logger.isDebugEnabled)
-          logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          logger.debug(s"table $tableName deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
         Option { result.getAttributes } map { item =>
           serializer.fromAttributeMap(item.asScala)
@@ -377,7 +377,7 @@ trait AmazonDynamoDBScalaMapper {
 
       client.deleteItem(request) map { result =>
         if (logger.isDebugEnabled)
-          logger.debug(s"deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          logger.debug(s"table $tableName deleteByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
         Option { result.getAttributes } map { item =>
           serializer.fromAttributeMap(item.asScala)
@@ -422,7 +422,7 @@ trait AmazonDynamoDBScalaMapper {
 
     client.deleteItem(request) map { result =>
       if (logger.isDebugEnabled)
-        logger.debug(s"delete() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        logger.debug(s"table $tableName delete() ConsumedCapacity = ${result.getConsumedCapacity()}")
     }
   }
 
@@ -453,7 +453,7 @@ trait AmazonDynamoDBScalaMapper {
 
     client.putItem(request) map { result =>
       if (logger.isDebugEnabled)
-        logger.debug(s"dump() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        logger.debug(s"table $tableName dump() ConsumedCapacity = ${result.getConsumedCapacity()}")
     }
   }
 
@@ -506,7 +506,7 @@ trait AmazonDynamoDBScalaMapper {
 
       client.getItem(request) map { result =>
         if (logger.isDebugEnabled)
-          logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          logger.debug(s"table $tableName loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
         Option { result.getItem } map { item =>
           serializer.fromAttributeMap(item.asScala)
@@ -551,7 +551,7 @@ trait AmazonDynamoDBScalaMapper {
 
       client.getItem(request) map { result =>
         if (logger.isDebugEnabled)
-          logger.debug(s"loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          logger.debug(s"table $tableName loadByKey() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
         Option { result.getItem } map { item =>
           serializer.fromAttributeMap(item.asScala)
@@ -660,7 +660,7 @@ trait AmazonDynamoDBScalaMapper {
       scanRequest.withExclusiveStartKey(lastEvaluatedKey.orNull)
     ) map { result =>
       if (logger.isDebugEnabled)
-        logger.debug(s"scanOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
+        logger.debug(s"table $tableName scanOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
       val r = result.getItems.asScala map { item =>
         serializer.fromAttributeMap(item.asScala)
@@ -700,7 +700,7 @@ trait AmazonDynamoDBScalaMapper {
         scanRequest.withExclusiveStartKey(lastKey.orNull)
       ) flatMap { result =>
         if (logger.isDebugEnabled)
-          logger.debug(s"countScan() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          logger.debug(s"table $tableName countScan() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
         val newCount = count + result.getCount
         Option { result.getLastEvaluatedKey } match {
@@ -799,7 +799,7 @@ trait AmazonDynamoDBScalaMapper {
           queryRequest.withExclusiveStartKey(lastKey.orNull)
         ) flatMap { result =>
           if (logger.isDebugEnabled)
-            logger.debug(s"query() ConsumedCapacity = ${result.getConsumedCapacity}")
+            logger.debug(s"table $tableName query() ConsumedCapacity = ${result.getConsumedCapacity}")
 
           val queryResult = result.getItems.asScala map { item =>
               serializer.fromAttributeMap(item.asScala)
@@ -1372,7 +1372,7 @@ trait AmazonDynamoDBScalaMapper {
         queryRequest
       ) map { result =>
         if (logger.isDebugEnabled)
-          logger.debug(s"queryOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          logger.debug(s"table $tableName queryOnce() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
         result.getItems.asScala.view map { item =>
           serializer.fromAttributeMap(item.asScala)
@@ -1747,7 +1747,7 @@ trait AmazonDynamoDBScalaMapper {
           queryRequest.withExclusiveStartKey(lastKey.orNull)
         ) flatMap { result =>
           if (logger.isDebugEnabled)
-            logger.debug(s"countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
+            logger.debug(s"table $tableName countQuery() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
           val newCount = count + result.getCount
 
@@ -2022,7 +2022,7 @@ trait AmazonDynamoDBScalaMapper {
 
         client.batchGetItem(request) flatMap { result =>
           if (logger.isDebugEnabled)
-            logger.debug(s"batchLoadByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+            logger.debug(s"table $tableName batchLoadByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
           builder ++= result.getResponses.get(tableName).asScala.view map { item =>
             serializer.fromAttributeMap(item.asScala)
@@ -2118,7 +2118,7 @@ trait AmazonDynamoDBScalaMapper {
 
       client.batchWriteItem(request) flatMap { result =>
         if (logger.isDebugEnabled)
-          logger.debug(s"batchDump() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          logger.debug(s"table $tableName batchDump() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
         checkRetryBatchWrite(result) flatMap { _ =>
           if (objsPair._2.isEmpty)
@@ -2168,7 +2168,7 @@ trait AmazonDynamoDBScalaMapper {
 
       client.batchWriteItem(request) flatMap { result =>
         if (logger.isDebugEnabled)
-          logger.debug(s"batchDelete() ConsumedCapacity = ${result.getConsumedCapacity()}")
+          logger.debug(s"table $tableName batchDelete() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
         checkRetryBatchWrite(result) flatMap { _ =>
           if (objsPair._2.isEmpty)
@@ -2276,7 +2276,7 @@ trait AmazonDynamoDBScalaMapper {
 
         client.batchWriteItem(request) flatMap { result =>
           if (logger.isDebugEnabled)
-            logger.debug(s"batchDeleteByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
+            logger.debug(s"table $tableName batchDeleteByKeys() ConsumedCapacity = ${result.getConsumedCapacity()}")
 
           checkRetryBatchWrite(result) flatMap { _ =>
             if (keysPair._2.isEmpty)
