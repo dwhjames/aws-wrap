@@ -32,6 +32,11 @@ object Dependencies {
     val logback    = "ch.qos.logback" % "logback-classic" % V.logback
   }
 
+  object Test {
+
+    val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+  }
+
   object IntegrationTest {
 
     val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % "it"

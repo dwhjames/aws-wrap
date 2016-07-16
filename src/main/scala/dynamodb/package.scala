@@ -264,9 +264,9 @@ package object dynamodb {
   implicit val attributeValueToByteArraySet = (x: AttributeValue) => catchAndRethrowConversion { x.getBS.asScala.map(_.array).toSet }
 
   /** string AttributeValue to Boolean */
-  implicit val attributeValueToBoolean = (x: AttributeValue) => catchAndRethrowConversion { x.getS.toBoolean }
+  implicit val attributeValueToBoolean = (x: AttributeValue) => catchAndRethrowConversion { x.getBOOL }
   /** string set AttributeValue to Set[Boolean] */
-  implicit val attributeValueToBooleanSet = (x: AttributeValue) => catchAndRethrowConversion { x.getSS.asScala.map(_.toBoolean).toSet }
+  implicit val attributeValueToBooleanSet = (x: AttributeValue) => catchAndRethrowConversion { x.getL.asScala.map(_.getBOOL).toSet }
 
   /** string AttributeValue to BigInt */
   implicit val attributeValueToBigInt     = (x: AttributeValue) => catchAndRethrowConversion { BigInt(x.getS) }
