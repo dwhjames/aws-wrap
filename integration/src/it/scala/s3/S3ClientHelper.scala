@@ -23,9 +23,8 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.transfer._
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 trait S3ClientHelper
   extends BeforeAndAfterAll
@@ -35,9 +34,10 @@ trait S3ClientHelper
   private val logger: Logger = LoggerFactory.getLogger(self.getClass)
 
   val client = {
+    val option = S3ClientOptions.builder().setPathStyleAccess(true).build()
     val c = new AmazonS3ScalaClient(new BasicAWSCredentials("FAKE_ACCESS_KEY", "FAKE_SECRET_KEY"))
     c.client.setEndpoint("http://localhost:4000")
-    c.client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true))
+    c.client.setS3ClientOptions(option)
     c
   }
 

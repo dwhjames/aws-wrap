@@ -17,14 +17,9 @@
 package com.github.dwhjames.awswrap
 package s3
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 import java.io.File
 
-import org.scalatest.{ FlatSpec, Matchers }
-
-import com.amazonaws.AmazonClientException
-
+import org.scalatest.{FlatSpec, Matchers}
 
 class FutureTransferSpec
   extends FlatSpec

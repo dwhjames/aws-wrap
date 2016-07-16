@@ -17,14 +17,11 @@
 
 package com.github.dwhjames.awswrap.dynamodb
 
+import org.scalatest.{FlatSpec, Matchers}
+
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-
-import org.scalatest.{ FlatSpec, BeforeAndAfterAll, Matchers }
-
-import com.amazonaws.AmazonClientException
-
 
 class ReadsOnHashKeyTableSpec
   extends FlatSpec
