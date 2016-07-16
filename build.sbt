@@ -1,20 +1,17 @@
-
 organization in ThisBuild := "com.github.dwhjames"
 
 licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 
-scalaVersion in ThisBuild := "2.11.7"
+scalaVersion in ThisBuild := "2.11.8"
 
-crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.7")
+crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.8")
 
 shellPrompt in ThisBuild := CustomShellPrompt.customPrompt
 
 resolvers in ThisBuild ++= Seq(
-    "typesafe" at "http://repo.typesafe.com/typesafe/releases",
-    "sonatype" at "http://oss.sonatype.org/content/repositories/releases"
-  )
-
-
+  "typesafe" at "http://repo.typesafe.com/typesafe/releases",
+  "sonatype" at "http://oss.sonatype.org/content/repositories/releases"
+)
 
 lazy val awsWrap = project in file(".")
 
@@ -32,16 +29,12 @@ libraryDependencies ++= Seq(
   Dependencies.Test.scalaTest
 )
 
-
 bintrayPackageLabels := Seq("aws", "dynamodb", "s3", "ses", "simpledb", "sns", "sqs", "async", "future")
-
-
 
 lazy val awsWrapTest = project.
   in(file("integration")).
   configs(IntegrationTest).
   dependsOn(awsWrap)
-
 
 lazy val scratch = project.
   in(file("scratch")).
