@@ -40,13 +40,13 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
   */
   def deleteAlarms(
     deleteAlarmsRequest: DeleteAlarmsRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.deleteAlarmsAsync, deleteAlarmsRequest)
+  ): Future[DeleteAlarmsResult] =
+    wrapAsyncMethod[DeleteAlarmsRequest, DeleteAlarmsResult](client.deleteAlarmsAsync, deleteAlarmsRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#deleteAlarms(com.amazonaws.services.cloudwatch.model.DeleteAlarmsRequest) AWS Java SDK]]
     */
-  def deleteAlarms(alarmNames: String*): Future[Unit] =
+  def deleteAlarms(alarmNames: String*): Future[DeleteAlarmsResult] =
     deleteAlarms(new DeleteAlarmsRequest().withAlarmNames(alarmNames: _*))
 
   /**
@@ -55,7 +55,7 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
   def describeAlarmHistory(
     describeAlarmHistoryRequest: DescribeAlarmHistoryRequest
   ): Future[DescribeAlarmHistoryResult] =
-    wrapAsyncMethod(client.describeAlarmHistoryAsync, describeAlarmHistoryRequest)
+    wrapAsyncMethod[DescribeAlarmHistoryRequest, DescribeAlarmHistoryResult](client.describeAlarmHistoryAsync, describeAlarmHistoryRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#describeAlarmHistory() AWS Java SDK]]
@@ -69,7 +69,7 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
   def describeAlarms(
     describeAlarmRequest: DescribeAlarmsRequest
   ): Future[DescribeAlarmsResult] =
-    wrapAsyncMethod(client.describeAlarmsAsync, describeAlarmRequest)
+    wrapAsyncMethod[DescribeAlarmsRequest, DescribeAlarmsResult](client.describeAlarmsAsync, describeAlarmRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#describeAlarms() AWS Java SDK]]
@@ -83,20 +83,20 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
   def describeAlarmsForMetric(
     describeAlarmsForMetricRequest: DescribeAlarmsForMetricRequest
   ): Future[DescribeAlarmsForMetricResult] =
-    wrapAsyncMethod(client.describeAlarmsForMetricAsync, describeAlarmsForMetricRequest)
+    wrapAsyncMethod[DescribeAlarmsForMetricRequest, DescribeAlarmsForMetricResult](client.describeAlarmsForMetricAsync, describeAlarmsForMetricRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#disableAlarmActions(com.amazonaws.services.cloudwatch.model.DisableAlarmActionsRequest) AWS Java SDK]]
     */
   def disableAlarmActions(
     disableAlarmActionsRequest: DisableAlarmActionsRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.disableAlarmActionsAsync, disableAlarmActionsRequest)
+  ): Future[DisableAlarmActionsResult] =
+    wrapAsyncMethod[DisableAlarmActionsRequest, DisableAlarmActionsResult](client.disableAlarmActionsAsync, disableAlarmActionsRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#disableAlarmActions(com.amazonaws.services.cloudwatch.model.DisableAlarmActionsRequest) AWS Java SDK]]
     */
-  def disableAlarmActions(alarmNames: String*): Future[Unit] =
+  def disableAlarmActions(alarmNames: String*): Future[DisableAlarmActionsResult] =
     disableAlarmActions(new DisableAlarmActionsRequest().withAlarmNames(alarmNames: _*))
 
   /**
@@ -104,13 +104,13 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
     */
   def enableAlarmActions(
     enableAlarmActionsRequest: EnableAlarmActionsRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.enableAlarmActionsAsync, enableAlarmActionsRequest)
+  ): Future[EnableAlarmActionsResult] =
+    wrapAsyncMethod[EnableAlarmActionsRequest, EnableAlarmActionsResult](client.enableAlarmActionsAsync, enableAlarmActionsRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#enableAlarmActions(com.amazonaws.services.cloudwatch.model.EnableAlarmActionsRequest) AWS Java SDK]]
     */
-  def enableAlarmActions(alarmNames: String*): Future[Unit] =
+  def enableAlarmActions(alarmNames: String*): Future[EnableAlarmActionsResult] =
     enableAlarmActions(new EnableAlarmActionsRequest().withAlarmNames(alarmNames: _*))
 
   /**
@@ -119,7 +119,7 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
   def getMetricStatistics(
     getMetricStatisticsRequest: GetMetricStatisticsRequest
   ): Future[GetMetricStatisticsResult] =
-    wrapAsyncMethod(client.getMetricStatisticsAsync, getMetricStatisticsRequest)
+    wrapAsyncMethod[GetMetricStatisticsRequest, GetMetricStatisticsResult](client.getMetricStatisticsAsync, getMetricStatisticsRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#listMetrics(com.amazonaws.services.cloudwatch.model.ListMetricsRequest) AWS Java SDK]]
@@ -127,7 +127,7 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
   def listMetrics(
     listMetricsRequest: ListMetricsRequest
   ): Future[ListMetricsResult] =
-    wrapAsyncMethod(client.listMetricsAsync, listMetricsRequest)
+    wrapAsyncMethod[ListMetricsRequest, ListMetricsResult](client.listMetricsAsync, listMetricsRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#listMetrics() AWS Java SDK]]
@@ -140,16 +140,16 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
     */
   def putMetricAlarm(
     putMetricAlarmRequest: PutMetricAlarmRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.putMetricAlarmAsync, putMetricAlarmRequest)
+  ): Future[PutMetricAlarmResult] =
+    wrapAsyncMethod[PutMetricAlarmRequest, PutMetricAlarmResult](client.putMetricAlarmAsync, putMetricAlarmRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#putMetricData(com.amazonaws.services.cloudwatch.model.PutMetricDataRequest) AWS Java SDK]]
     */
   def putMetricData(
     putMetricDataRequest: PutMetricDataRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.putMetricDataAsync, putMetricDataRequest)
+  ): Future[PutMetricDataResult] =
+    wrapAsyncMethod[PutMetricDataRequest, PutMetricDataResult](client.putMetricDataAsync, putMetricDataRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#putMetricData(com.amazonaws.services.cloudwatch.model.PutMetricDataRequest) AWS Java SDK]]
@@ -157,7 +157,7 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
   def putMetricData(
     namespace:  String,
     metricData: Iterable[MetricDatum]
-  ): Future[Unit] =
+  ): Future[PutMetricDataResult] =
     putMetricData(
       new PutMetricDataRequest()
       .withNamespace(namespace)
@@ -169,8 +169,8 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
     */
   def setAlarmState(
     setAlarmStateRequest: SetAlarmStateRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.setAlarmStateAsync, setAlarmStateRequest)
+  ): Future[SetAlarmStateResult] =
+    wrapAsyncMethod[SetAlarmStateRequest, SetAlarmStateResult](client.setAlarmStateAsync, setAlarmStateRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/cloudwatch/AmazonCloudWatch.html#setAlarmState(com.amazonaws.services.cloudwatch.model.SetAlarmStateRequest) AWS Java SDK]]
@@ -180,7 +180,7 @@ class AmazonCloudWatchScalaClient(val client: AmazonCloudWatchAsyncClient) {
     stateReason: String,
     stateValue: StateValue,
     stateReasonData: String = ""
-  ): Future[Unit] =
+  ): Future[SetAlarmStateResult] =
     setAlarmState(
       new SetAlarmStateRequest()
       .withAlarmName(alarmName)

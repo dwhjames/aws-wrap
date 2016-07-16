@@ -22,22 +22,21 @@ import java.io.{InputStream, File}
 import java.net.URL
 
 import scala.collection.JavaConverters._
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{Future, Promise}
 import scala.util.Try
 
 import java.util.concurrent.{TimeUnit, Executors, ExecutorService, ThreadFactory}
 import java.util.concurrent.atomic.AtomicLong
 
-import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
+import com.amazonaws.ClientConfiguration
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, DefaultAWSCredentialsProviderChain}
 import com.amazonaws.event.{ProgressListener, ProgressEvent, ProgressEventType}
-import com.amazonaws.internal.StaticCredentialsProvider;
+import com.amazonaws.internal.StaticCredentialsProvider
 import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.model._
 import com.amazonaws.services.s3.transfer.Transfer
 
 import org.slf4j.{Logger, LoggerFactory}
-
 
 private[s3] class S3ThreadFactory extends ThreadFactory {
   private val count = new AtomicLong(0L)
@@ -138,8 +137,6 @@ class AmazonS3ScalaClient(
     *
     * @param awsCredentials
     *     AWS credentials.
-    * @param clientConfiguration
-    *     a client configuration.
     * @param executorService
     *     an executor service for synchronous calls to the underlying AmazonS3Client.
     */

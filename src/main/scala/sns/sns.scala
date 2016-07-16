@@ -29,13 +29,13 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
 
   def addPermissionAsync(
     addPermissionAsyncRequest: AddPermissionRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.addPermissionAsync, addPermissionAsyncRequest)
+  ): Future[AddPermissionResult] =
+    wrapAsyncMethod[AddPermissionRequest, AddPermissionResult](client.addPermissionAsync, addPermissionAsyncRequest)
 
   def confirmSubscription(
     confirmSubscriptionRequest: ConfirmSubscriptionRequest
   ): Future[ConfirmSubscriptionResult] =
-    wrapAsyncMethod(client.confirmSubscriptionAsync, confirmSubscriptionRequest)
+    wrapAsyncMethod[ConfirmSubscriptionRequest, ConfirmSubscriptionResult](client.confirmSubscriptionAsync, confirmSubscriptionRequest)
 
   def confirmSubscription(
     topicArn: String,
@@ -46,7 +46,7 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
   def createTopic(
     createTopicRequest: CreateTopicRequest
   ): Future[CreateTopicResult] =
-    wrapAsyncMethod(client.createTopicAsync, createTopicRequest)
+    wrapAsyncMethod[CreateTopicRequest, CreateTopicResult](client.createTopicAsync, createTopicRequest)
 
   def createTopic(
     name: String
@@ -55,12 +55,12 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
 
   def deleteTopic(
     deleteTopicRequest: DeleteTopicRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.deleteTopicAsync, deleteTopicRequest)
+  ): Future[DeleteTopicResult] =
+    wrapAsyncMethod[DeleteTopicRequest, DeleteTopicResult](client.deleteTopicAsync, deleteTopicRequest)
 
   def deleteTopic(
     topicArn: String
-  ): Future[Unit] =
+  ): Future[DeleteTopicResult] =
     deleteTopic(new DeleteTopicRequest(topicArn))
 
   def getExecutorService(): ExecutorService =
@@ -72,7 +72,7 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
   def getSubscriptionAttributes(
     getSubscriptionAttributesRequest: GetSubscriptionAttributesRequest
   ): Future[GetSubscriptionAttributesResult] =
-    wrapAsyncMethod(client.getSubscriptionAttributesAsync, getSubscriptionAttributesRequest)
+    wrapAsyncMethod[GetSubscriptionAttributesRequest, GetSubscriptionAttributesResult](client.getSubscriptionAttributesAsync, getSubscriptionAttributesRequest)
 
   def getSubscriptionAttributes(
     subsciptionArn: String
@@ -80,7 +80,7 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
     getSubscriptionAttributes(new GetSubscriptionAttributesRequest(subsciptionArn))
 
   def getTopicAttributes(getTopicAttributesRequest: GetTopicAttributesRequest): Future[GetTopicAttributesResult] =
-    wrapAsyncMethod(client.getTopicAttributesAsync, getTopicAttributesRequest)
+    wrapAsyncMethod[GetTopicAttributesRequest, GetTopicAttributesResult](client.getTopicAttributesAsync, getTopicAttributesRequest)
 
   def getTopicAttributes(
     topicArn: String
@@ -90,7 +90,7 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
   def listSubscriptions(
     listSubscriptionsRequest: ListSubscriptionsRequest
   ): Future[ListSubscriptionsResult] =
-    wrapAsyncMethod(client.listSubscriptionsAsync, listSubscriptionsRequest)
+    wrapAsyncMethod[ListSubscriptionsRequest, ListSubscriptionsResult](client.listSubscriptionsAsync, listSubscriptionsRequest)
 
   def listSubscriptions(
     nextToken: String = null
@@ -100,7 +100,7 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
   def listSubscriptionsByTopic(
     listSubscriptionsByTopicRequest: ListSubscriptionsByTopicRequest
   ): Future[ListSubscriptionsByTopicResult] =
-      wrapAsyncMethod(client.listSubscriptionsByTopicAsync, listSubscriptionsByTopicRequest)
+      wrapAsyncMethod[ListSubscriptionsByTopicRequest, ListSubscriptionsByTopicResult](client.listSubscriptionsByTopicAsync, listSubscriptionsByTopicRequest)
 
   def listSubscriptionsByTopic(
     topicArn:  String,
@@ -111,7 +111,7 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
   def listTopics(
     listTopicsRequest: ListTopicsRequest
   ): Future[ListTopicsResult] =
-    wrapAsyncMethod(client.listTopicsAsync, listTopicsRequest)
+    wrapAsyncMethod[ListTopicsRequest, ListTopicsResult](client.listTopicsAsync, listTopicsRequest)
 
   def listTopics(
     nextToken: String = null
@@ -121,7 +121,7 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
   def publish(
     publishRequest: PublishRequest
   ): Future[PublishResult] =
-    wrapAsyncMethod(client.publishAsync, publishRequest)
+    wrapAsyncMethod[PublishRequest, PublishResult](client.publishAsync, publishRequest)
 
   def publish(
     topicArn: String,
@@ -131,18 +131,18 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
 
   def removePermission(
     removePermissionRequest: RemovePermissionRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.removePermissionAsync, removePermissionRequest)
+  ): Future[RemovePermissionResult] =
+    wrapAsyncMethod[RemovePermissionRequest, RemovePermissionResult](client.removePermissionAsync, removePermissionRequest)
 
   def setSubscriptionAttributes(
     setSubscriptionAttributesRequest: SetSubscriptionAttributesRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.setSubscriptionAttributesAsync, setSubscriptionAttributesRequest)
+  ): Future[SetSubscriptionAttributesResult] =
+    wrapAsyncMethod[SetSubscriptionAttributesRequest, SetSubscriptionAttributesResult](client.setSubscriptionAttributesAsync, setSubscriptionAttributesRequest)
 
   def setTopicAttributes(
     setTopicAttributesRequest: SetTopicAttributesRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.setTopicAttributesAsync, setTopicAttributesRequest)
+  ): Future[SetTopicAttributesResult] =
+    wrapAsyncMethod[SetTopicAttributesRequest, SetTopicAttributesResult](client.setTopicAttributesAsync, setTopicAttributesRequest)
 
   def shutdown(): Unit =
     client.shutdown()
@@ -150,7 +150,7 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
   def subscribe(
     subscribeRequest: SubscribeRequest
   ): Future[SubscribeResult] =
-    wrapAsyncMethod(client.subscribeAsync, subscribeRequest)
+    wrapAsyncMethod[SubscribeRequest, SubscribeResult](client.subscribeAsync, subscribeRequest)
 
   def subscribe(
     topicArn: String,
@@ -161,12 +161,12 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
 
   def unsubscribe(
     unsubscribeRequest: UnsubscribeRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.unsubscribeAsync, unsubscribeRequest)
+  ): Future[UnsubscribeResult] =
+    wrapAsyncMethod[UnsubscribeRequest, UnsubscribeResult](client.unsubscribeAsync, unsubscribeRequest)
 
   def unsubscribe(
     subsciptionArn: String
-  ): Future[Unit] =
+  ): Future[UnsubscribeResult] =
     unsubscribe(new UnsubscribeRequest(subsciptionArn))
 
 }

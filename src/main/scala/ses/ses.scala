@@ -31,7 +31,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def deleteIdentity(
     deleteIdentityRequest: DeleteIdentityRequest
   ): Future[DeleteIdentityResult] =
-      wrapAsyncMethod(client.deleteIdentityAsync, deleteIdentityRequest)
+      wrapAsyncMethod[DeleteIdentityRequest, DeleteIdentityResult](client.deleteIdentityAsync, deleteIdentityRequest)
 
   def deleteIdentity(
     identity: String
@@ -43,12 +43,12 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
 
   def deleteVerifiedEmailAddress(
     deleteVerifiedEmailAddressRequest: DeleteVerifiedEmailAddressRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.deleteVerifiedEmailAddressAsync, deleteVerifiedEmailAddressRequest)
+  ): Future[DeleteVerifiedEmailAddressResult] =
+    wrapAsyncMethod[DeleteVerifiedEmailAddressRequest, DeleteVerifiedEmailAddressResult](client.deleteVerifiedEmailAddressAsync, deleteVerifiedEmailAddressRequest)
 
   def deleteVerifiedEmailAddress(
     emailAddress: String
-  ): Future[Unit] =
+  ): Future[DeleteVerifiedEmailAddressResult] =
     deleteVerifiedEmailAddress(
       new DeleteVerifiedEmailAddressRequest()
       .withEmailAddress(emailAddress)
@@ -63,7 +63,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def getIdentityDkimAttributes(
     getIdentityDkimAttributesRequest: GetIdentityDkimAttributesRequest
   ): Future[GetIdentityDkimAttributesResult] =
-    wrapAsyncMethod(client.getIdentityDkimAttributesAsync, getIdentityDkimAttributesRequest)
+    wrapAsyncMethod[GetIdentityDkimAttributesRequest, GetIdentityDkimAttributesResult](client.getIdentityDkimAttributesAsync, getIdentityDkimAttributesRequest)
 
   def getIdentityDkimAttributes(
     identities: Iterable[String]
@@ -76,7 +76,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def getIdentityNotificationAttributes(
     getIdentityNotificationAttributesRequest: GetIdentityNotificationAttributesRequest
   ): Future[GetIdentityNotificationAttributesResult] =
-    wrapAsyncMethod(client.getIdentityNotificationAttributesAsync, getIdentityNotificationAttributesRequest)
+    wrapAsyncMethod[GetIdentityNotificationAttributesRequest, GetIdentityNotificationAttributesResult](client.getIdentityNotificationAttributesAsync, getIdentityNotificationAttributesRequest)
 
   def getIdentityNotificationAttributes(
     identities: Iterable[String]
@@ -89,7 +89,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def getIdentityVerificationAttributes(
     getIdentityVerificationAttributesRequest: GetIdentityVerificationAttributesRequest
   ): Future[GetIdentityVerificationAttributesResult] =
-    wrapAsyncMethod(client.getIdentityVerificationAttributesAsync, getIdentityVerificationAttributesRequest)
+    wrapAsyncMethod[GetIdentityVerificationAttributesRequest, GetIdentityVerificationAttributesResult](client.getIdentityVerificationAttributesAsync, getIdentityVerificationAttributesRequest)
 
   def getIdentityVerificationAttributes(
     identities: Iterable[String]
@@ -102,7 +102,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def getSendQuota(
     getSendQuotaRequest: GetSendQuotaRequest
   ): Future[GetSendQuotaResult] =
-    wrapAsyncMethod(client.getSendQuotaAsync, getSendQuotaRequest)
+    wrapAsyncMethod[GetSendQuotaRequest, GetSendQuotaResult](client.getSendQuotaAsync, getSendQuotaRequest)
 
   def getSendQuota(): Future[GetSendQuotaResult] =
     getSendQuota(new GetSendQuotaRequest)
@@ -110,7 +110,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def getSendStatistics(
     getSendStatisticsRequest: GetSendStatisticsRequest
   ): Future[GetSendStatisticsResult] =
-    wrapAsyncMethod(client.getSendStatisticsAsync, getSendStatisticsRequest)
+    wrapAsyncMethod[GetSendStatisticsRequest, GetSendStatisticsResult](client.getSendStatisticsAsync, getSendStatisticsRequest)
 
   def getSendStatistics(): Future[GetSendStatisticsResult] =
     getSendStatistics(new GetSendStatisticsRequest())
@@ -118,7 +118,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def listIdentities(
     listIdentitiesRequest: ListIdentitiesRequest
   ): Future[ListIdentitiesResult] =
-    wrapAsyncMethod(client.listIdentitiesAsync, listIdentitiesRequest)
+    wrapAsyncMethod[ListIdentitiesRequest, ListIdentitiesResult](client.listIdentitiesAsync, listIdentitiesRequest)
 
   def listIdentities(): Future[ListIdentitiesResult] =
     listIdentities(new ListIdentitiesRequest)
@@ -127,12 +127,12 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def listVerifiedEmailAddresses(
     listVerifiedEmailAddressesRequest: ListVerifiedEmailAddressesRequest
   ): Future[ListVerifiedEmailAddressesResult] =
-    wrapAsyncMethod(client.listVerifiedEmailAddressesAsync, listVerifiedEmailAddressesRequest)
+    wrapAsyncMethod[ListVerifiedEmailAddressesRequest, ListVerifiedEmailAddressesResult](client.listVerifiedEmailAddressesAsync, listVerifiedEmailAddressesRequest)
 
   def sendEmail(
     sendEmailRequest: SendEmailRequest
   ): Future[SendEmailResult] =
-    wrapAsyncMethod(client.sendEmailAsync, sendEmailRequest)
+    wrapAsyncMethod[SendEmailRequest, SendEmailResult](client.sendEmailAsync, sendEmailRequest)
 
   def sendEmail(
     source:      String,
@@ -144,7 +144,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def sendRawEmail(
     sendRawEmailRequest: SendRawEmailRequest
   ): Future[SendRawEmailResult] =
-    wrapAsyncMethod(client.sendRawEmailAsync, sendRawEmailRequest)
+    wrapAsyncMethod[SendRawEmailRequest, SendRawEmailResult](client.sendRawEmailAsync, sendRawEmailRequest)
 
   def sendRawEmail(
     rawMessage: RawMessage
@@ -154,7 +154,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def setIdentityDkimEnabled(
     setIdentityDkimEnabledRequest: SetIdentityDkimEnabledRequest
   ): Future[SetIdentityDkimEnabledResult] =
-    wrapAsyncMethod(client.setIdentityDkimEnabledAsync, setIdentityDkimEnabledRequest)
+    wrapAsyncMethod[SetIdentityDkimEnabledRequest, SetIdentityDkimEnabledResult](client.setIdentityDkimEnabledAsync, setIdentityDkimEnabledRequest)
 
   def setIdentityDkimEnabled(
     dkimEnabled: Boolean,
@@ -169,7 +169,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def setIdentityFeedbackForwardingEnabled(
     setIdentityFeedbackForwardingEnabledRequest: SetIdentityFeedbackForwardingEnabledRequest
   ): Future[SetIdentityFeedbackForwardingEnabledResult] =
-    wrapAsyncMethod(client.setIdentityFeedbackForwardingEnabledAsync, setIdentityFeedbackForwardingEnabledRequest)
+    wrapAsyncMethod[SetIdentityFeedbackForwardingEnabledRequest, SetIdentityFeedbackForwardingEnabledResult](client.setIdentityFeedbackForwardingEnabledAsync, setIdentityFeedbackForwardingEnabledRequest)
 
   def setIdentityFeedbackForwardingEnabled(
     forwardingEnabled: Boolean,
@@ -184,7 +184,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def setIdentityNotificationTopic(
     setIdentityNotificationTopicRequest: SetIdentityNotificationTopicRequest
   ): Future[SetIdentityNotificationTopicResult] =
-    wrapAsyncMethod(client.setIdentityNotificationTopicAsync, setIdentityNotificationTopicRequest)
+    wrapAsyncMethod[SetIdentityNotificationTopicRequest, SetIdentityNotificationTopicResult](client.setIdentityNotificationTopicAsync, setIdentityNotificationTopicRequest)
 
   def shutdown(): Unit =
     client.shutdown()
@@ -192,7 +192,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def verifyDomainDkim(
     verifyDomainDkimRequest: VerifyDomainDkimRequest
   ): Future[VerifyDomainDkimResult] =
-    wrapAsyncMethod(client.verifyDomainDkimAsync, verifyDomainDkimRequest)
+    wrapAsyncMethod[VerifyDomainDkimRequest, VerifyDomainDkimResult](client.verifyDomainDkimAsync, verifyDomainDkimRequest)
 
   def verifyDomainDkim(
     domain: String
@@ -205,7 +205,7 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   def verifyDomainIdentity(
     verifyDomainIdentityRequest: VerifyDomainIdentityRequest
   ): Future[VerifyDomainIdentityResult] =
-    wrapAsyncMethod(client.verifyDomainIdentityAsync, verifyDomainIdentityRequest)
+    wrapAsyncMethod[VerifyDomainIdentityRequest, VerifyDomainIdentityResult](client.verifyDomainIdentityAsync, verifyDomainIdentityRequest)
 
   def verifyDomainIdentity(
     domain: String
@@ -218,13 +218,13 @@ class AmazonSimpleEmailServiceScalaClient(val client: AmazonSimpleEmailServiceAs
   @deprecated("Use verifyEmailIdentity", "May 15, 2012")
   def verifyEmailAddress(
     verifyEmailAddressRequest: VerifyEmailAddressRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.verifyEmailAddressAsync, verifyEmailAddressRequest)
+  ): Future[VerifyEmailAddressResult] =
+    wrapAsyncMethod[VerifyEmailAddressRequest, VerifyEmailAddressResult](client.verifyEmailAddressAsync, verifyEmailAddressRequest)
 
   def verifyEmailIdentity(
     verifyEmailIdentityRequest: VerifyEmailIdentityRequest
   ): Future[VerifyEmailIdentityResult] =
-    wrapAsyncMethod(client.verifyEmailIdentityAsync, verifyEmailIdentityRequest)
+    wrapAsyncMethod[VerifyEmailIdentityRequest, VerifyEmailIdentityResult](client.verifyEmailIdentityAsync, verifyEmailIdentityRequest)
   
   def verifyEmailIdentity(
     emailAddress: String

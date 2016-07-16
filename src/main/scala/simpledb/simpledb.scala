@@ -30,13 +30,13 @@ class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
 
   def batchDeleteAttributes(
     batchDeleteAttributesRequest: BatchDeleteAttributesRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.batchDeleteAttributesAsync, batchDeleteAttributesRequest)
+  ): Future[BatchDeleteAttributesResult] =
+    wrapAsyncMethod[BatchDeleteAttributesRequest, BatchDeleteAttributesResult](client.batchDeleteAttributesAsync, batchDeleteAttributesRequest)
 
   def batchDeleteAttributes(
     domainName: String,
     items:      Seq[(String, Seq[(String, String)])]
-  ): Future[Unit] =
+  ): Future[BatchDeleteAttributesResult] =
     batchDeleteAttributes(
       new BatchDeleteAttributesRequest(
         domainName,
@@ -53,13 +53,13 @@ class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
 
   def batchPutAttributes(
     batchPutAttributesRequest: BatchPutAttributesRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.batchPutAttributesAsync, batchPutAttributesRequest)
+  ): Future[BatchPutAttributesResult] =
+    wrapAsyncMethod[BatchPutAttributesRequest, BatchPutAttributesResult](client.batchPutAttributesAsync, batchPutAttributesRequest)
 
   def batchPutAttributes(
     domainName: String,
     items:      Seq[(String, Seq[(String, String, Boolean)])]
-  ): Future[Unit] =
+  ): Future[BatchPutAttributesResult] =
     batchPutAttributes(
       new BatchPutAttributesRequest(
         domainName,
@@ -76,25 +76,25 @@ class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
 
   def createDomain(
     createDomainRequest: CreateDomainRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.createDomainAsync, createDomainRequest)
+  ): Future[CreateDomainResult] =
+    wrapAsyncMethod[CreateDomainRequest, CreateDomainResult](client.createDomainAsync, createDomainRequest)
 
   def createDomain(
     domainName: String
-  ): Future[Unit] =
+  ): Future[CreateDomainResult] =
     createDomain(new CreateDomainRequest(domainName))
 
   def deleteAttributes(
     deleteAttributesRequest: DeleteAttributesRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.deleteAttributesAsync, deleteAttributesRequest)
+  ): Future[DeleteAttributesResult] =
+    wrapAsyncMethod[DeleteAttributesRequest,DeleteAttributesResult](client.deleteAttributesAsync, deleteAttributesRequest)
 
   def deleteAttributes(
     domainName: String,
     itemName:   String,
     attributes: Seq[(String, String)] = Seq.empty,
     expected:   UpdateCondition       = null
-  ): Future[Unit] =
+  ): Future[DeleteAttributesResult] =
     deleteAttributes(
       new DeleteAttributesRequest(
         domainName,
@@ -106,18 +106,18 @@ class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
 
   def deleteDomain(
     deleteDomainRequest: DeleteDomainRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.deleteDomainAsync, deleteDomainRequest)
+  ): Future[DeleteDomainResult] =
+    wrapAsyncMethod[DeleteDomainRequest, DeleteDomainResult](client.deleteDomainAsync, deleteDomainRequest)
 
   def deleteDomain(
     domainName: String
-  ): Future[Unit] =
+  ): Future[DeleteDomainResult] =
     deleteDomain(new DeleteDomainRequest(domainName))
 
   def domainMetadata(
     domainMetadataRequest: DomainMetadataRequest
   ): Future[DomainMetadataResult] =
-    wrapAsyncMethod(client.domainMetadataAsync, domainMetadataRequest)
+    wrapAsyncMethod[DomainMetadataRequest,DomainMetadataResult](client.domainMetadataAsync, domainMetadataRequest)
 
   def domainMetadata(
     domainName: String
@@ -127,7 +127,7 @@ class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
   def getAttributes(
     getAttributesRequest: GetAttributesRequest
   ): Future[GetAttributesResult] =
-    wrapAsyncMethod(client.getAttributesAsync, getAttributesRequest)
+    wrapAsyncMethod[GetAttributesRequest, GetAttributesResult](client.getAttributesAsync, getAttributesRequest)
 
   def getAttributes(
     domainName:     String,
@@ -150,7 +150,7 @@ class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
   def listDomains(
     listDomainsRequest: ListDomainsRequest
   ): Future[ListDomainsResult] =
-    wrapAsyncMethod(client.listDomainsAsync, listDomainsRequest)
+    wrapAsyncMethod[ListDomainsRequest, ListDomainsResult](client.listDomainsAsync, listDomainsRequest)
 
   def listDomains(
     nextToken: String = null
@@ -162,15 +162,15 @@ class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
 
   def putAttributes(
     putAttributesRequest: PutAttributesRequest
-  ): Future[Unit] =
-    wrapVoidAsyncMethod(client.putAttributesAsync, putAttributesRequest)
+  ): Future[PutAttributesResult] =
+    wrapAsyncMethod[PutAttributesRequest, PutAttributesResult](client.putAttributesAsync, putAttributesRequest)
 
   def putAttributes(
     domainName: String,
     itemName:   String,
     attributes: Seq[(String, String, Boolean)],
     expected:   UpdateCondition = null
-  ): Future[Unit] =
+  ): Future[PutAttributesResult] =
     putAttributes(
       new PutAttributesRequest(
         domainName,
@@ -185,7 +185,7 @@ class AmazonSimpleDBScalaClient(val client: AmazonSimpleDBAsyncClient) {
   def select(
     selectRequest: SelectRequest
   ): Future[SelectResult] =
-    wrapAsyncMethod(client.selectAsync, selectRequest)
+    wrapAsyncMethod[SelectRequest, SelectResult](client.selectAsync, selectRequest)
 
   def select(
     selectExpression: String,
