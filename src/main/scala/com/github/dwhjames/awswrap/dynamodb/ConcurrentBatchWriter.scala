@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-package com.github.dwhjames.awswrap.dynamodb
+package com.github.dwhjames.awswrap
+package dynamodb
 
 import java.{util => ju}
 import java.util.{concurrent => juc}
@@ -31,7 +32,6 @@ import com.amazonaws.services.dynamodbv2.model.{BatchWriteItemRequest, Provision
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
   * A record to communicate errors during batch write attempts.
