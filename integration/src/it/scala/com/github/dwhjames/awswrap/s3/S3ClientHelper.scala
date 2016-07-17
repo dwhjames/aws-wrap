@@ -17,14 +17,11 @@
 package com.github.dwhjames.awswrap
 package s3
 
-import org.scalatest.{Suite, BeforeAndAfterAll}
-
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.transfer._
-
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.scalatest.{BeforeAndAfterAll, Suite}
+import org.slf4j.{Logger, LoggerFactory}
 
 trait S3ClientHelper
   extends BeforeAndAfterAll

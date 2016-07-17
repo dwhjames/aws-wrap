@@ -20,7 +20,7 @@ package com.github.dwhjames.awswrap
 import scala.concurrent._
 import scala.concurrent.duration._
 
-trait AwaitHelper {
+private[awswrap] trait AwaitHelper {
 
   def await[T](atMost: Duration)(awaitable: Awaitable[T]): T =
     Await.result(awaitable, atMost)

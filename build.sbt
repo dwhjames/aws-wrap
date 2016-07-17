@@ -35,7 +35,3 @@ lazy val awsWrapTest = project.
   in(file("integration")).
   configs(IntegrationTest).
   dependsOn(awsWrap)
-
-lazy val scratch = project.
-  in(file("scratch")).
-  dependsOn(awsWrap)
