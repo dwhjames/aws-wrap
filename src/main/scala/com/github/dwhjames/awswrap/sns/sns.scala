@@ -169,4 +169,19 @@ class AmazonSNSScalaClient(val client: AmazonSNSAsyncClient) {
   ): Future[UnsubscribeResult] =
     unsubscribe(new UnsubscribeRequest(subsciptionArn))
 
+  def createPlatformEndpoint(
+    createPlatformEndpointRequest: CreatePlatformEndpointRequest
+  ): Future[CreatePlatformEndpointResult] =
+    wrapAsyncMethod[CreatePlatformEndpointRequest, CreatePlatformEndpointResult](client.createPlatformEndpointAsync, createPlatformEndpointRequest)
+
+  def setEndpointAttributes(
+    setEndpointAttributesRequest: SetEndpointAttributesRequest
+  ): Future[SetEndpointAttributesResult] =
+    wrapAsyncMethod[SetEndpointAttributesRequest, SetEndpointAttributesResult](client.setEndpointAttributesAsync, setEndpointAttributesRequest)
+
+  def getEndpointAttributes(
+    getEndpointAttributesRequest: GetEndpointAttributesRequest
+  ): Future[GetEndpointAttributesResult] =
+    wrapAsyncMethod[GetEndpointAttributesRequest, GetEndpointAttributesResult](client.getEndpointAttributesAsync, getEndpointAttributesRequest)
+
 }
