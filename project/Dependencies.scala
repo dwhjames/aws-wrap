@@ -12,7 +12,7 @@ object Dependencies {
 
     val logback = "1.1.7"
 
-    val scalatest = "2.2.6"
+    val scalatest = "3.0.1"
   }
 
   object Compile {
