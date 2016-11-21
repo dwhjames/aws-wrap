@@ -14,14 +14,14 @@ Asynchronous clients are provided for the following services:
 
 ## Install
 
-aws-wrap is built for both Scala 2.10.x and 2.11.x against AWS Java SDK 1.11.x (for AWS Java SDK 1.10.x, 1.9.x and 1.8.x series, use the 0.8.0, 0.7.3 and 0.6.4 releases of aws-wrap, respectively). Binary releases are available from [Bintray]('https://bintray.com/mingchuno/maven/aws-wrap/view?source=watch').
+aws-wrap is built for Scala 2.10.x, 2.11.x and 2.12.x against AWS Java SDK 1.11.x (for AWS Java SDK 1.10.x, 1.9.x and 1.8.x series we recommend you upgrade before using this library). Binary releases are available from [Bintray]('https://bintray.com/mingchuno/maven/aws-wrap/view?source=watch').
 
 If you are using SBT, simply add the following to your `build.sbt` file:
 
 ```
 resolvers += Resolver.bintrayRepo("mingchuno", "maven")
 
-libraryDependencies += "com.github.dwhjames" %% "aws-wrap" % "0.9.0"
+libraryDependencies += "com.github.dwhjames" %% "aws-wrap" % "0.9.1"
 ```
 
 ## Usage
