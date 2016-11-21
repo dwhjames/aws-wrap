@@ -31,7 +31,7 @@ trait S3ClientHelper
   private val logger: Logger = LoggerFactory.getLogger(self.getClass)
 
   val client = {
-    val option = S3ClientOptions.builder().setPathStyleAccess(true).build()
+    val option = S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build()
     val c = new AmazonS3ScalaClient(new BasicAWSCredentials("FAKE_ACCESS_KEY", "FAKE_SECRET_KEY"))
     c.client.setEndpoint("http://localhost:4000")
     c.client.setS3ClientOptions(option)
