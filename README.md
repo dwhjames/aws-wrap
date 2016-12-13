@@ -1,7 +1,7 @@
 # Asynchronous Scala Clients for Amazon Web Services
 
 [![Build Status](https://travis-ci.org/mingchuno/aws-wrap.svg?branch=master)](https://travis-ci.org/mingchuno/aws-wrap)
-[![Download](https://api.bintray.com/packages/mingchuno/maven/aws-wrap/images/download.svg?version=0.9.2)](https://bintray.com/mingchuno/maven/aws-wrap/0.9.2/link)
+[![Download](https://api.bintray.com/packages/mingchuno/maven/aws-wrap/images/download.svg?version=0.9.3)](https://bintray.com/mingchuno/maven/aws-wrap/0.9.3/link)
 
 Asynchronous clients are provided for the following services:
 
@@ -22,7 +22,7 @@ If you are using SBT, simply add the following to your `build.sbt` file:
 ```
 resolvers += Resolver.bintrayRepo("mingchuno", "maven")
 
-libraryDependencies += "com.github.dwhjames" %% "aws-wrap" % "0.9.2"
+libraryDependencies += "com.github.dwhjames" %% "aws-wrap" % "0.9.3"
 ```
 
 ## Usage

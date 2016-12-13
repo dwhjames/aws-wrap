@@ -55,7 +55,12 @@ case class FailedBatch[Metadata](
 )
 
 object ConcurrentBatchWriter {
-  private def defaultClientConfig(writeConcurrency: Int) =
+  /**
+    * A default ClientConfiguration to keep the old behaviour
+    * @param writeConcurrency write concurrency and also the max connections
+    * @return a ClientConfiguration that can be further config
+    */
+  def defaultClientConfig(writeConcurrency: Int) =
     new ClientConfiguration()
       .withMaxErrorRetry(0)
       .withMaxConnections(writeConcurrency)
@@ -110,7 +115,7 @@ class ConcurrentBatchWriter(
 
   // a synchronous DynamoDB client that performs no internal retry-logic
   // and has a pool of connections equal to the number of concurrent writers
-  private val dynamoDBClient = new AmazonDynamoDBClient(credentialsProvider, clientConfiguration)
+  private val dynamoDBClient = new AmazonDynamoDBClient(credentialsProvider, clientConfiguration.withMaxConnections(writeConcurrency))
 
   /*
    * turn an fixed capacity, array blocking queue into a buffer
