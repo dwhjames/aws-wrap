@@ -31,27 +31,39 @@ import com.amazonaws.services.dynamodbv2.model.{BatchWriteItemRequest, Provision
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+object SingleThreadedBatchWriter {
+  val DEFAULT_CLIENT_CONFIG = new ClientConfiguration().withMaxErrorRetry(0)
+}
+
 class SingleThreadedBatchWriter(
     val tableName: String,
-    val credentialsProvider: AWSCredentialsProvider
+    val credentialsProvider: AWSCredentialsProvider,
+    val clientConfiguration: ClientConfiguration = SingleThreadedBatchWriter.DEFAULT_CLIENT_CONFIG
 ) {
+
+  /**
+    * Create a new single thread batch writer
+    *
+    * @param tableName
+    *     The name of the DynamoDB table to write to
+    * @param credentials
+    *     Static credentials to the DynamoDB table
+    * @param clientConfiguration
+    *    client supply ClientConfiguration
+    */
+  def this(tableName: String, credentials: AWSCredentials, clientConfiguration: ClientConfiguration) {
+    this(tableName, new StaticCredentialsProvider(credentials), clientConfiguration)
+  }
 
   private type Batch = ju.Map[String, ju.List[WriteRequest]]
 
   private val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
-  /**
-    * a synchronous DynamoDB client, configured to perform no retry logic internally
-    *
-    * public visible, to allow extra configuration if truely desired
-    */
-  val client = new AmazonDynamoDBClient(credentialsProvider, new ClientConfiguration().withMaxErrorRetry(0))
-
+  private val client = new AmazonDynamoDBClient(credentialsProvider, clientConfiguration)
 
   def this(tableName: String, credentials: AWSCredentials) {
     this(tableName, new StaticCredentialsProvider(credentials))
   }
-
 
   // implement exponential backoff using Thread.sleep
   private def pause(retries: Int): Unit =

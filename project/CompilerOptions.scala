@@ -10,8 +10,6 @@ object CompilerOptions extends AutoPlugin {
         "-unchecked",
         "-Xfatal-warnings",
         "-Xfuture",
-        //"-Xlint",
-        //"-Yno-adapted-args",
         "-Ywarn-dead-code",
         "-Ywarn-numeric-widen",
         "-Ywarn-value-discard"
