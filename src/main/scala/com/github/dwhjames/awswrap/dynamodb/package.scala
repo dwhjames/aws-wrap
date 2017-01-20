@@ -161,7 +161,7 @@ package object dynamodb extends QueryBuilder {
   /** string AttributeValue to BigInt */
   implicit val attributeValueToBigInt     = (x: AttributeValue) => catchAndRethrowConversion { BigInt(x.getS) }
   /** string AttributeValue to BigDecimal */
-  implicit val attributeValueToBigDecimal = (x: AttributeValue) => catchAndRethrowConversion { BigDecimal(x.getS) }
+  implicit val attributeValueToBigDecimal = (x: AttributeValue) => catchAndRethrowConversion { BigDecimal(x.getN) }
 
   /** string set AttributeValue to Set[BigInt] */
   implicit val attributeValueToBigIntSet     = (x: AttributeValue) => catchAndRethrowConversion { x.getSS.asScala.map(BigInt(_)).toSet }
