@@ -3,14 +3,16 @@ import sbt._
 object Dependencies {
 
   object V {
-    val awsJavaSDK  = "1.10.32"
+    val awsJavaSDK = "1.11.18"
 
-    val jodaTime    = "2.9"
-    val jodaConvert = "1.8"
+    val jodaTime = "2.9.4"
+    val jodaConvert = "1.8.1"
 
-    val slf4j = "1.7.12"
+    val slf4j = "1.7.21"
 
-    val logback     = "1.1.3"
+    val logback = "1.1.7"
+
+    val scalatest = "3.0.1"
   }
 
   object Compile {
@@ -32,8 +34,13 @@ object Dependencies {
     val logback    = "ch.qos.logback" % "logback-classic" % V.logback
   }
 
+  object Test {
+
+    val scalaTest = "org.scalatest" %% "scalatest" % V.scalatest % "test"
+  }
+
   object IntegrationTest {
 
-    val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % "it"
+    val scalaTest = "org.scalatest" %% "scalatest" % V.scalatest % "it"
   }
 }
