@@ -15,15 +15,13 @@
  * limitations under the License.
  */
 
-package com.github.dwhjames.awswrap.dynamodb.v2
+package com.github.dwhjames.awswrap.dynamodb
 
-import com.github.dwhjames.awswrap.dynamodb.{AmazonDynamoDBScalaMapper, DynamoDBClient}
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import DataTypeConversions._
 
 class DataTypeConversionSpec
   extends FlatSpec
@@ -126,35 +124,31 @@ object DataTypeConversionSpec {
       string = "String 1",
       bigDecimal = BigDecimal(1234567890123456789l),
       bigInt = BigInt(987654321098765432l),
-      double = Double.MinValue,
+      double = 1.toDouble,
       float = Float.MinValue,
-      long= 120.toLong,
-      int = 130.toInt,
-      byte = 14.toByte,
-      short = 7.toShort,
+      long= 12.toLong,
+      int = 13,
+      byte = 11.toByte,
+      short = 2.toShort,
       bool = true,
       strings = Set("one","two","three"),
       ints = Set(1,2,3),
-      bytes = Set(Byte.MaxValue, Byte.MinValue),
-      listOfStrings = List("two","two","one","three","one"),
-      mapOfInts= Map("one" -> 1, "two" -> 2)
+      bytes = Set(Byte.MaxValue, Byte.MinValue)
     ),
     DataTypeVarieties(
       string = "String 2",
       bigDecimal = BigDecimal(987654321098765432l),
       bigInt = BigInt(1234567890123456789l),
-      double = Double.MaxValue,
+      double = 2.toDouble,
       float = Float.MaxValue,
       long= 120.toLong,
-      int = 130.toInt,
+      int = 130,
       byte = 14.toByte,
       short = 7.toShort,
       bool = false,
       strings = Set("three","two","one"),
       ints = Set(3,2,1),
-      bytes = Set(Byte.MinValue, Byte.MaxValue),
-      listOfStrings = List("three","three","two","one","two"),
-      mapOfInts= Map("three" -> 3, "four" -> 4)
+      bytes = Set(Byte.MinValue, Byte.MaxValue)
     )
   )
 }

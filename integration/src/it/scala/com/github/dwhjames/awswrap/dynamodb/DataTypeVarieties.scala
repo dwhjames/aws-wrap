@@ -1,8 +1,6 @@
-package com.github.dwhjames.awswrap.dynamodb.v2
+package com.github.dwhjames.awswrap.dynamodb
 
-import DataTypeConversions._
 import com.amazonaws.services.dynamodbv2.model._
-import com.github.dwhjames.awswrap.dynamodb.{Schema, DynamoDBSerializer} //don't import '_' as legacy DataTypeConversions will clash with new ones
 
 case class DataTypeVarieties(
     string:           String,
@@ -17,9 +15,7 @@ case class DataTypeVarieties(
     bool:             Boolean,
     strings:          Set[String],
     ints:             Set[Int],
-    bytes:            Set[Byte],
-    listOfStrings:    List[String],
-    mapOfInts:        Map[String, Int]
+    bytes:            Set[Byte]
 )
 
 object DataTypeVarieties {
@@ -28,7 +24,7 @@ object DataTypeVarieties {
 
   val tableRequest =
     new CreateTableRequest()
-    .withTableName(DataTypeString.tableName)
+    .withTableName(DataTypeVarieties.tableName)
     .withProvisionedThroughput(Schema.provisionedThroughput(10L, 5L))
     .withAttributeDefinitions(
       Schema.stringAttribute(Attributes.string)
@@ -51,8 +47,6 @@ object DataTypeVarieties {
     val strings        = "strings"
     val ints           = "ints"
     val bytes          = "bytes"
-    val listOfStrings  = "listOfStrings"
-    val mapOfInts      = "map"
   }
 
   implicit object sameScoreSerializer extends DynamoDBSerializer[DataTypeVarieties] {
@@ -65,6 +59,9 @@ object DataTypeVarieties {
         Attributes.string -> dtypes.string
       )
 
+    def convertSS(f: Set[String])(implicit p: Set[String] => AttributeValue) = p(f)
+    def convertSI(f: Set[Int])(implicit p: Set[Int] => AttributeValue) = p(f)
+    def convertSB(f: Set[Byte])(implicit p: Set[Byte] => AttributeValue) = p(f)
 
     override def toAttributeMap(dtypes: DataTypeVarieties) =
       Map(
@@ -78,30 +75,37 @@ object DataTypeVarieties {
         Attributes.byte -> dtypes.byte,
         Attributes.short -> dtypes.short,
         Attributes.bool -> dtypes.bool,
-        Attributes.strings -> dtypes.strings,
-        Attributes.ints -> dtypes.ints,
-        Attributes.bytes -> dtypes.bytes,
-        Attributes.listOfStrings -> dtypes.listOfStrings,
-        Attributes.mapOfInts -> dtypes.mapOfInts
+        Attributes.strings -> convertSS(dtypes.strings),
+        Attributes.ints -> convertSI(dtypes.ints),
+        Attributes.bytes -> convertSB(dtypes.bytes)
       )
+
+    def convertD(x: AttributeValue)(implicit p: AttributeValue => Double ) = p(x)
+    def convertF(x: AttributeValue)(implicit p: AttributeValue => Float ) = p(x)
+    def convertL(x: AttributeValue)(implicit p: AttributeValue => Long ) = p(x)
+    def convertI(x: AttributeValue)(implicit p: AttributeValue => Int ) = p(x)
+    def convertB(x: AttributeValue)(implicit p: AttributeValue => Byte ) = p(x)
+    def convertS(x: AttributeValue)(implicit p: AttributeValue => Short ) = p(x)
+
+    def convertASS(x: AttributeValue)(implicit p: AttributeValue => Set[String] ):Set[String] = p(x)
+    def convertASI(x: AttributeValue)(implicit p: AttributeValue => Set[Int] ):Set[Int] = p(x)
+    def convertASB(x: AttributeValue)(implicit p: AttributeValue => Set[Byte] ):Set[Byte] = p(x)
 
     override def fromAttributeMap(item: collection.mutable.Map[String, AttributeValue]) =
       DataTypeVarieties(
         string = item(Attributes.string),
         bigDecimal = item(Attributes.bigDecimal),
         bigInt = item(Attributes.bigInt),
-        double = item(Attributes.double),
-        float = item(Attributes.float),
-        long = item(Attributes.long),
-        int = item(Attributes.int),
-        byte = item(Attributes.byte),
-        short = item(Attributes.short),
+        double = convertD(item(Attributes.double)),
+        float = convertF(item(Attributes.float)),
+        long = convertL(item(Attributes.long)),
+        int = convertI(item(Attributes.int)),
+        byte = convertB(item(Attributes.byte)),
+        short = convertS(item(Attributes.short)),
         bool = attributeValueToBoolean(item(Attributes.bool)),
-        strings = item(Attributes.strings),
-        ints = item(Attributes.ints),
-        bytes = item(Attributes.bytes),
-        listOfStrings = item(Attributes.listOfStrings),
-        mapOfInts = item(Attributes.mapOfInts)
+        strings = convertASS(item(Attributes.strings)),
+        ints = convertASI(item(Attributes.ints)),
+        bytes = convertASB(item(Attributes.bytes))
       )
   }
 }
