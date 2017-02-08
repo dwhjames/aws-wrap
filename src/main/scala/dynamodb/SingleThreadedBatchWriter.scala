@@ -20,8 +20,8 @@ package com.github.dwhjames.awswrap.dynamodb
 import java.{util => ju}
 import java.util.Random
 
-import com.amazonaws.{AmazonClientException, AmazonServiceException, ClientConfiguration}
-import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, BasicAWSCredentials}
+import com.amazonaws.{AmazonServiceException, ClientConfiguration}
+import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider}
 import com.amazonaws.internal.StaticCredentialsProvider
 import com.amazonaws.retry.RetryUtils
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
