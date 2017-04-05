@@ -22,13 +22,13 @@ import java.io.{InputStream, File}
 import java.net.URL
 
 import scala.collection.JavaConverters._
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{Future, Promise}
 import scala.util.Try
 
 import java.util.concurrent.{Executors, ExecutorService, ThreadFactory}
 import java.util.concurrent.atomic.AtomicLong
 
-import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
+import com.amazonaws.ClientConfiguration
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, DefaultAWSCredentialsProviderChain}
 import com.amazonaws.event.{ProgressListener, ProgressEvent, ProgressEventType}
 import com.amazonaws.internal.StaticCredentialsProvider;
