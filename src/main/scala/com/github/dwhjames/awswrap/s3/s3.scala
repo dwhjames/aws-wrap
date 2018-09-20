@@ -714,10 +714,9 @@ object FutureTransfer {
      */
     if (transfer.isDone) {
       val success = p trySuccess transfer
-      if (logger.isDebugEnabled) {
-        if (success) {
-          logger.debug(s"promise successfully completed from outside of callbacks for $transferDescription")
-        }
+
+      if (success) {
+        logger.debug(s"promise successfully completed from outside of callbacks for $transferDescription")
       }
     }
 
