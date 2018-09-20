@@ -1,11 +1,11 @@
 
-organization in ThisBuild := "com.github.dwhjames"
+organization in ThisBuild := "com.outworkers"
 
 licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 
-scalaVersion in ThisBuild := "2.11.7"
+scalaVersion in ThisBuild := "2.12.6"
 
-crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.7")
+crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.12", "2.12.6")
 
 shellPrompt in ThisBuild := CustomShellPrompt.customPrompt
 
@@ -13,7 +13,6 @@ resolvers in ThisBuild ++= Seq(
     "typesafe" at "http://repo.typesafe.com/typesafe/releases",
     "sonatype" at "http://oss.sonatype.org/content/repositories/releases"
   )
-
 
 
 lazy val awsWrap = project in file(".")
@@ -31,9 +30,7 @@ libraryDependencies ++= Seq(
   Dependencies.Compile.slf4j
 )
 
-
 bintrayPackageLabels := Seq("aws", "dynamodb", "s3", "ses", "simpledb", "sns", "sqs", "async", "future")
-
 
 
 lazy val awsWrapTest = project.

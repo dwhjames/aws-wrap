@@ -4,13 +4,12 @@ object Dependencies {
 
   object V {
     val awsJavaSDK  = "1.10.32"
+    val jodaTime    = "2.10"
+    val jodaConvert = "2.1.1"
 
-    val jodaTime    = "2.9"
-    val jodaConvert = "1.8"
+    val slf4j = "1.7.25"
 
-    val slf4j = "1.7.12"
-
-    val logback     = "1.1.3"
+    val logback = "1.1.3"
   }
 
   object Compile {
@@ -29,11 +28,11 @@ object Dependencies {
 
     val slf4j = "org.slf4j" % "slf4j-api" % V.slf4j
 
-    val logback    = "ch.qos.logback" % "logback-classic" % V.logback
+    val logback = "ch.qos.logback" % "logback-classic" % V.logback
   }
 
   object IntegrationTest {
 
-    val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % "it"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % "it"
   }
 }

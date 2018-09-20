@@ -17,18 +17,16 @@
 
 package com.github.dwhjames.awswrap.dynamodb
 
-import java.{util => ju}
 import java.util.Random
+import java.{util => ju}
 
-import com.amazonaws.{AmazonClientException, AmazonServiceException, ClientConfiguration}
-import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, BasicAWSCredentials}
+import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider}
 import com.amazonaws.internal.StaticCredentialsProvider
 import com.amazonaws.retry.RetryUtils
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.amazonaws.services.dynamodbv2.model.{BatchWriteItemRequest, ProvisionedThroughputExceededException, ReturnConsumedCapacity, WriteRequest}
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.amazonaws.{AmazonServiceException, ClientConfiguration}
+import org.slf4j.{Logger, LoggerFactory};
 
 
 class SingleThreadedBatchWriter(
