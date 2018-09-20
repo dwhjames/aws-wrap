@@ -18,25 +18,23 @@
 package com.github.dwhjames.awswrap
 package s3
 
-import java.io.{InputStream, File}
+import java.io.{File, InputStream}
 import java.net.URL
-
-import scala.collection.JavaConverters._
-import scala.concurrent.{ExecutionContext, Future, Promise}
-import scala.util.Try
-
-import java.util.concurrent.{Executors, ExecutorService, ThreadFactory}
 import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.{ExecutorService, Executors, ThreadFactory}
 
-import com.amazonaws.{AmazonWebServiceRequest, ClientConfiguration}
+import com.amazonaws.ClientConfiguration
 import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, DefaultAWSCredentialsProviderChain}
-import com.amazonaws.event.{ProgressListener, ProgressEvent, ProgressEventType}
-import com.amazonaws.internal.StaticCredentialsProvider;
+import com.amazonaws.event.{ProgressEvent, ProgressEventType, ProgressListener}
+import com.amazonaws.internal.StaticCredentialsProvider
 import com.amazonaws.services.s3._
 import com.amazonaws.services.s3.model._
 import com.amazonaws.services.s3.transfer.Transfer
-
 import org.slf4j.{Logger, LoggerFactory}
+
+import scala.collection.JavaConverters._
+import scala.concurrent.{Future, Promise}
+import scala.util.Try
 
 
 private[s3] class S3ThreadFactory extends ThreadFactory {
@@ -573,7 +571,7 @@ object FutureTransfer {
     * @see [[com.amazonaws.event.ProgressListener ProgressListener]]
     */
   def listenFor[T <: Transfer](transfer: T): Future[transfer.type] = {
-    import com.amazonaws.services.s3.transfer.internal.{ AbstractTransfer, TransferStateChangeListener }
+    import com.amazonaws.services.s3.transfer.internal.{AbstractTransfer, TransferStateChangeListener}
     val transferDescription = transfer.getDescription
     def debugLog(eventType: String): Unit = {
       logger.debug(s"$eventType : $transferDescription")

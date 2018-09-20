@@ -25,21 +25,24 @@ import com.amazonaws.handlers.AsyncHandler
 
 package object awswrap {
 
-  private def promiseToAsyncHandler[Request <: AmazonWebServiceRequest, Result](p: Promise[Result]) =
+  private def promiseToAsyncHandler[Request <: AmazonWebServiceRequest, Result](p: Promise[Result]): AsyncHandler[Request, Result] =
     new AsyncHandler[Request, Result] {
       override def onError(exception: Exception): Unit = { p.failure(exception); () }
       override def onSuccess(request: Request, result: Result): Unit = { p.success(result); () }
     }
 
-  private def promiseToVoidAsyncHandler[Request <: AmazonWebServiceRequest](p: Promise[Unit]) =
+  private def promiseToVoidAsyncHandler[Request <: AmazonWebServiceRequest](p: Promise[Unit]): AsyncHandler[Request, Void] =
     new AsyncHandler[Request, Void] {
       override def onError(exception: Exception): Unit = { p.failure(exception); () }
       override def onSuccess(request: Request, result: Void): Unit = { p.success(()); () }
     }
 
   @inline
-  private[awswrap] def wrapAsyncMethod[Request <: AmazonWebServiceRequest, Result](
-    f:       (Request, AsyncHandler[Request, Result]) => JFuture[Result],
+  private[awswrap] def wrapAsyncMethod[
+    Request <: AmazonWebServiceRequest,
+    Result
+  ](
+    f: (Request, AsyncHandler[Request, Result]) => JFuture[Result],
     request: Request
   ): Future[Result] = {
     val p = Promise[Result]
