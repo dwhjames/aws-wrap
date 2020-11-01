@@ -221,6 +221,11 @@ class AmazonS3ScalaClient(
   ): Future[CompleteMultipartUploadResult] =
     wrapMethod(client.completeMultipartUpload, completeMultipartUploadRequest)
 
+  def abortMultipartUpload(
+   abortMultipartUploadRequest: AbortMultipartUploadRequest
+ ): Future[Unit] =
+    wrapMethod(client.abortMultipartUpload, abortMultipartUploadRequest)
+
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#copyObject(com.amazonaws.services.s3.model.CopyObjectRequest) AWS Java SDK]]
     */
@@ -423,6 +428,11 @@ class AmazonS3ScalaClient(
     initiateMultipartUploadRequest: InitiateMultipartUploadRequest
   ): Future[InitiateMultipartUploadResult] =
     wrapMethod(client.initiateMultipartUpload, initiateMultipartUploadRequest)
+
+  def uploadPart(
+    uploadPartRequest: UploadPartRequest
+  ): Future[UploadPartResult] =
+    wrapMethod(client.uploadPart, uploadPartRequest)
 
   /**
     * @see [[http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/AmazonS3.html#listBuckets(com.amazonaws.services.s3.model.ListBucketsRequest) AWS Java SDK]]

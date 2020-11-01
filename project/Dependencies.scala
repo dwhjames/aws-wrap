@@ -34,6 +34,6 @@ object Dependencies {
 
   object IntegrationTest {
 
-    val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % "it"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5" % "it"
   }
 }

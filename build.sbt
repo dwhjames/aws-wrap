@@ -3,9 +3,9 @@ organization in ThisBuild := "com.github.dwhjames"
 
 licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 
-scalaVersion in ThisBuild := "2.11.7"
+scalaVersion in ThisBuild := "2.12.11"
 
-crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.7", "2.12.1")
+crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.7", "2.12.11")
 
 shellPrompt in ThisBuild := CustomShellPrompt.customPrompt
 
